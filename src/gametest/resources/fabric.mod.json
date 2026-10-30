@@ -6,7 +6,10 @@
 	"environment": "*",
 	"entrypoints": {
 		"fabric-gametest": [
-			"com.extremeprogression.gametest.SkeletonTests"
+			"com.extremeprogression.gametest.SkeletonTests",
+			"com.extremeprogression.gametest.ProgressionTests",
+			"com.extremeprogression.gametest.StoreTests",
+			"com.extremeprogression.gametest.CommandTests"
 		],
 		"fabric-client-gametest": [
 			"com.extremeprogression.gametest.ClientShots"

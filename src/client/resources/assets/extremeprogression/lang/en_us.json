@@ -1,0 +1,28 @@
+{
+	"skill.extremeprogression.melee": "Melee",
+	"skill.extremeprogression.ranged": "Ranged",
+	"skill.extremeprogression.defense": "Defense",
+	"skill.extremeprogression.mining": "Mining",
+	"skill.extremeprogression.foraging": "Foraging",
+	"skill.extremeprogression.farming": "Farming",
+	"skill.extremeprogression.fishing": "Fishing",
+	"skill.extremeprogression.exploration": "Exploration",
+	"skill.extremeprogression.smithing": "Smithing",
+	"skill.extremeprogression.arcana": "Arcana",
+
+	"category.extremeprogression.combat": "Combat",
+	"category.extremeprogression.gathering": "Gathering",
+	"category.extremeprogression.survival": "Survival",
+	"category.extremeprogression.crafting": "Crafting",
+
+	"commands.extremeprogression.overview.total": "Total level %s / %s · budget factor ×%s",
+	"commands.extremeprogression.overview.skill": "%s: level %s (%s%%)",
+	"commands.extremeprogression.overview.mastery": "%s: level %s · Mastery %s / %s",
+	"commands.extremeprogression.admin.set": "%s: %s set to level %s (was %s)",
+	"commands.extremeprogression.admin.add": "%s: %s %s XP, now level %s",
+	"commands.extremeprogression.no_player": "No player online by the name %s",
+	"commands.extremeprogression.unknown_skill": "Unknown skill: %s",
+
+	"message.extremeprogression.admin_set": "An operator set your %s from level %s to %s.",
+	"message.extremeprogression.admin_xp": "An operator changed your XP by %s in %s (level %s → %s)."
+}
