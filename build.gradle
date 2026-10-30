@@ -1,0 +1,77 @@
+plugins {
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+	id 'maven-publish'
+}
+
+repositories {
+	// Loom adds the repositories for Minecraft and its libraries by itself; add others here only when depending on
+	// other mods.
+}
+
+loom {
+	splitEnvironmentSourceSets()
+
+	mods {
+		"extremeprogression" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
+}
+
+dependencies {
+	// The versions live in gradle.properties
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+}
+
+processResources {
+	def version = project.version
+	inputs.property "version", version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 25
+}
+
+java {
+	// Loom attaches the sources jar to the build when it is present
+	withSourcesJar()
+
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
+}
+
+jar {
+	def projectName = project.name
+	inputs.property "projectName", projectName
+
+	from("LICENSE") {
+		rename { "${it}_$projectName" }
+	}
+}
+
+publishing {
+	publications {
+		create("mavenJava", MavenPublication) {
+			from components.java
+		}
+	}
+}
+
+// Game tests: server tests on a headless dedicated server (./gradlew runGameTest, also part of ./gradlew build) and a
+// client test in a real window (./gradlew runClientGameTest). Both run in CI on every push; sources live in src/gametest.
+fabricApi {
+	configureTests {
+		createSourceSet = true
+		modId = "extremeprogression-gametest"
+		enableGameTests = true
+		enableClientGameTests = true
+		eula = true
+	}
+}

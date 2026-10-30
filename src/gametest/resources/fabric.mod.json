@@ -1,0 +1,18 @@
+{
+	"schemaVersion": 1,
+	"id": "extremeprogression-gametest",
+	"version": "1",
+	"name": "Extreme Progression tests",
+	"environment": "*",
+	"entrypoints": {
+		"fabric-gametest": [
+			"com.extremeprogression.gametest.SkeletonTests"
+		],
+		"fabric-client-gametest": [
+			"com.extremeprogression.gametest.ClientShots"
+		]
+	},
+	"depends": {
+		"extremeprogression": "*"
+	}
+}

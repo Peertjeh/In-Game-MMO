@@ -1,0 +1,32 @@
+{
+	"schemaVersion": 1,
+	"id": "extremeprogression",
+	"version": "${version}",
+	"name": "Extreme Progression",
+	"description": "A hardcore RPG progression overhaul. Ten playstyle skills with specializations, skill trees and Mastery, synergies you discover yourself, and deaths that cost you for real.",
+	"authors": [
+		"Peertjeh"
+	],
+	"contact": {
+		"sources": "https://github.com/Peertjeh/In-Game-MMO",
+		"issues": "https://github.com/Peertjeh/In-Game-MMO/issues"
+	},
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.extremeprogression.ExtremeProgression"
+		],
+		"client": [
+			"com.extremeprogression.client.ExtremeProgressionClient"
+		]
+	},
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": ">=0.162.0"
+	},
+	"suggests": {
+		"extremedimensions": "*"
+	}
+}

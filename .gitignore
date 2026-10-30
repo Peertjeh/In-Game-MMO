@@ -1,0 +1,13 @@
+# gradle
+.gradle/
+build/
+run/
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+out/
+
+# javac argument files left behind by a failed compile
+javac.*.args
