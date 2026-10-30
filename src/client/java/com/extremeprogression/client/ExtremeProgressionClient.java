@@ -40,9 +40,12 @@ public class ExtremeProgressionClient implements ClientModInitializer {
 				context.client().execute(() -> OreSense.show(payload)));
 		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.ActivePayload.TYPE, (payload, context) ->
 				context.client().execute(() -> ClientProgress.applyActive(payload)));
+		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.DeathPayload.TYPE, (payload, context) ->
+				context.client().execute(() -> ClientProgress.applyDeaths(payload)));
 		// The few specialization effects felt on the client (movement, the view) read its own player's tree from here
 		com.extremeprogression.spec.Specs.localSkills = ClientProgress::skillData;
 		com.extremeprogression.spec.Specs.localActive = spec -> ClientProgress.activeTicks(spec.id) > 0;
+		com.extremeprogression.spec.Specs.localFatigued = () -> ClientProgress.fatigueLeft() > 0;
 		ClientPlayNetworking.registerGlobalReceiver(OpenSheetPayload.TYPE, (payload, context) ->
 				context.client().execute(() -> context.client().gui.setScreen(new CharacterSheetScreen(null))));
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> client.execute(() -> {
@@ -61,6 +64,10 @@ public class ExtremeProgressionClient implements ClientModInitializer {
 				if (client.getConnection() != null && ClientPlayNetworking.canSend(AbilityPayload.TYPE)) {
 					ClientPlayNetworking.send(new AbilityPayload(client.options.keyShift.isDown()));
 				}
+			}
+			// After respawning: what the death cost, once no other screen is open
+			if (ClientProgress.summaryPending() && client.gui.screen() == null && client.player != null && client.player.isAlive()) {
+				client.gui.setScreen(new com.extremeprogression.client.screen.DeathSummaryScreen(ClientProgress.takeSummary()));
 			}
 			while (OPEN_SHEET.consumeClick()) {
 				// (on a server without the mod nothing was sent, and there is nothing to show)

@@ -48,8 +48,10 @@ public class CharacterSheetScreen extends Screen {
 		int rx = x0 + LEFT_W + 6;
 		column(rx + 6, y0 + 20, List.of(Category.COMBAT, Category.SURVIVAL));
 		column(rx + 6 + SkillTile.W + 4, y0 + 20, List.of(Category.GATHERING, Category.CRAFTING));
+		this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.death.title"),
+				b -> Minecraft.getInstance().gui.setScreen(new DeathRegisterScreen(this))).pos(this.width / 2 - 102, y0 + H - 20).size(100, 20).build());
 		this.addRenderableWidget(Button.builder(Component.translatable("gui.done"), b -> this.onClose())
-				.pos(this.width / 2 - 50, y0 + H - 20).size(100, 20).build());
+				.pos(this.width / 2 + 2, y0 + H - 20).size(100, 20).build());
 	}
 
 	private void column(int x, int y, List<Category> categories) {
@@ -100,6 +102,14 @@ public class CharacterSheetScreen extends Screen {
 				ranks += e.masteryRanks();
 			}
 			row(g, lx, ry + 32, Ui.tr("gui.extremeprogression.sheet.mastery"), String.valueOf(ranks), ranks > 0 ? Ui.GOLD : Ui.TEXT);
+			// The death pressure, and death fatigue while it lasts (design §9: in the GUI, never on the HUD)
+			int pressure = p.death().pressure();
+			row(g, lx, ry + 44, Ui.tr("gui.extremeprogression.death.pressure"), String.valueOf(pressure),
+					pressure >= com.extremeprogression.config.Config.DEATH_WHOLE_LOSS_PRESSURE ? Ui.DANGER : pressure >= 1 ? Ui.WARN : Ui.TEXT);
+			long fatigue = ClientProgress.fatigueLeft();
+			if (fatigue > 0) {
+				row(g, lx, ry + 56, Ui.tr("gui.extremeprogression.death.fatigue"), com.extremeprogression.client.ui.DeathView.duration(fatigue), Ui.DANGER);
+			}
 		}
 
 		// The skills, grouped by category

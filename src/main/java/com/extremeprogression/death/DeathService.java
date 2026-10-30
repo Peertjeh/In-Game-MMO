@@ -157,6 +157,9 @@ public final class DeathService {
 				death.activeTicks -= hour;
 				death.pressure--;
 				Sync.send(p);
+			} else if (death.activeTicks % 1200 == 0) {
+				// (once a minute, so the Death Register's countdown never runs on while you are AFK)
+				Sync.send(p);
 			}
 			PlayerStore.markDirty(p.getUUID());
 		}

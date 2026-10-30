@@ -64,6 +64,13 @@ public final class DeathRules {
 		return best;
 	}
 
+	/** The fraction of its step a skill at this level loses: the share × (its level / the highest level), at most all. */
+	public static double fraction(int level, int highest, double share) {
+		// (with every skill at level 0, each counts as the highest)
+		double ratio = highest <= 0 ? 1 : (double) level / highest;
+		return Math.max(0, Math.min(1, share * ratio));
+	}
+
 	/**
 	 * Applies a death: {@code share} is the base times the dimension's factor, {@code whole} whether layer 3 counts.
 	 * Returns what every skill lost (skills that lost nothing included, with zeros).
@@ -80,10 +87,7 @@ public final class DeathRules {
 			loss.ranksBefore = d.masteryRanks;
 			loss.mastery = d.level >= Config.MAX_LEVEL;
 			double step = loss.mastery ? d.masteryXp : d.xp;
-			// (with every skill at level 0, each counts as the highest)
-			double ratio = highest <= 0 ? 1 : (double) d.level / highest;
-			double fraction = Math.max(0, Math.min(1, share * ratio));
-			double lost = step * fraction;
+			double lost = step * fraction(d.level, highest, share);
 			if (lost > 0) {
 				Progression.remove(p, s, Math.min(lost, step));
 			}

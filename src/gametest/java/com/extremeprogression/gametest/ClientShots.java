@@ -222,7 +222,87 @@ public class ClientShots implements FabricClientGameTest {
 			check(ctx.computeOnClient(mc -> mc.gui.screen() instanceof net.minecraft.client.gui.screens.inventory.AnvilScreen), "the anvil screen did not open");
 			ctx.runOnClient(mc -> mc.gui.setScreen(null));
 			ctx.waitTicks(5);
+
+			// A death (milestone 7): two earlier ones in the history, death pressure 1, then a real death in the Overworld
+			sp.getServer().runOnServer(s -> {
+				ServerPlayer player = s.getPlayerList().getPlayers().get(0);
+				PlayerProgress pr = PlayerStore.get(player.getUUID());
+				pr.death.history.add(record(System.currentTimeMillis() - 3L * 86_400_000, "minecraft:the_end", 2, 2.0, "mining", 62, 61, 0));
+				pr.death.history.add(record(System.currentTimeMillis() - 3_600_000, "minecraft:the_nether", 0, 1.5, "mining", 61, 61, 31200));
+				pr.death.deaths = 2;
+				pr.death.pressure = 1;
+				pr.death.activeTicks = 20 * 60 * 22;
+				Sync.send(player);
+				com.extremeprogression.death.DeathService.sendHistory(player, null);
+			});
+			ctx.waitTicks(5);
+			java.util.List<com.extremeprogression.data.DeathData.Loss> stake = ctx.computeOnClient(mc -> com.extremeprogression.client.screen.DeathRegisterScreen.atStake());
+			ctx.runOnClient(mc -> mc.gui.setScreen(new com.extremeprogression.client.screen.DeathRegisterScreen(new CharacterSheetScreen(null))));
+			ctx.waitTicks(10);
+			ctx.takeScreenshot("12_death_register_before");
+			ctx.runOnClient(mc -> mc.gui.setScreen(null));
+			double miningBefore = ctx.computeOnClient(mc -> ClientProgress.skill("mining").xp());
+			int summaries = ctx.computeOnClient(mc -> com.extremeprogression.client.screen.DeathSummaryScreen.opened());
+			sp.getServer().runOnServer(s -> {
+				ServerPlayer player = s.getPlayerList().getPlayers().get(0);
+				player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+				player.kill((net.minecraft.server.level.ServerLevel) player.level());
+			});
+			ctx.waitTicks(20);
+			check(ctx.computeOnClient(mc -> mc.gui.screen() instanceof net.minecraft.client.gui.screens.DeathScreen), "the death screen did not show");
+			// (as the death screen's Respawn button does)
+			ctx.runOnClient(mc -> {
+				mc.player.respawn();
+				mc.gui.setScreen(null);
+			});
+			ctx.waitTicks(40);
+			check(ctx.computeOnClient(mc -> com.extremeprogression.client.screen.DeathSummaryScreen.opened()) > summaries, "no summary was shown after respawning");
+			ctx.runOnClient(mc -> {
+				ProgressPayload.Death d = ClientProgress.death();
+				check(d.deaths() == 3 && d.pressure() == 2, "after the death the client shows " + d.deaths() + " deaths at pressure " + d.pressure());
+				check(ClientProgress.fatigueLeft() > 0, "the client shows no death fatigue after the death");
+				check(com.extremeprogression.spec.Specs.localFatigued.getAsBoolean(), "the client's own effects do not know about the fatigue");
+				check(ClientProgress.deathHistory().size() == 3, "the client's history holds " + ClientProgress.deathHistory().size() + " deaths, not 3");
+				// "At Stake" before the death was what the death took
+				com.extremeprogression.data.DeathData.Record last = ClientProgress.deathHistory().get(2);
+				for (com.extremeprogression.data.DeathData.Loss l : last.losses) {
+					double shown = stake.stream().filter(x -> x.skill.equals(l.skill)).findFirst().orElseThrow().xp;
+					check(Math.abs(shown - l.xp) < 1e-6, "At Stake showed " + shown + " XP for " + l.skill + ", the death took " + l.xp);
+				}
+				double miningAfter = ClientProgress.skill("mining").xp();
+				check(miningAfter < miningBefore, "Mining did not lose XP: " + miningBefore + " then " + miningAfter);
+			});
+			ctx.takeScreenshot("13_death_summary");
+			ctx.runOnClient(mc -> mc.gui.setScreen(new com.extremeprogression.client.screen.DeathRegisterScreen(null)));
+			ctx.waitTicks(10);
+			ctx.takeScreenshot("14_death_register_after");
+			ctx.runOnClient(mc -> mc.gui.setScreen(new CharacterSheetScreen(null)));
+			ctx.waitTicks(10);
+			ctx.takeScreenshot("15_character_sheet_fatigued");
+			ctx.runOnClient(mc -> mc.gui.setScreen(null));
+			ctx.waitTicks(5);
 		}
+	}
+
+	/** An earlier death for the history, with one skill's loss. */
+	private static com.extremeprogression.data.DeathData.Record record(long time, String dimension, int pressure, double multiplier, String skill,
+			int levelBefore, int levelAfter, double xp) {
+		com.extremeprogression.data.DeathData.Record r = new com.extremeprogression.data.DeathData.Record();
+		r.time = time;
+		r.dimension = dimension;
+		r.x = 120;
+		r.y = 64;
+		r.z = -340;
+		r.cause = "Steve fell from a high place";
+		r.pressure = pressure;
+		r.multiplier = multiplier;
+		com.extremeprogression.data.DeathData.Loss l = new com.extremeprogression.data.DeathData.Loss();
+		l.skill = skill;
+		l.levelBefore = levelBefore;
+		l.levelAfter = levelAfter;
+		l.xp = xp;
+		r.losses.add(l);
+		return r;
 	}
 
 	private static void admin(MinecraftServer s, String what, String args) {
@@ -272,7 +352,18 @@ public class ClientShots implements FabricClientGameTest {
 				"gui.extremeprogression.node.desc.ability", "gui.extremeprogression.respec.loss", "key.extremeprogression.ability"));
 		// (the messages the server sends)
 		keys.addAll(List.of("message.extremeprogression.admin_set", "message.extremeprogression.admin_xp", "message.extremeprogression.level_up",
-				"message.extremeprogression.mastery_up", "message.extremeprogression.fishing.not_open_water", "message.extremeprogression.fishing.overfished"));
+				"message.extremeprogression.mastery_up", "message.extremeprogression.fishing.not_open_water", "message.extremeprogression.fishing.overfished",
+				"message.extremeprogression.death.lost"));
+		// The Death Register and the summary (milestone 7)
+		for (String k : new String[] {"title", "deaths", "pressure", "step0", "step1", "step2", "no_pressure", "drops_in", "fatigue", "none", "fatigue_effect",
+				"per_dimension", "dimension.minecraft.overworld", "dimension.minecraft.the_nether", "dimension.minecraft.the_end",
+				"dimension.extremedimensions.the_seam", "permanent", "permanent_hint", "stake", "stake_basis", "stake_tip_share", "stake_tip_after",
+				"stake_tip_after_mastery", "short_rank", "short_level", "whole_level", "whole_rank", "warning_now", "warning_next", "warning_base", "history",
+				"history_scroll", "history_empty", "details_place", "minutes", "hours", "today", "yesterday", "lost_rank", "lost_level", "lost_xp",
+				"lost_mastery_xp", "lost_nothing", "and_more", "summary.title", "summary.continue", "summary.place", "summary.lost", "summary.fatigue",
+				"summary.pressure", "summary.pressure_whole"}) {
+			keys.add("gui.extremeprogression.death." + k);
+		}
 		List<String> missing = new ArrayList<>();
 		for (String k : keys) {
 			if (!Language.getInstance().has(k)) {
