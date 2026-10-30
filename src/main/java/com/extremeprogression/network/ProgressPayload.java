@@ -16,7 +16,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
  * every number is worked out on the server.
  */
 public record ProgressPayload(int total, int cap, double budgetFactor, int maxLevel, int masteryRanksMax, double masteryXpPerRank,
-							  List<Entry> skills) implements CustomPacketPayload {
+							  List<Entry> skills, Death death) implements CustomPacketPayload {
 	public static final Type<ProgressPayload> TYPE = new Type<>(ExtremeProgression.id("progress"));
 	public static final StreamCodec<FriendlyByteBuf, ProgressPayload> CODEC = StreamCodec.ofMember(ProgressPayload::write, ProgressPayload::read);
 
@@ -25,6 +25,15 @@ public record ProgressPayload(int total, int cap, double budgetFactor, int maxLe
 	 * specializations, the points bought (and set aside), how long until the next respec (real milliseconds) and how
 	 * long each ability still cools down (ticks).
 	 */
+	/**
+	 * The player's deaths: how many, the death pressure and the active play until it drops (ticks), death fatigue left
+	 * (ticks), and what the next death here would take: the share of every skill's step (base × the dimension's factor)
+	 * and whether a whole level or Mastery rank goes too.
+	 */
+	public record Death(int deaths, int pressure, long pressureDropsIn, long fatigueLeft, double share, double multiplier, boolean whole) {
+		public static final Death NONE = new Death(0, 0, 0, 0, 0.5, 1, false);
+	}
+
 	public record Entry(String id, int level, double xp, double need, int masteryRanks, double masteryXp, List<String> specs,
 						List<String> bought, List<String> suspended, long respecWait, Map<String, Integer> cooldowns) {}
 
@@ -53,6 +62,13 @@ public record ProgressPayload(int total, int cap, double budgetFactor, int maxLe
 				buf.writeVarInt(c.getValue());
 			}
 		}
+		buf.writeVarInt(death.deaths());
+		buf.writeVarInt(death.pressure());
+		buf.writeVarLong(death.pressureDropsIn());
+		buf.writeVarLong(death.fatigueLeft());
+		buf.writeDouble(death.share());
+		buf.writeDouble(death.multiplier());
+		buf.writeBoolean(death.whole());
 	}
 
 	private static ProgressPayload read(FriendlyByteBuf buf) {
@@ -82,7 +98,8 @@ public record ProgressPayload(int total, int cap, double budgetFactor, int maxLe
 			}
 			skills.add(new Entry(id, level, xp, need, ranks, masteryXp, specs, bought, suspended, respecWait, cooldowns));
 		}
-		return new ProgressPayload(total, cap, factor, maxLevel, ranksMax, perRank, skills);
+		Death death = new Death(buf.readVarInt(), buf.readVarInt(), buf.readVarLong(), buf.readVarLong(), buf.readDouble(), buf.readDouble(), buf.readBoolean());
+		return new ProgressPayload(total, cap, factor, maxLevel, ranksMax, perRank, skills, death);
 	}
 
 	private static void strings(FriendlyByteBuf buf, List<String> list) {

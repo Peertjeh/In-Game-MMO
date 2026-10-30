@@ -94,14 +94,31 @@ public final class Specs {
 	}
 
 	/**
-	 * The rank (0–5) of a passive or choice node: 0 when the specialization is not in use or the node not bought, and
-	 * for Exploration in heavy armor.
+	 * The rank (0–5) of a passive or choice node, times its skill's {@link #power}: 0 when the specialization is not in
+	 * use or the node not bought, and for Exploration in heavy armor. A node's effect grows with this number.
 	 */
-	public static int rank(Entity e, Specialization spec, NodeSlot slot) {
+	public static double rank(Entity e, Specialization spec, NodeSlot slot) {
 		if (!has(e, spec) || spec.skill == Skill.EXPLORATION && e instanceof LivingEntity l && Trunks.heavyArmor(l)) {
 			return 0;
 		}
-		return TreeRules.rank(data(e, spec.skill), spec, slot);
+		return TreeRules.rank(data(e, spec.skill), spec, slot) * power(e, spec.skill);
+	}
+
+	/** On the client: whether its own player's death fatigue is on. Set by the client. */
+	public static java.util.function.BooleanSupplier localFatigued = () -> false;
+
+	/**
+	 * How strongly a skill's passive bonuses (its trunk, its passives and choice nodes) work for this player: 1, or
+	 * during death fatigue its power (50%, design §7).
+	 */
+	public static double power(Entity e, Skill skill) {
+		if (e instanceof ServerPlayer p) {
+			return com.extremeprogression.death.DeathService.fatigued(p) ? com.extremeprogression.config.Config.DEATH_FATIGUE_POWER : 1;
+		}
+		if (e instanceof Player p && p.level().isClientSide() && p.isLocalPlayer()) {
+			return localFatigued.getAsBoolean() ? com.extremeprogression.config.Config.DEATH_FATIGUE_POWER : 1;
+		}
+		return 1;
 	}
 
 	/** Whether an ability is in effect: on the server, or on the client for its own player. */

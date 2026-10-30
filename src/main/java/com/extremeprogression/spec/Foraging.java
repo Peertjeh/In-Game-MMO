@@ -70,7 +70,7 @@ public final class Foraging {
 		// Tree Feller: the next tree within 6 seconds
 		AbilityService.register(LUMBERJACK, (p, rank) -> Active.start(p, LUMBERJACK, rank, 120));
 		// Bountiful Harvest: 10 s (+2 s a rank, +1 s a rank of Season's Bounty); Wild Remedy: 30 s (+5 s a rank)
-		AbilityService.register(GATHERER, (p, rank) -> Active.start(p, GATHERER, rank, 200 + 40 * (rank - 1) + 20 * rank(p, GATHERER, P4)));
+		AbilityService.register(GATHERER, (p, rank) -> Active.start(p, GATHERER, rank, 200 + 40 * (rank - 1) + (int) Math.round(20 * rank(p, GATHERER, P4))));
 		AbilityService.register(HERBALIST, (p, rank) -> Active.start(p, HERBALIST, rank, 600 + 100 * (rank - 1)));
 		PlayerBlockBreakEvents.AFTER.register((level, player, pos, state, be) -> {
 			if (!felling && player instanceof ServerPlayer p && level instanceof ServerLevel server && state.is(BlockTags.LOGS)
@@ -88,7 +88,7 @@ public final class Foraging {
 
 	/** Tree Feller: up to 16 logs (+12 a rank, +8 a rank of Wide Fell), the one just felled included. Never placed logs. */
 	private static void fell(ServerPlayer p, ServerLevel level, BlockPos start, int rank) {
-		int max = 16 + 12 * (rank - 1) + 8 * rank(p, LUMBERJACK, C1) - 1;
+		int max = 16 + 12 * (rank - 1) + (int) Math.round(8 * rank(p, LUMBERJACK, C1)) - 1;
 		List<BlockPos> logs = connectedLogs(level, start, max);
 		felling = true;
 		try {
@@ -259,9 +259,9 @@ public final class Foraging {
 			saturation += props.saturation() * 0.10f * rank(p, HERBALIST, P1);
 		}
 		if (id.equals("mushroom_stew") || id.equals("suspicious_stew")) {
-			int lore = rank(p, HERBALIST, C1);
+			double lore = rank(p, HERBALIST, C1);
 			if (lore > 0) {
-				p.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40 * lore, 0));
+				p.addEffect(new MobEffectInstance(MobEffects.REGENERATION, (int) Math.round(40 * lore), 0));
 			}
 		}
 		if (id.equals("sweet_berries") || id.equals("glow_berries")) {
@@ -275,9 +275,9 @@ public final class Foraging {
 		data.setFoodLevel(Math.max(0, Math.min(20, data.getFoodLevel() + hunger)));
 		data.setSaturation(Math.max(0, Math.min(data.getFoodLevel(), data.getSaturationLevel() + saturation)));
 		// Nourished: eating heals 0.4 a rank
-		int nourished = rank(p, HERBALIST, P4);
+		double nourished = rank(p, HERBALIST, P4);
 		if (nourished > 0) {
-			p.heal(0.4f * nourished);
+			p.heal((float) (0.4 * nourished));
 		}
 	}
 

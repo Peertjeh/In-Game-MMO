@@ -78,14 +78,14 @@ public final class Arcana {
 	static void register() {
 		// Catalyst: 30 s (+5 s a rank, +6 s a rank of Long Catalyst); Arcane Insight: 30 s (+5 s a rank, +6 s a rank of
 		// Insightful), its value 1 once the free reroll is used; Hex: the next thrown potion within 15 s (+3 s a rank of Long Hex)
-		AbilityService.register(ALCHEMIST, (p, rank) -> Active.start(p, ALCHEMIST, rank, 600 + 100 * (rank - 1) + 120 * rank(p, ALCHEMIST, P4)));
+		AbilityService.register(ALCHEMIST, (p, rank) -> Active.start(p, ALCHEMIST, rank, 600 + 100 * (rank - 1) + (int) Math.round(120 * rank(p, ALCHEMIST, P4))));
 		AbilityService.register(ENCHANTER, (p, rank) -> {
-			Active.start(p, ENCHANTER, rank, 600 + 100 * (rank - 1) + 120 * rank(p, ENCHANTER, P4));
+			Active.start(p, ENCHANTER, rank, 600 + 100 * (rank - 1) + (int) Math.round(120 * rank(p, ENCHANTER, P4)));
 			if (p.containerMenu instanceof EnchantmentMenu menu) {
 				insight(p, menu);
 			}
 		});
-		AbilityService.register(HEXER, (p, rank) -> Active.start(p, HEXER, rank, 300 + 60 * rank(p, HEXER, P4)));
+		AbilityService.register(HEXER, (p, rank) -> Active.start(p, HEXER, rank, 300 + (int) Math.round(60 * rank(p, HEXER, P4))));
 		ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> {
 			if (entity instanceof AbstractThrownPotion potion && entity.tickCount == 0 && potion.getOwner() instanceof ServerPlayer p) {
 				thrown(p, potion);
@@ -99,7 +99,7 @@ public final class Arcana {
 
 	/** The extra brewing progress a stand makes each tick: Busy Stand 5% (not for an Enchanter), Quick Brew 4% a rank, Catalyst 9 (10×). */
 	public static double brewSpeed(ServerPlayer user) {
-		double extra = Trunks.has(user, Skill.ARCANA, 5) && !Specs.has(user, ENCHANTER) ? 0.05 : 0;
+		double extra = Trunks.has(user, Skill.ARCANA, 5) && !Specs.has(user, ENCHANTER) ? 0.05 * Specs.power(user, Skill.ARCANA) : 0;
 		extra += 0.04 * rank(user, ALCHEMIST, P1);
 		if (Active.on(user, ALCHEMIST)) {
 			extra += 9;
@@ -136,8 +136,8 @@ public final class Arcana {
 		if (p == null || Specs.has(p, ENCHANTER)) {
 			return;
 		}
-		double factor = (Trunks.potentBrews(stand) ? 1.05 : 1) * (1 + 0.05 * rank(p, ALCHEMIST, C1));
-		int potent = rank(p, ALCHEMIST, C2);
+		double factor = (Trunks.potentBrews(stand) ? 1 + 0.05 * Specs.power(p, Skill.ARCANA) : 1) * (1 + 0.05 * rank(p, ALCHEMIST, C1));
+		double potent = rank(p, ALCHEMIST, C2);
 		for (int slot = 0; slot < 3; slot++) {
 			ItemStack potion = stand.getItem(slot);
 			PotionContents contents = potion.get(DataComponents.POTION_CONTENTS);
@@ -197,12 +197,12 @@ public final class Arcana {
 	/** Rich Choice: an offer is rolled as if 1 level higher a rank (the price stays). */
 	public static int richChoice(EnchantmentMenu menu, int cost) {
 		ServerPlayer p = viewer(menu);
-		return p == null || cost <= 0 ? cost : cost + rank(p, ENCHANTER, C2);
+		return p == null || cost <= 0 ? cost : cost + (int) Math.round(rank(p, ENCHANTER, C2));
 	}
 
 	/** Book Smart: combining enchanted books at an anvil costs 4% fewer levels a rank (at least 1). */
 	public static int bookCost(Player p, int cost) {
-		int smart = rank(p, ENCHANTER, P3);
+		double smart = rank(p, ENCHANTER, P3);
 		return cost > 1 && smart > 0 ? Math.max(1, (int) Math.floor(cost * (1 - 0.04 * smart))) : cost;
 	}
 
@@ -274,7 +274,7 @@ public final class Arcana {
 
 	/** A potion thrown by a player: Strong Arm (5% farther a rank), and Hex marks it. */
 	private static void thrown(ServerPlayer p, AbstractThrownPotion potion) {
-		int arm = rank(p, HEXER, P1);
+		double arm = rank(p, HEXER, P1);
 		if (arm > 0) {
 			potion.setDeltaMovement(potion.getDeltaMovement().scale(1 + 0.05 * arm));
 		}
@@ -316,7 +316,7 @@ public final class Arcana {
 				cloud.setPotionContents(contents);
 				level.addFreshEntity(cloud);
 			}
-			int mist = t.owner == null ? 0 : rank(t.owner, HEXER, C2);
+			double mist = t.owner == null ? 0 : rank(t.owner, HEXER, C2);
 			if (potion instanceof ThrownSplashPotion && mist > 0 && contents.hasEffects()) {
 				double reach = AbstractThrownPotion.SPLASH_RANGE * (1 + 0.10 * mist);
 				for (Entity e : level.getEntities(potion, potion.getBoundingBox().inflate(reach, 2.0, reach), e -> e instanceof LivingEntity)) {

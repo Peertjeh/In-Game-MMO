@@ -94,6 +94,26 @@ public final class Config {
 	/** Earlier versions of every player file kept beside it. */
 	public static int PLAYER_BACKUPS = 3;
 
+	// --- Death (design §7) ---------------------------------------------------------------------
+	/** The share of every skill's current step a death takes at death pressure 0 (for the highest skill). */
+	public static double DEATH_BASE = 0.5;
+	/** That share from death pressure 1. */
+	public static double DEATH_BASE_PRESSURED = 1.0;
+	/** From this death pressure a death also takes a whole level or Mastery rank of the highest skill (layer 3). */
+	public static int DEATH_WHOLE_LOSS_PRESSURE = 2;
+	/** The dimension factors on the loss (Overworld and others ×1). */
+	public static double DEATH_NETHER = 1.5;
+	public static double DEATH_END = 2.0;
+	/** Extreme Dimensions' Seam, only while that mod is installed. */
+	public static double DEATH_SEAM = 2.5;
+	/** Death fatigue: for this many minutes after a death, passive bonuses work at this power. */
+	public static double DEATH_FATIGUE_MINUTES = 10;
+	public static double DEATH_FATIGUE_POWER = 0.5;
+	/** Death pressure drops by 1 after this many minutes of active play without dying. */
+	public static double DEATH_PRESSURE_DECAY_MINUTES = 60;
+	/** How many deaths the Death Register keeps per player. */
+	public static int DEATH_HISTORY = 50;
+
 	private static final Map<String, Object> DEFAULTS = snapshot();
 
 	/**
@@ -179,6 +199,16 @@ public final class Config {
 		}
 		PLAYER_BACKUPS = Math.max(0, PLAYER_BACKUPS);
 		RESPEC_XP_SHARE = share(RESPEC_XP_SHARE, "RESPEC_XP_SHARE");
+		DEATH_BASE = share(DEATH_BASE, "DEATH_BASE");
+		DEATH_BASE_PRESSURED = share(DEATH_BASE_PRESSURED, "DEATH_BASE_PRESSURED");
+		DEATH_WHOLE_LOSS_PRESSURE = Math.max(1, DEATH_WHOLE_LOSS_PRESSURE);
+		DEATH_NETHER = nonNegative(DEATH_NETHER, "DEATH_NETHER");
+		DEATH_END = nonNegative(DEATH_END, "DEATH_END");
+		DEATH_SEAM = nonNegative(DEATH_SEAM, "DEATH_SEAM");
+		DEATH_FATIGUE_MINUTES = nonNegative(DEATH_FATIGUE_MINUTES, "DEATH_FATIGUE_MINUTES");
+		DEATH_FATIGUE_POWER = share(DEATH_FATIGUE_POWER, "DEATH_FATIGUE_POWER");
+		DEATH_PRESSURE_DECAY_MINUTES = nonNegative(DEATH_PRESSURE_DECAY_MINUTES, "DEATH_PRESSURE_DECAY_MINUTES");
+		DEATH_HISTORY = Math.max(0, DEATH_HISTORY);
 		RESPEC_DAYS = nonNegative(RESPEC_DAYS, "RESPEC_DAYS");
 		XP_MULTIPLIER = nonNegative(XP_MULTIPLIER, "XP_MULTIPLIER");
 		PLANTED_TREE_FACTOR = share(PLANTED_TREE_FACTOR, "PLANTED_TREE_FACTOR");

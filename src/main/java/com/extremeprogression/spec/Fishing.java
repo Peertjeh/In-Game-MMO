@@ -156,7 +156,7 @@ public final class Fishing {
 			if (kind(items) == Kind.FISH && Specs.roll(p, 0.03 * rank(p, ANGLER, P3))) {
 				items.add(items.iterator().next().copy());
 			}
-			int bookworm = rank(p, TREASURE_HUNTER, C2);
+			double bookworm = rank(p, TREASURE_HUNTER, C2);
 			if (bookworm > 0) {
 				for (ItemStack stack : items) {
 					if (stack.is(Items.ENCHANTED_BOOK)) {
@@ -192,11 +192,11 @@ public final class Fishing {
 
 	/** Big Catch: fish fill 0.4 more hunger a rank, rounded. */
 	public static void ate(ServerPlayer p, ItemStack food) {
-		int big = rank(p, ANGLER, C2);
+		double big = rank(p, ANGLER, C2);
 		String id = BuiltInRegistries.ITEM.getKey(food.getItem()).getPath();
 		if (big > 0 && (id.endsWith("cod") || id.endsWith("salmon") || id.equals("tropical_fish"))) {
 			FoodData data = p.getFoodData();
-			data.setFoodLevel(Math.min(20, data.getFoodLevel() + Math.round(0.4f * big)));
+			data.setFoodLevel(Math.min(20, data.getFoodLevel() + (int) Math.round(0.4 * big)));
 		}
 	}
 
@@ -204,7 +204,7 @@ public final class Fishing {
 
 	/** A cast: Long Cast, the bobber flies 5% farther a rank. */
 	static void cast(ServerPlayer p, FishingHook hook) {
-		int far = rank(p, HOOKMASTER, P2);
+		double far = rank(p, HOOKMASTER, P2);
 		if (far > 0) {
 			hook.setDeltaMovement(hook.getDeltaMovement().scale(1 + 0.05 * far));
 		}
@@ -257,13 +257,13 @@ public final class Fishing {
 		if (!(in instanceof LivingEntity target)) {
 			return;
 		}
-		int barbed = rank(p, HOOKMASTER, P1);
+		double barbed = rank(p, HOOKMASTER, P1);
 		if (barbed > 0) {
-			Specs.deal(target, p.damageSources().playerAttack(p), 0.5f * barbed);
+			Specs.deal(target, p.damageSources().playerAttack(p), (float) (0.5 * barbed));
 		}
-		int snag = rank(p, HOOKMASTER, P3);
+		double snag = rank(p, HOOKMASTER, P3);
 		if (snag > 0) {
-			target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 20 * snag, 0), p);
+			target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, (int) Math.round(20 * snag), 0), p);
 		}
 		if (target instanceof Mob mob && !SHAKEN.contains(mob) && Specs.roll(p, 0.20 * rank(p, HOOKMASTER, C1))) {
 			SHAKEN.add(mob);
@@ -306,7 +306,7 @@ public final class Fishing {
 		if (!(hook.getOwner() instanceof ServerPlayer p)) {
 			return;
 		}
-		int drag = rank(p, HOOKMASTER, C2);
+		double drag = rank(p, HOOKMASTER, C2);
 		if (drag > 0) {
 			Vec3 pull = p.position().subtract(target.position()).scale(0.1 * 0.2 * drag);
 			target.setDeltaMovement(target.getDeltaMovement().add(pull));
@@ -318,7 +318,7 @@ public final class Fishing {
 	/** Hook Fighter: +3% a rank on your hits up close against what is on your hook. */
 	static float outgoing(ServerPlayer p, LivingEntity target, net.minecraft.world.damagesource.DamageSource source, float amount) {
 		if (source.getDirectEntity() == p && p.fishing != null && p.fishing.getHookedIn() == target) {
-			return amount * (1 + 0.03f * rank(p, HOOKMASTER, P4));
+			return (float) (amount * (1 + 0.03 * rank(p, HOOKMASTER, P4)));
 		}
 		return amount;
 	}
@@ -328,7 +328,7 @@ public final class Fishing {
 	 * too from rank III, blue ice at V. Once per cast.
 	 */
 	private static void iceFishing(ServerPlayer p, FishingHook hook) {
-		int ice = rank(p, ANGLER, C1);
+		double ice = rank(p, ANGLER, C1);
 		if (ice == 0 || MELTED.contains(hook) || hook.isInWater()) {
 			return;
 		}
@@ -348,7 +348,7 @@ public final class Fishing {
 		}
 	}
 
-	private static boolean meltable(BlockState state, int rank) {
+	private static boolean meltable(BlockState state, double rank) {
 		return state.is(Blocks.ICE) || rank >= 3 && state.is(Blocks.PACKED_ICE) || rank >= 5 && state.is(Blocks.BLUE_ICE);
 	}
 

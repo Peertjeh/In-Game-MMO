@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public abstract class FarmlandBlockMixin {
 	@Inject(method = "turnToBaseBlock", at = @At("HEAD"), cancellable = true, require = 1)
 	private void extremeprogression$lightStep(Entity entity, BlockState state, Level level, BlockPos pos, CallbackInfo ci) {
-		if (entity != null && Trunks.has(entity, Skill.FARMING, 5)) {
+		if (entity != null && Trunks.has(entity, Skill.FARMING, 5) && (Trunks.power(entity, Skill.FARMING) >= 1 || entity.getRandom().nextDouble() < Trunks.power(entity, Skill.FARMING))) {
 			ci.cancel();
 		}
 	}

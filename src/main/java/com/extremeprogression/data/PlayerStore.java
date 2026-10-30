@@ -79,6 +79,11 @@ public final class PlayerStore {
 		return dir.resolve(id + ".json");
 	}
 
+	/** Writes this player's file now (after a death, so the loss is on disk even if the server stops at once). */
+	public static void saveNow(UUID id) {
+		save(id);
+	}
+
 	private static void save(UUID id) {
 		PlayerProgress p = LOADED.get(id);
 		if (p == null || dir == null) {

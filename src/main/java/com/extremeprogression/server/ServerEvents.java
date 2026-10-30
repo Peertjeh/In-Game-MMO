@@ -53,6 +53,7 @@ public final class ServerEvents {
 				PlayerStore.markDirty(player.getUUID());
 			}
 			Sync.send(player);
+			com.extremeprogression.death.DeathService.sendHistory(player, null);
 		});
 		// (on the server's thread: a player in a single-player world leaves from the connection's own)
 		ServerPlayConnectionEvents.DISCONNECT.register((handler, s) -> s.executeIfPossible(() -> {
@@ -65,6 +66,7 @@ public final class ServerEvents {
 			CombatXp.forget(id);
 			ExplorationXp.forget(id);
 			com.extremeprogression.spec.Specs.forget(id);
+			com.extremeprogression.death.DeathService.forget(id);
 		}));
 
 		// XP sources (design §2) and the rules against exploits (design §12)
@@ -80,6 +82,7 @@ public final class ServerEvents {
 		AbilityService.register();
 		Trunks.register();
 		com.extremeprogression.spec.Specs.register();
+		com.extremeprogression.death.DeathService.register();
 		UseItemCallback.EVENT.register((player, level, hand) -> {
 			if (!level.isClientSide()) {
 				AfkTracker.interacted(player.getUUID(), level.getServer().getTickCount());
@@ -95,6 +98,7 @@ public final class ServerEvents {
 			ExplorationXp.tick(s);
 			Trunks.tick(s);
 			com.extremeprogression.spec.Specs.tick(s);
+			com.extremeprogression.death.DeathService.tick(s);
 			XpService.tick(s);
 		});
 

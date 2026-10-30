@@ -98,7 +98,7 @@ public final class Defense {
 	}
 
 	/** A Juggernaut node's rank: they work in heavy armor only. */
-	private static int plate(LivingEntity e, com.extremeprogression.tree.NodeSlot slot) {
+	private static double plate(LivingEntity e, com.extremeprogression.tree.NodeSlot slot) {
 		return heavy(e) ? rank(e, JUGGERNAUT, slot) : 0;
 	}
 
@@ -152,7 +152,7 @@ public final class Defense {
 				}
 			}
 			if (attacker instanceof Mob && b.isBlocking()) {
-				best = Math.max(best, 0.02f * rank(b, BULWARK, P3));
+				best = (float) Math.max(best, 0.02 * rank(b, BULWARK, P3));
 			}
 		}
 		return best;
@@ -163,23 +163,23 @@ public final class Defense {
 			return;
 		}
 		// Spikes (Juggernaut): 2% a rank of a hit up close goes back to the attacker
-		int spikes = plate(v, C1);
+		double spikes = plate(v, C1);
 		if (spikes > 0 && melee(source) && original > 0) {
-			Specs.deal(attacker, v.damageSources().thorns(v), original * 0.02f * spikes);
+			Specs.deal(attacker, v.damageSources().thorns(v), (float) (original * 0.02 * spikes));
 		}
 		if (!blocked) {
 			return;
 		}
 		float stopped = Math.max(0, original - afterShield);
 		// Mirror Shield (Bulwark): 5% a rank of a blocked shot goes back to the shooter
-		int mirror = rank(v, BULWARK, C1);
+		double mirror = rank(v, BULWARK, C1);
 		if (mirror > 0 && source.is(DamageTypeTags.IS_PROJECTILE) && stopped > 0) {
-			Specs.deal(attacker, v.damageSources().thorns(v), stopped * 0.05f * mirror);
+			Specs.deal(attacker, v.damageSources().thorns(v), (float) (stopped * 0.05 * mirror));
 		}
 		// Shield Bash (Bulwark): a hit up close blocked within half a second of raising the shield stuns for 0.2 s a rank
-		int bash = rank(v, BULWARK, C2);
+		double bash = rank(v, BULWARK, C2);
 		if (bash > 0 && melee(source) && v.isUsingItem() && v.getTicksUsingItem() <= 10 + 5) {
-			Wounds.stun(attacker, 4 * bash);
+			Wounds.stun(attacker, (int) Math.round(4 * bash));
 			((ServerLevel) v.level()).sendParticles(ParticleTypes.CRIT, attacker.getX(), attacker.getEyeY(), attacker.getZ(), 8, 0.3, 0.3, 0.3, 0.1);
 		}
 	}
@@ -196,7 +196,7 @@ public final class Defense {
 
 	/** Recovery (Bulwark): a shield an axe disabled is ready again 10% sooner a rank. */
 	public static float disabledFor(LivingEntity blocker, float seconds) {
-		return seconds * (1 - 0.10f * rank(blocker, BULWARK, P4));
+		return (float) (seconds * (1 - 0.10 * rank(blocker, BULWARK, P4)));
 	}
 
 	/** Sturdy Shield (Bulwark): a 10% chance a rank that a block costs the shield no durability. */
@@ -233,7 +233,7 @@ public final class Defense {
 
 	/** Steady Heart (Resilience): healing is 3% stronger a rank. */
 	static float heal(LivingEntity target, float amount) {
-		return amount * (1 + 0.03f * rank(target, RESILIENCE, P3));
+		return (float) (amount * (1 + 0.03 * rank(target, RESILIENCE, P3)));
 	}
 
 	// --- Every tick ------------------------------------------------------------------------------
@@ -265,7 +265,7 @@ public final class Defense {
 			p.heal(now);
 		}
 		// Quick Recovery (Resilience): natural regeneration 5% faster a rank
-		int quick = rank(p, RESILIENCE, P2);
+		double quick = rank(p, RESILIENCE, P2);
 		if (quick > 0 && p.getHealth() < p.getMaxHealth() && p.getFoodData().getFoodLevel() >= 18) {
 			double carry = RECOVERY.getOrDefault(p, 0.0) + 0.05 * quick;
 			if (carry >= 1) {
@@ -276,7 +276,7 @@ public final class Defense {
 			RECOVERY.put(p, carry);
 		}
 		// Cool Blood (Resilience): you burn 10% shorter a rank (the fire burns out 1 / (1 − 0.1 × rank) times as fast)
-		int cool = rank(p, RESILIENCE, C2);
+		double cool = rank(p, RESILIENCE, C2);
 		if (cool > 0 && p.getRemainingFireTicks() > 0) {
 			double carry = COOLING.getOrDefault(p, 0.0) + 0.10 * cool / (1 - 0.10 * cool);
 			int whole = (int) carry;

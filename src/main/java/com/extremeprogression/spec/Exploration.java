@@ -136,7 +136,7 @@ public final class Exploration {
 		if (Specs.active(player, SURVIVALIST)) {
 			return 0;
 		}
-		float out = amount * (1 - 0.03f * rank(player, SURVIVALIST, P1));
+		float out = (float) (amount * (1 - 0.03 * rank(player, SURVIVALIST, P1)));
 		if (player.isSprinting()) {
 			out *= 1 - 0.20f * rank(player, WANDERER, C2);
 		}
@@ -145,11 +145,11 @@ public final class Exploration {
 
 	/** Hearty Eater (Survivalist): food gives 5% more saturation a rank. */
 	public static void ate(ServerPlayer p, ItemStack food) {
-		int r = rank(p, SURVIVALIST, P3);
+		double r = rank(p, SURVIVALIST, P3);
 		FoodProperties props = food.get(DataComponents.FOOD);
 		if (r > 0 && props != null) {
 			FoodData data = p.getFoodData();
-			data.setSaturation(Math.min(data.getFoodLevel(), data.getSaturationLevel() + props.saturation() * 0.05f * r));
+			data.setSaturation((float) Math.min(data.getFoodLevel(), data.getSaturationLevel() + props.saturation() * 0.05 * r));
 		}
 	}
 
@@ -169,7 +169,7 @@ public final class Exploration {
 	 */
 	public static Vec3 climb(LivingEntity entity, Vec3 movement) {
 		if (movement.y == 0.2 && entity instanceof Player p && entity.onClimbable()) {
-			int r = rank(p, ACROBAT, C2);
+			double r = rank(p, ACROBAT, C2);
 			if (r > 0) {
 				return new Vec3(movement.x, 0.2 * (1 + 0.10 * r), movement.z);
 			}

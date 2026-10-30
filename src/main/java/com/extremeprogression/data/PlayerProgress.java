@@ -11,7 +11,7 @@ import com.extremeprogression.skill.Skill;
  */
 public class PlayerProgress {
 	/** The schema this version writes. */
-	public static final int SCHEMA = 3;
+	public static final int SCHEMA = 4;
 
 	public int schema = SCHEMA;
 	/** The player's name when last seen (for leaderboards and admins while they are offline). */
@@ -23,6 +23,8 @@ public class PlayerProgress {
 	public Map<String, SkillData> skills = new LinkedHashMap<>();
 	/** What the player discovered (schema 2). */
 	public ExplorationData exploration = new ExplorationData();
+	/** Death pressure, fatigue and the deaths so far (schema 4). */
+	public DeathData death = new DeathData();
 
 	public SkillData get(Skill skill) {
 		return skills.computeIfAbsent(skill.id, k -> new SkillData());
@@ -72,6 +74,7 @@ public class PlayerProgress {
 			d.repair();
 		}
 		exploration = (exploration == null ? new ExplorationData() : exploration).repaired();
+		death = (death == null ? new DeathData() : death).repaired();
 		return this;
 	}
 

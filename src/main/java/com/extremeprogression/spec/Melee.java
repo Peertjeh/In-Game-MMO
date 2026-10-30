@@ -78,7 +78,7 @@ public final class Melee {
 
 	/** Bleeding from Blade, in seconds: its base, plus Deep Cut. */
 	private static int bleedSeconds(ServerPlayer p, int base) {
-		return base + rank(p, BLADE, C1);
+		return (int) Math.round(base + rank(p, BLADE, C1));
 	}
 
 	// --- Before a hit ----------------------------------------------------------------------------
@@ -229,7 +229,7 @@ public final class Melee {
 				target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 40, 1), p);
 			}
 			// Earthquake (Crusher): a mace smash also hits the enemies around it, for 6% a rank of its damage
-			int quake = rank(p, CRUSHER, C1);
+			double quake = rank(p, CRUSHER, C1);
 			if (quake > 0 && source.is(DamageTypeTags.IS_MACE_SMASH)) {
 				for (LivingEntity e : enemiesAround(p, target, 3)) {
 					Specs.deal(e, p.damageSources().playerAttack(p), (float) (dealt * 0.06 * quake));
@@ -281,7 +281,7 @@ public final class Melee {
 	/** Cleave (Crusher): your axe disables a shield 1 second longer a rank (vanilla: 5 seconds). */
 	public static float disableSeconds(LivingEntity attacker, float seconds) {
 		if (seconds > 0 && attacker.getMainHandItem().is(net.minecraft.tags.ItemTags.AXES)) {
-			return seconds + rank(attacker, CRUSHER, C2);
+			return (float) (seconds + rank(attacker, CRUSHER, C2));
 		}
 		return seconds;
 	}

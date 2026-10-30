@@ -53,18 +53,18 @@ public final class Smithing {
 
 	static void register() {
 		// Flash Forge: 30 s (+5 s a rank, +5 s a rank of Long Forge)
-		AbilityService.register(FORGEMASTER, (p, rank) -> Active.start(p, FORGEMASTER, rank, 600 + 100 * (rank - 1) + 100 * rank(p, FORGEMASTER, P4)));
+		AbilityService.register(FORGEMASTER, (p, rank) -> Active.start(p, FORGEMASTER, rank, 600 + 100 * (rank - 1) + (int) Math.round(100 * rank(p, FORGEMASTER, P4))));
 		// Masterwork: the next repair within 30 seconds
 		AbilityService.register(ARMORER, (p, rank) -> Active.start(p, ARMORER, rank, 600));
 		// Reforge: the next item within 60 seconds (+15 s a rank of Patient Craft)
-		AbilityService.register(TINKERER, (p, rank) -> Active.start(p, TINKERER, rank, 1200 + 300 * rank(p, TINKERER, P4)));
+		AbilityService.register(TINKERER, (p, rank) -> Active.start(p, TINKERER, rank, 1200 + (int) Math.round(300 * rank(p, TINKERER, P4))));
 	}
 
 	// --- Furnaces --------------------------------------------------------------------------------
 
 	/** The extra progress a furnace makes each tick: Fire Master 5%, Hot Coals 4% a rank, Flash Forge 3 more (4× in all). */
 	public static double furnaceSpeed(ServerPlayer user) {
-		double extra = Trunks.has(user, Skill.SMITHING, 5) ? 0.05 : 0;
+		double extra = Trunks.has(user, Skill.SMITHING, 5) ? 0.05 * Specs.power(user, Skill.SMITHING) : 0;
 		extra += 0.04 * rank(user, FORGEMASTER, P1);
 		if (Active.on(user, FORGEMASTER)) {
 			extra += 3;
@@ -74,7 +74,7 @@ public final class Smithing {
 
 	/** The chance that fuel is not used up: Fuel Saver 10%, Coal Miser 4% a rank. */
 	public static double fuelSaved(ServerPlayer user) {
-		return (Trunks.has(user, Skill.SMITHING, 20) ? 0.10 : 0) + 0.04 * rank(user, FORGEMASTER, P3);
+		return (Trunks.has(user, Skill.SMITHING, 20) ? 0.10 * Specs.power(user, Skill.SMITHING) : 0) + 0.04 * rank(user, FORGEMASTER, P3);
 	}
 
 	/** Slow Burn: fuel burns 10% longer a rank. */
@@ -97,13 +97,13 @@ public final class Smithing {
 
 	/** Thrifty Hands: a repair costs 4% fewer levels a rank (at least 1). */
 	public static int repairCost(Player p, int cost) {
-		int thrift = rank(p, ARMORER, P2);
+		double thrift = rank(p, ARMORER, P2);
 		return cost > 1 && thrift > 0 ? Math.max(1, (int) Math.floor(cost * (1 - 0.04 * thrift))) : cost;
 	}
 
 	/** Preservation: the "Too Expensive" limit, 40 in vanilla, 2 levels higher a rank. */
 	public static int tooExpensive(Player p) {
-		return 40 + 2 * rank(p, ARMORER, C1);
+		return 40 + (int) Math.round(2 * rank(p, ARMORER, C1));
 	}
 
 	/**
@@ -161,7 +161,7 @@ public final class Smithing {
 
 	/** Polish: an upgraded item is repaired by 4% of its durability a rank. */
 	public static void polished(ServerPlayer p, ItemStack result) {
-		int polish = rank(p, TINKERER, P2);
+		double polish = rank(p, TINKERER, P2);
 		if (polish > 0 && result.isDamageableItem() && result.getDamageValue() > 0) {
 			result.setDamageValue(Math.max(0, result.getDamageValue() - (int) Math.round(result.getMaxDamage() * 0.04 * polish)));
 		}
@@ -220,7 +220,7 @@ public final class Smithing {
 
 	/** Every tick: Trim Power's bonuses, from the trimmed armor worn. */
 	static void tick(ServerPlayer p) {
-		int power = rank(p, TINKERER, C2);
+		double power = rank(p, TINKERER, C2);
 		Map<String, Integer> pieces = new HashMap<>();
 		if (power > 0) {
 			for (EquipmentSlot slot : new EquipmentSlot[] {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET}) {

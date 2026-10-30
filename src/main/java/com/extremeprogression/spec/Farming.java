@@ -82,7 +82,7 @@ public final class Farming {
 
 	static void register() {
 		// Harvest Festival: 10 s (+2 s a rank, +1 s a rank of Festival Spirit)
-		AbilityService.register(GROWER, (p, rank) -> Active.start(p, GROWER, rank, 200 + 40 * (rank - 1) + 20 * rank(p, GROWER, P4)));
+		AbilityService.register(GROWER, (p, rank) -> Active.start(p, GROWER, rank, 200 + 40 * (rank - 1) + (int) Math.round(20 * rank(p, GROWER, P4))));
 		// Herding Call: 10 s (+2 s a rank); its value is the twins still to come
 		AbilityService.register(HERDER, (p, rank) -> Active.start(p, HERDER, rank, 200 + 40 * (rank - 1)).value = 1);
 		// Rally the Pack: 15 s (+3 s a rank)
@@ -133,7 +133,7 @@ public final class Farming {
 	}
 
 	/** Ripening Aura: once a second, crops within 4 blocks get 3% more growth a rank (vanilla's random ticks, × 0.03 a rank). */
-	private static void ripen(ServerPlayer p, int rank) {
+	private static void ripen(ServerPlayer p, double rank) {
 		ServerLevel level = (ServerLevel) p.level();
 		// a block gets about 3 / 4096 random ticks a tick, so 20 × 3 / 4096 a second; 3% more a rank of that
 		double chance = 20 * 3 / 4096.0 * 0.03 * rank;
@@ -172,11 +172,11 @@ public final class Farming {
 		if (child == null || noBreedingBonus(p)) {
 			return;
 		}
-		int quick = rank(p, HERDER, P2);
+		double quick = rank(p, HERDER, P2);
 		if (quick > 0 && child.getAge() < 0) {
 			child.setAge((int) (child.getAge() * (1 - 0.04 * quick)));
 		}
-		int calm = rank(p, HERDER, P4);
+		double calm = rank(p, HERDER, P4);
 		if (calm > 0) {
 			CALM.add(new Calm(parent, 1 - 0.05 * calm));
 			CALM.add(new Calm(partner, 1 - 0.05 * calm));
@@ -268,7 +268,7 @@ public final class Farming {
 
 	/** How many companions: 1, or with Pack Leader 2 from rank I and 3 from rank III. */
 	private static int companions(ServerPlayer p) {
-		int leader = rank(p, BEASTMASTER, C1);
+		double leader = rank(p, BEASTMASTER, C1);
 		return leader >= 3 ? 3 : leader >= 1 ? 2 : 1;
 	}
 
@@ -288,7 +288,7 @@ public final class Farming {
 		}
 		if (second) {
 			beasts(p, level);
-			int aura = rank(p, GROWER, C1);
+			double aura = rank(p, GROWER, C1);
 			if (aura > 0) {
 				ripen(p, aura);
 			}
@@ -310,7 +310,7 @@ public final class Farming {
 		mine.sort(Comparator.comparingDouble(t -> t.distanceToSqr(p)));
 		Set<UUID> chosen = new HashSet<>();
 		boolean wolfNear = false;
-		int mend = rank(p, BEASTMASTER, P3);
+		double mend = rank(p, BEASTMASTER, P3);
 		for (TamableAnimal t : mine) {
 			boolean within16 = t.distanceToSqr(p) <= 16 * 16;
 			if (within16 && t instanceof Wolf) {
@@ -319,7 +319,7 @@ public final class Farming {
 			if (within16 && chosen.size() < companions(p)) {
 				chosen.add(t.getUUID());
 				if (mend > 0 && t.getHealth() < t.getMaxHealth()) {
-					t.heal(0.1f * mend);
+					t.heal((float) (0.1 * mend));
 				}
 			}
 		}
@@ -348,7 +348,7 @@ public final class Farming {
 	/** Rider: the horse or camel you ride is 3% faster and jumps 2% higher a rank. */
 	private static void rider(ServerPlayer p) {
 		// (Rider needs Exploration 30: design §2, hard requirement)
-		int rider = com.extremeprogression.data.PlayerStore.get(p.getUUID()).get(com.extremeprogression.skill.Skill.EXPLORATION).level >= 30
+		double rider = com.extremeprogression.data.PlayerStore.get(p.getUUID()).get(com.extremeprogression.skill.Skill.EXPLORATION).level >= 30
 				? rank(p, BEASTMASTER, C2) : 0;
 		AbstractHorse now = rider > 0 && p.getVehicle() instanceof AbstractHorse h ? h : null;
 		AbstractHorse before = RIDDEN.get(p.getUUID());

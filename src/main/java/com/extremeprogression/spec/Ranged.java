@@ -92,7 +92,7 @@ public final class Ranged {
 		long tick = p.level().getServer().getTickCount();
 		if (projectile instanceof ThrownTrident trident) {
 			// Strong Throw: +4% speed a rank
-			int strong = rank(p, HARPOONER, P2);
+			double strong = rank(p, HARPOONER, P2);
 			if (strong > 0) {
 				trident.setDeltaMovement(trident.getDeltaMovement().scale(1 + 0.04 * strong));
 			}
@@ -162,7 +162,7 @@ public final class Ranged {
 
 	/** Quick Reload (Skirmisher): a crossbow loads 5% faster a rank. */
 	public static int chargeDuration(LivingEntity user, int ticks) {
-		int r = user == null ? 0 : rank(user, SKIRMISHER, C1);
+		double r = user == null ? 0 : rank(user, SKIRMISHER, C1);
 		return r == 0 ? ticks : Math.max(1, (int) Math.round(ticks * (1 - 0.05 * r)));
 	}
 
@@ -171,12 +171,12 @@ public final class Ranged {
 	 * rank V none). The factor on the slowed movement.
 	 */
 	public static float runningShot(Player player) {
-		int r = rank(player, SKIRMISHER, C2);
+		double r = rank(player, SKIRMISHER, C2);
 		ItemStack use = player.getUseItem();
 		if (r == 0 || !(use.is(Items.BOW) || use.is(Items.CROSSBOW))) {
 			return 1f;
 		}
-		return (0.2f + 0.16f * r) / 0.2f;
+		return (float) ((0.2f + 0.16f * r) / 0.2f);
 	}
 
 	/** Return (Harpooner): a 20% chance a rank that a trident without Loyalty comes back as with Loyalty I. */
@@ -264,9 +264,9 @@ public final class Ranged {
 		long tick = p.level().getServer().getTickCount();
 		if (shotFromBow(direct)) {
 			// Hunter's Mark (Sniper): a full shot's target glows 1 second a rank
-			int mark = rank(p, SNIPER, P3);
+			double mark = rank(p, SNIPER, P3);
 			if (mark > 0 && CombatXp.fullShot(direct)) {
-				target.addEffect(new MobEffectInstance(MobEffects.GLOWING, 20 * mark, 0), p);
+				target.addEffect(new MobEffectInstance(MobEffects.GLOWING, (int) Math.round(20 * mark), 0), p);
 			}
 			// Hit and Run (Skirmisher): +3% speed a rank for 3 seconds
 			if (rank(p, SKIRMISHER, P2) > 0) {
@@ -274,9 +274,9 @@ public final class Ranged {
 			}
 		} else if (direct instanceof ThrownTrident) {
 			// Barbed (Harpooner): Slowness I for 0.5 second a rank
-			int barbed = rank(p, HARPOONER, P3);
+			double barbed = rank(p, HARPOONER, P3);
 			if (barbed > 0) {
-				target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 10 * barbed, 0), p);
+				target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, (int) Math.round(10 * barbed), 0), p);
 			}
 			Integer harpoon = HARPOON.remove(direct);
 			if (harpoon != null) {

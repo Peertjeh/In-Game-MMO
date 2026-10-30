@@ -30,6 +30,10 @@ public final class Migrations {
 			// 2 → 3: specializations, points, cooldowns and the respec time per skill; none were chosen before
 			json.addProperty("schema", 3);
 		}
+		if (from < 4) {
+			// 3 → 4: deaths were added (pressure, fatigue, history); a file without them has died under none of these rules
+			json.addProperty("schema", 4);
+		}
 		return json;
 	}
 }

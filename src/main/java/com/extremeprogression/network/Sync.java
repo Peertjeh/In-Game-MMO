@@ -9,6 +9,8 @@ import com.extremeprogression.config.Config;
 import com.extremeprogression.data.PlayerProgress;
 import com.extremeprogression.data.PlayerStore;
 import com.extremeprogression.data.SkillData;
+import com.extremeprogression.death.DeathRules;
+import com.extremeprogression.death.DeathService;
 import com.extremeprogression.progression.Budget;
 import com.extremeprogression.progression.Progression;
 import com.extremeprogression.skill.Skill;
@@ -27,6 +29,7 @@ public final class Sync {
 		PayloadTypeRegistry.clientboundPlay().register(ActivePayload.TYPE, ActivePayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(OreSensePayload.TYPE, OreSensePayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(InsightPayload.TYPE, InsightPayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(DeathPayload.TYPE, DeathPayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(TreePayload.TYPE, TreePayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(AbilityPayload.TYPE, AbilityPayload.CODEC);
 	}
@@ -42,7 +45,7 @@ public final class Sync {
 	}
 
 	/** The progression as the client sees it, with cooldowns and the respec wait counted from now. */
-	public static ProgressPayload payload(PlayerProgress p, long gameTime, long now) {
+	public static ProgressPayload payload(PlayerProgress p, long gameTime, long now, double multiplier) {
 		List<ProgressPayload.Entry> skills = new ArrayList<>();
 		for (Skill s : Skill.values()) {
 			SkillData d = p.get(s);
@@ -57,15 +60,18 @@ public final class Sync {
 					List.copyOf(d.bought), List.copyOf(d.suspended), Math.max(0, d.respecReadyAt - now), cooldowns));
 		}
 		int total = p.totalLevel();
+		int pressure = p.death.pressure;
+		ProgressPayload.Death death = new ProgressPayload.Death(p.death.deaths, pressure, DeathService.pressureDropsIn(p), DeathService.fatigueLeft(p, gameTime),
+				DeathRules.base(pressure) * multiplier, multiplier, DeathRules.whole(pressure));
 		return new ProgressPayload(total, Config.TOTAL_LEVEL_CAP, Budget.factor(total), Config.MAX_LEVEL, Config.MASTERY_RANKS,
-				Config.MASTERY_XP_PER_RANK, skills);
+				Config.MASTERY_XP_PER_RANK, skills, death);
 	}
 
 	/** Sends the player their progression, if their client can receive it (a test player's cannot). */
 	public static void send(ServerPlayer player) {
 		if (ServerPlayNetworking.canSend(player, ProgressPayload.TYPE)) {
 			long gameTime = player.level().getServer().overworld().getGameTime();
-			ServerPlayNetworking.send(player, payload(PlayerStore.get(player.getUUID()), gameTime, System.currentTimeMillis()));
+			ServerPlayNetworking.send(player, payload(PlayerStore.get(player.getUUID()), gameTime, System.currentTimeMillis(), DeathService.multiplier(player)));
 		}
 	}
 }

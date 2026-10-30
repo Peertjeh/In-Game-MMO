@@ -77,7 +77,7 @@ public final class Mining {
 		AbilityService.register(PROSPECTOR, Mining::oreSense);
 		// Earthmover: 8 s (+1 s a rank); Tunnel Bore: 8 s (+1 s a rank, +1 s a rank of Bore Master)
 		AbilityService.register(EXCAVATOR, (p, rank) -> Active.start(p, EXCAVATOR, rank, 160 + 20 * (rank - 1)));
-		AbilityService.register(TUNNELER, (p, rank) -> Active.start(p, TUNNELER, rank, 160 + 20 * (rank - 1) + 20 * rank(p, TUNNELER, P4)));
+		AbilityService.register(TUNNELER, (p, rank) -> Active.start(p, TUNNELER, rank, 160 + 20 * (rank - 1) + (int) Math.round(20 * rank(p, TUNNELER, P4))));
 		PlayerBlockBreakEvents.BEFORE.register((level, player, pos, state, be) -> {
 			if (!level.isClientSide() && !breakingAround && player instanceof ServerPlayer p && (Active.on(p, EXCAVATOR) || Active.on(p, TUNNELER))) {
 				HitResult hit = p.pick(p.blockInteractionRange(), 1.0f, false);
@@ -125,7 +125,7 @@ public final class Mining {
 	 * ancient debris, 4 blocks further a rank. Broad Spectrum: +2 s a rank. Lingering Sense: +1 s a rank.
 	 */
 	private static void oreSense(ServerPlayer p, int rank) {
-		int ticks = 20 * (10 + rank(p, PROSPECTOR, P4) + 2 * rank(p, PROSPECTOR, C2));
+		int ticks = (int) Math.round(20 * (10 + rank(p, PROSPECTOR, P4) + 2 * rank(p, PROSPECTOR, C2)));
 		Active.start(p, PROSPECTOR, rank, ticks);
 		List<OreSensePayload.Ore> ores = sense(p, rank);
 		if (ServerPlayNetworking.canSend(p, OreSensePayload.TYPE)) {
@@ -135,8 +135,8 @@ public final class Mining {
 
 	/** The ores Ore Sense shows this player at a rank (at most 512). */
 	public static List<OreSensePayload.Ore> sense(ServerPlayer p, int rank) {
-		int gem = rank(p, PROSPECTOR, C1);
-		int radius = 12 + 2 * (rank - 1) + 4 * gem;
+		double gem = rank(p, PROSPECTOR, C1);
+		int radius = (int) Math.round(12 + 2 * (rank - 1) + 4 * gem);
 		List<OreSensePayload.Ore> ores = new ArrayList<>();
 		ServerLevel level = (ServerLevel) p.level();
 		BlockPos center = p.blockPosition();
@@ -308,8 +308,8 @@ public final class Mining {
 
 	/** Finds and Treasure Digger: a block dug with a shovel (never a placed one) may hold a find. */
 	public static void dug(ServerPlayer p, ServerLevel level, BlockPos pos) {
-		int finds = rank(p, EXCAVATOR, P2);
-		int treasure = rank(p, EXCAVATOR, C1);
+		double finds = rank(p, EXCAVATOR, P2);
+		double treasure = rank(p, EXCAVATOR, C1);
 		if (!Specs.roll(p, 0.01 * (finds + treasure))) {
 			return;
 		}
@@ -338,7 +338,7 @@ public final class Mining {
 
 	static void tick(ServerPlayer p) {
 		// Cave Runner (Tunneler): +2% speed a rank where the sky is out of sight
-		int runner = rank(p, TUNNELER, P2);
+		double runner = rank(p, TUNNELER, P2);
 		boolean under = runner > 0 && !p.level().canSeeSky(p.blockPosition().above());
 		Trunks.modifier(p, Attributes.MOVEMENT_SPEED, CAVE_RUNNER, under ? 0.02 * runner : 0, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
 	}

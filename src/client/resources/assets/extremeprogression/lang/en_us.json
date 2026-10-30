@@ -43,6 +43,7 @@
 	"message.extremeprogression.level_up": "%s reached level %s",
 	"message.extremeprogression.mastery_up": "%s: Mastery rank %s",
 	"message.extremeprogression.fishing.not_open_water": "No Fishing XP here: fish in open water",
+	"message.extremeprogression.death.lost": "Death cost %s of your skills progress. The Death Register in your Character Sheet shows what was lost.",
 	"message.extremeprogression.fishing.overfished": "This spot is overfished: fish somewhere else for full XP",
 
 	"gui.extremeprogression.sheet.title": "Character Sheet",

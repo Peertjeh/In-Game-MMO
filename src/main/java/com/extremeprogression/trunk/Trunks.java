@@ -10,6 +10,7 @@ import com.extremeprogression.ExtremeProgression;
 import com.extremeprogression.data.PlayerStore;
 import com.extremeprogression.mixin.FoodDataAccess;
 import com.extremeprogression.skill.Skill;
+import com.extremeprogression.spec.Specs;
 import com.extremeprogression.xp.CombatXp;
 
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
@@ -74,17 +75,17 @@ public final class Trunks {
 		});
 		// Forest Foot (Foraging 15): berry bushes no longer prick
 		ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) ->
-				!(source.is(DamageTypes.SWEET_BERRY_BUSH) && has(entity, Skill.FORAGING, 15)));
+				!(source.is(DamageTypes.SWEET_BERRY_BUSH) && has(entity, Skill.FORAGING, 15) && full((ServerPlayer) entity, Skill.FORAGING)));
 		// Wind Reader (Ranged 20): arrows fly 5% faster
 		ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> {
 			if (entity instanceof AbstractArrow arrow && !(arrow instanceof ThrownTrident) && arrow.tickCount == 0 && has(arrow.getOwner(), Skill.RANGED, 20)) {
-				arrow.setDeltaMovement(arrow.getDeltaMovement().scale(1.05));
+				arrow.setDeltaMovement(arrow.getDeltaMovement().scale(1 + 0.05 * power(arrow.getOwner(), Skill.RANGED)));
 			}
 		});
 		// Arrow Recovery (Ranged 10): a 10% chance to recover your arrow from a slain mob
 		ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
 			if (source.getDirectEntity() instanceof AbstractArrow arrow && !(arrow instanceof ThrownTrident) && !(entity instanceof Player)
-					&& arrow.pickup == AbstractArrow.Pickup.ALLOWED && has(arrow.getOwner(), Skill.RANGED, 10) && entity.getRandom().nextDouble() < 0.10) {
+					&& arrow.pickup == AbstractArrow.Pickup.ALLOWED && has(arrow.getOwner(), Skill.RANGED, 10) && entity.getRandom().nextDouble() < 0.10 * power(arrow.getOwner(), Skill.RANGED)) {
 				ItemStack back = arrow.getPickupItemStackOrigin().copy();
 				back.setCount(1);
 				Block.popResource(entity.level(), entity.blockPosition(), back);
@@ -103,6 +104,17 @@ public final class Trunks {
 			return false;
 		}
 		return skill != Skill.EXPLORATION || !heavyArmor(p);
+	}
+
+	/** How strong a skill's trunk bonuses are now: 1, or less during death fatigue (design §7). */
+	public static double power(Entity entity, Skill skill) {
+		return Specs.power(entity, skill);
+	}
+
+	/** An all-or-nothing bonus: always at full power, a chance equal to the power during death fatigue. */
+	private static boolean full(ServerPlayer p, Skill skill) {
+		double power = power(p, skill);
+		return power >= 1 || p.getRandom().nextDouble() < power;
 	}
 
 	private static final Set<String> HEAVY = Set.of("iron_", "diamond_", "netherite_");
@@ -142,21 +154,21 @@ public final class Trunks {
 	public static void tick(MinecraftServer server) {
 		for (ServerPlayer p : server.getPlayerList().getPlayers()) {
 			// Combat Rhythm (Melee 5): the attack bar charges 3% faster
-			modifier(p, Attributes.ATTACK_SPEED, COMBAT_RHYTHM, has(p, Skill.MELEE, 5) ? 0.03 : 0, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
+			modifier(p, Attributes.ATTACK_SPEED, COMBAT_RHYTHM, has(p, Skill.MELEE, 5) ? 0.03 * power(p, Skill.MELEE) : 0, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
 			// Miner's Rhythm (Mining 5) and Woodcutter's Rhythm (Foraging 5): +3% with the skill's tools
 			ItemStack held = p.getMainHandItem();
 			double speed = 0;
 			if ((held.is(ItemTags.PICKAXES) || held.is(ItemTags.SHOVELS)) && has(p, Skill.MINING, 5)) {
-				speed += 0.03;
+				speed += 0.03 * power(p, Skill.MINING);
 			}
 			if (held.is(ItemTags.AXES) && has(p, Skill.FORAGING, 5)) {
-				speed += 0.03;
+				speed += 0.03 * power(p, Skill.FORAGING);
 			}
 			modifier(p, Attributes.BLOCK_BREAK_SPEED, BREAK_SPEED, speed, AttributeModifier.Operation.ADD_MULTIPLIED_BASE);
 			// Steadfast (Defense 20): 5% knockback resistance
-			modifier(p, Attributes.KNOCKBACK_RESISTANCE, STEADFAST, has(p, Skill.DEFENSE, 20) ? 0.05 : 0, AttributeModifier.Operation.ADD_VALUE);
+			modifier(p, Attributes.KNOCKBACK_RESISTANCE, STEADFAST, has(p, Skill.DEFENSE, 20) ? 0.05 * power(p, Skill.DEFENSE) : 0, AttributeModifier.Operation.ADD_VALUE);
 			// Swimmer (Exploration 15): +5% swimming speed
-			modifier(p, Attributes.WATER_MOVEMENT_EFFICIENCY, SWIMMER, has(p, Skill.EXPLORATION, 15) ? 0.05 : 0, AttributeModifier.Operation.ADD_VALUE);
+			modifier(p, Attributes.WATER_MOVEMENT_EFFICIENCY, SWIMMER, has(p, Skill.EXPLORATION, 15) ? 0.05 * power(p, Skill.EXPLORATION) : 0, AttributeModifier.Operation.ADD_VALUE);
 		}
 	}
 
@@ -190,32 +202,33 @@ public final class Trunks {
 			if (direct == p && CombatXp.fullCharge(p)) {
 				// Full Swing (Melee 10): +5%; Finishing Blow (Melee 20): critical hits +10%
 				if (has(p, Skill.MELEE, 10)) {
-					out *= 1.05f;
+					out *= 1 + 0.05 * power(p, Skill.MELEE);
 				}
 				if (has(p, Skill.MELEE, 20) && critical(p)) {
-					out *= 1.10f;
+					out *= 1 + 0.10 * power(p, Skill.MELEE);
 				}
 			} else if (direct != p && CombatXp.fullShot(direct) && has(p, Skill.RANGED, 15)) {
 				// Keen Eye (Ranged 15): fully drawn shots +5%
-				out *= 1.05f;
+				out *= 1 + 0.05 * power(p, Skill.RANGED);
 			}
 		}
 		if (target instanceof ServerPlayer v) {
 			// Hardened (Defense 10): 3% less damage from hostile mobs
 			if (attacker instanceof Enemy && has(v, Skill.DEFENSE, 10)) {
-				out *= 0.97f;
+				out *= 1 - 0.03 * power(v, Skill.DEFENSE);
 			}
 			// Cave Lore (Mining 15): 10% less from dripstone, magma blocks and falling blocks
 			if ((source.is(DamageTypes.HOT_FLOOR) || source.is(DamageTypes.STALAGMITE) || source.is(DamageTypes.FALLING_STALACTITE)
 					|| source.is(DamageTypes.FALLING_BLOCK)) && has(v, Skill.MINING, 15)) {
-				out *= 0.90f;
+				out *= 1 - 0.10 * power(v, Skill.MINING);
 			}
 			if (source.is(DamageTypes.FALL)) {
 				// Light-Footed (Exploration 5): 5% less; Roll (Exploration 20): 10% chance of half (sneaking 20%)
 				if (has(v, Skill.EXPLORATION, 5)) {
-					out *= 0.95f;
+					out *= 1 - 0.05 * power(v, Skill.EXPLORATION);
 				}
-				if (has(v, Skill.EXPLORATION, 20) && v.getRandom().nextDouble() < (0.10 + com.extremeprogression.spec.Exploration.tumble(v)) * (v.isShiftKeyDown() ? 2 : 1)) {
+				if (has(v, Skill.EXPLORATION, 20) && v.getRandom().nextDouble()
+						< (0.10 * power(v, Skill.EXPLORATION) + com.extremeprogression.spec.Exploration.tumble(v)) * (v.isShiftKeyDown() ? 2 : 1)) {
 					out *= 0.5f;
 				}
 			}
@@ -231,21 +244,21 @@ public final class Trunks {
 	/** Sure Footing (Melee 15): 10% less knockback while attacking (within 2 seconds of your own attack). */
 	public static double knockback(LivingEntity target, double strength) {
 		if (target instanceof ServerPlayer p && has(p, Skill.MELEE, 15) && CombatXp.attackedWithin(p, 40)) {
-			return strength * 0.9;
+			return strength * (1 - 0.10 * power(p, Skill.MELEE));
 		}
 		return strength;
 	}
 
-	/** Shield Reflex (Defense 5): the shield is ready one tick sooner than vanilla's delay. */
+	/** Shield Reflex (Defense 5): the shield is ready one tick sooner than vanilla's delay (not during death fatigue: a tick does not halve). */
 	public static boolean shieldReady(LivingEntity entity, int ticksUsing, int delay) {
-		return delay > 0 && ticksUsing >= delay - 1 && has(entity, Skill.DEFENSE, 5);
+		return delay > 0 && ticksUsing >= delay - 1 && has(entity, Skill.DEFENSE, 5) && power(entity, Skill.DEFENSE) >= 1;
 	}
 
 	/** Catch Breath (Defense 15): after a hit in a fight, natural regeneration comes 2 seconds sooner. */
 	public static void inAFight(ServerPlayer p) {
 		if (has(p, Skill.DEFENSE, 15)) {
 			FoodDataAccess food = (FoodDataAccess) p.getFoodData();
-			food.extremeprogression$setTickTimer(Math.min(79, food.extremeprogression$getTickTimer() + 40));
+			food.extremeprogression$setTickTimer(Math.min(79, food.extremeprogression$getTickTimer() + (int) Math.round(40 * power(p, Skill.DEFENSE))));
 		}
 	}
 
@@ -256,10 +269,10 @@ public final class Trunks {
 		if (player == null || amount <= 0) {
 			return amount;
 		}
-		if ((stack.is(ItemTags.PICKAXES) || stack.is(ItemTags.SHOVELS)) && has(player, Skill.MINING, 10) && player.getRandom().nextDouble() < 0.05) {
+		if ((stack.is(ItemTags.PICKAXES) || stack.is(ItemTags.SHOVELS)) && has(player, Skill.MINING, 10) && player.getRandom().nextDouble() < 0.05 * power(player, Skill.MINING)) {
 			return 0;
 		}
-		if (stack.is(Items.FISHING_ROD) && has(player, Skill.FISHING, 10) && player.getRandom().nextDouble() < 0.10) {
+		if (stack.is(Items.FISHING_ROD) && has(player, Skill.FISHING, 10) && player.getRandom().nextDouble() < 0.10 * power(player, Skill.FISHING)) {
 			return 0;
 		}
 		return amount;
@@ -271,17 +284,17 @@ public final class Trunks {
 			return timeLeft;
 		}
 		int drawn = bow.getUseDuration(user) - timeLeft;
-		return timeLeft - (int) Math.round(drawn * (0.05 + com.extremeprogression.spec.Ranged.quickDraw(user)));
+		return timeLeft - (int) Math.round(drawn * (0.05 * power(user, Skill.RANGED) + com.extremeprogression.spec.Ranged.quickDraw(user)));
 	}
 
 	/** Patience (Fishing 5): fish bite 5% sooner (vanilla's wait averages 17.5 seconds; this takes 0.875 off). */
 	public static float fishingTime(Entity angler, float seconds) {
-		return has(angler, Skill.FISHING, 5) ? seconds + 0.875f : seconds;
+		return has(angler, Skill.FISHING, 5) ? seconds + (float) (0.875 * power(angler, Skill.FISHING)) : seconds;
 	}
 
 	/** Sea Luck (Fishing 20): +5% treasure chance (2 points of luck: treasure from 5% to about 9%). */
 	public static int fishingLuck(Entity angler, int luck) {
-		return has(angler, Skill.FISHING, 20) ? luck + 2 : luck;
+		return has(angler, Skill.FISHING, 20) ? luck + (int) Math.round(2 * power(angler, Skill.FISHING)) : luck;
 	}
 
 	// --- Yields ----------------------------------------------------------------------------------
@@ -297,10 +310,10 @@ public final class Trunks {
 		// (with the specializations' passives on top, and their prices: Tunneler no double ores, Herder no extra crops)
 		boolean twice = switch (yield) {
 			case ORE -> !state.is(net.minecraft.world.level.block.Blocks.ANCIENT_DEBRIS) && !com.extremeprogression.spec.Mining.noDoubles(p)
-					&& p.getRandom().nextDouble() < (has(p, Skill.MINING, 20) ? 0.05 : 0) + com.extremeprogression.spec.Mining.doubleOreChance(p);
-			case LOG -> p.getRandom().nextDouble() < (has(p, Skill.FORAGING, 20) ? 0.05 : 0) + com.extremeprogression.spec.Foraging.doubleLogChance(p);
+					&& p.getRandom().nextDouble() < (has(p, Skill.MINING, 20) ? 0.05 * power(p, Skill.MINING) : 0) + com.extremeprogression.spec.Mining.doubleOreChance(p);
+			case LOG -> p.getRandom().nextDouble() < (has(p, Skill.FORAGING, 20) ? 0.05 * power(p, Skill.FORAGING) : 0) + com.extremeprogression.spec.Foraging.doubleLogChance(p);
 			case CROP -> !com.extremeprogression.spec.Farming.noExtraCrops(p)
-					&& p.getRandom().nextDouble() < (has(p, Skill.FARMING, 10) ? 0.05 : 0) + com.extremeprogression.spec.Farming.extraCropChance(p);
+					&& p.getRandom().nextDouble() < (has(p, Skill.FARMING, 10) ? 0.05 * power(p, Skill.FARMING) : 0) + com.extremeprogression.spec.Farming.extraCropChance(p);
 			case LEAVES -> has(p, Skill.FORAGING, 10);
 		};
 		if (!twice) {
@@ -312,7 +325,7 @@ public final class Trunks {
 				// 10% more saplings, apples and sticks
 				String id = BuiltInRegistries.ITEM.getKey(drop.getItem()).getPath();
 				boolean leafy = id.endsWith("_sapling") || id.equals("mangrove_propagule") || drop.is(Items.APPLE) || drop.is(Items.STICK);
-				if (leafy && p.getRandom().nextDouble() < 0.10) {
+				if (leafy && p.getRandom().nextDouble() < 0.10 * power(p, Skill.FORAGING)) {
 					Block.popResource(level, pos, drop.copy());
 				}
 			} else if (yield != Yield.CROP || first) {
@@ -330,7 +343,7 @@ public final class Trunks {
 	/** Growing Up (Farming 15): a baby you bred grows up 10% faster. */
 	public static void bred(ServerPlayer p, AgeableMob child) {
 		if (child != null && child.getAge() < 0 && has(p, Skill.FARMING, 15) && !com.extremeprogression.spec.Farming.noBreedingBonus(p)) {
-			child.setAge((int) (child.getAge() * 0.9));
+			child.setAge((int) (child.getAge() * (1 - 0.10 * power(p, Skill.FARMING))));
 		}
 	}
 
@@ -343,7 +356,8 @@ public final class Trunks {
 			return;
 		}
 		String id = BuiltInRegistries.ITEM.getKey(food.getItem()).getPath();
-		if (CROP_FOOD.contains(id) && has(p, Skill.FARMING, 20) || FISH_FOOD.contains(id) && has(p, Skill.FISHING, 15)) {
+		if (CROP_FOOD.contains(id) && has(p, Skill.FARMING, 20) && full(p, Skill.FARMING)
+				|| FISH_FOOD.contains(id) && has(p, Skill.FISHING, 15) && full(p, Skill.FISHING)) {
 			p.getFoodData().eat(1, 0f);
 		}
 		com.extremeprogression.spec.Exploration.ate(p, food);
@@ -353,7 +367,7 @@ public final class Trunks {
 
 	/** Stamina (Exploration 10): sprinting costs 5% less hunger. */
 	public static float exhaustion(Player player, float amount) {
-		return player.isSprinting() && has(player, Skill.EXPLORATION, 10) ? amount * 0.95f : amount;
+		return player.isSprinting() && has(player, Skill.EXPLORATION, 10) ? (float) (amount * (1 - 0.05 * power(player, Skill.EXPLORATION))) : amount;
 	}
 
 	// --- Workstations ----------------------------------------------------------------------------
@@ -433,12 +447,12 @@ public final class Trunks {
 
 	/** Thrifty Anvil (Smithing 10): 5% fewer levels. Tempered Steel (Smithing 15): a repair restores 5% more. */
 	public static int anvilCost(Player player, int cost) {
-		return cost > 1 && has(player, Skill.SMITHING, 10) ? Math.max(1, (int) Math.floor(cost * 0.95)) : cost;
+		return cost > 1 && has(player, Skill.SMITHING, 10) ? Math.max(1, (int) Math.floor(cost * (1 - 0.05 * power(player, Skill.SMITHING)))) : cost;
 	}
 
 	public static void anvilRepair(Player player, ItemStack left, ItemStack result) {
 		if (!result.isEmpty() && left.isDamageableItem() && result.getDamageValue() < left.getDamageValue() && has(player, Skill.SMITHING, 15)) {
-			result.setDamageValue(Math.max(0, result.getDamageValue() - (int) Math.ceil(result.getMaxDamage() * 0.05)));
+			result.setDamageValue(Math.max(0, result.getDamageValue() - (int) Math.ceil(result.getMaxDamage() * 0.05 * power(player, Skill.SMITHING))));
 		}
 		// (the Smithing specializations' repairs come after the trunk's)
 		if (!result.isEmpty() && left.isDamageableItem()) {
@@ -453,7 +467,7 @@ public final class Trunks {
 		if (com.extremeprogression.spec.Specs.has(player, com.extremeprogression.skill.Specialization.ALCHEMIST)) {
 			return;
 		}
-		if (has(player, Skill.ARCANA, 10) && player.getRandom().nextDouble() < 0.10) {
+		if (has(player, Skill.ARCANA, 10) && player.getRandom().nextDouble() < 0.10 * power(player, Skill.ARCANA)) {
 			ItemStack lapis = menu.getSlot(1).getItem();
 			if (lapis.isEmpty()) {
 				menu.getSlot(1).set(new ItemStack(Items.LAPIS_LAZULI));
@@ -462,7 +476,7 @@ public final class Trunks {
 				menu.getSlot(1).setChanged();
 			}
 		}
-		if (has(player, Skill.ARCANA, 20) && player.getRandom().nextDouble() < 0.10) {
+		if (has(player, Skill.ARCANA, 20) && player.getRandom().nextDouble() < 0.10 * power(player, Skill.ARCANA)) {
 			player.giveExperienceLevels(1);
 		}
 	}
