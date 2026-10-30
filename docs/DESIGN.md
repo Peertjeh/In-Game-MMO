@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION — Ontwerpdocument
 
 > Werktitel. De definitieve naam is nog niet gekozen.
-> Status: **Interview ronde 17 (fase 5: skill 9/10, Smithing). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
+> Status: **Interview ronde 18 (fase 5: skill 10/10, Arcana). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
 
 Legenda per mechaniek:
 - ✅ **Bevestigd**: door de eigenaar goedgekeurd
@@ -30,7 +30,8 @@ Legenda per mechaniek:
 | 14 | Skill 6/10: Farming | ✅ akkoord, bonemeal geeft geen XP |
 | 15 | Skill 7/10: Fishing | ✅ akkoord, kleine put geeft geen XP |
 | 16 | Skill 8/10: Exploration | ✅ akkoord |
-| 17 | Skill 9/10: Smithing | ❓ wacht op antwoorden |
+| 17 | Skill 9/10: Smithing | ✅ akkoord, Masterwork afgezwakt |
+| 18 | Skill 10/10: Arcana | ❓ wacht op antwoorden |
 
 ---
 
@@ -443,7 +444,7 @@ Keuzes in dit voorstel:
 
 **Geen nieuwe items nodig.**
 
-### Skill 9/10: Smithing (💡 voorstel, ronde 17)
+### Skill 9/10: Smithing (✅ goedgekeurd in ronde 17)
 **Identiteit:** metaal en uitrusting: smelten, repareren en verbeteren aan de oven, het aambeeld en de smithing table.
 
 **XP:**
@@ -466,9 +467,9 @@ Keuzes in dit voorstel:
 |---|---|---|---|
 | Werkplek | Oven en blast furnace | Aambeeld | Smithing table |
 | Speelstijl | Meer metaal uit dezelfde erts | Uitrusting in leven houden | Uitrusting verbeteren |
-| Actieve ability | **Flash Forge**: 30 seconden lang smelten ovens die jij opent 4× sneller. Cooldown 5 min. | **Masterwork**: je volgende reparatie binnen 30 seconden herstelt het item volledig en kost geen XP-levels. Cooldown 5 min. | **Reforge**: het volgende item dat je upgradet of repareert, krijgt blijvend +10% maximale duurzaamheid. Cooldown 5 min. |
+| Actieve ability | **Flash Forge**: 30 seconden lang smelten ovens die jij opent 4× sneller. Cooldown 5 min. | ✅ **Masterwork**: je volgende reparatie binnen 30 seconden herstelt het item volledig. Er is **25% kans** dat hij geen XP-levels kost; anders betaal je gewoon. Cooldown 5 min. (Afgezwakt in ronde 17: "altijd gratis" was te sterk.) | **Reforge**: het volgende item dat je upgradet of repareert, krijgt blijvend +10% maximale duurzaamheid. Cooldown 5 min. |
 | Trade-off | Reparaties herstellen 15% minder | Smelten geeft geen bonusopbrengst en −25% XP | Reparaties aan het aambeeld herstellen 20% minder |
-| Voorbeeld keuzeknoop | Tweede smelt (kans op dubbele opbrengst) **of** Zuinige gloed (brandstof gaat 50% langer mee) | Behoud (reparaties worden nooit "too expensive" en verliezen geen enchants) **of** Snelle hamer (reparaties herstellen +25%) | Sjabloonbehoud (20% kans dat je een smithing template houdt; **vereist Mining 30**) **of** Trimkracht (elke armor trim geeft een klein effect, afhankelijk van het materiaal) |
+| Voorbeeld keuzeknoop | Tweede smelt (kans op dubbele opbrengst) **of** Zuinige gloed (brandstof gaat 50% langer mee) | Behoud (💡 afgezwakt: de "too expensive"-grens gaat van 40 naar 50 levels, in plaats van helemaal weg, en reparaties verliezen geen enchants) **of** Snelle hamer (reparaties herstellen +25%) | Sjabloonbehoud (20% kans dat je een smithing template houdt; **vereist Mining 30**) **of** Trimkracht (elke armor trim geeft een klein effect, afhankelijk van het materiaal) |
 
 **Mastery-perks** (voorbeeld, 1 van 2 per rank): +1% kans op dubbele opbrengst bij smelten **of** +1% extra herstel bij reparaties.
 
@@ -479,6 +480,54 @@ Keuzes in dit voorstel:
 - Eerste voorbeeld van een **harde vereiste (D)**: Sjabloonbehoud van Tinkerer vereist Mining 30.
 
 **Geen nieuwe items nodig.** Maximale duurzaamheid en trim-effecten werken met vanilla item-components.
+
+- ✅ XP alleen van metaal smelten, en alleen als je de oven zelf leeghaalt.
+- ✅ Abilities van crafting-skills activeer je met `R` terwijl je naar de werkplek kijkt.
+- ✅ Tinkerer mag armor trims een klein echt effect geven. Mining 30 voor Sjabloonbehoud is de eerste harde vereiste.
+
+### Skill 10/10: Arcana (💡 voorstel, ronde 18)
+**Identiteit:** magie: drankjes brouwen en uitrusting enchanten.
+
+**XP:**
+- **Brouwen:** je krijgt XP als je klare drankjes **zelf uit de brouwstandaard haalt**. Een trechter geeft niets, net als bij de oven. Hoe complexer het drankje, hoe meer XP:
+
+  | Drankje | XP |
+  |---|---|
+  | Basis (awkward) | weinig |
+  | Met effect | gemiddeld |
+  | Verlengd of versterkt | meer |
+  | Splash of lingering | het meest |
+
+- **Enchanten aan de enchanting table:** XP naar het aantal levels dat je uitgeeft en het niveau van de enchant.
+- **Enchanted books combineren aan het aambeeld:** Arcana-XP. Gewoon repareren aan het aambeeld blijft Smithing.
+- De grindstone geeft geen XP.
+
+**Stam** (gratis, vanzelf vrij):
+| Level | Bonus |
+|---|---|
+| 5 | Bezige ketel: brouwstandaarden die jij vult, brouwen 5% sneller |
+| 10 | Lapisbesparing: 10% kans dat enchanten 1 lapis minder kost |
+| 15 | Krachtige dranken: drankjes die jij brouwt, werken 5% langer |
+| 20 | Zuinige magie: 10% kans dat enchanten 1 level minder kost |
+
+**Specialisaties:**
+| | **Alchemist** | **Enchanter** | **Hexer** |
+|---|---|---|---|
+| Werkplek / item | Brouwstandaard | Enchanting table | Splash- en lingering-drankjes |
+| Speelstijl | Betere en nieuwe drankjes | Betere enchants | Drankjes als wapen |
+| Actieve ability | **Catalyst**: 30 seconden lang brouwen standaarden die jij opent 10× sneller. Cooldown 5 min. | **Arcane Insight**: bij je volgende enchant binnen 30 seconden zie je **alle** enchants van elk aanbod (vanilla toont er maar één), en je mag het aanbod één keer gratis vernieuwen. Cooldown 5 min. | **Hex**: het volgende splash-drankje dat je binnen 15 seconden gooit, laat een wolk achter die 2× zo groot is en 2× zo lang blijft. Cooldown 4 min. |
+| Trade-off | Enchanten geeft −50% XP en geen bonussen | Brouwen geeft −50% XP en geen bonussen | Drankjes die je **zelf drinkt**, werken 25% korter |
+| Voorbeeld keuzeknoop | Verlengd (drankjes werken 25% langer) **of** Versterkt (kans dat een drankje één niveau sterker uitkomt) | Spaarzaam (enchanten kost 1 level minder, minimaal 1) **of** Rijke keuze (meer kans op de beste enchant in het aanbod) | Blijvend gif (negatieve effecten die jij geeft, duren 30% langer) **of** Wijde nevel (+50% straal voor splash) |
+
+**Nieuwe drankjes voor Alchemist** (💡): recepten voor vanilla-effecten die je in vanilla niet kunt brouwen, zoals **Haste**, **Resistance** en **Absorption**. Het blijven gewone vanilla-drankjes met een vanilla-effect, dus het zijn geen nieuwe items.
+
+**Mastery-perks** (voorbeeld, 1 van 2 per rank): drankjes werken 1% langer **of** +1% kans op een beter enchant-aanbod.
+
+**Abilities:** `R` terwijl je naar de brouwstandaard of enchanting table kijkt. Bij Hexer: `R` met een splash- of lingering-drankje in je hand.
+
+**Tegenwerking:** tegenpool **Smithing** (magie tegenover staal).
+
+**Geen nieuwe items nodig.**
 
 ### Voorbeelden van harde vereisten (D) (💡)
 - Smithing: Sjabloonbehoud (Tinkerer) vereist Mining 30 (zie skill 9).
