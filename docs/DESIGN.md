@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION — Ontwerpdocument
 
 > Werktitel. De definitieve naam is nog niet gekozen.
-> Status: **Interview ronde 9 (fase 5: skills per stuk, te beginnen met Melee). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
+> Status: **Interview ronde 10 (fase 5: skill 2/10, Ranged). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
 
 Legenda per mechaniek:
 - ✅ **Bevestigd**: door de eigenaar goedgekeurd
@@ -22,7 +22,8 @@ Legenda per mechaniek:
 | 6 | Fase 4 deel 1: wat een dood kost, welke skills, herstel, vangnet, Extreme Dimensions | ✅ beantwoord |
 | 7 | Fase 4 deel 2: herhaalde doden, dimensies, vermoeidheid, Mastery, PvP | ✅ beantwoord |
 | 8 | Fase 5: opbouw van de trees, punten, ranks, cooldowns, afleren | ✅ beantwoord |
-| 9 | Skill 1/10: Melee | ❓ wacht op antwoorden |
+| 9 | Skill 1/10: Melee | ✅ alles akkoord |
+| 10 | Skill 2/10: Ranged (+ drie specialisaties per skill) | ❓ wacht op antwoorden |
 
 ---
 
@@ -128,7 +129,7 @@ Keuzes in dit voorstel:
 - Excavation valt onder Mining (Excavator).
 - Geen aparte Cooking-skill (in vanilla is koken alleen smelten). Voedselefficiëntie kan onder Farming of Exploration vallen.
 
-### Skill 1/10: Melee (💡 voorstel, ronde 9)
+### Skill 1/10: Melee (✅ goedgekeurd in ronde 9)
 **Identiteit:** vechten van dichtbij. Melee beloont timing en goed gekozen wapens, niet klikspam.
 
 **XP:**
@@ -137,6 +138,7 @@ Keuzes in dit voorstel:
   - Voorbeelden van gevarenfactoren: zombie 1,0 · skelet 1,2 · creeper 1,5 · enderman 1,5 · wither-skelet 2,0 · warden en bazen 3,0.
 - **Alleen volledig opgeladen klappen** (aanvalsbalk ≥ 90%) geven XP. Klikspam en macro's leveren dus niets op.
 - Passieve dieren geven geen XP. Mobs uit spawners of spawn-eggs geven geen XP (details in fase 7).
+- ✅ **PvP-schade geeft ook XP.** Maatregelen tegen farmen met een tweede account volgen in fase 7.
 
 **Stam** (gratis, vanzelf vrij):
 | Level | Bonus |
@@ -161,6 +163,43 @@ Keuzes in dit voorstel:
 - Tegenpool: **Ranged** (zie §2).
 - Uitrustingsconflict: Brawler (zie de trade-off hierboven).
 - Conflicten tussen specialisaties van verschillende skills leggen we vast als alle skills ontworpen zijn.
+
+**Geen nieuwe items nodig.**
+
+### Skill 2/10: Ranged (💡 voorstel, ronde 10)
+**Identiteit:** vechten op afstand. Ranged beloont geduld, positie en goed mikken.
+
+**XP:**
+- XP = toegebrachte schade × gevarenfactor × **afstandsbonus**.
+  - De afstandsbonus is +2% per blok boven de 10 blokken, tot maximaal +60% (op 40 blokken).
+  - De schade telt maximaal tot de resterende levens van het doelwit.
+  - De gevarenfactoren zijn dezelfde als bij Melee.
+- **Alleen een volledig gespannen boog** (≥ 90%) geeft XP. Een kruisboog is altijd volledig geladen.
+- PvP-schade telt, net als bij Melee.
+- Geen XP van passieve dieren of mobs uit spawners.
+
+**Stam** (gratis, vanzelf vrij):
+| Level | Bonus |
+|---|---|
+| 5 | Vaste hand: je spant de boog 5% sneller |
+| 10 | Pijlen terug: 10% kans om je pijlen terug te vinden bij een gedode mob |
+| 15 | Scherp oog: volledig gespannen schoten doen +5% schade |
+| 20 | Windlezer: pijlen vliegen 5% sneller (minder valhoek) |
+
+**Specialisaties:**
+| | **Sniper** | **Skirmisher** | **Harpooner** |
+|---|---|---|---|
+| Wapens | Boog, kruisboog | Boog, kruisboog | Gegooide trident |
+| Speelstijl | Afstand, kopschoten, doorboren | Bewegen en schieten, snel herladen | Werpen, binnentrekken, water en regen |
+| Actieve ability | **Deadeye**: inzoomen zoals een verrekijker. Je volgende volle schot binnen 8 seconden is een zekere crit en doorboort 1 doelwit; een kopschot doet +100%. Cooldown 4 min. | **Volley**: 5 seconden lang schiet elk schot 3 pijlen in een waaier, voor de prijs van 1 pijl. Cooldown 4 min. | **Harpoon**: je volgende geworpen trident trekt het doelwit naar je toe. Cooldown 4 min. |
+| Trade-off | −20% schade op doelwitten dichterbij dan 8 blokken | −20% schade op doelwitten verder dan 20 blokken | Boog en kruisboog doen −15% schade |
+| Voorbeeld keuzeknoop | Doorboren (+1 doelwit) **of** Kopschot (+schade op het hoofd) | Snel herladen (kruisboog −25% laadtijd) **of** Rennend schieten (niet vertragen tijdens het spannen) | Terugkeer (de trident komt ook zonder Loyalty terug, maar langzaam) **of** Getijdenkracht (+schade in water of regen) |
+
+**Mastery-perks** (voorbeeld, 1 van 2 per rank): +1% schade tegen vliegende mobs **of** +1% schade tegen spelers.
+
+**Tegenwerking:**
+- Tegenpool: **Melee**.
+- Harpooner: een trident van dichtbij valt onder Melee (Blade); een geworpen trident onder Ranged.
 
 **Geen nieuwe items nodig.**
 
@@ -242,8 +281,9 @@ Ter referentie, de speeltijd van één level (zonder budgetfactor):
 - ✅ **Ability-ranks I–V** voor de actieve ability van een specialisatie, te kopen met punten.
 - ✅ **Punten herverdelen** binnen dezelfde specialisatie kost **evenveel als een volledige respec**: 20% XP en 7 dagen.
 - ✅ **Lange cooldowns:** 3–5 minuten, met een sterk en beslissend effect.
-- 💡 **Twee actieve abilities** in één skill (na level 75): `R` voor de eerste specialisatie, `Shift + R` voor de tweede.
-- 💡 **Punten bij levelverlies:** zak je onder een level, dan valt het laatst gekochte punt eerst weg. Wordt het level teruggewonnen, dan komt dat punt automatisch terug op dezelfde plek.
+- ✅ **Twee actieve abilities** in één skill (na level 75): `R` voor de eerste specialisatie, `Shift + R` voor de tweede.
+- ✅ **Punten bij levelverlies:** zak je onder een level, dan valt het laatst gekochte punt eerst weg. Wordt het level teruggewonnen, dan komt dat punt automatisch terug op dezelfde plek.
+- 💡 **Drie specialisaties per skill.** Met maar twee is de tweede keuze op level 75 geen keuze meer, want dan krijg je automatisch de andere. Met drie kies je op 75 echt (ronde 10).
 
 ## 7. Doodsstraffen
 ### Vaste principes (uit de opdracht, geen keuze)
