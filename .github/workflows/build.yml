@@ -53,7 +53,7 @@ jobs:
           echo "$jars" > "$out/jars.txt"
           grep -vE '^\s*(#|$)' .github/javap-classes.txt | while read -r name; do
             if [[ "$name" != *.* ]]; then
-              found=$(for j in $jars; do unzip -Z1 "$j" 2>/dev/null; done | grep -E "(^|/)${name}\.class$" | sed 's/\.class$//; s#/#.#g' | sort -u)
+              found=$(for j in $jars; do unzip -Z1 "$j" 2>/dev/null; done | grep -E "(^|/)${name}\.class$" | sed 's/\.class$//; s#/#.#g' | sort -u || true)
               [ -z "$found" ] && { echo "NOT FOUND: $name" >> "$out/javap.txt"; continue; }
             else
               found="$name"
@@ -103,7 +103,7 @@ jobs:
         if: failure()
         shell: bash
         run: |
-          grep -E "Exception|Error:|ERROR\]|AssertionError|Caused by|at com\.extremeprogression" client-output.txt | grep -vE "server.properties|MalformedJson" | head -12 | cut -c1-900 | while read -r line; do echo "::warning title=Client test::$line"; done
+          { grep -E "Exception|Error:|error:|ERROR\\]|AssertionError|Caused by|at com\\.extremeprogression" client-output.txt || true; } | grep -vE "server.properties|MalformedJson|Realms|flite|narrator|Anisotropic|GLX|OpenGL" | head -12 | cut -c1-900 | while read -r line; do echo "::warning title=Client test::$line"; done || true
       # For reviewing from where artifacts cannot be downloaded: the latest screenshots of a push, as the only commit of
       # the ci-screenshots branch (force-pushed, so it never grows)
       - name: publish the screenshots to the ci-screenshots branch

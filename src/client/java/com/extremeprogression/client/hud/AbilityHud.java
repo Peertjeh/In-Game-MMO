@@ -41,7 +41,7 @@ public final class AbilityHud {
 
 	public static void extract(GuiGraphicsExtractor g) {
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.options.hideGui || mc.player == null || mc.player.isSpectator()) {
+		if (mc.player == null || mc.player.isSpectator()) {
 			return;
 		}
 		boolean second = mc.options.keyShift.isDown();
