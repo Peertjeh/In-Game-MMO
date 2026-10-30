@@ -92,7 +92,7 @@ public class SkillScreen extends Screen {
 	private Detail specDetail(Specialization spec) {
 		String key = spec.translationKey();
 		List<String> lines = new ArrayList<>();
-		lines.add(Ui.tr("gui.extremeprogression.skill.gear", Ui.tr(key + ".gear")));
+		lines.addAll(wrap(Ui.tr("gui.extremeprogression.skill.gear", Ui.tr(key + ".gear"))));
 		lines.addAll(wrap(Ui.tr(key + ".style")));
 		if (spec.conflict() != null) {
 			lines.addAll(wrap(Ui.tr("gui.extremeprogression.skill.conflict", Ui.tr(spec.conflict().translationKey()),

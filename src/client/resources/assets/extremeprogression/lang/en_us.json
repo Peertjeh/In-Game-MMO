@@ -53,7 +53,7 @@
 	"gui.extremeprogression.skill.trunk_kind": "Trunk bonus · level %s",
 	"gui.extremeprogression.skill.unlocks_at": "Unlocks at level %s",
 	"gui.extremeprogression.skill.spec_kind": "Specialization",
-	"gui.extremeprogression.skill.spec_levels": "Chosen at level %s or %s",
+	"gui.extremeprogression.skill.spec_levels": "Chosen at %s or %s",
 	"gui.extremeprogression.skill.gear": "Gear: %s",
 	"gui.extremeprogression.skill.conflict": "Cannot be combined with %s (%s).",
 	"gui.extremeprogression.skill.ability_kind": "Active ability of %s",
