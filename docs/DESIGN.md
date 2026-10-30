@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION: Design Document
 
 > Working title. The final name has not been chosen yet.
-> Status: **Phase 7 (anti-exploit). There is no gameplay code yet; the design has not been approved as a whole.**
+> Status: **Phase 7: XP tables for approval. There is no gameplay code yet; the design has not been approved as a whole.**
 
 Legend for every mechanic:
 - ✅ **Confirmed**: approved by the owner
@@ -36,7 +36,8 @@ Legend for every mechanic:
 | 20 | Phase 6: style, screens, skill tree, "At Stake", HUD | ✅ approved |
 | 21 | GUI mockup | ✅ approved ("let's go on with this"); feedback may follow later |
 | 22 | Language | ✅ the mod and its repository in English; the design chat stays in Dutch |
-| 23 | Phase 7: anti-exploit | ❓ awaiting answers |
+| 23 | Phase 7: anti-exploit | ✅ approved |
+| 24 | Appendix A: XP tables; Dutch translation | ❓ awaiting answers |
 
 ---
 
@@ -559,7 +560,9 @@ General rules:
 
 ## 3. XP generation
 - The XP sources per skill are in §2.
-- 💡 How the 400-hour pace turns into XP per action, and the anti-exploit rules: §12 (phase 7).
+- ✅ The exact values are set now, as **Appendix A**, tuned to the 400-hour pace, so they can be approved in one go (round 23).
+- 💡 The scale: **one hour of focused play in a skill ≈ 10,000 XP**, before the budget factor, the opposing-skill penalty and diminishing returns. All values live in the config (§11).
+- The anti-exploit rules: §12.
 
 ## 4. Level progression and formulas
 
@@ -743,7 +746,197 @@ _Phase 9._
   - **Automation:** pistons, water, villagers and hoppers give no XP. Only what a player does by hand counts.
   - **Fishing:** open water only, an "overfished" decline after 10 catches in one spot, and a movement check.
   - **Exploration:** new chunks per player, 25% with an elytra, no walking or swimming XP, falls blocked per spot.
-- ❓ Phase 7 (round 23): trial spawner mobs, mob farms, diminishing returns, a general AFK rule, PvP between the same players, and how the XP tables are set.
+- A useful side effect of the damage rule: in a mob farm where mobs fall to 1 heart and the player finishes them, the player only earns XP for that last bit of damage. No separate farm rule is needed.
+
+### Confirmed (round 23)
+- ✅ **Trial spawners** give **full XP**. Trial chambers are designed challenges, and vanilla already puts a trial spawner on a 30-minute cooldown after it is beaten. Plain spawners and spawn eggs stay at 0 XP.
+- ✅ **Diminishing returns** as a general brake, set so high that normal active play never reaches it; only farms and macros do.
+  - 💡 Numbers: per skill, over a rolling 10-minute window. Above **5,000 XP** in 10 minutes (3× the normal pace), XP shrinks step by step down to a floor of **5%**. The window and threshold are configurable.
+- ✅ **A general AFK rule:** **no XP** in any skill after 5 minutes without real play (no looking around, no movement of your own, no interaction).
+  - 💡 Movement caused by water currents, pistons, minecarts or boats does not count as play.
+- ✅ **PvP** (the owner said "approved" to the list; read as a and b, which had no caveat):
+  - **a)** damaging the same player gives XP for at most 3 "lives" per hour (60 health points of damage);
+  - **b)** no XP from players with less than half of your total level.
+  - 💡 **c)** no XP from players on the same IP address: **off by default** (it would also hit siblings and housemates), configurable for servers that want it.
+
+### Further rules (💡)
+- **Explosions** (TNT, creepers, beds, respawn anchors) give no Mining or Foraging XP.
+- **Creative and Spectator** mode give no XP.
+- Mobs from **`/summon`**, spawn eggs (also from a dispenser) and plain spawners are flagged and give 0 XP. The flag is stored on the entity, so it survives restarts and unloaded chunks.
 
 ## 13. Implementation roadmap
 _Only after the full design is approved._
+
+---
+
+## Appendix A: XP tables (💡 proposal, round 24)
+
+All values are configurable (§11). They are calibrated against an assumed rate of active play, given per skill below. Internally XP is a decimal number; the GUI rounds it.
+
+### A.1 Scale
+- **1 hour of focused play in a skill ≈ 10,000 XP.**
+- XP for level L → L+1 = `10,000 × (hours(L+1) − hours(L)) × budget factor`, with `hours(L) = 400 × (L/100)^2.66` (§4).
+- **A Mastery rank costs 400,000 XP** (≈ 40 hours), with no budget factor, because Mastery does not count toward the cap.
+
+| Level | 1 | 5 | 10 | 25 | 50 | 75 | 100 |
+|---|---|---|---|---|---|---|---|
+| XP for that one level | 19 | 864 (5→6) | 2,525 (10→11) | 11,011 (25→26) | 34,230 (50→51) | 66,732 (75→76) | 105,519 (99→100) |
+| Cumulative XP | 19 | 1,385 | 8,751 | 100,134 | 632,878 | 1,860,900 | 4,000,000 |
+
+(Without the budget factor. With a total of 212 levels, for example, the factor is ×1.50.)
+
+### A.2 Melee and Ranged
+- **XP = damage dealt × danger factor × 4.** Damage counts at most up to the target's remaining health. Ranged multiplies by its distance bonus as well.
+- Calibration: an active fighter deals ≈ 2,500 damage to hostile mobs per hour, at an average factor of ≈ 1.0–1.2.
+
+| Danger factor | Mobs |
+|---|---|
+| 0 | Passive animals; mobs from spawners, spawn eggs or `/summon` |
+| 0.5 | Silverfish, endermite |
+| 0.6 | Slime, magma cube (they split) |
+| 0.8 | Zombified piglin (when angry) |
+| 1.0 | Zombie, husk, drowned, spider, vex, iron golem (when hostile to you) |
+| 1.2 | Skeleton, stray, bogged, piglin |
+| 1.3 | Cave spider, pillager |
+| 1.4 | Phantom |
+| 1.5 | Creeper, enderman, witch, guardian, creaking; **players (PvP)** |
+| 1.6 | Vindicator, blaze, ghast, hoglin, zoglin, shulker |
+| 1.8 | Breeze |
+| 2.0 | Wither skeleton, evoker, ravager |
+| 2.2 | Piglin brute |
+| 3.0 | Warden, elder guardian, Wither, Ender Dragon |
+
+### A.3 Defense
+- **XP = damage your shield blocks or your armor absorbs × the attacker's danger factor × 15.**
+- Calibration: a front-liner absorbs ≈ 600 damage per hour.
+- The cap of 6 hits per attacker per 60 seconds applies (§2).
+
+### A.4 Mining
+Calibration: ≈ 1,200 blocks per hour, of which ≈ 60 are ores.
+
+| Block | XP | Block | XP |
+|---|---:|---|---:|
+| Stone, andesite, diorite, granite, tuff | 3 | Deepslate, cobbled deepslate | 5 |
+| Netherrack (breaks very fast) | 1 | End stone, basalt, blackstone | 4 |
+| Calcite, dripstone, magma block | 4 | Sandstone, terracotta | 3 / 5 |
+| Obsidian | 20 | Crying obsidian | 30 |
+| Coal ore / deepslate | 40 / 70 | Copper ore / deepslate | 60 / 90 |
+| Iron ore / deepslate | 90 / 130 | Gold ore / deepslate | 130 / 190 |
+| Redstone ore / deepslate | 60 / 90 | Lapis ore / deepslate | 80 / 120 |
+| Diamond ore / deepslate | 600 / 900 | Emerald ore / deepslate | 500 / 700 |
+| Nether quartz ore | 30 | Nether gold ore | 40 |
+| Ancient Debris | 1,500 | Amethyst block | 10 |
+
+**Shovel** (≈ 1,800 blocks per hour):
+
+| Block | XP | Block | XP |
+|---|---:|---|---:|
+| Dirt, grass block, sand, gravel | 2 | Clay | 6 |
+| Mud, soul sand, soul soil | 3 | Snow | 1 |
+| **Brushing** suspicious sand or gravel | 250 | | |
+
+### A.5 Foraging
+Calibration: ≈ 500 logs per hour.
+
+| Log (natural tree) | XP | Log | XP |
+|---|---:|---|---:|
+| Oak | 16 | Birch, spruce | 18 |
+| Dark oak, acacia | 20 | Jungle, mangrove | 22 |
+| Cherry, crimson stem, warped stem | 24 | Pale oak | 26 |
+
+Player-planted trees give 25% (§2); bonemeal-grown trees give 0.
+
+| Wild plant | XP | Wild plant | XP |
+|---|---:|---|---:|
+| Sweet berries (wild bush, per harvest) | 15 | Glow berries (wild vine) | 15 |
+| Natural mushroom | 10 | Flower | 6 (rare flowers 10) |
+| Cocoa (natural jungle) | 12 | Wild melon or pumpkin | 30 |
+| Honey bottle or honeycomb from a wild hive | 40 | | |
+
+### A.6 Farming
+Calibration: ≈ 1,000 harvested crops per hour.
+
+| Crop (fully grown, harvested by hand) | XP | Crop | XP |
+|---|---:|---|---:|
+| Wheat, carrot, potato | 8 | Beetroot | 9 |
+| Nether wart | 10 | Melon, pumpkin (from a stem) | 10 |
+| Cocoa (planted) | 9 | Sweet berries (planted bush) | 6 |
+| Sugar cane, cactus (top blocks only) | 4 / 3 | Torchflower | 60 |
+| Pitcher plant | 80 | | |
+
+| Animals | XP |
+|---|---:|
+| Breeding, per baby | 40 |
+| Shearing a sheep | 15 |
+| Taming: wolf | 200 |
+| Taming: cat, fox | 250 / 300 |
+| Taming: horse, donkey, mule, llama | 300 |
+| Taming: parrot | 350 |
+| Taming: camel | 400 |
+| **Damage dealt by your tamed animals** | damage × danger factor × 3 |
+
+### A.7 Fishing
+Calibration: ≈ 120 catches per hour (with Lure).
+
+| Catch | XP | Catch | XP |
+|---|---:|---|---:|
+| Cod | 60 | Salmon | 80 |
+| Pufferfish | 100 | Tropical fish | 160 |
+| Junk | 15 | Bow, fishing rod | 250 |
+| Name tag, saddle, nautilus shell | 300 | Enchanted book | 400 |
+| Heart of the Sea, trident (Treasure Hunter) | 1,000 | | |
+
+- 💡 **Hookmaster** also earns XP for using the rod as a tool: 30 XP when Shake makes a hooked mob drop something (once per mob).
+
+### A.8 Exploration
+Calibration: ≈ 600 new chunks per hour on foot, plus structures and the first visits to biomes.
+
+| Source | XP |
+|---|---:|
+| New chunk (on foot, on horseback, by boat) | 8 |
+| New chunk with an elytra | 2 |
+| A chunk revisited after 30 real days | 2 |
+| New biome (first time) | 500 |
+| Survived fall | 40 per damage point (a 10-damage fall = 400) |
+
+| New structure (each one, the first time you enter it) | XP |
+|---|---:|
+| Ruined portal | 100 |
+| Mineshaft, shipwreck, ocean ruin | 150–200 |
+| Igloo, village, trail ruins | 250–300 |
+| Desert temple, jungle temple, pillager outpost | 400 |
+| Nether fortress | 800 |
+| Trial chamber, end city | 1,000 |
+| Ocean monument, bastion | 1,200 |
+| Stronghold, woodland mansion | 1,500 |
+| Ancient city | 2,000 |
+
+- 💡 The **first structure of each type** you ever enter gives **3×** XP.
+
+### A.9 Smithing
+Smithing is limited by materials more than by time; its values are higher per action.
+
+| Smelting (taken out by hand, per item) | XP | | XP |
+|---|---:|---|---:|
+| Raw copper / copper ore | 15 | Raw iron / iron ore | 25 |
+| Raw gold / gold ore | 30 | Ancient Debris | 300 |
+| Raw ore blocks | 9× the raw ore | Stone, sand, glass, food | 0 |
+
+- **Anvil repair:** `200 × material factor × the share of durability restored`. Material factor: wood 0.5 · stone, leather 0.8 · chain, copper, gold 1.0 · iron 1.5 · diamond 3 · netherite 4. A diamond pickaxe repaired from broken to full gives 600.
+- **Smithing table:** netherite upgrade 1,500 per item · armor trim 300 per item.
+
+### A.10 Arcana
+Calibration: ≈ 200 potions per hour for an active brewer.
+
+| Potion (taken out by hand) | XP |
+|---|---:|
+| Awkward, mundane, thick | 5 |
+| With an effect | 30 |
+| Extended (redstone) or amplified (glowstone) | 45 |
+| Splash | 60 |
+| Lingering | 80 |
+| New Alchemist potions (Haste, Resistance, Absorption) | 60 |
+
+- **Enchanting table:** `15 × the level the offer requires` (a level-30 offer = 450).
+- **Combining enchantments at the anvil:** `25 × the level cost`.
+- The grindstone gives 0.
