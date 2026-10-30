@@ -213,6 +213,15 @@ public class ClientShots implements FabricClientGameTest {
 			ctx.takeScreenshot("11_arcane_insight");
 			sp.getServer().runOnServer(s -> s.getPlayerList().getPlayers().get(0).closeContainer());
 			ctx.waitTicks(5);
+
+			// The anvil screen (Preservation's "Too Expensive!" limit is read there): it opens and draws
+			ctx.runOnClient(mc -> mc.gui.setScreen(new net.minecraft.client.gui.screens.inventory.AnvilScreen(
+					new net.minecraft.world.inventory.AnvilMenu(0, mc.player.getInventory()), mc.player.getInventory(),
+					net.minecraft.network.chat.Component.translatable("container.repair"))));
+			ctx.waitTicks(5);
+			check(ctx.computeOnClient(mc -> mc.gui.screen() instanceof net.minecraft.client.gui.screens.inventory.AnvilScreen), "the anvil screen did not open");
+			ctx.runOnClient(mc -> mc.gui.setScreen(null));
+			ctx.waitTicks(5);
 		}
 	}
 

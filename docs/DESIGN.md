@@ -771,9 +771,8 @@ for Calm Herd are the two parents.
   offers** button for the free reroll; both go once the enchantment is made or the time is up.
 - **Thrown potions** carry their brewer's duration bonus (Potent Brews, Extended) into their splash and cloud, and
   their thrower's Hexer nodes; a Hexed splash potion leaves a cloud as a lingering potion would.
-- **Preservation** raises the "Too Expensive" limit on the server; vanilla's anvil screen still reads "Too Expensive!"
-  from 40 levels, though the result can be taken. Repairs keep their enchantments in vanilla already, so that half of
-  Preservation needs nothing.
+- **Preservation** raises the "Too Expensive" limit on the server and on the anvil screen alike. Repairs keep their
+  enchantments in vanilla already, so that half of Preservation needs nothing.
 
 | Specialization | Ability ranks (after I) | P1 · P2 (2 points a rank) | P3 · P4 (3 points a rank) | Choice (3 points a rank) |
 |---|---|---|---|---|
