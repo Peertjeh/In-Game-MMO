@@ -1,0 +1,5 @@
+# Data files the javap step copies out of the Minecraft jars (zip globs), for formats that only data shows
+data/minecraft/recipe/*awkward*.json
+data/minecraft/recipe/*swiftness*.json
+data/minecraft/recipe/*long_swiftness*.json
+data/minecraft/recipe/*splash*.json

@@ -63,6 +63,18 @@ jobs:
               javap -p -cp "$cp" "$cls" >> "$out/javap.txt" 2>&1 || echo "NOT FOUND: $cls" >> "$out/javap.txt"
             done
           done
+          # Data files out of the jars too (recipe formats and the like): one zip glob per line of .github/javap-files.txt
+          if [ -f .github/javap-files.txt ]; then
+            grep -vE '^\s*(#|$)' .github/javap-files.txt | while read -r pattern; do
+              for j in $jars; do
+                for entry in $(unzip -Z1 "$j" "$pattern" 2>/dev/null | head -8 || true); do
+                  echo "=== FILE $entry" >> "$out/files.txt"
+                  unzip -p "$j" "$entry" >> "$out/files.txt" 2>/dev/null || true
+                  echo >> "$out/files.txt"
+                done
+              done
+            done
+          fi
           cd "$out"
           git init -q -b ci-javap
           git config user.name "github-actions[bot]"
