@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.7.0: Specializations (in development)
+## 0.7.0: Specializations
 
 Part 1 of 3: the twelve specializations of Melee, Ranged, Defense and Exploration now do what they say.
 
@@ -20,8 +20,16 @@ Part 2 of 3: the twelve specializations of Mining, Foraging, Farming and Fishing
   Frenzy, Lucky Cast (guaranteed treasure in open water) and Reel In.
 - **Passives, choice nodes and prices** for all twelve, such as Rare Seeds, Honey Harvest (calm bees), Ice Fishing,
   Bookworm, Rider and the Tunneler's "no double drops".
-- The six Crafting specializations (Smithing and Arcana) can be chosen and bought as before; their effects follow in
-  part 3.
+Part 3 of 3: the six specializations of Smithing and Arcana.
+
+- **Abilities** at their workstations: Flash Forge (furnaces 4× as fast), Masterwork (a full repair, sometimes free),
+  Reforge (+10% maximum durability, once per item), Catalyst (brewing 10× as fast), Arcane Insight (every enchantment
+  of the offers beside the table, and a free reroll) and Hex (a thrown potion's cloud twice as large and long).
+- **New potions for the Alchemist**: Haste (cocoa beans), Resistance (an armadillo scute) and Absorption (honeycomb),
+  brewed from an awkward potion by an Alchemist with Foraging 30.
+- **Passives, choice nodes and prices** for all six, such as Second Smelt, Preservation, Trim Power, Extended, Rich
+  Choice and Wide Mist. Potent Brews now also works on splash and lingering potions.
+- With this, all thirty specializations do what they say.
 
 ## 0.6.0: Trees and abilities
 

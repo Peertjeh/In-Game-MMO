@@ -677,7 +677,7 @@ For reference, the play time of a single level (without the budget factor):
   - Swimmer (Exploration 15) is +0.05 water movement efficiency; Catch Breath (Defense 15) brings the next natural
     regeneration 2 s forward after each hit in a fight.
   - "Furnaces / brewing stands you fill" are the ones you last opened.
-  - Potent Brews (Arcana 15) works on potions you drink; splash and lingering potions follow with Hexer in milestone 6.
+  - Potent Brews (Arcana 15) works on potions you drink, and (from milestone 6) on the splash and cloud of thrown ones.
   - The Skill Screen fits GUI scale 3 at 1280 × 720 (426 × 240), the scale Minecraft picks there by itself.
 
 ### How milestone 6 implements it (version 0.7.0)
@@ -755,6 +755,38 @@ All numbers are **per rank**. Readings of §2 (💡): Herding Call's animals are
 walk to you; Rally the Pack's target is the mob you last hit (or the one that last hit you); the Herbalist's
 "cultivated food" is food made from crops and the meat of farm animals (beef, pork, mutton, chicken); "bred animals"
 for Calm Herd are the two parents.
+
+**Part 3: Crafting** (Smithing, Arcana). In addition (💡):
+- **"Furnaces / brewing stands you open"** are the ones you opened last (as for the trunk); a workstation remembers its
+  user across restarts.
+- **Repairs** follow this order: vanilla, then the trunk (Tempered Steel), then the prices (Forgemaster −15%, Tinkerer
+  −20% of what was restored), then Fine Repair and Quick Hammer (of the item's whole durability), then Masterwork
+  (fully).
+- **The Alchemist's new potions** are plain vanilla potions with vanilla effects, brewed from an awkward potion
+  (normal, splash or lingering) by data recipes: **Haste** (cocoa beans, 3:00), **Resistance** (an armadillo scute,
+  3:00) and **Absorption** (honeycomb, 2:00). A stand brews them only for an Alchemist with **Foraging 30** (the hard
+  requirement of §2; the requirement shows in the GUI with the other hard requirements in milestone 8).
+- **Arcane Insight** lists every enchantment of the three offers beside the enchanting table, with a **Reroll the
+  offers** button for the free reroll; both go once the enchantment is made or the time is up.
+- **Thrown potions** carry their brewer's duration bonus (Potent Brews, Extended) into their splash and cloud, and
+  their thrower's Hexer nodes; a Hexed splash potion leaves a cloud as a lingering potion would.
+- **Preservation** raises the "Too Expensive" limit on the server; vanilla's anvil screen still reads "Too Expensive!"
+  from 40 levels, though the result can be taken. Repairs keep their enchantments in vanilla already, so that half of
+  Preservation needs nothing.
+
+| Specialization | Ability ranks (after I) | P1 · P2 (2 points a rank) | P3 · P4 (3 points a rank) | Choice (3 points a rank) |
+|---|---|---|---|---|
+| **Forgemaster** | +5 s (I: 30 s, 4× as fast) | Hot Coals: furnaces you use +4% speed · Smelter's Eye: smelting metal +3% XP | Coal Miser: 4% chance fuel is not used up · Long Forge: Flash Forge +5 s | Second Smelt: 4% chance of a double output **or** Slow Burn: fuel burns 10% longer |
+| **Armorer** | +5% chance that it costs no levels (I: 25%) | Fine Repair: repairs restore +3% of the durability · Thrifty Hands: repairs cost 4% fewer levels | Smith's Eye: repairing +3% XP · Gentle Hammer: 5% chance the anvil does not wear | Preservation: the "Too Expensive" limit +2 levels (50 at V) **or** Quick Hammer: repairs restore +5% |
+| **Tinkerer** | +2% durability (I: +10%); it waits 60 s; once per item | Upgrade Lore: upgrades and trims +3% XP · Polish: an upgraded item is repaired by 4% | Spare Material: 4% chance an anvil repair keeps its material · Patient Craft: Reforge waits +15 s | Template Saver: 4% chance to keep the template (needs Mining 30) **or** Trim Power: each trimmed armor piece gives a bonus by its material |
+| **Alchemist** | +5 s (I: 30 s, 10× as fast) | Quick Brew: stands you use +4% speed · Brewer's Eye: brewing +3% XP | Distiller: 4% chance a brew keeps its ingredient · Long Catalyst: Catalyst +6 s | Extended: potions you brew last 5% longer **or** Potent: 6% chance a potion comes out one level stronger |
+| **Enchanter** | +5 s (I: 30 s) | Lore: enchanting +3% XP · Lapis Thrift: 4% chance of a lapis back | Book Smart: combining books at an anvil costs 4% fewer levels · Insightful: Arcane Insight +6 s | Frugal: 20% chance enchanting costs 1 level less (always at V) **or** Rich Choice: offers rolled as if 1 level higher |
+| **Hexer** | the cloud +10% larger (I: twice the size and time of a lingering cloud) | Strong Arm: thrown potions fly 5% farther · Concentrated: your thrown potions' effects last 5% longer | Careful Aim: 20% chance your own negative thrown potions miss you · Long Hex: Hex waits +3 s | Lingering Venom: negative effects from your thrown potions last 6% longer **or** Wide Mist: your splash potions and clouds reach 10% farther |
+
+**Trim Power** at rank V, per trimmed piece (a fifth of it a rank): iron +0.5 armor · diamond +0.5 armor toughness ·
+netherite +5% knockback resistance · copper +2% speed · redstone +2% attack speed · quartz +0.25 attack damage ·
+amethyst +0.5 max health · lapis +2% breaking speed · emerald +0.5 luck · gold +0.1 movement efficiency · resin +0.2
+oxygen bonus.
 
 ## 7. Death penalties
 
@@ -1011,7 +1043,7 @@ for Calm Herd are the two parents.
 
 Work starts only after the owner's final approval (§15). Each milestone ends with: compiling, running the tests, checking for regressions, a report of what was built and what is still open, and the owner's approval before the next major system.
 
-Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 ✅ done (0.4.0) · milestone 4 ✅ done (0.5.0) · milestone 5 ✅ done (0.6.0) · milestone 6 in progress (0.7.0): parts 1 and 2 of 3 ✅ built and verified, part 3 next.
+Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 ✅ done (0.4.0) · milestone 4 ✅ done (0.5.0) · milestone 5 ✅ done (0.6.0) · milestone 6 ✅ done (0.7.0) · milestone 7 next.
 
 | # | Milestone | Contents | Tests |
 |---|---|---|---|

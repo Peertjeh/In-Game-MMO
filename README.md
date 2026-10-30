@@ -6,9 +6,8 @@ Ten playstyle skills, each with its own skill tree, three specializations and a 
 that you discover yourself. Slow, meaningful progression, and deaths that cost you for real, always shown up front.
 
 > **Status:** in development. The design is approved; the code is being built milestone by milestone. So far all ten
-> skills earn XP (with the rules against exploits), and their trunks, specializations, points and respec work. The
-> 24 specializations of the Combat, Survival and Gathering skills have their abilities, nodes and prices; the six of
-> Smithing and Arcana, the death system and the synergies follow.
+> skills earn XP (with the rules against exploits), and their trunks, specializations, points and respec work, and all
+> thirty specializations have their abilities, nodes and prices. The death system and the synergies follow.
 
 - The full design: [docs/DESIGN.md](docs/DESIGN.md)
 - Works on its own, and optionally together with [Extreme Dimensions](https://github.com/Peertjeh/extremedimensions).
