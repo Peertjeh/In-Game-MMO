@@ -181,6 +181,38 @@ public class ClientShots implements FabricClientGameTest {
 			int glowing = ctx.computeOnClient(mc -> com.extremeprogression.client.OreSense.shown());
 			check(glowing >= 10, "Ore Sense shows " + glowing + " ores, not the 10 placed");
 			ctx.takeScreenshot("10_ore_sense");
+
+			// Arcane Insight (Enchanter): every enchantment of the offers beside the enchanting table, with a free reroll
+			sp.getServer().runOnServer(s -> {
+				ServerPlayer player = s.getPlayerList().getPlayers().get(0);
+				PlayerProgress pr = PlayerStore.get(player.getUUID());
+				TreeRules.choose(pr, Specialization.ENCHANTER);
+				TreeRules.buy(pr, Specialization.ENCHANTER, NodeSlot.A1);
+				Sync.send(player);
+				player.giveExperienceLevels(30);
+				player.level().setBlockAndUpdate(player.blockPosition().south(2), net.minecraft.world.level.block.Blocks.ENCHANTING_TABLE.defaultBlockState());
+			});
+			ctx.runOnClient(mc -> {
+				mc.player.setYRot(0);
+				mc.player.setXRot(35);
+			});
+			ctx.waitTicks(10);
+			ctx.getInput().pressKey(o -> ExtremeProgressionClient.ABILITY);
+			ctx.waitTicks(10);
+			check(ctx.computeOnClient(mc -> ClientProgress.activeTicks("enchanter")) > 0, "Arcane Insight was not used looking at the enchanting table");
+			sp.getServer().runOnServer(s -> {
+				ServerPlayer player = s.getPlayerList().getPlayers().get(0);
+				net.minecraft.core.BlockPos table = player.blockPosition().south(2);
+				player.openMenu(player.level().getBlockState(table).getMenuProvider(player.level(), table));
+				player.containerMenu.getSlot(0).set(new ItemStack(Items.DIAMOND_SWORD));
+				player.containerMenu.getSlot(1).set(new ItemStack(Items.LAPIS_LAZULI, 3));
+			});
+			ctx.waitTicks(10);
+			int insight = ctx.computeOnClient(mc -> com.extremeprogression.client.inventory.InsightPanel.shown());
+			check(insight > 0, "the Insight panel shows no enchantments");
+			ctx.takeScreenshot("11_arcane_insight");
+			sp.getServer().runOnServer(s -> s.getPlayerList().getPlayers().get(0).closeContainer());
+			ctx.waitTicks(5);
 		}
 	}
 
