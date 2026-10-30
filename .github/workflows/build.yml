@@ -20,10 +20,16 @@ jobs:
         run: chmod +x ./gradlew
       # Building also runs the server game tests on a headless dedicated server; a failing test fails the build
       - name: build and server game tests
-        run: ./gradlew build
+        shell: bash
+        run: ./gradlew build 2>&1 | tee build-output.txt
         timeout-minutes: 20
-      - name: report the mod jar
-        run: ls -l build/libs/*.jar | awk '{printf "JAR %s %.1f KB\n", $NF, $5 / 1024}'
+      # The game tests' verdict and the jar as annotations, readable through the API where the logs cannot be downloaded
+      - name: report the game tests and the mod jar
+        if: always()
+        shell: bash
+        run: |
+          grep -E "GAME TESTS COMPLETE|required tests? passed|tests? failed|failed with|Test .* failed" build-output.txt | sed 's/^.*\]: //' | tail -10 | while read -r line; do echo "::notice title=Server game tests::$line"; done
+          for jar in build/libs/*.jar; do [ -f "$jar" ] && echo "::notice title=Jar::$(basename "$jar") $(( $(stat -c %s "$jar") / 1024 )) KB"; done
       - name: capture build artifacts
         uses: actions/upload-artifact@v7
         with:
@@ -33,6 +39,8 @@ jobs:
   client:
     name: client test and screenshots
     runs-on: ubuntu-24.04
+    permissions:
+      contents: write
     steps:
       - name: checkout repository
         uses: actions/checkout@v6
@@ -51,6 +59,24 @@ jobs:
         env:
           LIBGL_ALWAYS_SOFTWARE: '1'
         timeout-minutes: 25
+      # For reviewing from where artifacts cannot be downloaded: the latest screenshots of a push, as the only commit of
+      # the ci-screenshots branch (force-pushed, so it never grows)
+      - name: publish the screenshots to the ci-screenshots branch
+        if: always() && github.event_name == 'push'
+        shell: bash
+        run: |
+          dir="$PWD/build/run/clientGameTest/screenshots"
+          ls "$dir"/*.png >/dev/null 2>&1 || { echo "no screenshots"; exit 0; }
+          tmp=$(mktemp -d)
+          cp "$dir"/*.png "$tmp"/
+          cd "$tmp"
+          git init -q -b ci-screenshots
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Screenshots of ${GITHUB_SHA::7} on ${GITHUB_REF_NAME}"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" ci-screenshots
+          echo "::notice title=Screenshots::$(ls *.png | wc -l) screenshots of ${GITHUB_SHA::7} on the ci-screenshots branch"
       - name: capture screenshots
         if: always()
         uses: actions/upload-artifact@v7
