@@ -24,7 +24,7 @@ import net.minecraft.network.chat.Component;
  */
 public class CodexScreen extends Screen {
 	static final int W = 404, H = 222;
-	private static final int ROW = 13;
+	private static final int ROW = 12;
 	/** Runic letters for what is not discovered yet (in the game's fallback font). */
 	private static final String RUNES = "ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ";
 
