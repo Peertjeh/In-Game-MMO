@@ -140,6 +140,10 @@ public final class Config {
 	/** The first discovery of a synergy on the server is announced in the chat. */
 	public static boolean SYNERGY_ANNOUNCE = true;
 
+	/** The %extremeprogression:...% placeholders for TAB and chat mods (with Text Placeholder API), and how often they are worked out. */
+	public static boolean PLACEHOLDERS = true;
+	public static int PLACEHOLDER_REFRESH_TICKS = 20;
+
 	private static final Map<String, Object> DEFAULTS = snapshot();
 
 	/**
@@ -259,6 +263,7 @@ public final class Config {
 		OPPOSING_PASSIVE_POWER = share(OPPOSING_PASSIVE_POWER, "OPPOSING_PASSIVE_POWER");
 		MASTERY_PERK_STEP = nonNegative(MASTERY_PERK_STEP, "MASTERY_PERK_STEP");
 		SYNERGY_LEVEL = Math.max(0, SYNERGY_LEVEL);
+		PLACEHOLDER_REFRESH_TICKS = Math.max(1, PLACEHOLDER_REFRESH_TICKS);
 		RESPEC_DAYS = nonNegative(RESPEC_DAYS, "RESPEC_DAYS");
 		XP_MULTIPLIER = nonNegative(XP_MULTIPLIER, "XP_MULTIPLIER");
 		PLANTED_TREE_FACTOR = share(PLANTED_TREE_FACTOR, "PLANTED_TREE_FACTOR");

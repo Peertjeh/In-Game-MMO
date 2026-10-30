@@ -25,5 +25,6 @@ public class ExtremeProgression implements ModInitializer {
 		com.extremeprogression.config.DataFiles.load();
 		Sync.register();
 		ServerEvents.register();
+		com.extremeprogression.compat.TabPlaceholders.offer();
 	}
 }

@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.1.0: TAB
+
+Extreme Progression on the player list and in chat, beside Extreme Dimensions and BattleHub.
+
+- **Placeholders** for TAB, Styled Chat and other mods, through Text Placeholder API: `%extremeprogression:total%`,
+  `highest`, `level_<skill>`, `specs`, `pressure`, `fatigue`, `synergies`, a level `badge`, the server's `preset`,
+  `xp_event`, `discoveries`, `top` and more (the full list in `server/README.md`).
+- **The shared server configs** in `server/config/`: TAB's player list shows the level badge behind every name, and
+  the header and footer show the preset, XP events, your level, best skill, death pressure and fatigue. Styled Chat
+  shows the badge and, on hover, your level and specializations.
+- Options `placeholders` and `placeholder_refresh_ticks`.
+
 ## 1.0.0: First release
 
 The first release of Extreme Progression, for Minecraft 26.3 on Fabric. Everything of 0.1.0 to 0.10.0 below, and:

@@ -26,7 +26,8 @@
 			"com.extremeprogression.gametest.SynergyTests",
 			"com.extremeprogression.gametest.AdminTests",
 			"com.extremeprogression.gametest.CompatTests",
-			"com.extremeprogression.gametest.BalanceTests"
+			"com.extremeprogression.gametest.BalanceTests",
+			"com.extremeprogression.gametest.PlaceholderTests"
 		],
 		"fabric-client-gametest": [
 			"com.extremeprogression.gametest.ClientShots"

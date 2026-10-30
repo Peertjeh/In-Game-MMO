@@ -76,6 +76,8 @@ Herb Lore and more.
   - every synergy's strength.
 - An **in-game settings screen** for admins, `/skills reload`, **XP events** (`/skills xprate 2 mining 60`), a
   **leaderboard**, `/skills inspect` and resets that wait for a confirmation.
+- **TAB and Styled Chat**: `%extremeprogression:...%` placeholders through Text Placeholder API: a level badge in the
+  player list, your best skill, death pressure and fatigue in the footer, an XP event in the header.
 - Player data is saved atomically with backups, and old files are migrated forward, never reset.
 
 ## 📦 Requirements
@@ -83,7 +85,7 @@ Herb Lore and more.
 - Minecraft **26.3**, Fabric Loader **0.19.5** or newer, **Fabric API**, Java **25**.
 - On the server **and** on every client.
 - Extreme Dimensions is optional; with it, the Seam counts for deaths and the inventory buttons sit side by side.
-- Tested with Sodium, Iris and Mod Menu.
+- Tested with Sodium, Iris, Mod Menu and Text Placeholder API.
 
 ## ❓ FAQ
 

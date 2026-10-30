@@ -45,6 +45,7 @@ public final class ServerEvents {
 			PlayerStore.close();
 			com.extremeprogression.synergy.Chronicle.close();
 			com.extremeprogression.xp.XpEvents.clear();
+			com.extremeprogression.compat.TabPlaceholders.clear();
 			com.extremeprogression.command.AdminCommands.clear();
 			AfkTracker.clear();
 			XpService.clear();
@@ -117,6 +118,7 @@ public final class ServerEvents {
 			com.extremeprogression.death.DeathService.tick(s);
 			com.extremeprogression.synergy.SynergyEffects.tick(s);
 			com.extremeprogression.xp.XpEvents.tick(s);
+			com.extremeprogression.compat.TabPlaceholders.tick(s);
 			XpService.tick(s);
 		});
 

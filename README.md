@@ -15,7 +15,7 @@ that you discover yourself. Slow, meaningful progression, and deaths that cost y
 - **Twelve hidden synergies**, a personal Codex and the server's Chronicle.
 - **Deaths that cost you**: death pressure, the dimensions' factors, death fatigue, the Death Register and At Stake.
 - **For server owners**: presets, data files for every number, an in-game settings screen, XP events, a leaderboard and
-  admin commands.
+  admin commands, and placeholders for TAB and Styled Chat ([server/README.md](server/README.md)).
 
 More: the page text in [docs/modrinth/description.md](docs/modrinth/description.md), the full design in
 [docs/DESIGN.md](docs/DESIGN.md), what changed in [CHANGELOG.md](CHANGELOG.md), and how to try it in

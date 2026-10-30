@@ -89,6 +89,22 @@ Without Extreme Dimensions none of this code is loaded.
 - The license is MIT. The icon is drawn by `tools/icon/make_icon.py`, and the Modrinth page text is in
   `docs/modrinth/description.md`.
 
+**TAB and Styled Chat (version 1.1.0)**, as Extreme Dimensions and BattleHub have them on the same server:
+- `%extremeprogression:<name>%` placeholders go through Text Placeholder API, which TAB and Styled Chat read on Fabric.
+  - The values are worked out on the server's thread once a second and kept as a snapshot, because TAB asks from a
+    thread of its own.
+  - Compile-time stand-ins for placeholder-api's classes (from Extreme Dimensions) are left out of the jar. Without
+    placeholder-api nothing of it is ever loaded.
+- The placeholders cover each player and the server:
+  - per player: the total level, Mastery, the best skill, every skill's level and Mastery ranks, the specializations,
+    the death pressure, deaths, death fatigue, the synergies found and a level badge;
+  - per server: the preset, the cap, a running XP event, the server's first discoveries and the best player.
+- The shared configs of that server (`server/config/`, TAB and Styled Chat for all three mods) carry Extreme
+  Progression's lines. The list of placeholders is in `server/README.md`.
+- 💡 The level badge: `✦<total>` in a colour that brightens every hundred levels, with a gold star once the player has
+  Mastery.
+- The compatibility run includes the real placeholder-api and reads the placeholders back through it, as TAB does.
+
 ### State of the repository (inspected on 2026-10-30)
 - `Peertjeh/In-Game-MMO`: 1 commit, only `README.md` ("MMO With GUI"). Greenfield: no code, build, GUI or storage.
 
