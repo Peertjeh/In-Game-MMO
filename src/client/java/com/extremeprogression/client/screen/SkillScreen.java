@@ -85,7 +85,7 @@ public class SkillScreen extends Screen {
 				int nx = single ? cx : cx + slot.column * (half + 2);
 				int ny = ty + 19 + (8 - slot.row) * ROW;
 				String key = TreeRules.key(spec, slot);
-				add(nx, ny, single ? colW : half, ROW - 1, Component.literal(nodeName(spec, slot)), key, () -> nodeState(spec, slot), () -> nodeBadge(spec, slot));
+				add(nx, ny, single ? colW : half, ROW - 1, Component.literal(single ? nodeName(spec, slot) : cellName(slot)), key, () -> nodeState(spec, slot), () -> nodeBadge(spec, slot));
 			}
 		}
 		// The trunk: two rows of two
@@ -182,6 +182,11 @@ public class SkillScreen extends Screen {
 			case PASSIVE -> Ui.tr("gui.extremeprogression.node.passive", slot.ordinal() < 2 ? slot.column + 1 : slot.column + 3);
 			case CHOICE -> Ui.tr(slot == NodeSlot.C1 ? "gui.extremeprogression.node.choice_a" : "gui.extremeprogression.node.choice_b");
 		};
+	}
+
+	/** The short label of a half-width cell (P1 to P4, A or B), where the full name would not fit beside its rank. */
+	private static String cellName(NodeSlot slot) {
+		return slot.kind == NodeSlot.Kind.CHOICE ? (slot == NodeSlot.C1 ? "A" : "B") : "P" + (slot.ordinal() < 2 ? slot.column + 1 : slot.column + 3);
 	}
 
 	private TreeNode.State nodeState(Specialization spec, NodeSlot slot) {

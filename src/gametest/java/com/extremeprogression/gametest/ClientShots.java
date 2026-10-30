@@ -147,7 +147,8 @@ public class ClientShots implements FabricClientGameTest {
 
 			// With a sword in hand the ability key reaches Riposte: its icon shows beside the hotbar, and R uses it
 			sp.getServer().runOnServer(s -> s.getPlayerList().getPlayers().get(0).setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIAMOND_SWORD)));
-			ctx.waitTicks(10);
+			// Long enough for the operator messages in the chat to fade, so the action bar shows in the screenshots
+			ctx.waitTicks(220);
 			check(ctx.computeOnClient(mc -> AbilityHud.ready(false)) == Specialization.BLADE, "the HUD does not show Riposte as ready with a sword");
 			ctx.takeScreenshot("08_ability_ready");
 			ctx.getInput().pressKey(o -> ExtremeProgressionClient.ABILITY);
