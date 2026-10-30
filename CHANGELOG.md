@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.8.0: Deaths (in development)
+
+Deaths now cost you for real, and the game always shows the cost up front.
+
+- **The loss**: every skill loses a share of its progress in the current level, or toward the next Mastery rank. Your
+  highest skill loses the most and a skill at half its level half as much. A normal death never takes a level.
+- **Death pressure**: +1 on every death, −1 for every hour of active play. At 0 a death takes 50%, from 1 it takes 100%,
+  and from 2 your highest skill also loses a whole Mastery rank, or a whole level when it has none.
+- **Dimensions**: deaths in the Nether cost ×1.5, in the End ×2, and in Extreme Dimensions' Seam ×2.5. There is no
+  extra XP there.
+- **Death fatigue**: for 10 minutes after a death every passive bonus works at half strength.
+- **Death Register** (a button on the Character Sheet): your deaths, the pressure and when it drops, death fatigue, the
+  dimensions' factors, **At Stake** (exactly what you would lose if you died now) and your last 50 deaths.
+- **After respawning**: a summary of what the death cost.
+- Lost levels set your newest points aside, and a specialization below 25 or 75 sleeps until the level is back.
+- Deaths in Creative or Spectator cost nothing. The loss is saved the moment you die.
+
 ## 0.7.0: Specializations (in development)
 
 Part 1 of 3: the twelve specializations of Melee, Ranged, Defense and Exploration now do what they say.

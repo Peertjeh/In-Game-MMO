@@ -46,7 +46,7 @@ public class DeathSummaryScreen extends Screen {
 	@Override
 	protected void init() {
 		int rows = Math.max(1, Math.min(MAX_ROWS, lost.size()));
-		h = 74 + 10 * rows + 4 + 9 * notes().size() + 30;
+		h = 94 + 10 * rows + 9 * notes().size();
 		x0 = (this.width - W) / 2;
 		y0 = Math.max(2, (this.height - h) / 2);
 		this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.death.title"),

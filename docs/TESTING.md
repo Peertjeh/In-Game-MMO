@@ -1,6 +1,6 @@
 # Testing Extreme Progression
 
-This is for trying the mod in a real game while it is still in development (version 0.7.0, milestones 0–6 of the
+This is for trying the mod in a real game while it is still in development (version 0.8.0, milestones 0–7 of the
 [roadmap](DESIGN.md#13-implementation-roadmap--proposal)). What is not built yet is listed at the end.
 
 ## What you need
@@ -9,7 +9,7 @@ This is for trying the mod in a real game while it is still in development (vers
 - **Fabric Loader 0.19.5** or newer for 26.3 (the [Fabric installer](https://fabricmc.net/use/installer/))
 - **Fabric API 0.162.0+26.3** or newer ([Modrinth](https://modrinth.com/mod/fabric-api))
 - **Java 25** (the Minecraft launcher brings its own)
-- The mod's jar: `extremeprogression-0.7.0.jar`
+- The mod's jar: `extremeprogression-0.8.0.jar`
   - the latest green build is always on the
     [`ci-jar` branch](https://github.com/Peertjeh/In-Game-MMO/tree/ci-jar) (click the jar, then "Download raw file");
   - or under **Artifacts** of any [build run](https://github.com/Peertjeh/In-Game-MMO/actions).
@@ -17,7 +17,7 @@ This is for trying the mod in a real game while it is still in development (vers
 ## Installing
 
 1. Install Fabric Loader for 26.3 with the installer, and start that profile once.
-2. Put the Fabric API jar and `extremeprogression-0.7.0.jar` in the `mods` folder of that game directory.
+2. Put the Fabric API jar and `extremeprogression-0.8.0.jar` in the `mods` folder of that game directory.
 3. Start the game. The title screen's mod list (Mods) should show Extreme Progression.
 
 On a **server**, the same two jars go in the server's `mods` folder; every player needs the mod too (it has a GUI and a
@@ -33,6 +33,7 @@ key of its own). Extreme Dimensions is optional; the two work side by side.
 | Your first specialization's ability | `R` (rebindable in Controls), with the right tool or looking at the right workstation |
 | Your second specialization's ability | `Shift + R` |
 | Ability ready / in effect | the small icons right of the hotbar (in effect: with the seconds left) |
+| Death Register | the button at the foot of the Character Sheet |
 
 ## Commands for testing (operators, or cheats on in singleplayer)
 
@@ -77,10 +78,19 @@ Player data is in `<world>/extremeprogression/players/`.
    [DESIGN.md, "How milestone 6 implements it"](DESIGN.md#how-milestone-6-implements-it-version-070).
 7. **Respec**: the Respec… button shows the cost first (20% of the skill's XP, then 7 days' wait); the admin command is
    free.
+8. **Deaths** (play in Survival: Creative deaths cost nothing):
+   - Open the Death Register first: At Stake shows what a death would take now. Die, and compare it with the summary
+     after respawning.
+   - Die again soon: the pressure is 1, so twice the loss. A third time, at pressure 2, your highest skill also loses a
+     whole level, or a Mastery rank when it has one.
+   - Try the Nether or the End: the factor shows in the register.
+   - For 10 minutes after a death your bonuses are at half strength. The Character Sheet shows the time left.
+   - A skill set to 25 with a specialization, then a death at pressure 2: the specialization sleeps until you win level
+     25 back.
+   - To start over: `/skills admin set` does not touch the death pressure. A new world or a removed player file does.
 
 ## Not built yet
 
-- **Dying costs nothing yet**: the death system (losing levels, death pressure, the Death Register) is milestone 7.
 - **Mastery perks, synergies, opposing skills' XP penalty** and showing specialization conflicts and hard requirements
   in more detail: milestone 8.
 - **Presets, the settings screen, the leaderboard, XP events**: milestone 9.
@@ -90,6 +100,9 @@ Player data is in `<world>/extremeprogression/players/`.
 - The Respec… confirmation works its preview out with the default options; a server with other respec options charges
   what its own options say.
 - A spear's charge attack gives no Melee XP.
+- The Death Register describes the pressure steps with the client's own options; on a server with other death options
+  the losses (and At Stake) still follow the server.
+- An Extreme Dimensions Collapse does not count as a death (an open question in the design).
 
 ## Reporting a problem
 

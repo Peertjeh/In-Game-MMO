@@ -38,7 +38,10 @@ public final class DeathView {
 			return String.format(Locale.ROOT, "%d:%02d", seconds / 60, seconds % 60);
 		}
 		long minutes = (seconds + 59) / 60;
-		return minutes < 60 ? Ui.tr("gui.extremeprogression.death.minutes", minutes)
+		if (minutes < 60) {
+			return Ui.tr("gui.extremeprogression.death.minutes", minutes);
+		}
+		return minutes % 60 == 0 ? Ui.tr("gui.extremeprogression.death.hours_whole", minutes / 60)
 				: Ui.tr("gui.extremeprogression.death.hours", minutes / 60, minutes % 60);
 	}
 
@@ -75,10 +78,10 @@ public final class DeathView {
 		if (l.levelAfter < l.levelBefore) {
 			parts.add(Ui.tr("gui.extremeprogression.death.lost_level", l.levelBefore, l.levelAfter));
 		}
-		if (l.xp >= 0.5 || parts.isEmpty()) {
+		if (l.xp >= 0.5) {
 			parts.add(Ui.tr(l.mastery ? "gui.extremeprogression.death.lost_mastery_xp" : "gui.extremeprogression.death.lost_xp", Ui.number(l.xp)));
 		}
-		return String.join(", ", parts);
+		return parts.isEmpty() ? Ui.tr("gui.extremeprogression.death.lost_nothing") : String.join(", ", parts);
 	}
 
 	/** The skills that lost something, the biggest loss first (a whole level or rank before any XP). */

@@ -7,7 +7,8 @@ that you discover yourself. Slow, meaningful progression, and deaths that cost y
 
 > **Status:** in development. The design is approved; the code is being built milestone by milestone. So far all ten
 > skills earn XP (with the rules against exploits), and their trunks, specializations, points and respec work, and all
-> thirty specializations have their abilities, nodes and prices. The death system and the synergies follow.
+> thirty specializations have their abilities, nodes and prices. Deaths cost progress, with death pressure, the
+> dimensions' factors, death fatigue and the Death Register. Mastery and the synergies follow.
 
 - The full design: [docs/DESIGN.md](docs/DESIGN.md)
 - Works on its own, and optionally together with [Extreme Dimensions](https://github.com/Peertjeh/extremedimensions).

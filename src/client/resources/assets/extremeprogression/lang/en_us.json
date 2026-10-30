@@ -824,6 +824,7 @@
 	"gui.extremeprogression.death.details_place": "At %s, %s, %s · death pressure %s",
 	"gui.extremeprogression.death.minutes": "%s min",
 	"gui.extremeprogression.death.hours": "%s h %s min",
+	"gui.extremeprogression.death.hours_whole": "%s h",
 	"gui.extremeprogression.death.today": "Today %s",
 	"gui.extremeprogression.death.yesterday": "Yesterday %s",
 	"gui.extremeprogression.death.lost_rank": "Mastery rank %s → %s",

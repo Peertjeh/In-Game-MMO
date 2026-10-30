@@ -239,6 +239,9 @@ public class ClientShots implements FabricClientGameTest {
 			java.util.List<com.extremeprogression.data.DeathData.Loss> stake = ctx.computeOnClient(mc -> com.extremeprogression.client.screen.DeathRegisterScreen.atStake());
 			ctx.runOnClient(mc -> mc.gui.setScreen(new com.extremeprogression.client.screen.DeathRegisterScreen(new CharacterSheetScreen(null))));
 			ctx.waitTicks(10);
+			// (the cursor in a corner, where it shows no tooltip over the screen: opening a screen centres it)
+			ctx.getInput().setCursorPos(1, 1);
+			ctx.waitTicks(2);
 			ctx.takeScreenshot("12_death_register_before");
 			ctx.runOnClient(mc -> mc.gui.setScreen(null));
 			double miningBefore = ctx.computeOnClient(mc -> ClientProgress.skill("mining").xp());
@@ -275,6 +278,8 @@ public class ClientShots implements FabricClientGameTest {
 			ctx.takeScreenshot("13_death_summary");
 			ctx.runOnClient(mc -> mc.gui.setScreen(new com.extremeprogression.client.screen.DeathRegisterScreen(null)));
 			ctx.waitTicks(10);
+			ctx.getInput().setCursorPos(1, 1);
+			ctx.waitTicks(2);
 			ctx.takeScreenshot("14_death_register_after");
 			ctx.runOnClient(mc -> mc.gui.setScreen(new CharacterSheetScreen(null)));
 			ctx.waitTicks(10);
@@ -359,7 +364,7 @@ public class ClientShots implements FabricClientGameTest {
 				"per_dimension", "dimension.minecraft.overworld", "dimension.minecraft.the_nether", "dimension.minecraft.the_end",
 				"dimension.extremedimensions.the_seam", "permanent", "permanent_hint", "stake", "stake_basis", "stake_tip_share", "stake_tip_after",
 				"stake_tip_after_mastery", "short_rank", "short_level", "whole_level", "whole_rank", "warning_now", "warning_next", "warning_base", "history",
-				"history_scroll", "history_empty", "details_place", "minutes", "hours", "today", "yesterday", "lost_rank", "lost_level", "lost_xp",
+				"history_scroll", "history_empty", "details_place", "minutes", "hours", "hours_whole", "today", "yesterday", "lost_rank", "lost_level", "lost_xp",
 				"lost_mastery_xp", "lost_nothing", "and_more", "summary.title", "summary.continue", "summary.place", "summary.lost", "summary.fatigue",
 				"summary.pressure", "summary.pressure_whole"}) {
 			keys.add("gui.extremeprogression.death." + k);

@@ -835,6 +835,77 @@ oxygen bonus.
 
 ### Open questions
 - ❓ Does a **Collapse** in Extreme Dimensions (the Tether runs dry and you wake up at home) also count as a death for this mod? (ED integration)
+  - Until it is answered, a Collapse does **not** count: the mod only reacts to a real death.
+
+### How milestone 7 implements it (version 0.8.0)
+The confirmed rules above, as built. Everything marked 💡 was decided while building.
+
+- **The loss, layers 1 and 2:**
+  - Every skill's "step" is its progress toward the next Mastery rank at the maximum level, or else the XP within its
+    current level.
+  - Every skill loses `step × min(1, base × (its level / the highest level) × the dimension's factor)`. So a skill never
+    drops a level in these layers, even in the End at pressure 1 (200%).
+  - 💡 **The highest skill** is the one with the highest level. On a tie it is the one with more Mastery ranks, then
+    the one with more XP.
+  - 💡 With **every skill at level 0**, each counts as the highest: each loses the base share of its XP.
+  - 💡 **A death right at the start of a level** costs that skill nothing in layers 1 and 2. Nothing goes below level 0.
+- **Layer 3**, from death pressure 2, after layers 1 and 2:
+  - The highest skill loses 1 Mastery rank and the perk chosen at it. Only with no ranks does it lose 1 whole level.
+  - 💡 A lost level lands at the **same point of the level below**. At pressure 2 the base is 100%, so layer 2 has
+    already taken the whole step of the highest skill, and the skill lands at the start of the level below.
+  - 💡 Layer 3 is **always exactly one** rank or level. The dimension's factor does not multiply it.
+- **Points and specializations on a lost level** (the rules of milestone 5):
+  - The most recently bought point is set aside first.
+  - A specialization below 25 or 75 is dormant. It works again, with the same choice and the same points, as soon as
+    the level is back.
+- **Death pressure:**
+  - +1 on every death.
+  - −1 for every hour of active play, which means online and not AFK (the 5-minute AFK rule of §12), counted per second.
+  - 💡 A death starts that hour over.
+  - 💡 The server sends the countdown once a minute, so the Death Register never runs on while you are AFK.
+- **Dimensions:**
+  - Overworld ×1, Nether ×1.5, End ×2, the Seam ×2.5.
+  - 💡 The Seam only counts as the Seam with Extreme Dimensions loaded. Without it the id counts ×1, as does any other
+    mod's dimension.
+- **Death fatigue:**
+  - For 10 minutes after a death, every passive bonus works at 50%.
+  - 💡 That covers the 40 trunk bonuses and every passive and choice node, including the nodes that lengthen an ability.
+  - 💡 It does not cover an ability's own rank, a specialization's price, or XP.
+  - 💡 A bonus that is all or nothing (Forest Foot, Light Step, Farmhouse Fare, Fisher's Fare) works half of the time.
+  - 💡 **Shield Reflex**, one tick sooner, is off while fatigued (a tick cannot be halved).
+  - 💡 Thresholds such as Pack Leader's companions and Ice Fishing's radius use the halved rank.
+  - 💡 The 10 minutes are **game time**: they pause in a paused singleplayer world, and on a server they also run while
+    you are offline.
+- **Which deaths count:**
+  - 💡 Deaths in **Creative or Spectator** cost nothing and do not raise the pressure.
+  - 💡 **Two deaths in one server tick** count once.
+  - A PvP death costs the same as any other, and the killer gains nothing (no vampirism).
+- **Saving:**
+  - 💡 The loss is written to the player file **at once**, not at the next autosave. A server that stops right after
+    a death keeps the loss, and nothing can apply it twice: the file holds the result, not a pending loss.
+  - The player file (schema 4) adds the deaths, the pressure, its play-time counter, the end of death fatigue, and the
+    last 50 deaths. An older file loads with none.
+- **The Death Register** (the approved mockup of round 21, at GUI size):
+  - **Left:** the deaths, the death pressure with its three steps (0 · 50%, 1 · 100%, 2+ · a whole level), when it
+    drops, death fatigue left, the dimensions' factors (the current one framed), and "Loss is permanent".
+  - **At Stake:** every skill in two columns. Each shows what it would lose now and a bar of its step: kept, lost in
+    red, still to earn. Hovering shows its share and what would be left. A line under it says what the pressure means
+    for this death and the next.
+  - **Recent deaths:** one line each, the newest first, with a scroll wheel. Hovering shows the cause, the place, the
+    pressure and every skill's loss.
+  - 💡 At Stake runs the **server's own death rules** on a copy of the progression the server sent, with the share and
+    pressure the server sent. A death takes exactly what it showed (a client test checks this).
+- **After a death:**
+  - 💡 A chat line at the moment of death says how many skills lost progress.
+  - After respawning, a **summary** opens once, as soon as no other screen is open. It shows the cause, the place and
+    the factor, every skill that lost something, death fatigue, and what the death pressure now means. Its buttons are
+    Death Register and Continue.
+  - 💡 The **Character Sheet** shows the death pressure, the death fatigue while it lasts (never on the HUD), and a
+    Death Register button.
+- **Configuration** (`config/extremeprogression.json`, 10 options): the two base shares, the pressure for layer 3, the
+  three dimension factors, the fatigue's minutes and power, the pressure decay in minutes, and the history length.
+  - 💡 Until milestone 9 syncs the settings, the client's own copy describes the pressure steps in the GUI. The losses
+    themselves always come from the server.
 
 ## 8. Recovery mechanics
 - ✅ **No recovery mechanics.** There is no shade, no challenge and no item to win back a loss. Loss is permanent (round 7).
@@ -1043,7 +1114,7 @@ oxygen bonus.
 
 Work starts only after the owner's final approval (§15). Each milestone ends with: compiling, running the tests, checking for regressions, a report of what was built and what is still open, and the owner's approval before the next major system.
 
-Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 ✅ done (0.4.0) · milestone 4 ✅ done (0.5.0) · milestone 5 ✅ done (0.6.0) · milestone 6 ✅ done (0.7.0) · milestone 7 next.
+Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 ✅ done (0.4.0) · milestone 4 ✅ done (0.5.0) · milestone 5 ✅ done (0.6.0) · milestone 6 ✅ done (0.7.0) · milestone 7 ✅ done (0.8.0) · milestone 8 next.
 
 | # | Milestone | Contents | Tests |
 |---|---|---|---|
