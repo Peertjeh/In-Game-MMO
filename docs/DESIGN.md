@@ -765,7 +765,8 @@ for Calm Herd are the two parents.
 - **The Alchemist's new potions** are plain vanilla potions with vanilla effects, brewed from an awkward potion
   (normal, splash or lingering) by data recipes: **Haste** (cocoa beans, 3:00), **Resistance** (an armadillo scute,
   3:00) and **Absorption** (honeycomb, 2:00). A stand brews them only for an Alchemist with **Foraging 30** (the hard
-  requirement of §2; the requirement shows in the GUI with the other hard requirements in milestone 8).
+  requirement of §2). All four hard requirements of §2 are checked from milestone 6 on (Template Saver Mining 30, the new
+  potions Foraging 30, Deep Sea Exploration 40, Rider Exploration 30); the GUI shows them in milestone 8.
 - **Arcane Insight** lists every enchantment of the three offers beside the enchanting table, with a **Reroll the
   offers** button for the free reroll; both go once the enchantment is made or the time is up.
 - **Thrown potions** carry their brewer's duration bonus (Potent Brews, Extended) into their splash and cloud, and

@@ -148,7 +148,9 @@ public final class Fishing {
 			} else if (kind == Kind.JUNK && Specs.roll(p, 0.10 * rank(p, TREASURE_HUNTER, P3))) {
 				replace(items, roll(p, hook, rod, BuiltInLootTables.FISHING_FISH));
 			}
-			if (Specs.roll(p, 0.002 * rank(p, TREASURE_HUNTER, C1))) {
+			// Deep Sea needs Exploration 40 (design §2, hard requirement)
+			if (com.extremeprogression.data.PlayerStore.get(p.getUUID()).get(com.extremeprogression.skill.Skill.EXPLORATION).level >= 40
+					&& Specs.roll(p, 0.002 * rank(p, TREASURE_HUNTER, C1))) {
 				replace(items, List.of(new ItemStack(p.getRandom().nextBoolean() ? Items.HEART_OF_THE_SEA : Items.TRIDENT)));
 			}
 			if (kind(items) == Kind.FISH && Specs.roll(p, 0.03 * rank(p, ANGLER, P3))) {
