@@ -54,10 +54,17 @@ public final class Specs {
 		Ranged.register();
 		Defense.register();
 		Exploration.register();
+		Mining.register();
+		Foraging.register();
+		Farming.register();
+		Fishing.register();
 		ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) -> secondary() || allow(entity, source, amount));
 		ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> {
 			if (entity instanceof Projectile projectile && entity.tickCount == 0 && projectile.getOwner() instanceof ServerPlayer p) {
 				Ranged.shot(p, projectile);
+				if (projectile instanceof net.minecraft.world.entity.projectile.FishingHook hook) {
+					Fishing.cast(p, hook);
+				}
 			}
 		});
 	}
@@ -175,7 +182,9 @@ public final class Specs {
 		if (source.getEntity() instanceof ServerPlayer p && p != target) {
 			out = Melee.outgoing(p, target, source, out);
 			out = Ranged.outgoing(p, target, source, out);
+			out = Fishing.outgoing(p, target, source, out);
 		}
+		out = Farming.damage(target, source, out);
 		out = Defense.incoming(target, source, out);
 		out = Exploration.incoming(target, source, out);
 		return out;
@@ -205,12 +214,17 @@ public final class Specs {
 	public static void tick(MinecraftServer server) {
 		Active.tick(server);
 		Wounds.tick(server);
+		Foraging.tick(server);
 		for (ServerPlayer p : server.getPlayerList().getPlayers()) {
 			Melee.tick(p);
 			Ranged.tick(p);
 			Defense.tick(p);
 			Exploration.tick(p);
+			Mining.tick(p);
+			Farming.tick(p);
+			Fishing.tick(p);
 		}
+		Farming.endOfTick();
 	}
 
 	/** Hunger from anything the player does. */
@@ -220,7 +234,24 @@ public final class Specs {
 
 	/** An effect about to be given to an entity: changed, or null when it is shaken off. */
 	public static MobEffectInstance effect(LivingEntity target, MobEffectInstance effect) {
-		return Defense.effect(target, effect);
+		MobEffectInstance out = Defense.effect(target, effect);
+		return out == null ? null : Foraging.effect(target, out);
+	}
+
+	/** A player's breaking speed on a block (on the client too). */
+	public static float destroySpeed(Player player, net.minecraft.world.level.block.state.BlockState state, float speed) {
+		return Foraging.destroySpeed(player, state, Mining.destroySpeed(player, state, speed));
+	}
+
+	/** The durability a use of a tool costs: the gathering specializations' chances of none. */
+	public static int durability(ItemStack stack, ServerPlayer player, int amount) {
+		if (player == null || amount <= 0) {
+			return amount;
+		}
+		int out = Mining.durability(stack, player, amount);
+		out = Foraging.durability(stack, player, out);
+		out = Farming.durability(stack, player, out);
+		return Fishing.durability(stack, player, out);
 	}
 
 	/** Healing an entity receives. */
@@ -232,5 +263,8 @@ public final class Specs {
 		Active.forget(id);
 		Melee.forget(id);
 		Ranged.forget(id);
+		Mining.forget(id);
+		Farming.forget(id);
+		Fishing.forget(id);
 	}
 }

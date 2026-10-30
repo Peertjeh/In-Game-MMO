@@ -19,7 +19,7 @@ public abstract class BrushableBlockEntityMixin {
 	@Inject(method = "brushingCompleted", at = @At("HEAD"), require = 1)
 	private void extremeprogression$brushed(ServerLevel level, LivingEntity user, ItemStack brush, CallbackInfo ci) {
 		if (user instanceof Player player) {
-			GatheringXp.brushed(player);
+			GatheringXp.brushed(player, (BrushableBlockEntity) (Object) this);
 		}
 	}
 }

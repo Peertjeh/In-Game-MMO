@@ -44,7 +44,7 @@ public final class FishingXp {
 		}
 		double base = 0;
 		for (ItemStack stack : items) {
-			base += XpTables.caught(stack) * Math.max(1, stack.getCount());
+			base += XpTables.caught(stack) * Math.max(1, stack.getCount()) * com.extremeprogression.spec.Fishing.xp(player, stack);
 		}
 		Overfishing spot = SPOTS.computeIfAbsent(player.getUUID(), k -> new Overfishing());
 		double share = spot.take(hook.getX(), hook.getY(), hook.getZ());

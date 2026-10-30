@@ -20,5 +20,6 @@ public abstract class BredAnimalsTriggerMixin {
 	private void extremeprogression$bred(ServerPlayer player, Animal parent, Animal partner, AgeableMob child, CallbackInfo ci) {
 		AnimalXp.bred(player);
 		Trunks.bred(player, child);
+		com.extremeprogression.spec.Farming.bred(player, parent, partner, child);
 	}
 }

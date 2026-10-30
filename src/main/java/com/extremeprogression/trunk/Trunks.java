@@ -294,10 +294,13 @@ public final class Trunks {
 	 * chance of the block's drops once more. Only for blocks that also gave XP (never placed ones).
 	 */
 	public static void extraDrops(ServerPlayer p, ServerLevel level, BlockPos pos, BlockState state, BlockEntity be, Yield yield) {
+		// (with the specializations' passives on top, and their prices: Tunneler no double ores, Herder no extra crops)
 		boolean twice = switch (yield) {
-			case ORE -> !state.is(net.minecraft.world.level.block.Blocks.ANCIENT_DEBRIS) && has(p, Skill.MINING, 20) && p.getRandom().nextDouble() < 0.05;
-			case LOG -> has(p, Skill.FORAGING, 20) && p.getRandom().nextDouble() < 0.05;
-			case CROP -> has(p, Skill.FARMING, 10) && p.getRandom().nextDouble() < 0.05;
+			case ORE -> !state.is(net.minecraft.world.level.block.Blocks.ANCIENT_DEBRIS) && !com.extremeprogression.spec.Mining.noDoubles(p)
+					&& p.getRandom().nextDouble() < (has(p, Skill.MINING, 20) ? 0.05 : 0) + com.extremeprogression.spec.Mining.doubleOreChance(p);
+			case LOG -> p.getRandom().nextDouble() < (has(p, Skill.FORAGING, 20) ? 0.05 : 0) + com.extremeprogression.spec.Foraging.doubleLogChance(p);
+			case CROP -> !com.extremeprogression.spec.Farming.noExtraCrops(p)
+					&& p.getRandom().nextDouble() < (has(p, Skill.FARMING, 10) ? 0.05 : 0) + com.extremeprogression.spec.Farming.extraCropChance(p);
 			case LEAVES -> has(p, Skill.FORAGING, 10);
 		};
 		if (!twice) {
@@ -326,7 +329,7 @@ public final class Trunks {
 
 	/** Growing Up (Farming 15): a baby you bred grows up 10% faster. */
 	public static void bred(ServerPlayer p, AgeableMob child) {
-		if (child != null && child.getAge() < 0 && has(p, Skill.FARMING, 15)) {
+		if (child != null && child.getAge() < 0 && has(p, Skill.FARMING, 15) && !com.extremeprogression.spec.Farming.noBreedingBonus(p)) {
 			child.setAge((int) (child.getAge() * 0.9));
 		}
 	}
@@ -344,6 +347,8 @@ public final class Trunks {
 			p.getFoodData().eat(1, 0f);
 		}
 		com.extremeprogression.spec.Exploration.ate(p, food);
+		com.extremeprogression.spec.Foraging.ate(p, food);
+		com.extremeprogression.spec.Fishing.ate(p, food);
 	}
 
 	/** Stamina (Exploration 10): sprinting costs 5% less hunger. */

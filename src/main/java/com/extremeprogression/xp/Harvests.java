@@ -17,6 +17,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.animal.sheep.Sheep;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -36,7 +37,8 @@ public final class Harvests {
 
 	private enum Kind { SWEET_BERRIES, GLOW_BERRIES, HONEY, SHEARING }
 
-	private record Pending(ServerPlayer player, Level level, BlockPos pos, Kind kind, Sheep sheep) {}
+	/** A harvest noted at the click, with what it gives (for the wild bonuses of Foraging's specializations). */
+	private record Pending(ServerPlayer player, Level level, BlockPos pos, Kind kind, Sheep sheep, Item item, int count) {}
 
 	/** (one entry per block or sheep per tick: the event fires for both hands) */
 	private static final Map<Object, Pending> PENDING = new LinkedHashMap<>();
@@ -53,7 +55,7 @@ public final class Harvests {
 			if (!level.isClientSide() && player instanceof ServerPlayer p) {
 				AfkTracker.interacted(p.getUUID(), level.getServer().getTickCount());
 				if (entity instanceof Sheep sheep && sheep.readyForShearing() && p.getItemInHand(hand).is(Items.SHEARS)) {
-					PENDING.putIfAbsent(sheep.getUUID(), new Pending(p, level, sheep.blockPosition(), Kind.SHEARING, sheep));
+					PENDING.putIfAbsent(sheep.getUUID(), new Pending(p, level, sheep.blockPosition(), Kind.SHEARING, sheep, null, 0));
 				}
 			}
 			return InteractionResult.PASS;
@@ -63,17 +65,25 @@ public final class Harvests {
 	private static void noteBlock(ServerPlayer p, Level level, BlockPos pos, ItemStack held) {
 		BlockState state = level.getBlockState(pos);
 		Kind kind = null;
+		Item item = null;
+		int count = 1;
 		if (state.getBlock() instanceof SweetBerryBushBlock && state.getValue(SweetBerryBushBlock.AGE) > 1) {
 			kind = Kind.SWEET_BERRIES;
+			item = Items.SWEET_BERRIES;
+			count = state.getValue(SweetBerryBushBlock.AGE) == 3 ? 2 : 1;
 		} else if (state.getBlock() instanceof CaveVines && CaveVines.hasGlowBerries(state)) {
 			kind = Kind.GLOW_BERRIES;
+			item = Items.GLOW_BERRIES;
 		} else if (state.is(Blocks.BEE_NEST) && state.getValue(BeehiveBlock.HONEY_LEVEL) >= BeehiveBlock.MAX_HONEY_LEVELS
 				&& (held.is(Items.GLASS_BOTTLE) || held.is(Items.SHEARS))) {
 			kind = Kind.HONEY;
+			item = held.is(Items.GLASS_BOTTLE) ? Items.HONEY_BOTTLE : Items.HONEYCOMB;
+			count = held.is(Items.GLASS_BOTTLE) ? 1 : 3;
+			com.extremeprogression.spec.Foraging.takingHoney(p, pos);
 		}
 		if (kind != null) {
 			BlockPos at = pos.immutable();
-			PENDING.putIfAbsent(at, new Pending(p, level, at, kind, null));
+			PENDING.putIfAbsent(at, new Pending(p, level, at, kind, null, item, count));
 		}
 	}
 
@@ -94,7 +104,8 @@ public final class Harvests {
 	private static void check(Pending h) {
 		if (h.kind == Kind.SHEARING) {
 			if (h.sheep.isSheared()) {
-				XpService.award(h.player, Skill.FARMING, XpTables.SHEARING);
+				XpService.award(h.player, Skill.FARMING, XpTables.SHEARING * com.extremeprogression.spec.Farming.shearXp(h.player));
+				com.extremeprogression.spec.Farming.sheared(h.player, h.sheep);
 			}
 			return;
 		}
@@ -109,11 +120,14 @@ public final class Harvests {
 			return;
 		}
 		int flags = PlacedBlocks.flags(h.level, h.pos);
-		switch (h.kind) {
+		boolean wild = switch (h.kind) {
 			case SWEET_BERRIES -> GatheringXp.wildOrPlanted(h.player, flags, XpTables.WILD_SWEET_BERRIES, XpTables.PLANTED_SWEET_BERRIES);
 			case GLOW_BERRIES -> GatheringXp.wildOrPlanted(h.player, flags, XpTables.GLOW_BERRIES, 0);
 			case HONEY -> GatheringXp.wild(h.player, flags, XpTables.WILD_HONEY);
-			default -> {}
+			default -> false;
+		};
+		if (wild && h.item != null) {
+			com.extremeprogression.spec.Foraging.wildPicked(h.player, h.level, h.pos, h.item, h.count);
 		}
 		// The berries bonemeal made are picked: what grows back by itself counts again
 		if ((flags & BONEMEALED) != 0) {

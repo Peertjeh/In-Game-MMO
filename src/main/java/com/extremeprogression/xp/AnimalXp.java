@@ -15,11 +15,11 @@ public final class AnimalXp {
 
 	/** From the vanilla trigger for advancements: the player bred two animals. */
 	public static void bred(ServerPlayer player) {
-		XpService.award(player, Skill.FARMING, XpTables.BREEDING);
+		XpService.award(player, Skill.FARMING, XpTables.BREEDING * com.extremeprogression.spec.Farming.breedXp(player));
 	}
 
 	/** From the vanilla trigger for advancements: the player tamed an animal. */
 	public static void tamed(ServerPlayer player, Animal animal) {
-		XpService.award(player, Skill.FARMING, XpTables.taming(animal.getType()));
+		XpService.award(player, Skill.FARMING, XpTables.taming(animal.getType()) * com.extremeprogression.spec.Farming.tamerXp(player));
 	}
 }

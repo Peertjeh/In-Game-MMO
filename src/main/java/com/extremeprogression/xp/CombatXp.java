@@ -96,7 +96,7 @@ public final class CombatXp {
 			}
 		} else if (attacker instanceof TamableAnimal pet && direct == pet && pet.isTame() && pet.getOwner() instanceof ServerPlayer owner
 				&& owner != target && dealt > 0) {
-			offence(owner, target, Skill.FARMING, dealt, XpTables.PET_PER_DAMAGE, hostileBefore, tick);
+			offence(owner, target, Skill.FARMING, dealt, XpTables.PET_PER_DAMAGE * com.extremeprogression.spec.Farming.tamerXp(owner), hostileBefore, tick);
 		}
 
 		if (target instanceof ServerPlayer victim) {

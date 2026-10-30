@@ -92,7 +92,7 @@ public final class GatheringXp {
 		double pick = XpTables.pickaxe(state);
 		if (pick > 0) {
 			if ((flags & PLACED) == 0 && player.getMainHandItem().is(ItemTags.PICKAXES) && player.hasCorrectToolForDrops(state)) {
-				XpService.award(player, Skill.MINING, pick);
+				XpService.award(player, Skill.MINING, com.extremeprogression.spec.Mining.xp(player, state, pick));
 				if (BuiltInRegistries.BLOCK.getKey(block).getPath().endsWith("_ore")) {
 					Trunks.extraDrops(player, server, pos, state, be, Trunks.Yield.ORE);
 				}
@@ -103,6 +103,7 @@ public final class GatheringXp {
 		if (shovel > 0) {
 			if ((flags & PLACED) == 0 && player.getMainHandItem().is(ItemTags.SHOVELS)) {
 				XpService.award(player, Skill.MINING, shovel);
+				com.extremeprogression.spec.Mining.dug(player, server, pos);
 			}
 			return;
 		}
@@ -112,7 +113,7 @@ public final class GatheringXp {
 		if (log > 0) {
 			if ((flags & PLACED) == 0) {
 				double share = (flags & BONEMEALED) != 0 ? Config.BONEMEAL_FACTOR : (flags & PLANTED) != 0 ? Config.PLANTED_TREE_FACTOR : 1.0;
-				XpService.award(player, Skill.FORAGING, log * share);
+				XpService.award(player, Skill.FORAGING, log * share * com.extremeprogression.spec.Foraging.logXp(player));
 				if (share > 0) {
 					Trunks.extraDrops(player, server, pos, state, be, Trunks.Yield.LOG);
 				}
@@ -123,18 +124,20 @@ public final class GatheringXp {
 		// Farming: fully grown crops
 		if (block instanceof CropBlock crop) {
 			if (crop.isMaxAge(state)) {
-				farming(player, XpTables.crop(state), flags);
+				farming(player, XpTables.crop(state) * com.extremeprogression.spec.Farming.cropXp(player), flags);
 				if ((flags & BONEMEALED) == 0) {
 					Trunks.extraDrops(player, server, pos, state, be, Trunks.Yield.CROP);
+					com.extremeprogression.spec.Farming.harvested(player, server, pos, state, be);
 				}
 			}
 			return;
 		}
 		if (block instanceof NetherWartBlock) {
 			if (state.getValue(NetherWartBlock.AGE) >= NetherWartBlock.MAX_AGE) {
-				farming(player, XpTables.NETHER_WART, flags);
+				farming(player, XpTables.NETHER_WART * com.extremeprogression.spec.Farming.cropXp(player), flags);
 				if ((flags & BONEMEALED) == 0) {
 					Trunks.extraDrops(player, server, pos, state, be, Trunks.Yield.CROP);
+					com.extremeprogression.spec.Farming.harvested(player, server, pos, state, be);
 				}
 			}
 			return;
@@ -147,14 +150,14 @@ public final class GatheringXp {
 		}
 		if (block instanceof PitcherCropBlock) {
 			if (state.getValue(PitcherCropBlock.AGE) >= PitcherCropBlock.MAX_AGE) {
-				farming(player, XpTables.PITCHER, b.lowerFlags);
+				farming(player, XpTables.PITCHER * com.extremeprogression.spec.Farming.cropXp(player), b.lowerFlags);
 			}
 			return;
 		}
 		if (state.is(Blocks.TORCHFLOWER)) {
 			// (a torchflower only grows from a seed; one that was placed as a flower gives nothing)
 			if ((flags & PLACED) == 0) {
-				farming(player, XpTables.TORCHFLOWER, flags);
+				farming(player, XpTables.TORCHFLOWER * com.extremeprogression.spec.Farming.cropXp(player), flags);
 			}
 			return;
 		}
@@ -165,20 +168,20 @@ public final class GatheringXp {
 
 		// Wild or planted: Foraging in the wild, Farming when a player planted it
 		if (block instanceof CocoaBlock) {
-			if (state.getValue(CocoaBlock.AGE) >= CocoaBlock.MAX_AGE) {
-				wildOrPlanted(player, flags, XpTables.WILD_COCOA, XpTables.PLANTED_COCOA);
+			if (state.getValue(CocoaBlock.AGE) >= CocoaBlock.MAX_AGE && wildOrPlanted(player, flags, XpTables.WILD_COCOA, XpTables.PLANTED_COCOA)) {
+				com.extremeprogression.spec.Foraging.wildBroken(player, server, pos, state, be);
 			}
 			return;
 		}
 		if (block instanceof SweetBerryBushBlock) {
-			if (state.getValue(SweetBerryBushBlock.AGE) > 1) {
-				wildOrPlanted(player, flags, XpTables.WILD_SWEET_BERRIES, XpTables.PLANTED_SWEET_BERRIES);
+			if (state.getValue(SweetBerryBushBlock.AGE) > 1 && wildOrPlanted(player, flags, XpTables.WILD_SWEET_BERRIES, XpTables.PLANTED_SWEET_BERRIES)) {
+				com.extremeprogression.spec.Foraging.wildBroken(player, server, pos, state, be);
 			}
 			return;
 		}
 		if (block instanceof CaveVines) {
-			if (CaveVines.hasGlowBerries(state)) {
-				wildOrPlanted(player, flags, XpTables.GLOW_BERRIES, 0);
+			if (CaveVines.hasGlowBerries(state) && wildOrPlanted(player, flags, XpTables.GLOW_BERRIES, 0)) {
+				com.extremeprogression.spec.Foraging.wildBroken(player, server, pos, state, be);
 			}
 			return;
 		}
@@ -187,19 +190,28 @@ public final class GatheringXp {
 				return;
 			}
 			if (b.fromStem) {
-				farming(player, XpTables.STEM_FRUIT, flags);
-			} else {
-				wild(player, flags, XpTables.WILD_MELON);
+				farming(player, XpTables.STEM_FRUIT * com.extremeprogression.spec.Farming.cropXp(player), flags);
+			} else if (wild(player, flags, XpTables.WILD_MELON)) {
+				com.extremeprogression.spec.Foraging.wildBroken(player, server, pos, state, be);
 			}
 			return;
 		}
 		if (XpTables.mushroom(state)) {
-			wild(player, flags, XpTables.MUSHROOM);
+			if (wild(player, flags, XpTables.MUSHROOM)) {
+				com.extremeprogression.spec.Foraging.wildBroken(player, server, pos, state, be);
+			}
 			return;
 		}
 		double flower = XpTables.flower(state);
 		if (flower > 0) {
-			wild(player, isUpperHalf(state) ? b.lowerFlags : flags, flower);
+			if (wild(player, isUpperHalf(state) ? b.lowerFlags : flags, flower)) {
+				com.extremeprogression.spec.Foraging.wildBroken(player, server, pos, state, be);
+			}
+			return;
+		}
+		// Grass and ferns give no XP, but Rare Seeds may find something in the ones that grew by themselves
+		if (com.extremeprogression.spec.Foraging.isGrass(state) && ((isUpperHalf(state) ? b.lowerFlags : flags) & (PLACED | PLANTED | BONEMEALED)) == 0) {
+			com.extremeprogression.spec.Foraging.grass(player, server, pos);
 		}
 	}
 
@@ -208,21 +220,26 @@ public final class GatheringXp {
 		XpService.award(player, Skill.FARMING, (flags & BONEMEALED) != 0 ? xp * Config.BONEMEAL_FACTOR : xp);
 	}
 
-	/** Something that only gives XP where it grew by itself: never placed, never from something planted. */
-	static void wild(ServerPlayer player, int flags, double xp) {
+	/**
+	 * Something that only gives XP where it grew by itself: never placed, never from something planted. True when it
+	 * counted as wild (and not grown with bonemeal), so its wild bonuses apply.
+	 */
+	static boolean wild(ServerPlayer player, int flags, double xp) {
 		if ((flags & (PLACED | PLANTED)) != 0) {
-			return;
+			return false;
 		}
-		XpService.award(player, Skill.FORAGING, (flags & BONEMEALED) != 0 ? xp * Config.BONEMEAL_FACTOR : xp);
+		boolean bonemeal = (flags & BONEMEALED) != 0;
+		XpService.award(player, Skill.FORAGING, (bonemeal ? xp * Config.BONEMEAL_FACTOR : xp) * com.extremeprogression.spec.Foraging.wildXp(player));
+		return !bonemeal;
 	}
 
-	/** Foraging XP where it grew wild, Farming XP where a player planted it (cocoa, berry bushes). */
-	static void wildOrPlanted(ServerPlayer player, int flags, double wildXp, double plantedXp) {
+	/** Foraging XP where it grew wild, Farming XP where a player planted it (cocoa, berry bushes). True when wild. */
+	static boolean wildOrPlanted(ServerPlayer player, int flags, double wildXp, double plantedXp) {
 		if ((flags & (PLACED | PLANTED)) != 0) {
 			farming(player, plantedXp, flags);
-		} else {
-			wild(player, flags, wildXp);
+			return false;
 		}
+		return wild(player, flags, wildXp);
 	}
 
 	/** Sugar cane and cactus: every block above the bottom one that grew by itself, up to the top. */
@@ -239,7 +256,8 @@ public final class GatheringXp {
 			}
 			grown += share(PlacedBlocks.flags(level, at));
 		}
-		XpService.award(player, Skill.FARMING, grown * (state.is(Blocks.SUGAR_CANE) ? XpTables.SUGAR_CANE : XpTables.CACTUS));
+		XpService.award(player, Skill.FARMING, grown * (state.is(Blocks.SUGAR_CANE) ? XpTables.SUGAR_CANE : XpTables.CACTUS)
+				* com.extremeprogression.spec.Farming.cropXp(player));
 	}
 
 	private static double share(int flags) {
@@ -247,9 +265,10 @@ public final class GatheringXp {
 	}
 
 	/** A player brushed a suspicious block until it gave up its find (archaeology). */
-	public static void brushed(Player player) {
+	public static void brushed(Player player, net.minecraft.world.level.block.entity.BrushableBlockEntity be) {
 		if (player instanceof ServerPlayer p) {
-			XpService.award(p, Skill.MINING, XpTables.BRUSHING);
+			XpService.award(p, Skill.MINING, XpTables.BRUSHING * com.extremeprogression.spec.Mining.brushXp(p));
+			com.extremeprogression.spec.Mining.brushed(p, be);
 		}
 	}
 }

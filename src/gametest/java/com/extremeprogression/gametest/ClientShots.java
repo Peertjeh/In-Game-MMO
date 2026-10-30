@@ -182,9 +182,9 @@ public class ClientShots implements FabricClientGameTest {
 				keys.add(spec.translationKey() + part);
 			}
 		}
-		// The nodes of the specializations whose content is built (milestone 6, part 1: Combat and Survival)
+		// The nodes of the specializations whose content is built (milestone 6, parts 1 and 2: all but Crafting)
 		for (Specialization spec : Specialization.values()) {
-			if (spec.skill.category == Category.COMBAT || spec.skill.category == Category.SURVIVAL) {
+			if (spec.skill.category != Category.CRAFTING) {
 				keys.add(spec.translationKey() + ".ability.ranks");
 				for (String slot : new String[] {"p1", "p2", "p3", "p4", "c1", "c2"}) {
 					keys.add(spec.translationKey() + "." + slot);
