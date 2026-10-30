@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION — Ontwerpdocument
 
 > Werktitel. De definitieve naam is nog niet gekozen.
-> Status: **Interview ronde 6 (fase 4: doodsstraffen). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
+> Status: **Interview ronde 7 (fase 4 deel 2: doodsstraffen). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
 
 Legenda per mechaniek:
 - ✅ **Bevestigd**: door de eigenaar goedgekeurd
@@ -19,7 +19,8 @@ Legenda per mechaniek:
 | 3 | Skill-sjabloon: tegenwerking, actieve abilities, specialisaties, ontdekken | ✅ beantwoord |
 | 4 | Fase 3: schaal, totaalbudget, tempo, specialisatiemomenten, tegenpolen | ✅ beantwoord |
 | 5 | Fase 3 afronden: getallen voor tempo, plafond, Mastery, respec, tegenpolen | ✅ alles akkoord |
-| 6 | Fase 4 deel 1: wat een dood kost, welke skills, herstel, vangnet, Extreme Dimensions | ❓ wacht op antwoorden |
+| 6 | Fase 4 deel 1: wat een dood kost, welke skills, herstel, vangnet, Extreme Dimensions | ✅ beantwoord |
+| 7 | Fase 4 deel 2: herhaalde doden, dimensies, vermoeidheid, Mastery, PvP | ❓ wacht op antwoorden |
 
 ---
 
@@ -197,34 +198,62 @@ _Nog niet besproken._
 
 ### Ontwerpgevolg van het trage tempo
 - Level 100 kost ~400 uur, en één level rond level 75–99 kost 7–10 uur. Hele levels verliezen is dus zwaar.
-- 💡 Daarom raakt de straf eerst **Mastery-voortgang** en de **XP binnen je huidige level**, en pas bij herhaalde doden **hele levels**.
 
-### Voorstellen (💡, ronde 6)
-1. **Verlieslagen**, in deze volgorde:
-   - (1) voortgang naar de volgende Mastery-rank
-   - (2) XP binnen je huidige level (je zakt niet onder het begin van je level)
-   - (3) hele levels, alleen bij herhaalde doden (deel 2)
-2. **Welke skills:** de skills die **betrokken waren bij je dood**:
-   - gedood in een gevecht met een zwaard → Melee en Defense
-   - doodgevallen → Exploration
-   - verdronken tijdens het vissen → Fishing
-   - gestorven in een mijn → Mining
-3. **Herstel:** wat je verliest blijft achter als een **"schim"** op de plek waar je stierf. Dat is geen item, maar een plek in de wereld.
-   - Haal je de schim binnen een tijdslimiet op, dan krijg je het grootste deel terug.
-   - Sterf je opnieuw voordat je hem hebt opgehaald, dan is de oude schim **definitief weg**.
-   - De naam "Echo" wordt niet gebruikt, omdat Extreme Dimensions al een `Echo` heeft.
-4. **Vangnet:** een maximum per dood, en **vloeren op de mijlpalen** (25 en 75). Daardoor verlies je een specialisatie nooit door één dood.
-5. **Extreme Dimensions:** als beide mods draaien, wordt onze straf zachter waar ED al straft. Instelbaar door de serverbeheerder.
+### Bevestigd (ronde 6)
+- ✅ **Verlieslagen (optie B)**, in deze volgorde:
+  - (1) voortgang naar de volgende Mastery-rank
+  - (2) XP binnen je huidige level (je zakt niet onder het begin van je level)
+  - (3) hele levels, alleen bij herhaalde doden
+- ✅ **Alle skills** worden geraakt, **je hoogste skill het meest**.
+- ✅ **Geen schim** of terughaalplek bij de plek van je dood.
+  - ❓ Betekent dit dat **verlies altijd permanent** is, ook niet terug te winnen via uitdagingen? (controle in ronde 7)
+- ✅ **Geen mijlpaalvloeren.** Je kunt onder level 25 of 75 zakken. Je specialisatie wordt dan **onbruikbaar** tot je dat level terugwint.
+  - 💡 De keuze blijft wel bewaard: wie het level terugwint, heeft de specialisatie meteen weer, zonder respec-kosten.
+- ✅ **Extreme Dimensions: volledig stapelen (optie A).** Als beide mods draaien, gelden beide straffen volledig.
+
+### Voorstellen (💡)
+**Verdeling over de skills** (ronde 7):
+- Elke skill verliest `basis × (level van die skill / hoogste level)`.
+- Met een basis van **50%** van de XP binnen het huidige level:
+  - je hoogste skill verliest 50%
+  - een skill op de helft van dat level verliest 25%
+  - een skill op een kwart verliest 12,5%
+- Voorbeeld: je hoogste skill staat op level 90 (één level ≈ 9 uur). Een dood kost daar maximaal ~4,5 uur, en gemiddeld ~2,25 uur.
+
+**Herhaalde doden: doodsdruk** (ronde 7):
+- Elke dood verhoogt je **doodsdruk** met 1.
+- Per uur actief spelen zonder te sterven zakt de druk met 1.
+
+| Doodsdruk bij het sterven | Straf |
+|---|---|
+| 0 | Laag 1 + 2: basis **50%** |
+| 1 | Laag 1 + 2: basis **100%** |
+| 2 of meer | Zoals bij 1, plus **1 heel level** in je hoogste skill (laag 3) |
+
+**Dimensies** (ronde 7): de straf wordt vermenigvuldigd naar het gevaar van de plek.
+- Overworld ×1, Nether ×1,5, End ×2.
+- Met Extreme Dimensions erbij: de Seam ×2,5.
+- Bijvraag: geven gevaarlijke dimensies ook meer XP (risico tegenover beloning)?
+
+**Doodsvermoeidheid** (ronde 7): na een dood werken je passieve bonussen **10 minuten op 50%**. Dit staat in beeld als een effect met een timer.
+
+**Mastery** (ronde 7): bij doodsdruk 2 of meer kun je ook een **hele Mastery-rank** verliezen, inclusief de perk die je bij die rank koos.
+
+**PvP** (ronde 7): wie jou doodt, krijgt een deel van wat jij verliest (zoals Vampirism in mcMMO), alleen als jouw level minstens de helft van dat van de doder is. Anders verdwijnt het gewoon.
+
+**Beheer** (fase 9): alle straffen zijn instelbaar, met **presets** zoals de `Preset`-klasse van Extreme Dimensions. Jouw keuzes zijn de standaard.
 
 ### Open vragen
-- ❓ Alleen XP, of ook levels?
-- ❓ Welke skills worden geraakt?
-- ❓ Herstel via een schim, en hoe streng?
-- ❓ Maximum per dood en mijlpaalvloeren?
-- ❓ Stapelen met Extreme Dimensions, of dempen?
+- ❓ Is verlies altijd permanent?
+- ❓ Doodsdruk: akkoord met de trappen en het afnemen?
+- ❓ Dimensie-vermenigvuldigers, en meer XP in gevaarlijke dimensies?
+- ❓ Doodsvermoeidheid: ja of nee, en hoe zwaar?
+- ❓ Mastery-ranks verliezen: ja of nee?
+- ❓ PvP: steelt de doder XP, of verdwijnt het?
 
 ## 8. Herstelmechanieken
-_Nog niet besproken._
+- ✅ **Geen schim** of terughaalplek bij de plek van je dood (ronde 6).
+- ❓ Is er helemaal geen herstel (ook niet via uitdagingen)? Zie §7.
 
 ## 9. GUI-navigatie
 - ✅ Openen met een sneltoets **en** vanuit het inventory-scherm.
