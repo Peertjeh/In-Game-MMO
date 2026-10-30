@@ -20,6 +20,7 @@ import com.extremeprogression.network.Sync;
 import com.extremeprogression.progression.Budget;
 import com.extremeprogression.progression.Progression;
 import com.extremeprogression.skill.Skill;
+import com.extremeprogression.tree.TreeRules;
 
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -28,8 +29,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 /**
- * {@code /skills} and its subcommands (design §11): {@code /skills} opens the Character Sheet, and operators set levels
- * and give XP.
+ * {@code /skills} and its subcommands (design §11): {@code /skills} opens the Character Sheet, and operators set levels,
+ * give XP and grant a free respec.
  *
  * <p>An operator's change is never silent: the player is told, and the change goes to the server log.
  */
@@ -54,7 +55,32 @@ public final class SkillsCommand {
 										.then(Commands.argument("skill", StringArgumentType.word())
 												.suggests((c, b) -> SharedSuggestionProvider.suggest(Arrays.stream(Skill.values()).map(s -> s.id), b))
 												.then(Commands.argument("xp", DoubleArgumentType.doubleArg())
-														.executes(c -> add(c, DoubleArgumentType.getDouble(c, "xp")))))))));
+														.executes(c -> add(c, DoubleArgumentType.getDouble(c, "xp")))))))
+						.then(Commands.literal("respec")
+								.then(Commands.argument("player", StringArgumentType.word())
+										.suggests((c, b) -> SharedSuggestionProvider.suggest(c.getSource().getOnlinePlayerNames(), b))
+										.then(Commands.argument("skill", StringArgumentType.word())
+												.suggests((c, b) -> SharedSuggestionProvider.suggest(Arrays.stream(Skill.values()).map(s -> s.id), b))
+												.executes(SkillsCommand::respec))))));
+	}
+
+	/** A free respec: the skill's choices and points are reset, without the XP cost or the waiting time. */
+	private static int respec(CommandContext<CommandSourceStack> c) {
+		CommandSourceStack src = c.getSource();
+		ServerPlayer target = target(c);
+		Skill skill = skill(c);
+		if (target == null || skill == null) {
+			return 0;
+		}
+		PlayerProgress p = PlayerStore.get(target.getUUID());
+		if (TreeRules.respec(p, skill, System.currentTimeMillis(), true) != TreeRules.Result.OK) {
+			src.sendFailure(Component.translatable("commands.extremeprogression.admin.respec_nothing", target.getName(), Component.translatable(skill.translationKey())));
+			return 0;
+		}
+		changed(src, target, Component.translatable("message.extremeprogression.admin_respec", Component.translatable(skill.translationKey())),
+				skill.id + ": free respec");
+		src.sendSuccess(() -> Component.translatable("commands.extremeprogression.admin.respec", target.getName(), Component.translatable(skill.translationKey())), true);
+		return 1;
 	}
 
 	/** Opens the Character Sheet; a client that cannot show it gets every skill's level in chat instead. */

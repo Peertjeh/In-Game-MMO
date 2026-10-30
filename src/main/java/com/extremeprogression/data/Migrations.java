@@ -26,6 +26,10 @@ public final class Migrations {
 			// 1 → 2: exploration was added; a file without it has discovered nothing yet
 			json.addProperty("schema", 2);
 		}
+		if (from < 3) {
+			// 2 → 3: specializations, points, cooldowns and the respec time per skill; none were chosen before
+			json.addProperty("schema", 3);
+		}
 		return json;
 	}
 }

@@ -36,6 +36,10 @@ public final class Config {
 	/** The levels at which a skill's first and second specialization are chosen (design §6). */
 	public static int FIRST_SPECIALIZATION_LEVEL = 25;
 	public static int SECOND_SPECIALIZATION_LEVEL = 75;
+	/** A respec costs this share of the skill's XP... */
+	public static double RESPEC_XP_SHARE = 0.2;
+	/** ...and the next one is only possible after this many real days. */
+	public static double RESPEC_DAYS = 7.0;
 
 	// --- Earning XP (design §3, Appendix A) ------------------------------------------------------
 
@@ -174,6 +178,8 @@ public final class Config {
 			MASTERY_XP_PER_RANK = (double) DEFAULTS.get("MASTERY_XP_PER_RANK");
 		}
 		PLAYER_BACKUPS = Math.max(0, PLAYER_BACKUPS);
+		RESPEC_XP_SHARE = share(RESPEC_XP_SHARE, "RESPEC_XP_SHARE");
+		RESPEC_DAYS = nonNegative(RESPEC_DAYS, "RESPEC_DAYS");
 		XP_MULTIPLIER = nonNegative(XP_MULTIPLIER, "XP_MULTIPLIER");
 		PLANTED_TREE_FACTOR = share(PLANTED_TREE_FACTOR, "PLANTED_TREE_FACTOR");
 		BONEMEAL_FACTOR = share(BONEMEAL_FACTOR, "BONEMEAL_FACTOR");

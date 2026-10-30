@@ -4,6 +4,7 @@ import com.extremeprogression.config.Config;
 import com.extremeprogression.data.PlayerProgress;
 import com.extremeprogression.data.SkillData;
 import com.extremeprogression.skill.Skill;
+import com.extremeprogression.tree.TreeRules;
 
 /**
  * Earning and losing XP. Pure rules on a {@link PlayerProgress}: callers save and sync afterwards.
@@ -79,6 +80,9 @@ public final class Progression {
 			d.xp = 0;
 			levels++;
 		}
+		if (levels > 0) {
+			TreeRules.settle(p, skill);
+		}
 		return new Change(applied, levels, 0, ranks, 0, capped);
 	}
 
@@ -122,6 +126,9 @@ public final class Progression {
 				break;
 			}
 		}
+		if (levels > 0) {
+			TreeRules.settle(p, skill);
+		}
 		return new Change(applied, 0, levels, 0, ranks, false);
 	}
 
@@ -135,6 +142,16 @@ public final class Progression {
 			d.masteryRanks = 0;
 			d.masteryXp = 0;
 		}
+		TreeRules.settle(p, skill);
 		return old;
+	}
+
+	/**
+	 * All the XP in a skill: its levels at today's budget factor, the XP within the level, and its Mastery. A respec
+	 * costs a share of this.
+	 */
+	public static double totalXp(PlayerProgress p, Skill skill) {
+		SkillData d = p.get(skill);
+		return XpCurve.cumulative(d.level) * Budget.factor(p.totalLevel()) + d.xp + d.masteryRanks * Config.MASTERY_XP_PER_RANK + d.masteryXp;
 	}
 }

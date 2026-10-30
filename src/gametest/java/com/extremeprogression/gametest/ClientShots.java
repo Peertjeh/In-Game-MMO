@@ -5,6 +5,13 @@ import java.util.List;
 
 import com.extremeprogression.ExtremeProgression;
 import com.extremeprogression.config.Config;
+import com.extremeprogression.client.hud.AbilityHud;
+import com.extremeprogression.client.screen.RespecScreen;
+import com.extremeprogression.data.PlayerProgress;
+import com.extremeprogression.data.PlayerStore;
+import com.extremeprogression.network.Sync;
+import com.extremeprogression.tree.NodeSlot;
+import com.extremeprogression.tree.TreeRules;
 import com.extremeprogression.client.ExtremeProgressionClient;
 import com.extremeprogression.client.inventory.SheetButton;
 import com.extremeprogression.client.screen.CharacterSheetScreen;
@@ -24,6 +31,9 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.locale.Language;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 /**
  * The client starts with the mod, opens a world, receives its progression and shows it: the Character Sheet (opened
@@ -89,8 +99,29 @@ public class ClientShots implements FabricClientGameTest {
 			check(ctx.computeOnClient(mc -> CharacterSheetScreen.opened()) > sheets, "K did not open the Character Sheet");
 			ctx.takeScreenshot("03_character_sheet");
 
+			// A tree in use: Blade chosen in Melee with a few points bought, and Bulwark in Defense, which shuts Brawler out
+			sp.getServer().runOnServer(s -> {
+				ServerPlayer player = s.getPlayerList().getPlayers().get(0);
+				PlayerProgress pr = PlayerStore.get(player.getUUID());
+				TreeRules.choose(pr, Specialization.BLADE);
+				for (NodeSlot slot : new NodeSlot[] {NodeSlot.A1, NodeSlot.P1, NodeSlot.P1, NodeSlot.A2, NodeSlot.P2, NodeSlot.P3}) {
+					TreeRules.buy(pr, Specialization.BLADE, slot);
+				}
+				TreeRules.choose(pr, Specialization.BULWARK);
+				Sync.send(player);
+			});
+			ctx.waitTicks(10);
+			ctx.runOnClient(mc -> {
+				ProgressPayload.Entry melee = ClientProgress.skill("melee");
+				check(melee != null && melee.specs().contains("blade") && melee.bought().size() == 6, "the client does not show the bought Blade nodes");
+			});
+
 			// A Skill Screen, below and past the maximum level
-			ctx.runOnClient(mc -> mc.gui.setScreen(new SkillScreen(Skill.MELEE, new CharacterSheetScreen(null))));
+			ctx.runOnClient(mc -> {
+				SkillScreen screen = new SkillScreen(Skill.MELEE, new CharacterSheetScreen(null));
+				mc.gui.setScreen(screen);
+				screen.select("blade/p3");
+			});
 			ctx.waitTicks(10);
 			ctx.takeScreenshot("04_skill_melee");
 			ctx.runOnClient(mc -> mc.gui.setScreen(new SkillScreen(Skill.ARCANA, null)));
@@ -107,7 +138,23 @@ public class ClientShots implements FabricClientGameTest {
 			ctx.runOnClient(mc -> check(Screens.getWidgets(inventory[0]).stream().anyMatch(w -> w instanceof SheetButton),
 					"the inventory has no Character Sheet button"));
 			ctx.takeScreenshot("06_inventory_button");
+
+			// The respec costs are shown before anything happens
+			ctx.runOnClient(mc -> mc.gui.setScreen(new RespecScreen(Skill.MELEE, null)));
+			ctx.waitTicks(10);
+			ctx.takeScreenshot("07_respec_confirmation");
 			ctx.runOnClient(mc -> mc.gui.setScreen(null));
+
+			// With a sword in hand the ability key reaches Riposte: its icon shows beside the hotbar, and R uses it
+			sp.getServer().runOnServer(s -> s.getPlayerList().getPlayers().get(0).setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIAMOND_SWORD)));
+			ctx.waitTicks(10);
+			check(ctx.computeOnClient(mc -> AbilityHud.ready(false)) == Specialization.BLADE, "the HUD does not show Riposte as ready with a sword");
+			ctx.takeScreenshot("08_ability_ready");
+			ctx.getInput().pressKey(o -> ExtremeProgressionClient.ABILITY);
+			ctx.waitTicks(10);
+			check(ctx.computeOnClient(mc -> AbilityHud.ready(false)) == null, "Riposte still shows as ready after R");
+			check(ctx.computeOnClient(mc -> ClientProgress.cooldown("melee", "blade")) > 0, "using Riposte started no cooldown");
+			ctx.takeScreenshot("09_ability_used");
 		}
 	}
 
@@ -134,6 +181,15 @@ public class ClientShots implements FabricClientGameTest {
 				keys.add(spec.translationKey() + part);
 			}
 		}
+		for (TreeRules.Result r : TreeRules.Result.values()) {
+			if (r != TreeRules.Result.OK) {
+				keys.add("message.extremeprogression.tree." + r.name().toLowerCase(java.util.Locale.ROOT));
+			}
+		}
+		keys.addAll(List.of("message.extremeprogression.tree.chosen", "message.extremeprogression.tree.respec", "message.extremeprogression.ability.none",
+				"message.extremeprogression.ability.none_second", "message.extremeprogression.ability.no_rank", "message.extremeprogression.ability.cooldown",
+				"message.extremeprogression.ability.used", "message.extremeprogression.admin_respec", "gui.extremeprogression.node.passive",
+				"gui.extremeprogression.node.desc.ability", "gui.extremeprogression.respec.loss", "key.extremeprogression.ability"));
 		// (the messages the server sends)
 		keys.addAll(List.of("message.extremeprogression.admin_set", "message.extremeprogression.admin_xp", "message.extremeprogression.level_up",
 				"message.extremeprogression.mastery_up", "message.extremeprogression.fishing.not_open_water", "message.extremeprogression.fishing.overfished"));

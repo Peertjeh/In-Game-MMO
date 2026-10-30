@@ -11,7 +11,7 @@ import com.extremeprogression.skill.Skill;
  */
 public class PlayerProgress {
 	/** The schema this version writes. */
-	public static final int SCHEMA = 2;
+	public static final int SCHEMA = 3;
 
 	public int schema = SCHEMA;
 	/** The player's name when last seen (for leaderboards and admins while they are offline). */
@@ -69,6 +69,7 @@ public class PlayerProgress {
 			d.xp = finite(d.xp);
 			d.masteryRanks = Math.max(0, d.masteryRanks);
 			d.masteryXp = finite(d.masteryXp);
+			d.repair();
 		}
 		exploration = (exploration == null ? new ExplorationData() : exploration).repaired();
 		return this;

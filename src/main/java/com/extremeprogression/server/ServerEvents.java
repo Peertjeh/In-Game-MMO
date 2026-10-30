@@ -2,6 +2,7 @@ package com.extremeprogression.server;
 
 import java.util.UUID;
 
+import com.extremeprogression.ability.AbilityService;
 import com.extremeprogression.antiexploit.AfkTracker;
 import com.extremeprogression.antiexploit.MobOrigins;
 import com.extremeprogression.antiexploit.PlacedBlocks;
@@ -9,6 +10,7 @@ import com.extremeprogression.command.SkillsCommand;
 import com.extremeprogression.data.PlayerProgress;
 import com.extremeprogression.data.PlayerStore;
 import com.extremeprogression.network.Sync;
+import com.extremeprogression.tree.TreeService;
 import com.extremeprogression.xp.CombatXp;
 import com.extremeprogression.xp.CraftingXp;
 import com.extremeprogression.xp.ExplorationXp;
@@ -70,6 +72,10 @@ public final class ServerEvents {
 		Harvests.register();
 		CombatXp.register();
 		CraftingXp.register();
+
+		// Trees and abilities (design §6)
+		TreeService.register();
+		AbilityService.register();
 		UseItemCallback.EVENT.register((player, level, hand) -> {
 			if (!level.isClientSide()) {
 				AfkTracker.interacted(player.getUUID(), level.getServer().getTickCount());

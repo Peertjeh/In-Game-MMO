@@ -21,7 +21,7 @@ import net.minecraft.network.chat.Component;
 final class TreeNode extends AbstractButton {
 	/** The node's state as its edge and text colour show it. */
 	enum State {
-		OWNED(Ui.OK, Ui.TEXT), REACHABLE(Ui.WARN, Ui.TEXT), LOCKED(Ui.DIM, Ui.MUTED), CONFLICT(0xAA0000, 0xD09090);
+		OWNED(Ui.OK, Ui.TEXT), REACHABLE(Ui.WARN, Ui.TEXT), LOCKED(Ui.DIM, Ui.MUTED), CONFLICT(0xAA0000, 0xD09090), DORMANT(0x5555FF, Ui.MUTED);
 
 		final int edge, text;
 
@@ -34,12 +34,19 @@ final class TreeNode extends AbstractButton {
 	private final Supplier<State> state;
 	private final BooleanSupplier selected;
 	private final Runnable select;
+	/** A short note on the right (a rank like 2/5, a ✓), or null. */
+	private final Supplier<String> badge;
 
 	TreeNode(int x, int y, int w, int h, Component label, Supplier<State> state, BooleanSupplier selected, Runnable select) {
+		this(x, y, w, h, label, state, selected, select, () -> null);
+	}
+
+	TreeNode(int x, int y, int w, int h, Component label, Supplier<State> state, BooleanSupplier selected, Runnable select, Supplier<String> badge) {
 		super(x, y, w, h, label);
 		this.state = state;
 		this.selected = selected;
 		this.select = select;
+		this.badge = badge;
 	}
 
 	@Override
@@ -54,8 +61,13 @@ final class TreeNode extends AbstractButton {
 		int edge = selected.getAsBoolean() ? Ui.TEXT : isHovered() ? Ui.mix(s.edge, Ui.TEXT, 0.5) : s.edge;
 		int x = getX(), y = getY(), w = getWidth(), h = getHeight();
 		Ui.tile(g, x, y, w, h, edge);
-		String label = Ui.ellipsize(font, getMessage().getString(), w - 8);
+		String note = badge.get();
+		int noteW = note == null ? 0 : font.width(note) + 3;
+		String label = Ui.ellipsize(font, getMessage().getString(), w - 8 - noteW);
 		Ui.text(g, font, label, x + 4, y + (h - 8) / 2, s.text);
+		if (note != null) {
+			Ui.right(g, font, note, x + w - 3, y + (h - 8) / 2, s == State.OWNED ? Ui.OK : s == State.REACHABLE ? Ui.WARN : Ui.MUTED);
+		}
 	}
 
 	@Override

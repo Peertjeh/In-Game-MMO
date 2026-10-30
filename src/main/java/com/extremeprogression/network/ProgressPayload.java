@@ -1,7 +1,9 @@
 package com.extremeprogression.network;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.extremeprogression.ExtremeProgression;
 
@@ -18,8 +20,13 @@ public record ProgressPayload(int total, int cap, double budgetFactor, int maxLe
 	public static final Type<ProgressPayload> TYPE = new Type<>(ExtremeProgression.id("progress"));
 	public static final StreamCodec<FriendlyByteBuf, ProgressPayload> CODEC = StreamCodec.ofMember(ProgressPayload::write, ProgressPayload::read);
 
-	/** One skill: its level, the XP within the level and what the next level needs, and its Mastery. */
-	public record Entry(String id, int level, double xp, double need, int masteryRanks, double masteryXp) {}
+	/**
+	 * One skill: its level, the XP within the level and what the next level needs, its Mastery, and its tree: the chosen
+	 * specializations, the points bought (and set aside), how long until the next respec (real milliseconds) and how
+	 * long each ability still cools down (ticks).
+	 */
+	public record Entry(String id, int level, double xp, double need, int masteryRanks, double masteryXp, List<String> specs,
+						List<String> bought, List<String> suspended, long respecWait, Map<String, Integer> cooldowns) {}
 
 	private void write(FriendlyByteBuf buf) {
 		buf.writeVarInt(total);
@@ -36,6 +43,15 @@ public record ProgressPayload(int total, int cap, double budgetFactor, int maxLe
 			buf.writeDouble(e.need());
 			buf.writeVarInt(e.masteryRanks());
 			buf.writeDouble(e.masteryXp());
+			strings(buf, e.specs());
+			strings(buf, e.bought());
+			strings(buf, e.suspended());
+			buf.writeLong(e.respecWait());
+			buf.writeVarInt(e.cooldowns().size());
+			for (Map.Entry<String, Integer> c : e.cooldowns().entrySet()) {
+				buf.writeUtf(c.getKey());
+				buf.writeVarInt(c.getValue());
+			}
 		}
 	}
 
@@ -49,9 +65,40 @@ public record ProgressPayload(int total, int cap, double budgetFactor, int maxLe
 		int n = buf.readVarInt();
 		List<Entry> skills = new ArrayList<>(n);
 		for (int i = 0; i < n; i++) {
-			skills.add(new Entry(buf.readUtf(), buf.readVarInt(), buf.readDouble(), buf.readDouble(), buf.readVarInt(), buf.readDouble()));
+			String id = buf.readUtf();
+			int level = buf.readVarInt();
+			double xp = buf.readDouble();
+			double need = buf.readDouble();
+			int ranks = buf.readVarInt();
+			double masteryXp = buf.readDouble();
+			List<String> specs = strings(buf);
+			List<String> bought = strings(buf);
+			List<String> suspended = strings(buf);
+			long respecWait = buf.readLong();
+			int c = buf.readVarInt();
+			Map<String, Integer> cooldowns = new LinkedHashMap<>();
+			for (int j = 0; j < c; j++) {
+				cooldowns.put(buf.readUtf(), buf.readVarInt());
+			}
+			skills.add(new Entry(id, level, xp, need, ranks, masteryXp, specs, bought, suspended, respecWait, cooldowns));
 		}
 		return new ProgressPayload(total, cap, factor, maxLevel, ranksMax, perRank, skills);
+	}
+
+	private static void strings(FriendlyByteBuf buf, List<String> list) {
+		buf.writeVarInt(list.size());
+		for (String s : list) {
+			buf.writeUtf(s);
+		}
+	}
+
+	private static List<String> strings(FriendlyByteBuf buf) {
+		int n = buf.readVarInt();
+		List<String> list = new ArrayList<>(n);
+		for (int i = 0; i < n; i++) {
+			list.add(buf.readUtf());
+		}
+		return list;
 	}
 
 	@Override

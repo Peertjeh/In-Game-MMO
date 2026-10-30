@@ -41,3 +41,12 @@ net.minecraft.client.KeyMapping
 net.minecraft.client.gui.Gui
 net.minecraft.client.gui.GuiGraphicsExtractor
 net.minecraft.world.phys.Vec3
+FarmlandBlock
+FarmBlock
+AbstractThrownPotion
+ThrownSplashPotion
+ThrownLingeringPotion
+AreaEffectCloud
+net.minecraft.world.item.component.CustomData
+net.minecraft.client.Options
+net.minecraft.network.FriendlyByteBuf

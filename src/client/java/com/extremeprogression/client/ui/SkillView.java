@@ -1,5 +1,8 @@
 package com.extremeprogression.client.ui;
 
+import java.util.List;
+import java.util.Map;
+
 import com.extremeprogression.client.state.ClientProgress;
 import com.extremeprogression.network.ProgressPayload;
 import com.extremeprogression.skill.Skill;
@@ -29,7 +32,7 @@ public final class SkillView {
 	/** The skill's entry, or an empty one at level 0 before the server has sent anything. */
 	public static ProgressPayload.Entry entry(Skill skill) {
 		ProgressPayload.Entry e = ClientProgress.skill(skill.id);
-		return e != null ? e : new ProgressPayload.Entry(skill.id, 0, 0, 0, 0, 0);
+		return e != null ? e : new ProgressPayload.Entry(skill.id, 0, 0, 0, 0, 0, List.of(), List.of(), List.of(), 0, Map.of());
 	}
 
 	public static boolean mastered(ProgressPayload.Entry e) {

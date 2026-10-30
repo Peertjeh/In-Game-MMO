@@ -7,10 +7,16 @@ import com.extremeprogression.client.state.ClientProgress;
 import com.extremeprogression.client.ui.SkillView;
 import com.extremeprogression.client.ui.Ui;
 import com.extremeprogression.config.Config;
+import com.extremeprogression.data.PlayerProgress;
+import com.extremeprogression.data.SkillData;
 import com.extremeprogression.network.ProgressPayload;
+import com.extremeprogression.network.TreePayload;
 import com.extremeprogression.skill.Skill;
 import com.extremeprogression.skill.Specialization;
+import com.extremeprogression.tree.NodeSlot;
+import com.extremeprogression.tree.TreeRules;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
@@ -18,21 +24,27 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 /**
- * One skill (design §9): its level and milestones, its tree (the three specializations as columns, the trunk below
- * them) and a detail panel for the selected part. Milestone 2 shows the tree; choosing and buying come in milestone 5.
+ * One skill (design §9): its level, milestones and points; its tree, with the three specializations as columns (each
+ * the same eight rows of nodes, design §6) and the trunk below them; and a detail panel for the selected part, from
+ * which a specialization is chosen or a node bought. Every request goes to the server, which decides.
  */
 public class SkillScreen extends Screen {
-	private static final int W = 420, H = CharacterSheetScreen.H;
+	private static final int W = 440, H = 300;
 	private static final int TREE_W = 300, HEADER_H = 44;
+	private static final String[] ROMAN = {"", "I", "II", "III", "IV", "V"};
 
 	private final Skill skill;
 	private final Screen parent;
 	private int x0, y0;
-	/** What the detail panel shows: a specialization, its ability, its price, or a trunk level (kept across resizes). */
+	/** What the detail panel shows: a specialization's id, a node's key, or "trunk.<level>" (kept across resizes). */
 	private String selectedKey = null;
-	private final java.util.Map<String, Detail> details = new java.util.HashMap<>();
+	private Button action;
+	private Button respec;
+	/** The tree rules' view of the progression, rebuilt whenever the server sends a new one. */
+	private PlayerProgress view;
+	private int viewOf = -1;
 
-	private record Detail(String title, String kind, List<String> lines, String requirement) {}
+	private record Detail(String title, String kind, List<String> lines, String status, int statusColor) {}
 
 	public SkillScreen(Skill skill, Screen parent) {
 		super(Component.translatable(skill.translationKey()));
@@ -40,82 +52,257 @@ public class SkillScreen extends Screen {
 		this.parent = parent;
 	}
 
+	private PlayerProgress view() {
+		if (view == null || viewOf != ClientProgress.updates()) {
+			view = ClientProgress.asProgress();
+			viewOf = ClientProgress.updates();
+		}
+		return view;
+	}
+
+	private SkillData data() {
+		return view().get(skill);
+	}
+
 	@Override
 	protected void init() {
 		x0 = (this.width - W) / 2;
 		y0 = Math.max(2, (this.height - H) / 2);
-		details.clear();
 		int ty = y0 + HEADER_H + 6;
 		int colW = (TREE_W - 12 - 8) / 3;
+		int half = (colW - 2) / 2;
 		List<Specialization> specs = Specialization.of(skill);
 		for (int i = 0; i < specs.size(); i++) {
 			Specialization spec = specs.get(i);
 			int cx = x0 + 6 + i * (colW + 4);
-			int cy = ty + 6;
 			if (selectedKey == null) {
 				selectedKey = spec.id;
 			}
-			node(cx, cy, colW, 20, Component.translatable(spec.translationKey()), this::specState, spec.id, specDetail(spec));
-			node(cx, cy + 24, colW, 16, Component.literal("◆ ").append(Component.translatable(spec.translationKey() + ".ability")), this::specState,
-					spec.id + ".ability", abilityDetail(spec));
-			node(cx, cy + 44, colW, 16, Component.translatable("gui.extremeprogression.skill.price"), this::specState, spec.id + ".price", priceDetail(spec));
+			add(cx, ty + 6, colW, 16, Component.translatable(spec.translationKey()), spec.id, () -> specState(spec), () -> specBadge(spec));
+			for (NodeSlot slot : NodeSlot.values()) {
+				boolean single = slot.kind == NodeSlot.Kind.ABILITY;
+				int nx = single ? cx : cx + slot.column * (half + 2);
+				int ny = ty + 6 + 20 + (8 - slot.row) * 16;
+				String key = TreeRules.key(spec, slot);
+				add(nx, ny, single ? colW : half, 14, Component.literal(nodeName(spec, slot)), key, () -> nodeState(spec, slot), () -> nodeBadge(spec, slot));
+			}
 		}
 		// The trunk: two rows of two
-		int trunkY = ty + 6 + 64 + 16;
+		int trunkY = ty + 6 + 20 + 8 * 16 + 14;
 		int nodeW = (TREE_W - 12 - 4) / 2;
 		for (int i = 0; i < Skill.TRUNK_LEVELS.length; i++) {
 			int level = Skill.TRUNK_LEVELS[i];
 			int nx = x0 + 6 + (i % 2) * (nodeW + 4);
-			int ny = trunkY + (i / 2) * 20;
+			int ny = trunkY + (i / 2) * 18;
 			String key = "trunk.extremeprogression." + skill.id + "." + level;
-			Detail d = new Detail(Ui.tr(key), Ui.tr("gui.extremeprogression.skill.trunk_kind", level), wrap(Ui.tr(key + ".desc")),
-					Ui.tr("gui.extremeprogression.skill.unlocks_at", level));
-			node(nx, ny, nodeW, 16, Component.literal(level + " · ").append(Component.translatable(key)),
-					() -> SkillView.entry(skill).level() >= level ? TreeNode.State.OWNED : TreeNode.State.LOCKED, "trunk." + level, d);
+			add(nx, ny, nodeW, 16, Component.literal(level + " · ").append(Component.translatable(key)), "trunk." + level,
+					() -> data().level >= level ? TreeNode.State.OWNED : TreeNode.State.LOCKED, () -> data().level >= level ? "✓" : null);
 		}
+		int dx = x0 + TREE_W + 6, dw = W - TREE_W - 6;
+		int th = H - HEADER_H - 6 - 26;
+		action = this.addRenderableWidget(Button.builder(Component.empty(), b -> act()).pos(dx + 6, ty + th - 24).size(dw - 12, 18).build());
 		this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.skill.back"), b -> this.onClose())
-				.pos(this.width / 2 - 104, y0 + H - 20).size(120, 20).build());
+				.pos(this.width / 2 - 150, y0 + H - 20).size(120, 20).build());
+		respec = this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.skill.respec"),
+				b -> Minecraft.getInstance().gui.setScreen(new RespecScreen(skill, this))).pos(this.width / 2 - 26, y0 + H - 20).size(84, 20).build());
 		this.addRenderableWidget(Button.builder(Component.translatable("gui.done"), b -> closeAll())
-				.pos(this.width / 2 + 20, y0 + H - 20).size(84, 20).build());
+				.pos(this.width / 2 + 62, y0 + H - 20).size(88, 20).build());
+		refreshButtons();
 	}
 
-	private void node(int x, int y, int w, int h, Component label, java.util.function.Supplier<TreeNode.State> state, String key, Detail detail) {
-		details.put(key, detail);
-		this.addRenderableWidget(new TreeNode(x, y, w, h, label, state, () -> key.equals(selectedKey), () -> selectedKey = key));
+	private void add(int x, int y, int w, int h, Component label, String key, java.util.function.Supplier<TreeNode.State> state,
+			java.util.function.Supplier<String> badge) {
+		this.addRenderableWidget(new TreeNode(x, y, w, h, label, state, () -> key.equals(selectedKey), () -> {
+			selectedKey = key;
+			refreshButtons();
+		}, badge));
 	}
 
-	/** Choosing a specialization comes in milestone 5: until then every column is shown, none is reachable yet. */
-	private TreeNode.State specState() {
+	@Override
+	public void tick() {
+		refreshButtons();
+	}
+
+	/** The detail panel's button: choose the selected specialization, or buy a point in the selected node. */
+	private void refreshButtons() {
+		if (action == null) {
+			return;
+		}
+		action.visible = false;
+		Specialization spec = Specialization.byId(selectedKey);
+		if (spec != null && TreeRules.canChoose(view(), spec) == TreeRules.Result.OK) {
+			action.visible = true;
+			action.setMessage(Component.translatable("gui.extremeprogression.skill.choose", Component.translatable(spec.translationKey())));
+		}
+		NodeSlot slot = TreeRules.slotOf(selectedKey);
+		Specialization owner = slot == null ? null : Specialization.byId(selectedKey.substring(0, selectedKey.indexOf('/')));
+		if (owner != null && TreeRules.canBuy(view(), owner, slot) == TreeRules.Result.OK) {
+			action.visible = true;
+			action.setMessage(Component.translatable("gui.extremeprogression.skill.buy", slot.cost));
+		}
+		respec.active = TreeRules.canRespec(view(), skill, 0) != TreeRules.Result.NOTHING_TO_RESET;
+	}
+
+	private void act() {
+		Specialization spec = Specialization.byId(selectedKey);
+		if (spec != null) {
+			send(new TreePayload(TreePayload.Action.CHOOSE, skill.id, spec.id));
+		} else if (TreeRules.slotOf(selectedKey) != null) {
+			send(new TreePayload(TreePayload.Action.BUY, skill.id, selectedKey));
+		}
+	}
+
+	static void send(TreePayload request) {
+		if (ClientPlayNetworking.canSend(TreePayload.TYPE)) {
+			ClientPlayNetworking.send(request);
+		}
+	}
+
+	// --- States and texts ------------------------------------------------------------------------
+
+	private TreeNode.State specState(Specialization spec) {
+		SkillData d = data();
+		int index = TreeRules.indexOf(d, spec);
+		if (index >= 0) {
+			return TreeRules.active(d, index) != null ? TreeNode.State.OWNED : TreeNode.State.DORMANT;
+		}
+		TreeRules.Result r = TreeRules.canChoose(view(), spec);
+		return r == TreeRules.Result.OK ? TreeNode.State.REACHABLE : r == TreeRules.Result.CONFLICT ? TreeNode.State.CONFLICT : TreeNode.State.LOCKED;
+	}
+
+	private String specBadge(Specialization spec) {
+		int index = TreeRules.indexOf(data(), spec);
+		return index == 0 ? "1st" : index == 1 ? "2nd" : null;
+	}
+
+	private String nodeName(Specialization spec, NodeSlot slot) {
+		return switch (slot.kind) {
+			case ABILITY -> "◆ " + Ui.tr(spec.translationKey() + ".ability") + " " + ROMAN[slot.abilityRank()];
+			case PASSIVE -> Ui.tr("gui.extremeprogression.node.passive", slot.ordinal() < 2 ? slot.column + 1 : slot.column + 3);
+			case CHOICE -> Ui.tr(slot == NodeSlot.C1 ? "gui.extremeprogression.node.choice_a" : "gui.extremeprogression.node.choice_b");
+		};
+	}
+
+	private TreeNode.State nodeState(Specialization spec, NodeSlot slot) {
+		SkillData d = data();
+		int rank = TreeRules.rank(d, spec, slot);
+		TreeRules.Result r = TreeRules.canBuy(view(), spec, slot);
+		if (r == TreeRules.Result.OK) {
+			return TreeNode.State.REACHABLE;
+		}
+		if (rank > 0) {
+			return TreeNode.State.OWNED;
+		}
+		if (r == TreeRules.Result.DORMANT) {
+			return TreeNode.State.DORMANT;
+		}
+		if (TreeRules.indexOf(d, spec) < 0 && TreeRules.canChoose(view(), spec) == TreeRules.Result.CONFLICT) {
+			return TreeNode.State.CONFLICT;
+		}
 		return TreeNode.State.LOCKED;
 	}
 
-	private Detail specDetail(Specialization spec) {
-		String key = spec.translationKey();
-		List<String> lines = new ArrayList<>();
-		lines.addAll(wrap(Ui.tr("gui.extremeprogression.skill.gear", Ui.tr(key + ".gear"))));
-		lines.addAll(wrap(Ui.tr(key + ".style")));
-		if (spec.conflict() != null) {
-			lines.addAll(wrap(Ui.tr("gui.extremeprogression.skill.conflict", Ui.tr(spec.conflict().translationKey()),
-					Ui.tr(spec.conflict().skill.translationKey()))));
+	private String nodeBadge(Specialization spec, NodeSlot slot) {
+		SkillData d = data();
+		int rank = TreeRules.rank(d, spec, slot);
+		if (slot.maxRank > 1) {
+			NodeSlot partner = slot.partner();
+			if (rank == 0 && partner != null && TreeRules.rank(d, spec, partner) > 0) {
+				return "or";
+			}
+			return rank + "/" + slot.maxRank;
 		}
-		return new Detail(Ui.tr(key), Ui.tr("gui.extremeprogression.skill.spec_kind"), lines, Ui.tr("gui.extremeprogression.skill.spec_levels",
-				Config.FIRST_SPECIALIZATION_LEVEL, Config.SECOND_SPECIALIZATION_LEVEL));
+		if (rank > 0) {
+			return "✓";
+		}
+		return d.level < slot.level ? "Lv " + slot.level : slot.cost + " pt";
 	}
 
-	private Detail abilityDetail(Specialization spec) {
-		String key = spec.translationKey() + ".ability";
-		return new Detail(Ui.tr(key), Ui.tr("gui.extremeprogression.skill.ability_kind", Ui.tr(spec.translationKey())), wrap(Ui.tr(key + ".desc")),
-				Ui.tr("gui.extremeprogression.skill.ability_key"));
+	private Detail detail(String key) {
+		if (key == null) {
+			return null;
+		}
+		SkillData d = data();
+		if (key.startsWith("trunk.")) {
+			int level = Integer.parseInt(key.substring(6));
+			String t = "trunk.extremeprogression." + skill.id + "." + level;
+			boolean owned = d.level >= level;
+			return new Detail(Ui.tr(t), Ui.tr("gui.extremeprogression.skill.trunk_kind", level), wrap(Ui.tr(t + ".desc")),
+					owned ? Ui.tr("gui.extremeprogression.node.status.owned") : Ui.tr("gui.extremeprogression.skill.unlocks_at", level), owned ? Ui.OK : Ui.MUTED);
+		}
+		Specialization spec = Specialization.byId(key);
+		if (spec != null) {
+			String k = spec.translationKey();
+			List<String> lines = new ArrayList<>();
+			lines.addAll(wrap(Ui.tr("gui.extremeprogression.skill.gear", Ui.tr(k + ".gear"))));
+			lines.addAll(wrap(Ui.tr(k + ".style")));
+			lines.addAll(wrap(Ui.tr("gui.extremeprogression.skill.price_of", Ui.tr(k)) + ": " + Ui.tr(k + ".tradeoff")));
+			if (spec.conflict() != null) {
+				lines.addAll(wrap(Ui.tr("gui.extremeprogression.skill.conflict", Ui.tr(spec.conflict().translationKey()), Ui.tr(spec.conflict().skill.translationKey()))));
+			}
+			int index = TreeRules.indexOf(d, spec);
+			String status;
+			int color;
+			if (index >= 0) {
+				boolean active = TreeRules.active(d, index) != null;
+				status = active ? Ui.tr(index == 0 ? "gui.extremeprogression.skill.spec.first" : "gui.extremeprogression.skill.spec.second")
+						: Ui.tr("gui.extremeprogression.skill.spec.dormant", TreeRules.unlockLevel(index));
+				color = active ? Ui.OK : 0x5555FF;
+			} else {
+				TreeRules.Result r = TreeRules.canChoose(view(), spec);
+				status = r == TreeRules.Result.OK ? Ui.tr("gui.extremeprogression.skill.spec.choosable") : status(r, null);
+				color = r == TreeRules.Result.OK ? Ui.WARN : r == TreeRules.Result.CONFLICT ? Ui.DANGER : Ui.MUTED;
+			}
+			return new Detail(Ui.tr(k), Ui.tr("gui.extremeprogression.skill.spec_levels", Config.FIRST_SPECIALIZATION_LEVEL, Config.SECOND_SPECIALIZATION_LEVEL),
+					lines, status, color);
+		}
+		NodeSlot slot = TreeRules.slotOf(key);
+		spec = slot == null ? null : Specialization.byId(key.substring(0, key.indexOf('/')));
+		if (spec == null) {
+			return null;
+		}
+		int rank = TreeRules.rank(d, spec, slot);
+		String kind = switch (slot.kind) {
+			case ABILITY -> Ui.tr("gui.extremeprogression.node.kind.ability", ROMAN[slot.abilityRank()], slot.cost);
+			case PASSIVE -> Ui.tr("gui.extremeprogression.node.kind.passive", rank, slot.maxRank, slot.cost);
+			case CHOICE -> Ui.tr("gui.extremeprogression.node.kind.choice", rank, slot.maxRank, slot.cost);
+		};
+		List<String> lines = new ArrayList<>();
+		String keyName = TreeRules.indexOf(d, spec) == 1 ? "Shift + R" : "R";
+		switch (slot.kind) {
+			case ABILITY -> {
+				lines.addAll(wrap(Ui.tr(spec.translationKey() + ".ability.desc")));
+				lines.addAll(wrap(Ui.tr("gui.extremeprogression.node.desc.ability", keyName, spec.cooldownMinutes)));
+			}
+			case PASSIVE -> lines.addAll(wrap(Ui.tr("gui.extremeprogression.node.desc.passive", Ui.tr(spec.translationKey()))));
+			case CHOICE -> lines.addAll(wrap(Ui.tr("gui.extremeprogression.node.desc.choice")));
+		}
+		List<String> needs = new ArrayList<>();
+		for (NodeSlot r : slot.requires()) {
+			needs.add(nodeName(spec, r));
+		}
+		if (!needs.isEmpty()) {
+			lines.addAll(wrap(Ui.tr("gui.extremeprogression.node.requires", String.join(" / ", needs))));
+		}
+		if (slot.level > 0) {
+			lines.addAll(wrap(Ui.tr("gui.extremeprogression.node.requires_level", slot.level)));
+		}
+		TreeRules.Result r = TreeRules.canBuy(view(), spec, slot);
+		String status = r == TreeRules.Result.OK ? Ui.tr("gui.extremeprogression.node.status.buyable")
+				: r == TreeRules.Result.MAX_RANK ? Ui.tr("gui.extremeprogression.node.status.owned") : status(r, spec);
+		int color = r == TreeRules.Result.OK ? Ui.WARN : r == TreeRules.Result.MAX_RANK ? Ui.OK : Ui.MUTED;
+		return new Detail(nodeName(spec, slot), kind, lines, status, color);
 	}
 
-	private Detail priceDetail(Specialization spec) {
-		return new Detail(Ui.tr("gui.extremeprogression.skill.price_of", Ui.tr(spec.translationKey())), Ui.tr("gui.extremeprogression.skill.price_kind"),
-				wrap(Ui.tr(spec.translationKey() + ".tradeoff")), "");
+	private static String status(TreeRules.Result r, Specialization spec) {
+		return Ui.tr("message.extremeprogression.tree." + r.name().toLowerCase(java.util.Locale.ROOT));
 	}
 
 	private List<String> wrap(String text) {
 		return Ui.wrap(this.font, text, W - TREE_W - 6 - 12);
 	}
+
+	// --- Drawing ---------------------------------------------------------------------------------
 
 	@Override
 	public void extractBackground(GuiGraphicsExtractor g, int mouseX, int mouseY, float a) {
@@ -124,7 +311,7 @@ public class SkillScreen extends Screen {
 		ProgressPayload.Entry e = SkillView.entry(skill);
 		boolean mastered = SkillView.mastered(e);
 
-		// The header: icon, name, category and opposing skill; level and bar; milestones
+		// The header: icon, name, category and opposing skill; level and bar; milestones and points
 		Ui.panel(g, x0, y0, W, HEADER_H);
 		g.fakeItem(SkillView.icon(skill), x0 + 6, y0 + 6);
 		Ui.text(g, this.font, this.title.getString(), x0 + 26, y0 + 6, skill.category.accent);
@@ -145,29 +332,38 @@ public class SkillScreen extends Screen {
 		}
 		Ui.meter(g, bx, y0 + 17, bw, 5, SkillView.fill(e), mastered ? Ui.GOLD : skill.category.accent);
 		milestones(g, x0 + 6, y0 + 31, e.level());
+		SkillData d = data();
+		int free = TreeRules.free(d);
+		Ui.right(g, this.font, Ui.tr("gui.extremeprogression.skill.points", free, TreeRules.earned(d)), x0 + W - 8, y0 + 31, free > 0 ? Ui.WARN : Ui.MUTED);
 
 		// The tree and the detail panel
 		int ty = y0 + HEADER_H + 6, th = H - HEADER_H - 6 - 26;
 		Ui.panel(g, x0, ty, TREE_W, th);
-		Ui.text(g, this.font, Ui.tr("gui.extremeprogression.skill.trunk"), x0 + 6, ty + 6 + 64 + 5, Ui.MUTED);
+		Ui.text(g, this.font, Ui.tr("gui.extremeprogression.skill.trunk"), x0 + 6, ty + 6 + 20 + 8 * 16 + 3, Ui.MUTED);
 		int dx = x0 + TREE_W + 6, dw = W - TREE_W - 6;
 		Ui.panel(g, dx, ty, dw, th);
-		Detail selected = details.get(selectedKey);
+		Detail selected = detail(selectedKey);
 		if (selected != null) {
 			int y = ty + 6;
 			Ui.text(g, this.font, Ui.ellipsize(this.font, selected.title(), dw - 12), dx + 6, y, Ui.TEXT);
-			Ui.text(g, this.font, Ui.ellipsize(this.font, selected.kind(), dw - 12), dx + 6, y + 10, Ui.MUTED);
-			Ui.divider(g, dx + 6, y + 21, dw - 12);
-			y += 26;
+			List<String> kind = Ui.wrap(this.font, selected.kind(), dw - 12);
+			for (int i = 0; i < kind.size() && i < 2; i++) {
+				Ui.text(g, this.font, kind.get(i), dx + 6, y + 10 + i * 10, Ui.MUTED);
+			}
+			y += 10 + Math.min(2, kind.size()) * 10 + 2;
+			Ui.divider(g, dx + 6, y, dw - 12);
+			y += 5;
+			int bottom = ty + th - 24 - 22;
 			for (String line : selected.lines()) {
-				if (y > ty + th - 22) {
+				if (y > bottom) {
 					break;
 				}
 				Ui.text(g, this.font, line, dx + 6, y, Ui.TEXT);
 				y += 10;
 			}
-			if (!selected.requirement().isEmpty()) {
-				Ui.text(g, this.font, Ui.ellipsize(this.font, selected.requirement(), dw - 12), dx + 6, ty + th - 14, Ui.MUTED);
+			List<String> status = Ui.wrap(this.font, selected.status(), dw - 12);
+			for (int i = 0; i < status.size() && i < 2; i++) {
+				Ui.text(g, this.font, status.get(i), dx + 6, ty + th - 24 - 20 + i * 10, selected.statusColor());
 			}
 		}
 	}
@@ -201,5 +397,11 @@ public class SkillScreen extends Screen {
 
 	public boolean isPauseScreen() {
 		return false;
+	}
+
+	/** The selected part, for tests. */
+	public void select(String key) {
+		selectedKey = key;
+		refreshButtons();
 	}
 }
