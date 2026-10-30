@@ -5,6 +5,8 @@ jobs:
   build:
     name: build and server tests
     runs-on: ubuntu-24.04
+    permissions:
+      contents: write
     steps:
       - name: checkout repository
         uses: actions/checkout@v6
@@ -35,6 +37,36 @@ jobs:
         with:
           name: Artifacts
           path: build/libs/
+      # For checking vanilla signatures from where the Minecraft jar cannot be downloaded: a commit message with [javap]
+      # publishes the members of the classes in .github/javap-classes.txt as the only commit of the ci-javap branch
+      - name: publish vanilla signatures to the ci-javap branch
+        if: always() && github.event_name == 'push' && contains(github.event.head_commit.message, '[javap]')
+        shell: bash
+        run: |
+          jars=$(find "$HOME/.gradle/caches/fabric-loom" .gradle/loom-cache -name "*.jar" -path "*minecraft*" 2>/dev/null | grep -v sources | sort -u)
+          cp=$(echo "$jars" | paste -sd: -)
+          out=$(mktemp -d)
+          echo "$jars" > "$out/jars.txt"
+          grep -vE '^\s*(#|$)' .github/javap-classes.txt | while read -r name; do
+            if [[ "$name" != *.* ]]; then
+              found=$(for j in $jars; do unzip -Z1 "$j" 2>/dev/null; done | grep -E "(^|/)${name}\.class$" | sed 's/\.class$//; s#/#.#g' | sort -u)
+              [ -z "$found" ] && { echo "NOT FOUND: $name" >> "$out/javap.txt"; continue; }
+            else
+              found="$name"
+            fi
+            for cls in $found; do
+              echo "=== $cls" >> "$out/javap.txt"
+              javap -p -cp "$cp" "$cls" >> "$out/javap.txt" 2>&1 || echo "NOT FOUND: $cls" >> "$out/javap.txt"
+            done
+          done
+          cd "$out"
+          git init -q -b ci-javap
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Signatures for ${GITHUB_SHA::7}"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" ci-javap
+          echo "::notice title=Signatures::$(grep -c '^=== ' javap.txt) classes, $(grep -c '^NOT FOUND' javap.txt) not found, on the ci-javap branch"
 
   client:
     name: client test and screenshots
