@@ -646,6 +646,40 @@ For reference, the play time of a single level (without the budget factor):
 - ✅ **Two active abilities** in one skill (after level 75): `R` for the first specialization, `Shift + R` for the second.
 - ✅ **Points on level loss:** when you drop below a level, the most recently bought point is removed first. When you win the level back, that point returns to the same node by itself.
 
+### How milestone 5 implements it (version 0.6.0)
+- 💡 **The branch of every specialization** follows the approved Skill Screen mockup (round 21), from the bottom up:
+  two passives; ability rank I; rank II; two passives; a choice node (one of two); ranks III, IV (level 60) and V
+  (level 80). The mockup's branch cost about 30 points, but a branch must cost **more than 75** (round 8), so passives
+  and choice nodes have **5 ranks**: row 1 at 2 points a rank, row 4 and the choice at 3, each ability rank 3. A full
+  branch costs **80 points**; two branches share the 75 points a skill earns from level 25 to 100.
+  - Points: 1 per level from level 25 (a skill at level 47 has 22).
+  - The passives, choice nodes and abilities can be bought now, but **their effects come in milestone 6**, with each
+    specialization's content; until then they show placeholder names ("Passive 1", "Choice A").
+- **Respec:** one button per skill resets both specializations and every point, for 20% of the skill's XP (its levels at
+  today's budget factor, plus Mastery), then waits 7 real days. Redistributing points is the same respec. The
+  confirmation shows the exact cost first. Operators: `/skills admin respec <player> <skill>` is free and immediate,
+  and the player is told.
+- **Lost levels** set the newest points aside; regained levels give them back to the same nodes, in the same order. A
+  specialization below its level (25 or 75) is dormant: kept, not in use. (This is the rule of §6; the death system
+  in milestone 7 uses it.)
+- **The ability key:** `R` uses a first specialization's ability, `Shift + R` a second's. It reaches the ability whose
+  trigger fits what you hold or look at; workstations before tools before "anything"; on a tie, the first skill.
+  - 💡 Triggers: Blade sword or spear · Crusher axe or mace · Brawler empty hand · Sniper and Skirmisher bow or crossbow
+    · Harpooner trident · Bulwark shield · Prospector and Tunneler pickaxe · Excavator shovel or brush · Lumberjack an
+    axe while looking at a log · Herbalist food · Grower hoe · the three Fishing specializations a fishing rod · Hexer a
+    splash or lingering potion · Forgemaster, Armorer, Tinkerer, Alchemist and Enchanter their workstation in view ·
+    Juggernaut, Resilience, Gatherer, Herder, Beastmaster, Wanderer, Survivalist and Acrobat anything.
+  - Cooldowns are those of §2, saved in game time; a small icon beside the hotbar shows the ability the key would use
+    while it is ready.
+- **The trunks** all work. 💡 Choices made while building:
+  - Patience (Fishing 5) takes 0.875 s off the bite wait (5% of vanilla's average); Sea Luck (Fishing 20) is 2 points
+    of luck (treasure from 5% to about 9%).
+  - Swimmer (Exploration 15) is +0.05 water movement efficiency; Catch Breath (Defense 15) brings the next natural
+    regeneration 2 s forward after each hit in a fight.
+  - "Furnaces / brewing stands you fill" are the ones you last opened.
+  - Potent Brews (Arcana 15) works on potions you drink; splash and lingering potions follow with Hexer in milestone 6.
+  - The Skill Screen fits GUI scale 3 at 1280 × 720 (426 × 240), the scale Minecraft picks there by itself.
+
 ## 7. Death penalties
 
 ### Fixed principles (from the brief, not a choice)
@@ -901,7 +935,7 @@ For reference, the play time of a single level (without the budget factor):
 
 Work starts only after the owner's final approval (§15). Each milestone ends with: compiling, running the tests, checking for regressions, a report of what was built and what is still open, and the owner's approval before the next major system.
 
-Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 ✅ done (0.4.0) · milestone 4 ✅ done (0.5.0) · milestone 5 next.
+Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 ✅ done (0.4.0) · milestone 4 ✅ done (0.5.0) · milestone 5 built (0.6.0), being verified.
 
 | # | Milestone | Contents | Tests |
 |---|---|---|---|

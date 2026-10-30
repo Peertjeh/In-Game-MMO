@@ -6,7 +6,8 @@ Ten playstyle skills, each with its own skill tree, three specializations and a 
 that you discover yourself. Slow, meaningful progression, and deaths that cost you for real, always shown up front.
 
 > **Status:** in development. The design is approved; the code is being built milestone by milestone. So far all ten
-> skills earn XP, with the rules against exploits; the trees, abilities and the death system follow.
+> skills earn XP (with the rules against exploits), and their trunks, specializations, points and respec work; the
+> abilities' effects, the death system and the synergies follow.
 
 - The full design: [docs/DESIGN.md](docs/DESIGN.md)
 - Works on its own, and optionally together with [Extreme Dimensions](https://github.com/Peertjeh/extremedimensions).

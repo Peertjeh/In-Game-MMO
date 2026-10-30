@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.6.0: Trees and abilities (in development)
+
+- **Specializations**: choose the first at level 25 and the second at 75 on the Skill Screen. Specializations of
+  different skills that exclude each other (such as Brawler and Bulwark) cannot be combined.
+- **Points**: from level 25 every level gives 1 point (75 at level 100), shared by both specializations. Every branch
+  has the same eight rows: passives, the active ability's ranks I to V and a choice node; a full branch costs 80 points,
+  so nobody takes everything. The passives', choice nodes' and abilities' effects come in the next version.
+- **Respec**: resets a skill's specializations and points for 20% of its XP, then not again for 7 days; the cost is
+  shown before you confirm. Operators can give a free respec with `/skills admin respec`.
+- **Lost levels** set your newest points aside; when you win the levels back, the points return to the same nodes.
+- **The ability key**: `R` (rebindable) for a first specialization's ability, `Shift + R` for a second's, reached by
+  what you hold or look at; cooldowns of 4 or 5 minutes, and a small icon beside the hotbar while it is ready.
+- **The trunks**: the passive bonuses at levels 5, 10, 15 and 20 of all ten skills now work, from faster mining and a
+  quicker attack bar to farmland you no longer trample and potions that last longer.
+- The Skill Screen is interactive, and fits the screen at GUI scale 3.
+
 ## 0.5.0: XP from the other six skills (in development)
 
 - **Melee**: fully charged hits (attack bar at least 90%), by the damage dealt up to the target's remaining health × its
