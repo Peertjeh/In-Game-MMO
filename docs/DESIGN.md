@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION — Ontwerpdocument
 
 > Werktitel. De definitieve naam is nog niet gekozen.
-> Status: **Interview ronde 12 (fase 5: skill 4/10, Mining). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
+> Status: **Interview ronde 13 (fase 5: skill 5/10, Foraging). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
 
 Legenda per mechaniek:
 - ✅ **Bevestigd**: door de eigenaar goedgekeurd
@@ -25,7 +25,8 @@ Legenda per mechaniek:
 | 9 | Skill 1/10: Melee | ✅ alles akkoord |
 | 10 | Skill 2/10: Ranged (+ drie specialisaties per skill) | ✅ alles akkoord |
 | 11 | Skill 3/10: Defense | ✅ akkoord |
-| 12 | Skill 4/10: Mining | ❓ wacht op antwoorden |
+| 12 | Skill 4/10: Mining | ✅ akkoord |
+| 13 | Skill 5/10: Foraging | ❓ wacht op antwoorden |
 
 ---
 
@@ -247,7 +248,7 @@ Keuzes in dit voorstel:
 - ✅ **Groepsabilities mogen.** Abilities die ook bondgenoten helpen, zoals Bastion, zijn toegestaan.
 - ✅ **XP-bron:** schade die je opvangt (schild of armor). Er komt geen aparte bonus voor overleven met weinig levens.
 
-### Skill 4/10: Mining (💡 voorstel, ronde 12)
+### Skill 4/10: Mining (✅ goedgekeurd in ronde 12)
 **Identiteit:** ondergronds werk met houweel en schep: ertsen vinden, tunnels graven en de grond doorzoeken.
 
 **XP:**
@@ -281,6 +282,40 @@ Keuzes in dit voorstel:
 **Tegenwerking:** geen tegenpool. Verder gaat het via specialisatieconflicten, die volgen als alle skills ontworpen zijn.
 
 **Geen nieuwe items nodig.**
+
+- ✅ **Ore Sense** blijft zoals voorgesteld: ertsen door muren zien, binnen 12 blokken, met een cooldown van 5 min.
+- ✅ **Dubbele drops** blijven, met Ancient Debris uitgezonderd.
+
+### Skill 5/10: Foraging (💡 voorstel, ronde 13)
+**Identiteit:** de wilde natuur: bomen kappen en verzamelen wat vanzelf groeit.
+
+**XP:**
+- **Logs uit natuurlijke bomen**, per houtsoort uit een tabel. Zeldzame bomen geven meer, zoals jungle, cherry en pale oak.
+- **Bomen die een speler zelf heeft geplant** geven **25% XP**. Zo blijft een boomfarm nuttig, maar niet de snelste weg. Instelbaar.
+- **Wilde planten:** zoete bessen van wilde struiken, glow berries, natuurlijke paddenstoelen, bloemen, cacao uit de jungle, wilde meloenen en pompoenen, en honing en honingraat uit wilde bijenkorven.
+- Geplaatste blokken en planten die een speler met bonemeal heeft laten groeien, geven niets.
+
+**Stam** (gratis, vanzelf vrij):
+| Level | Bonus |
+|---|---|
+| 5 | Houthakkersritme: +3% kapsnelheid op logs |
+| 10 | Bladeren schudden: 10% meer kans op saplings, appels en stokken uit bladeren |
+| 15 | Bosvoet: bessenstruiken prikken je niet meer |
+| 20 | Dubbel hout: 5% kans op een dubbele log |
+
+**Specialisaties:**
+| | **Lumberjack** | **Gatherer** | **Herbalist** |
+|---|---|---|---|
+| Speelstijl | Bomen kappen | Wilde opbrengst verzamelen | Leven van wild voedsel |
+| Actieve ability | **Tree Feller**: de eerstvolgende boom die je binnen 6 seconden raakt, valt in één keer om. Elke log kost duurzaamheid. Rank I: max 16 logs, rank V: max 64. Cooldown 4 min. | **Bountiful Harvest**: 10 seconden lang geven alle wilde planten 3× opbrengst. Cooldown 5 min. | **Wild Remedy**: 30 seconden lang geeft al het voedsel dat je eet dubbele verzadiging, plus 5 seconden Regeneration I. Cooldown 5 min. |
+| Trade-off | Wilde planten geven −50% XP, en je krijgt er geen bonusopbrengst van | −15% kapsnelheid op logs | Verbouwd voedsel (brood, gewassen, vlees van gefokte dieren) vult 20% minder |
+| Voorbeeld keuzeknoop | Breed kappen (Tree Feller neemt grotere bomen) **of** Spaarzaam (Tree Feller kost de helft aan duurzaamheid) | Zeldzame zaden (kans op torchflower seeds of pitcher pods uit gras) **of** Honingoogst (dubbele honing uit wilde korven, zonder dat de bijen boos worden) | Paddenstoelkenner (paddenstoelensoep geeft Regeneration) **of** Bessenkenner (bessen vullen +2 honger) |
+
+**Mastery-perks** (voorbeeld, 1 van 2 per rank): +1% kans op een dubbele log **of** +1% kans op dubbele wilde opbrengst.
+
+**Tegenwerking:** geen tegenpool. Herbalist botst inhoudelijk met Farming (verbouwd voedsel vult minder); een mogelijk specialisatieconflict volgt later.
+
+**Geen nieuwe items nodig.** Torchflower seeds en pitcher pods zijn vanilla-items, die je normaal alleen via een sniffer krijgt.
 
 ### Voorbeelden van harde vereisten (D) (💡)
 - Smithing: de netherite-upgrade-specialisatie vereist Mining 30.
