@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION — Ontwerpdocument
 
 > Werktitel. De definitieve naam is nog niet gekozen.
-> Status: **Interview ronde 11 (fase 5: skill 3/10, Defense). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
+> Status: **Interview ronde 12 (fase 5: skill 4/10, Mining). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
 
 Legenda per mechaniek:
 - ✅ **Bevestigd**: door de eigenaar goedgekeurd
@@ -24,7 +24,8 @@ Legenda per mechaniek:
 | 8 | Fase 5: opbouw van de trees, punten, ranks, cooldowns, afleren | ✅ beantwoord |
 | 9 | Skill 1/10: Melee | ✅ alles akkoord |
 | 10 | Skill 2/10: Ranged (+ drie specialisaties per skill) | ✅ alles akkoord |
-| 11 | Skill 3/10: Defense | ❓ wacht op antwoorden |
+| 11 | Skill 3/10: Defense | ✅ akkoord |
+| 12 | Skill 4/10: Mining | ❓ wacht op antwoorden |
 
 ---
 
@@ -204,7 +205,7 @@ Keuzes in dit voorstel:
 
 **Geen nieuwe items nodig.**
 
-### Skill 3/10: Defense (💡 voorstel, ronde 11)
+### Skill 3/10: Defense (✅ goedgekeurd in ronde 11)
 **Identiteit:** klappen opvangen en overleven. Defense is de skill van wie vooraan staat.
 
 **XP:**
@@ -240,6 +241,44 @@ Keuzes in dit voorstel:
 - Tegenpool: **Exploration** (zwaar tegenover licht).
 - Uitrustingsconflict: in zware armor (Juggernaut-stijl) werken de bewegingsbonussen van Exploration niet.
 - Brawler (Melee) mag geen borstplaat van ijzer of zwaarder dragen en botst dus vanzelf met Juggernaut.
+
+**Geen nieuwe items nodig.**
+
+- ✅ **Groepsabilities mogen.** Abilities die ook bondgenoten helpen, zoals Bastion, zijn toegestaan.
+- ✅ **XP-bron:** schade die je opvangt (schild of armor). Er komt geen aparte bonus voor overleven met weinig levens.
+
+### Skill 4/10: Mining (💡 voorstel, ronde 12)
+**Identiteit:** ondergronds werk met houweel en schep: ertsen vinden, tunnels graven en de grond doorzoeken.
+
+**XP:**
+- XP per blok, uit een instelbare tabel.
+  - Zeldzame ertsen geven veel, steen weinig.
+  - Diepte zit in de tabel: deepslate en deepslate-ertsen geven meer dan hun gewone versie. Er is geen aparte dieptebonus en geen dimensiebonus.
+- Met de schep: aarde, zand, grind, klei, modder en soul sand (weinig). **Suspicious sand en gravel borstelen** (archaeology) geeft veel.
+- **Geplaatste blokken geven nooit XP.** Ook blokken uit een cobblestone-generator (lava + water) niet. Details in fase 7.
+
+**Stam** (gratis, vanzelf vrij):
+| Level | Bonus |
+|---|---|
+| 5 | Mijnwerkersritme: +3% breeksnelheid met houweel en schep |
+| 10 | Stevig gereedschap: 5% kans dat een blok geen duurzaamheid kost |
+| 15 | Grotkennis: 10% minder schade van druipsteen, magmablokken en vallend grind of zand |
+| 20 | Dubbele vondst: 5% kans op een dubbele ertsdrop (Ancient Debris is uitgezonderd, instelbaar) |
+
+**Specialisaties:**
+| | **Prospector** | **Excavator** | **Tunneler** |
+|---|---|---|---|
+| Gereedschap | Houweel | Schep en borstel | Houweel |
+| Speelstijl | Ertsen vinden en meer opbrengst | Graven, schatten en archaeology | Snelheid en grote tunnels |
+| Actieve ability | **Ore Sense**: 10 seconden lang zie je ertsen binnen 12 blokken door de muren heen oplichten. De server stuurt alleen die posities, dus het is geen x-ray voor de hele wereld. Cooldown 5 min. | **Earthmover**: 8 seconden lang breekt je schep 3×3 blokken tegelijk. Cooldown 4 min. | **Tunnel Bore**: 8 seconden lang breek je 1×3 blokken (rank V: 3×3). Cooldown 4 min. |
+| Trade-off | −10% breeksnelheid op gewone steen en deepslate | −15% breeksnelheid met een houweel | **Geen** kans op dubbele drops (ook niet die van de stam), en ertsen geven −25% XP |
+| Voorbeeld keuzeknoop | Edelsteenoog (alleen diamant en smaragd, maar een groter bereik) **of** Breed spectrum (alle ertsen, kleiner bereik) | Schatgraver (meer vondsten in aarde, zand en grind) **of** Archeoloog (betere vondsten bij het borstelen) | Diepgang (deepslate breekt even snel als steen) **of** Duurzaam (50% minder slijtage tijdens Tunnel Bore) |
+
+**Vondsten van Excavator** zijn alleen vanilla-items: vuursteen, kleiballen, botten, goudklompjes, pottery sherds en dergelijke.
+
+**Mastery-perks** (voorbeeld, 1 van 2 per rank): +1% kans op dubbele erts **of** +1% breeksnelheid.
+
+**Tegenwerking:** geen tegenpool. Verder gaat het via specialisatieconflicten, die volgen als alle skills ontworpen zijn.
 
 **Geen nieuwe items nodig.**
 
