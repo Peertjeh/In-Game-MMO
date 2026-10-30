@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION: Design Document
 
 > Working title. The final name has not been chosen yet.
-> Status: **Phase 7: XP tables for approval. There is no gameplay code yet; the design has not been approved as a whole.**
+> Status: **Phases 8 and 9: storage, configuration and commands. There is no gameplay code yet; the design has not been approved as a whole.**
 
 Legend for every mechanic:
 - ✅ **Confirmed**: approved by the owner
@@ -37,7 +37,8 @@ Legend for every mechanic:
 | 21 | GUI mockup | ✅ approved ("let's go on with this"); feedback may follow later |
 | 22 | Language | ✅ the mod and its repository in English; the design chat stays in Dutch |
 | 23 | Phase 7: anti-exploit | ✅ approved |
-| 24 | Appendix A: XP tables; Dutch translation | ❓ awaiting answers |
+| 24 | Appendix A: XP tables; Dutch translation | ✅ approved; English only, no translation |
+| 25 | Phases 8 and 9: name, storage, configuration, commands, leaderboard | ❓ awaiting answers |
 
 ---
 
@@ -52,7 +53,7 @@ Legend for every mechanic:
   - 💡 Technically: ED is listed only under `suggests` in `fabric.mod.json`, never under `depends`. All integration code lives apart (`compat/extremedimensions`) and only runs when `FabricLoader.isModLoaded("extremedimensions")` is true. Without ED that code is never loaded.
   - ❓ What the integration does exactly is still to be discussed (the Seam's penalty multiplier, how the death penalties interact).
 - ✅ **The mod is in English** (round 22): all in-game text, the documentation and this document. Only the design conversation with the owner is in Dutch.
-  - ❓ Should the mod also ship a Dutch translation (`nl_nl`), as Extreme Dimensions does, or English only?
+  - ✅ **English only** (round 24): no Dutch translation is shipped. The text still lives in `en_us.json`, so translations stay possible later.
 
 ### State of the repository (inspected on 2026-10-30)
 - `Peertjeh/In-Game-MMO`: 1 commit, only `README.md` ("MMO With GUI"). Greenfield: no code, build, GUI or storage.
@@ -730,12 +731,59 @@ For reference, the play time of a single level (without the budget factor):
 - The example player has 212/400 levels, death pressure 1, and Blade, Bulwark and Prospector as specializations. All numbers follow the approved formulas.
 - **Node names and effects** in the tree that are not approved above (e.g. Swordmaster, Spear Reach, Armor Breaker) are **examples** (💡). The real content of every tree is worked out per skill during implementation.
 
-## 10. Player data
-- 💡 Gson JSON per world, as in Extreme Dimensions, with migration and tests (phase 8).
-- 💡 Placed-block tracking and mob origin flags need per-chunk and per-entity storage (phase 8).
+## 10. Player data (💡 proposal, round 25)
 
-## 11. Configuration
-_Phase 9._
+### Where it lives
+| Data | Storage | Why |
+|---|---|---|
+| A player's progression | One Gson JSON file per player: `<world>/<modid>/players/<uuid>.json` | Easy to inspect and back up; one busy player never rewrites everyone's data. Same format as Extreme Dimensions. |
+| Server-wide data (chronicle, first discoverers) | `<world>/<modid>/world.json` | One small file per world. |
+| Placed blocks | A Fabric data attachment on each chunk: a bitset per chunk section, only where something was placed | Saved and loaded with the chunk itself, so it never runs ahead of or behind the blocks. |
+| Mob origin flags (spawner, spawn egg, `/summon`) | A Fabric data attachment on the entity | Survives restarts and unloaded chunks. |
+| Anti-exploit state (AFK timer, diminishing-returns window, PvP caps, fall spots) | Memory only | Short-lived; nothing is lost that matters when the server restarts. |
+
+### What a player file holds
+- Per skill: total XP, level, Mastery ranks and the perk chosen at each rank.
+- Specializations (first, second, and dormant ones after level loss).
+- The nodes bought, **in the order they were bought** (needed for "the most recently bought point goes first", §6).
+- Cooldowns: ability cooldowns (game ticks) and the respec waiting time (real time).
+- Death pressure and its decay timer (counted in play time), the death fatigue end time.
+- Death history: the last 50 deaths, with time, place, dimension, cause and exactly what was lost.
+- Discovered synergies with date and place.
+- Statistics per skill (e.g. full hits, ores mined, catches).
+- Exploration: visited chunks as a bitset per region and dimension, the last visit per region, visited biomes and entered structures.
+
+### Saving safely
+- Changes are marked dirty and written **with the world's autosave**, on logout and on server stop, as in Extreme Dimensions. No write on every XP gain.
+- Writes are atomic (a temporary file, then a move), so a crash never leaves a half-written file.
+- The last **3 versions** of every player file are kept as backups.
+- Every file has a **schema version**. On an update the mod migrates old files forward; it never resets progression. Migration tests load files written by older versions (like `MigrationTests` in Extreme Dimensions).
+
+## 11. Configuration and administration (💡 proposal, round 25)
+
+### Configuration
+- **`config/<modid>.json`** for every balance value, as in Extreme Dimensions: missing keys are written back, so the file always lists every option.
+- **Data files** for the larger tables: `config/<modid>/xp/<skill>.json` (Appendix A) and `config/<modid>/synergies.json`.
+- **Presets**, like Extreme Dimensions' `Preset`:
+  - **Hardcore** (the default): the owner's choices in this document.
+  - **Normal**: half the death loss, no layer 3, 50% faster XP.
+  - **Custom**: whatever the file says.
+- Everything the brief lists is configurable: enabled skills, maximum levels, XP multipliers and values, ability requirements and cooldowns, death penalties, anti-farming rules and skill dependencies. (There are no recovery mechanics to configure.)
+
+### Commands
+| Command | Who | What |
+|---|---|---|
+| `/skills` | Everyone | Opens the Character Sheet |
+| `/skills top [skill]` | Everyone | The leaderboard (total or per skill) |
+| `/skills inspect <player>` | Operators | Opens that player's Character Sheet, read only |
+| `/skills admin set <player> <skill> <level>` | Operators | Sets a level |
+| `/skills admin add <player> <skill> <xp>` | Operators | Adds or removes XP |
+| `/skills admin respec <player> <skill>` | Operators | A free respec |
+| `/skills admin reset <player> [skill]` | Admins | Resets progression, only after a confirmation |
+| `/skills reload` | Admins | Reloads the config |
+
+- Permissions follow Extreme Dimensions: operators are op level 2 (`LEVEL_GAMEMASTERS`), admins op level 3 (`LEVEL_ADMINS`).
+- **Admin changes are never silent:** the player gets a message, and the change is written to the server log.
 
 ## 12. Anti-exploit
 - 💡 All XP is computed on the server; the client only displays it (follows from option A).
@@ -754,7 +802,7 @@ _Phase 9._
   - 💡 Numbers: per skill, over a rolling 10-minute window. Above **5,000 XP** in 10 minutes (3× the normal pace), XP shrinks step by step down to a floor of **5%**. The window and threshold are configurable.
 - ✅ **A general AFK rule:** **no XP** in any skill after 5 minutes without real play (no looking around, no movement of your own, no interaction).
   - 💡 Movement caused by water currents, pistons, minecarts or boats does not count as play.
-- ✅ **PvP** (the owner said "approved" to the list; read as a and b, which had no caveat):
+- ✅ **PvP** (a and b; confirmed in round 24):
   - **a)** damaging the same player gives XP for at most 3 "lives" per hour (60 health points of damage);
   - **b)** no XP from players with less than half of your total level.
   - 💡 **c)** no XP from players on the same IP address: **off by default** (it would also hit siblings and housemates), configurable for servers that want it.
@@ -769,7 +817,7 @@ _Only after the full design is approved._
 
 ---
 
-## Appendix A: XP tables (💡 proposal, round 24)
+## Appendix A: XP tables (✅ approved in round 24)
 
 All values are configurable (§11). They are calibrated against an assumed rate of active play, given per skill below. Internally XP is a decimal number; the GUI rounds it.
 
@@ -886,7 +934,7 @@ Calibration: ≈ 120 catches per hour (with Lure).
 | Name tag, saddle, nautilus shell | 300 | Enchanted book | 400 |
 | Heart of the Sea, trident (Treasure Hunter) | 1,000 | | |
 
-- 💡 **Hookmaster** also earns XP for using the rod as a tool: 30 XP when Shake makes a hooked mob drop something (once per mob).
+- ✅ **Hookmaster** also earns XP for using the rod as a tool: 30 XP when Shake makes a hooked mob drop something (once per mob).
 
 ### A.8 Exploration
 Calibration: ≈ 600 new chunks per hour on foot, plus structures and the first visits to biomes.
@@ -911,7 +959,7 @@ Calibration: ≈ 600 new chunks per hour on foot, plus structures and the first 
 | Stronghold, woodland mansion | 1,500 |
 | Ancient city | 2,000 |
 
-- 💡 The **first structure of each type** you ever enter gives **3×** XP.
+- ✅ The **first structure of each type** you ever enter gives **3×** XP.
 
 ### A.9 Smithing
 Smithing is limited by materials more than by time; its values are higher per action.
