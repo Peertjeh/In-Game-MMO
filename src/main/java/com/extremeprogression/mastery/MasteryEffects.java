@@ -43,7 +43,7 @@ public final class MasteryEffects {
 	}
 
 	public static boolean boss(Entity e) {
-		return e != null && (e.getType().is(ConventionalEntityTypeTags.BOSSES) || BOSSES.contains(path(e)));
+		return e != null && (BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(e.getType()).is(ConventionalEntityTypeTags.BOSSES) || BOSSES.contains(path(e)));
 	}
 
 	public static boolean flying(Entity e) {
