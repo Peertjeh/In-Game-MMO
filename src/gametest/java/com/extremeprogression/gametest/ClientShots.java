@@ -29,6 +29,7 @@ import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.locale.Language;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -178,6 +179,19 @@ public class ClientShots implements FabricClientGameTest {
 			ctx.runOnClient(mc -> ((com.extremeprogression.client.screen.CodexScreen) mc.gui.screen()).show(true));
 			ctx.waitTicks(5);
 			ctx.takeScreenshot("05_chronicle");
+
+			// The power level beside the name above a player's head: the client knows everyone's, and hides it where told
+			ctx.runOnClient(mc -> {
+				Component badge = com.extremeprogression.client.state.ClientPower.badge(mc.player.getUUID());
+				check(badge != null && badge.getString().equals("✦312★"), "the name tag badge is " + (badge == null ? "missing" : badge.getString()) + ", not ✦312★");
+				String hidden = Config.NAMETAG_HIDDEN_DIMENSIONS;
+				Config.NAMETAG_HIDDEN_DIMENSIONS = "battlehub:hub, minecraft:overworld";
+				try {
+					check(com.extremeprogression.client.state.ClientPower.badge(mc.player.getUUID()) == null, "the badge shows in a dimension that hides it");
+				} finally {
+					Config.NAMETAG_HIDDEN_DIMENSIONS = hidden;
+				}
+			});
 
 			// Administration (milestone 9): the settings reached the client, the leaderboard, an XP event, an inspection
 			check(ctx.computeOnClient(mc -> com.extremeprogression.client.state.ClientAdmin.settings() != null), "the client got no settings");

@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.0: Power levels and a clearer Skill Screen
+
+- **The power level above heads**: beside every player's name in multiplayer, their total level as in the tablist
+  (`✦312`, a gold star with Mastery). Not shown in BattleHub's lobby and matches (option
+  `nametag_hidden_dimensions`), and off with `nametag_power: false`.
+- **The Skill Screen** is easier to read: the three specializations are tabs, the tree shows one branch at a time over
+  its full width with every node's own name, lines show which node opens which, and the screen grows with the window.
+- **The inventory button** sits inside the inventory now, between your figure and the crafting grid, clear of the
+  recipe book and of Extreme Dimensions' buttons.
+
 ## 1.1.0: TAB
 
 Extreme Progression on the player list and in chat, beside Extreme Dimensions and BattleHub.

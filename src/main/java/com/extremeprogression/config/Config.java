@@ -143,6 +143,12 @@ public final class Config {
 	/** The %extremeprogression:...% placeholders for TAB and chat mods (with Text Placeholder API), and how often they are worked out. */
 	public static boolean PLACEHOLDERS = true;
 	public static int PLACEHOLDER_REFRESH_TICKS = 20;
+	/**
+	 * The power level (✦ and the total level) beside the name above every player's head, except in these dimensions
+	 * (BattleHub's lobby and matches by default: a game of its own).
+	 */
+	public static boolean NAMETAG_POWER = true;
+	public static String NAMETAG_HIDDEN_DIMENSIONS = "battlehub:hub,battlehub:arenas";
 
 	private static final Map<String, Object> DEFAULTS = snapshot();
 

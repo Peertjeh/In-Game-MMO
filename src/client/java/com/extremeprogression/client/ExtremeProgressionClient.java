@@ -50,6 +50,8 @@ public class ExtremeProgressionClient implements ClientModInitializer {
 				context.client().gui.setScreen(new com.extremeprogression.client.screen.SettingsScreen(null));
 			}
 		}));
+		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.PowerPayload.TYPE, (payload, context) ->
+				context.client().execute(() -> com.extremeprogression.client.state.ClientPower.apply(payload)));
 		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.XpEventPayload.TYPE, (payload, context) ->
 				context.client().execute(() -> com.extremeprogression.client.state.ClientAdmin.apply(payload)));
 		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.LeaderboardPayload.TYPE, (payload, context) ->
@@ -67,6 +69,7 @@ public class ExtremeProgressionClient implements ClientModInitializer {
 			ClientProgress.clear();
 			com.extremeprogression.client.state.ClientSynergies.clear();
 			com.extremeprogression.client.state.ClientAdmin.clear();
+			com.extremeprogression.client.state.ClientPower.clear();
 			OreSense.clear();
 		}));
 

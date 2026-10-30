@@ -224,7 +224,7 @@ public final class TabPlaceholders {
 	 * The total level at a glance, behind a name: "✦312" in a colour that brightens every hundred levels (gray, green,
 	 * aqua, gold, light purple at the cap), with a gold star once the player has Mastery; nothing at level 0.
 	 */
-	static Component badge(int total, int mastery) {
+	public static Component badge(int total, int mastery) {
 		if (total <= 0 && mastery <= 0) {
 			return Component.empty();
 		}

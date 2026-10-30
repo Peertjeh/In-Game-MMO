@@ -46,6 +46,7 @@ public final class ServerEvents {
 			com.extremeprogression.synergy.Chronicle.close();
 			com.extremeprogression.xp.XpEvents.clear();
 			com.extremeprogression.compat.TabPlaceholders.clear();
+			com.extremeprogression.compat.PowerTags.clear();
 			com.extremeprogression.command.AdminCommands.clear();
 			AfkTracker.clear();
 			XpService.clear();
@@ -64,6 +65,7 @@ public final class ServerEvents {
 			com.extremeprogression.synergy.Synergies.send(player);
 			com.extremeprogression.config.Settings.send(player, false);
 			com.extremeprogression.xp.XpEvents.send(player);
+			com.extremeprogression.compat.PowerTags.joined(player);
 		});
 		// (on the server's thread: a player in a single-player world leaves from the connection's own)
 		ServerPlayConnectionEvents.DISCONNECT.register((handler, s) -> s.executeIfPossible(() -> {
@@ -119,6 +121,7 @@ public final class ServerEvents {
 			com.extremeprogression.synergy.SynergyEffects.tick(s);
 			com.extremeprogression.xp.XpEvents.tick(s);
 			com.extremeprogression.compat.TabPlaceholders.tick(s);
+			com.extremeprogression.compat.PowerTags.tick(s);
 			XpService.tick(s);
 		});
 

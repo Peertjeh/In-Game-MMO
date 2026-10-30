@@ -38,5 +38,9 @@ Both need **Text Placeholder API** (`placeholder-api`) on the server: every `%ex
 | `%extremeprogression:discoveries%` | the synergies anyone on the server found first (`5/12`) |
 | `%extremeprogression:top%` | the best player and their total (`Steve 312`), checked once a minute |
 
+The level badge also shows beside every player's name above their head (Extreme Progression draws it on each client,
+no TAB needed), except in BattleHub's lobby and matches: `nametag_hidden_dimensions` and `nametag_power` in
+`config/extremeprogression.json`.
+
 The values are in English (a tablist is the same for everyone) and are worked out once a second (`placeholder_refresh_ticks`);
 `placeholders: false` in `config/extremeprogression.json` empties them all.

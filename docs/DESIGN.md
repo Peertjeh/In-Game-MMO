@@ -61,6 +61,9 @@ Only when Extreme Dimensions is installed:
 - ✅ The **Seam** multiplies the death penalty by **×2.5** (round 7).
 - ✅ Both mods' death penalties **stack in full** (round 6).
 - 💡 Our inventory button sits right of ED's Journal and Curses buttons, so they never overlap (§9).
+  - 1.2.0: there it reached past the inventory's edge, so it now sits inside the inventory's own panel. It is in the
+    empty space between the player's figure and the crafting grid, above the off-hand slot, clear of the recipe book's
+    button and ED's.
 - 💡 The Seam's structures (villages, looms, colossal buildings, the Return Gate) count as **new structures** for Exploration.
   - Milestone 10: the Seam's buildings are not world structures. Extreme Dimensions builds them from its own plans
     while you are there, and the Seam is wiped and grown anew, so a structure lookup cannot see them.
@@ -104,6 +107,15 @@ Without Extreme Dimensions none of this code is loaded.
 - 💡 The level badge: `✦<total>` in a colour that brightens every hundred levels, with a gold star once the player has
   Mastery.
 - The compatibility run includes the real placeholder-api and reads the placeholders back through it, as TAB does.
+
+**The power level above heads (version 1.2.0)**
+- Beside every player's name tag in multiplayer, the same badge as in the tablist (`✦312`, a gold star with Mastery).
+  It is drawn by each client from every online player's total level and Mastery ranks.
+- The server sends those totals whenever one changes (it checks twice a second) and to every player who joins.
+- 💡 The badge is not shown in BattleHub's lobby and matches (`nametag_hidden_dimensions`, a list of dimension ids),
+  because BattleHub draws its own name tags there. `nametag_power: false` turns it off everywhere.
+- It only shows where the game shows a name tag at all: never for invisible players, never through walls for sneaking
+  ones.
 
 ### State of the repository (inspected on 2026-10-30)
 - `Peertjeh/In-Game-MMO`: 1 commit, only `README.md` ("MMO With GUI"). Greenfield: no code, build, GUI or storage.
@@ -1079,6 +1091,9 @@ The confirmed rules above, as built. Everything marked 💡 was decided while bu
   6. ✅ **Leaderboard** (round 25): the total and every skill, with every player's levels.
   7. ✅ **Settings** (operators only, round 25): the configuration in the game, like Extreme Dimensions' settings screen.
 - **Skill tree:** one fixed layout that fits on one screen, without scrolling.
+  - 1.2.0: the owner found the three branches side by side too cramped. The specializations are now tabs, and the tree
+    shows one branch at a time over its full width. Every node has its own name, lines show which node opens which,
+    and the screen grows with the window up to 560 × 330.
   - Nodes have clear states: owned, buyable, out of reach, requirement missing, conflict, dormant.
 - **HUD outside the GUI:** minimal.
   - A short notice on a level-up or a discovered synergy.

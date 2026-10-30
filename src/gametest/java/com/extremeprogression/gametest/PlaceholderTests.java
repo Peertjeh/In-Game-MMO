@@ -88,6 +88,17 @@ public class PlaceholderTests {
 	}
 
 	@GameTest
+	public void everyOnlinePlayersPowerGoesToTheNameTags(GameTestHelper helper) {
+		Config.reset();
+		ServerPlayer p = TestPlayers.survivor(helper, "Powerful");
+		Progression.setLevel(PlayerStore.get(p.getUUID()), Skill.MINING, 33);
+		var entry = com.extremeprogression.compat.PowerTags.now(helper.getLevel().getServer()).stream().filter(e -> e.player().equals(p.getUUID())).findFirst();
+		check(helper, entry.isPresent() && entry.get().total() == 33 && entry.get().mastery() == 0, "the name tags do not get the player's power: %s", entry);
+		check(helper, "✦33".equals(TabPlaceholders.badge(33, 0).getString()) && TabPlaceholders.badge(0, 0).getString().isEmpty(), "the badge is not ✦33, or not empty at 0");
+		helper.succeed();
+	}
+
+	@GameTest
 	public void theSnapshotForgetsLeaversAndCanBeSwitchedOff(GameTestHelper helper) {
 		Config.reset();
 		MinecraftServer server = helper.getLevel().getServer();
