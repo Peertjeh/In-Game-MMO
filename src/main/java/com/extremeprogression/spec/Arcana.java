@@ -150,7 +150,7 @@ public final class Arcana {
 			if (potent > 0 && Specs.roll(p, 0.06 * potent)) {
 				PotionContents stronger = contents;
 				for (MobEffectInstance e : contents.getAllEffects()) {
-					if (!e.getEffect().value().isInstantenous()) {
+					if (!e.getEffect().value().isInstantaneous()) {
 						stronger = stronger.withEffectAdded(new MobEffectInstance(e.getEffect(), e.getDuration(), e.getAmplifier() + 1, e.isAmbient(), e.isVisible(),
 								e.showIcon()));
 					}
@@ -324,7 +324,7 @@ public final class Arcana {
 					if (d > AbstractThrownPotion.SPLASH_RANGE && d <= reach) {
 						double falloff = 1 - d / reach;
 						for (MobEffectInstance effect : contents.getAllEffects()) {
-							if (!effect.getEffect().value().isInstantenous()) {
+							if (!effect.getEffect().value().isInstantaneous()) {
 								int duration = (int) Math.round(effect.getDuration() * falloff);
 								if (duration > 20) {
 									((LivingEntity) e).addEffect(new MobEffectInstance(effect.getEffect(), duration, effect.getAmplifier(), effect.isAmbient(),
@@ -388,7 +388,7 @@ public final class Arcana {
 				factor *= 1 + 0.06 * rank(t.owner, HEXER, C1);
 			}
 		}
-		if (factor == 1 || effect.getEffect().value().isInstantenous()) {
+		if (factor == 1 || effect.getEffect().value().isInstantaneous()) {
 			return effect;
 		}
 		return new MobEffectInstance(effect.getEffect(), Math.max(1, (int) Math.round(effect.getDuration() * factor)), effect.getAmplifier(), effect.isAmbient(),
