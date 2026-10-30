@@ -1,7 +1,7 @@
 # Extreme Progression: Design Document
 
 > Name: **Extreme Progression**, mod ID `extremeprogression` (round 25).
-> Status: **Complete design, awaiting the owner's final approval (§15). There is no gameplay code yet.**
+> Status: **Design approved (round 26). Implementation in progress on the `develop` branch: see §13.**
 
 Legend for every mechanic:
 - ✅ **Confirmed**: approved by the owner
@@ -39,7 +39,7 @@ Legend for every mechanic:
 | 23 | Phase 7: anti-exploit | ✅ approved |
 | 24 | Appendix A: XP tables; Dutch translation | ✅ approved; English only, no translation |
 | 25 | Phases 8 and 9: name, storage, configuration, commands, leaderboard | ✅ approved |
-| 26 | Phase 10: the complete design | ❓ awaiting final approval |
+| 26 | Phase 10: the complete design | ✅ approved |
 
 ---
 
@@ -837,6 +837,8 @@ For reference, the play time of a single level (without the budget factor):
 ## 13. Implementation roadmap (💡 proposal)
 
 Work starts only after the owner's final approval (§15). Each milestone ends with: compiling, running the tests, checking for regressions, a report of what was built and what is still open, and the owner's approval before the next major system.
+
+Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (version 0.2.0) · milestone 2 next.
 
 | # | Milestone | Contents | Tests |
 |---|---|---|---|
