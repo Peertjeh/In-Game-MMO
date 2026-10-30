@@ -1,6 +1,6 @@
 # Testing Extreme Progression
 
-This is for trying the mod in a real game while it is still in development (version 1.0.0, milestones 0–10 of the
+This is for trying the mod in a real game (version 1.0.0, milestones 0–10 of the
 [roadmap](DESIGN.md#13-implementation-roadmap--proposal)). What is not built yet is listed at the end.
 
 ## What you need
@@ -10,6 +10,7 @@ This is for trying the mod in a real game while it is still in development (vers
 - **Fabric API 0.162.0+26.3** or newer ([Modrinth](https://modrinth.com/mod/fabric-api))
 - **Java 25** (the Minecraft launcher brings its own)
 - The mod's jar: `extremeprogression-1.0.0.jar`
+  - the release: [v1.0.0 on GitHub](https://github.com/Peertjeh/In-Game-MMO/releases/tag/v1.0.0);
   - the latest green build is always on the
     [`ci-jar` branch](https://github.com/Peertjeh/In-Game-MMO/tree/ci-jar) (click the jar, then "Download raw file");
   - or under **Artifacts** of any [build run](https://github.com/Peertjeh/In-Game-MMO/actions).
