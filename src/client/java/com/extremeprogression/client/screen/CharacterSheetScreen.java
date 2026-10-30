@@ -48,10 +48,12 @@ public class CharacterSheetScreen extends Screen {
 		int rx = x0 + LEFT_W + 6;
 		column(rx + 6, y0 + 20, List.of(Category.COMBAT, Category.SURVIVAL));
 		column(rx + 6 + SkillTile.W + 4, y0 + 20, List.of(Category.GATHERING, Category.CRAFTING));
+		this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.codex.button"),
+				b -> Minecraft.getInstance().gui.setScreen(new CodexScreen(this))).pos(this.width / 2 - 153, y0 + H - 20).size(100, 20).build());
 		this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.death.title"),
-				b -> Minecraft.getInstance().gui.setScreen(new DeathRegisterScreen(this))).pos(this.width / 2 - 102, y0 + H - 20).size(100, 20).build());
+				b -> Minecraft.getInstance().gui.setScreen(new DeathRegisterScreen(this))).pos(this.width / 2 - 50, y0 + H - 20).size(100, 20).build());
 		this.addRenderableWidget(Button.builder(Component.translatable("gui.done"), b -> this.onClose())
-				.pos(this.width / 2 + 2, y0 + H - 20).size(100, 20).build());
+				.pos(this.width / 2 + 53, y0 + H - 20).size(100, 20).build());
 	}
 
 	private void column(int x, int y, List<Category> categories) {

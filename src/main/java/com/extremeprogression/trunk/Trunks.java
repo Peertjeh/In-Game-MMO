@@ -363,6 +363,7 @@ public final class Trunks {
 		com.extremeprogression.spec.Exploration.ate(p, food);
 		com.extremeprogression.spec.Foraging.ate(p, food);
 		com.extremeprogression.spec.Fishing.ate(p, food);
+		com.extremeprogression.synergy.SynergyEffects.ate(p, food);
 	}
 
 	/** Stamina (Exploration 10): sprinting costs 5% less hunger. */

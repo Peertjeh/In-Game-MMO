@@ -125,6 +125,10 @@ public final class Config {
 	public static double OPPOSING_PASSIVE_POWER = 0.75;
 	/** What one Mastery rank put in a perk adds: 1%. */
 	public static double MASTERY_PERK_STEP = 0.01;
+	/** Synergies need both their skills at this level (design §2). */
+	public static int SYNERGY_LEVEL = 30;
+	/** The first discovery of a synergy on the server is announced in the chat. */
+	public static boolean SYNERGY_ANNOUNCE = true;
 
 	private static final Map<String, Object> DEFAULTS = snapshot();
 
@@ -226,6 +230,7 @@ public final class Config {
 		OPPOSING_FULL_GAP = Math.max(1, OPPOSING_FULL_GAP);
 		OPPOSING_PASSIVE_POWER = share(OPPOSING_PASSIVE_POWER, "OPPOSING_PASSIVE_POWER");
 		MASTERY_PERK_STEP = nonNegative(MASTERY_PERK_STEP, "MASTERY_PERK_STEP");
+		SYNERGY_LEVEL = Math.max(0, SYNERGY_LEVEL);
 		RESPEC_DAYS = nonNegative(RESPEC_DAYS, "RESPEC_DAYS");
 		XP_MULTIPLIER = nonNegative(XP_MULTIPLIER, "XP_MULTIPLIER");
 		PLANTED_TREE_FACTOR = share(PLANTED_TREE_FACTOR, "PLANTED_TREE_FACTOR");

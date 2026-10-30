@@ -47,7 +47,10 @@
 		"SmithingMenuMixin",
 		"SpreadingPlantMixin",
 		"TameAnimalTriggerMixin",
-		"ThrownTridentMixin"
+		"ThrownTridentMixin",
+		"ArrowMixin",
+		"VibrationListenerMixin",
+		"AbstractBoatMixin"
 	],
 	"injectors": {
 		"defaultRequire": 0

@@ -217,6 +217,7 @@ public final class Specs {
 		out = Defense.incoming(target, source, out);
 		out = Exploration.incoming(target, source, out);
 		out = com.extremeprogression.mastery.MasteryEffects.damage(target, source, out);
+		out = com.extremeprogression.synergy.SynergyEffects.damage(target, source, out);
 		return out;
 	}
 
@@ -233,6 +234,9 @@ public final class Specs {
 			Ranged.after(p, target, source, dealt);
 		}
 		Defense.after(target, source, original, afterShield, blocked, dealt);
+		if (blocked && target instanceof ServerPlayer v) {
+			com.extremeprogression.synergy.SynergyEffects.blocked(v);
+		}
 	}
 
 	/** The strength of a knockback the entity takes. */
@@ -269,7 +273,8 @@ public final class Specs {
 	public static MobEffectInstance effect(LivingEntity target, MobEffectInstance effect) {
 		MobEffectInstance out = Defense.effect(target, effect);
 		out = out == null ? null : Arcana.effect(target, out);
-		return out == null ? null : Foraging.effect(target, out);
+		out = out == null ? null : Foraging.effect(target, out);
+		return out == null ? null : com.extremeprogression.synergy.SynergyEffects.effect(target, out);
 	}
 
 	/** A player's breaking speed on a block (on the client too). */
@@ -285,7 +290,8 @@ public final class Specs {
 		int out = Mining.durability(stack, player, amount);
 		out = Foraging.durability(stack, player, out);
 		out = Farming.durability(stack, player, out);
-		return Fishing.durability(stack, player, out);
+		out = Fishing.durability(stack, player, out);
+		return com.extremeprogression.synergy.SynergyEffects.durability(stack, player, out);
 	}
 
 	/** Healing an entity receives. */

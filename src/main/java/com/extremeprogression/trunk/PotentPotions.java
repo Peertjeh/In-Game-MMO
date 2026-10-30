@@ -52,7 +52,8 @@ public final class PotentPotions {
 
 	/** The potion now being drunk, and by whom (EMPTY when the drinking is done). */
 	public static void drinking(ItemStack potion, net.minecraft.world.entity.LivingEntity drinker) {
-		drinking = potion.isEmpty() ? 1.0f : (float) (factor(potion) * com.extremeprogression.spec.Arcana.drinkFactor(drinker));
+		drinking = potion.isEmpty() ? 1.0f : (float) (factor(potion) * com.extremeprogression.spec.Arcana.drinkFactor(drinker)
+				* com.extremeprogression.synergy.SynergyEffects.drinkFactor(potion, drinker));
 	}
 
 	/** The duration scale of the effects being applied now. */

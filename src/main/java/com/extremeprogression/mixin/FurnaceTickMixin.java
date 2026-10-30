@@ -22,15 +22,21 @@ import net.minecraft.world.level.block.state.BlockState;
 public abstract class FurnaceTickMixin {
 	@Inject(method = "serverTick", at = @At("HEAD"), require = 1)
 	private static void extremeprogression$before(ServerLevel level, BlockPos pos, BlockState state, AbstractFurnaceBlockEntity furnace, CallbackInfo ci,
-			@Share("fuel") LocalRef<ItemStack> fuel, @Share("lit") LocalIntRef lit, @Share("output") LocalRef<ItemStack> output) {
+			@Share("fuel") LocalRef<ItemStack> fuel, @Share("lit") LocalIntRef lit, @Share("output") LocalRef<ItemStack> output,
+			@Share("input") LocalRef<ItemStack> input) {
 		fuel.set(furnace.getItem(1).copy());
+		input.set(furnace.getItem(0).copy());
 		lit.set(((FurnaceAccess) furnace).extremeprogression$getLitTimeRemaining());
 		output.set(furnace.getItem(2).copy());
 	}
 
 	@Inject(method = "serverTick", at = @At("TAIL"), require = 1)
 	private static void extremeprogression$after(ServerLevel level, BlockPos pos, BlockState state, AbstractFurnaceBlockEntity furnace, CallbackInfo ci,
-			@Share("fuel") LocalRef<ItemStack> fuel, @Share("lit") LocalIntRef lit, @Share("output") LocalRef<ItemStack> output) {
-		Trunks.furnaceTick(furnace, fuel.get(), lit.get(), output.get());
+			@Share("fuel") LocalRef<ItemStack> fuel, @Share("lit") LocalIntRef lit, @Share("output") LocalRef<ItemStack> output,
+			@Share("input") LocalRef<ItemStack> input) {
+		// (the output as it was before the trunk's and the specializations' extras, so Forge of the Deep counts the smelt itself)
+		ItemStack before = output.get();
+		Trunks.furnaceTick(furnace, fuel.get(), lit.get(), before);
+		com.extremeprogression.synergy.SynergyEffects.furnaceTick(furnace, input.get(), before);
 	}
 }

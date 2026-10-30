@@ -42,14 +42,18 @@ public class ExtremeProgressionClient implements ClientModInitializer {
 				context.client().execute(() -> ClientProgress.applyActive(payload)));
 		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.DeathPayload.TYPE, (payload, context) ->
 				context.client().execute(() -> ClientProgress.applyDeaths(payload)));
+		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.SynergyPayload.TYPE, (payload, context) ->
+				context.client().execute(() -> com.extremeprogression.client.state.ClientSynergies.apply(payload)));
 		// The few specialization effects felt on the client (movement, the view) read its own player's tree from here
 		com.extremeprogression.spec.Specs.localSkills = ClientProgress::skillData;
 		com.extremeprogression.spec.Specs.localActive = spec -> ClientProgress.activeTicks(spec.id) > 0;
 		com.extremeprogression.spec.Specs.localFatigued = () -> ClientProgress.fatigueLeft() > 0;
+		com.extremeprogression.synergy.Synergies.localKnown = com.extremeprogression.client.state.ClientSynergies::known;
 		ClientPlayNetworking.registerGlobalReceiver(OpenSheetPayload.TYPE, (payload, context) ->
 				context.client().execute(() -> context.client().gui.setScreen(new CharacterSheetScreen(null))));
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> client.execute(() -> {
 			ClientProgress.clear();
+			com.extremeprogression.client.state.ClientSynergies.clear();
 			OreSense.clear();
 		}));
 

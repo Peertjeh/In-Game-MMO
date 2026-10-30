@@ -18,6 +18,9 @@ public abstract class BlockItemMixin {
 	private void extremeprogression$placed(BlockPlaceContext context, BlockState state, CallbackInfoReturnable<Boolean> cir) {
 		if (cir.getReturnValueZ()) {
 			PlacedBlocks.placed(context.getLevel(), context.getClickedPos(), state);
+			if (context.getLevel() instanceof net.minecraft.server.level.ServerLevel level) {
+				com.extremeprogression.synergy.SynergyEffects.placed(context.getPlayer(), level, context.getClickedPos(), state);
+			}
 		}
 	}
 }

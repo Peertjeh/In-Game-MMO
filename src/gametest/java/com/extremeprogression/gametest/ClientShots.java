@@ -153,6 +153,32 @@ public class ClientShots implements FabricClientGameTest {
 			ctx.waitTicks(10);
 			ctx.takeScreenshot("05_skill_smithing_opposed");
 
+			// Synergies: Mining 61 with Exploration 18 shows Deep Walker's runes; Melee 47 and Defense 38 discover Counterstrike
+			sp.getServer().runOnServer(s -> {
+				ServerPlayer player = s.getPlayerList().getPlayers().get(0);
+				com.extremeprogression.synergy.SynergyEffects.blocked(player);
+				net.minecraft.world.entity.LivingEntity zombie = net.minecraft.world.entity.EntityTypes.ZOMBIE.create(player.level(),
+						net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+				com.extremeprogression.synergy.SynergyEffects.damage(zombie, player.damageSources().playerAttack(player), 10);
+			});
+			ctx.waitTicks(10);
+			ctx.runOnClient(mc -> {
+				check(com.extremeprogression.client.state.ClientSynergies.known(com.extremeprogression.synergy.Synergy.COUNTERSTRIKE),
+						"the client does not know the discovered Counterstrike");
+				check(com.extremeprogression.client.screen.CodexScreen.stage(com.extremeprogression.synergy.Synergy.DEEP_WALKER) == 1,
+						"Deep Walker does not show as runes with a vague hint");
+				check(com.extremeprogression.client.screen.CodexScreen.stage(com.extremeprogression.synergy.Synergy.GREEN_THUMB) == 0,
+						"Green Thumb shows although neither skill is at 30");
+				mc.gui.setScreen(new com.extremeprogression.client.screen.CodexScreen(null));
+			});
+			ctx.waitTicks(10);
+			ctx.getInput().setCursorPos(1, 1);
+			ctx.waitTicks(2);
+			ctx.takeScreenshot("05_codex");
+			ctx.runOnClient(mc -> ((com.extremeprogression.client.screen.CodexScreen) mc.gui.screen()).show(true));
+			ctx.waitTicks(5);
+			ctx.takeScreenshot("05_chronicle");
+
 			// The inventory has the Character Sheet's button
 			InventoryScreen[] inventory = new InventoryScreen[1];
 			ctx.runOnClient(mc -> {
@@ -392,6 +418,18 @@ public class ClientShots implements FabricClientGameTest {
 				"weaker", "final"}) {
 			keys.add("gui.extremeprogression.mastery." + k);
 		}
+		for (com.extremeprogression.synergy.Synergy syn : com.extremeprogression.synergy.Synergy.values()) {
+			for (String part : new String[] {"", ".desc", ".hint1", ".hint2"}) {
+				keys.add(syn.translationKey() + part);
+			}
+		}
+		for (String k : new String[] {"codex.button", "codex.title", "codex.tab", "chronicle.tab", "codex.count", "codex.out_of_reach", "codex.out_of_reach_tip",
+				"codex.unknown_skills", "codex.found", "codex.first_discoverer", "codex.first_by", "codex.dormant", "codex.found_by_someone", "codex.needs",
+				"codex.footer", "chronicle.nobody", "chronicle.first", "chronicle.footer"}) {
+			keys.add("gui.extremeprogression." + k);
+		}
+		keys.addAll(List.of("message.extremeprogression.synergy.discovered", "message.extremeprogression.synergy.first",
+				"message.extremeprogression.synergy.first_you", "message.extremeprogression.tree.no_perk_waiting"));
 		// The Death Register and the summary (milestone 7)
 		for (String k : new String[] {"title", "deaths", "pressure", "step0", "step1", "step2", "no_pressure", "drops_in", "fatigue", "none", "fatigue_effect",
 				"per_dimension", "dimension.minecraft.overworld", "dimension.minecraft.the_nether", "dimension.minecraft.the_end",

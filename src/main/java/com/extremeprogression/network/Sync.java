@@ -30,6 +30,7 @@ public final class Sync {
 		PayloadTypeRegistry.clientboundPlay().register(OreSensePayload.TYPE, OreSensePayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(InsightPayload.TYPE, InsightPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(DeathPayload.TYPE, DeathPayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(SynergyPayload.TYPE, SynergyPayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(TreePayload.TYPE, TreePayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(AbilityPayload.TYPE, AbilityPayload.CODEC);
 	}

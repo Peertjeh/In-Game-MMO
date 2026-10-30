@@ -34,12 +34,16 @@ public final class ServerEvents {
 	private ServerEvents() {}
 
 	public static void register() {
-		ServerLifecycleEvents.SERVER_STARTED.register(s -> PlayerStore.open(s.getWorldPath(LevelResource.ROOT)));
+		ServerLifecycleEvents.SERVER_STARTED.register(s -> {
+			PlayerStore.open(s.getWorldPath(LevelResource.ROOT));
+			com.extremeprogression.synergy.Chronicle.open(s.getWorldPath(LevelResource.ROOT));
+		});
 		// The progression is written with the world's own saves (autosave, /save-all, stop), never ahead of them
 		ServerLifecycleEvents.AFTER_SAVE.register((s, flush, force) -> PlayerStore.flush());
 		ServerLifecycleEvents.SERVER_STOPPING.register(s -> PlayerStore.flush());
 		ServerLifecycleEvents.SERVER_STOPPED.register(s -> {
 			PlayerStore.close();
+			com.extremeprogression.synergy.Chronicle.close();
 			AfkTracker.clear();
 			XpService.clear();
 		});
@@ -54,6 +58,7 @@ public final class ServerEvents {
 			}
 			Sync.send(player);
 			com.extremeprogression.death.DeathService.sendHistory(player, null);
+			com.extremeprogression.synergy.Synergies.send(player);
 		});
 		// (on the server's thread: a player in a single-player world leaves from the connection's own)
 		ServerPlayConnectionEvents.DISCONNECT.register((handler, s) -> s.executeIfPossible(() -> {
@@ -67,6 +72,7 @@ public final class ServerEvents {
 			ExplorationXp.forget(id);
 			com.extremeprogression.spec.Specs.forget(id);
 			com.extremeprogression.death.DeathService.forget(id);
+			com.extremeprogression.synergy.SynergyEffects.forget(id);
 		}));
 
 		// XP sources (design §2) and the rules against exploits (design §12)
@@ -83,6 +89,7 @@ public final class ServerEvents {
 		Trunks.register();
 		com.extremeprogression.spec.Specs.register();
 		com.extremeprogression.death.DeathService.register();
+		com.extremeprogression.synergy.SynergyEffects.register();
 		UseItemCallback.EVENT.register((player, level, hand) -> {
 			if (!level.isClientSide()) {
 				AfkTracker.interacted(player.getUUID(), level.getServer().getTickCount());
@@ -99,6 +106,7 @@ public final class ServerEvents {
 			Trunks.tick(s);
 			com.extremeprogression.spec.Specs.tick(s);
 			com.extremeprogression.death.DeathService.tick(s);
+			com.extremeprogression.synergy.SynergyEffects.tick(s);
 			XpService.tick(s);
 		});
 
