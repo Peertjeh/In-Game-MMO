@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION — Ontwerpdocument
 
 > Werktitel. De definitieve naam is nog niet gekozen.
-> Status: **Interview ronde 19 (fase 5 afronden: conflicten, synergieën, harde vereisten). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
+> Status: **Interview ronde 20 (fase 6: de GUI). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
 
 Legenda per mechaniek:
 - ✅ **Bevestigd**: door de eigenaar goedgekeurd
@@ -32,7 +32,8 @@ Legenda per mechaniek:
 | 16 | Skill 8/10: Exploration | ✅ akkoord |
 | 17 | Skill 9/10: Smithing | ✅ akkoord, Masterwork afgezwakt |
 | 18 | Skill 10/10: Arcana | ✅ akkoord |
-| 19 | Conflicten tussen specialisaties, synergieën, harde vereisten | ❓ wacht op antwoorden |
+| 19 | Conflicten tussen specialisaties, synergieën, harde vereisten | ✅ akkoord; synergieën mogen in de repo |
+| 20 | Fase 6: stijl, schermen, skill tree, "op het spel", HUD | ❓ wacht op antwoorden |
 
 ---
 
@@ -532,7 +533,7 @@ Keuzes in dit voorstel:
 
 - ✅ Hexer, de nieuwe drankjes voor de Alchemist en Arcane Insight zijn goedgekeurd zoals voorgesteld.
 
-### Conflicten tussen specialisaties (💡 voorstel, ronde 19)
+### Conflicten tussen specialisaties (✅ goedgekeurd in ronde 19)
 Mechanisme b: deze specialisaties van **verschillende** skills sluiten elkaar uit. Wie de ene heeft, kan de andere niet kiezen. De GUI toont dat vooraf, met de reden erbij.
 
 | Specialisatie | ✕ | Specialisatie | Waarom |
@@ -543,7 +544,7 @@ Mechanisme b: deze specialisaties van **verschillende** skills sluiten elkaar ui
 | Herbalist (Foraging) | ✕ | Grower (Farming) | Wild tegenover verbouwd |
 | Tinkerer (Smithing) | ✕ | Enchanter (Arcana) | Staal verbeteren tegenover magie verbeteren |
 
-### Harde vereisten (D) (💡 voorstel, ronde 19)
+### Harde vereisten (D) (✅ goedgekeurd in ronde 19)
 | Knoop of ability | Vereist | Waarom |
 |---|---|---|
 | Sjabloonbehoud (Tinkerer, Smithing) | Mining 30 | ✅ al goedgekeurd |
@@ -551,9 +552,27 @@ Mechanisme b: deze specialisaties van **verschillende** skills sluiten elkaar ui
 | Nieuwe drankjes (Alchemist, Arcana) | Foraging 30 | Kennis van wilde kruiden |
 | Ruiter (Beastmaster, Farming) | Exploration 30 | Wie veel reist, rijdt beter |
 
-### Verborgen synergieën
-- ❓ **Nog niet in dit document**, omdat deze repo openbaar is: een lijst hier zou alles verklappen. De voorstellen staan in de chat van ronde 19. Eerst moet gekozen worden hoe we de lijst geheim houden.
-- 💡 Algemene regels:
+### Verborgen synergieën (✅ goedgekeurd in ronde 19)
+- ✅ De lijst **mag in deze openbare repo** staan (de eigenaar koos dat bewust). Spelers die de repo lezen, kunnen ze dus vooraf kennen.
+- 💡 Fase 9: de synergieën komen in een databestand, zodat een serverbeheerder ze kan aanpassen of vervangen.
+- Elke synergie vraagt **beide skills op level 30**. Tussen tegenpolen zijn er bewust geen synergieën.
+
+| Skills | Synergie | Effect |
+|---|---|---|
+| Melee + Defense | Tegenstoot | Na een geslaagde blok met je schild doet je volgende klap binnen 2 seconden +20% |
+| Melee + Exploration | Stormloop | Klappen terwijl je sprint doen +10% |
+| Ranged + Exploration | Hoge grond | +10% schade op doelwitten die minstens 8 blokken lager staan |
+| Ranged + Arcana | Giftpunt | Effecten van tipped arrows duren 50% langer |
+| Mining + Smithing | Smidse van de diepte | +5% kans op dubbele opbrengst bij het smelten van ruwe erts |
+| Mining + Exploration | Diepteloper | Sculk sensors in de Deep Dark merken je pas 2 blokken later op |
+| Foraging + Farming | Groene hand | Saplings die jij plant, groeien 20% sneller |
+| Fishing + Exploration | Zeevaarder | Boten die jij stuurt, varen 10% sneller |
+| Farming + Defense | Trouwe wachter | Je wolven krijgen 20% minder schade terwijl jij blokt |
+| Smithing + Defense | Op maat | Je armor slijt 10% langzamer |
+| Fishing + Arcana | Getijdenmagie | Water Breathing-drankjes werken 50% langer |
+| Foraging + Arcana | Kruidenkenner | Glow berries geven 10 seconden Night Vision |
+
+- Algemene regels:
   - Een synergie heeft twee skills nodig, elk op een minimumlevel.
   - De rune-hint verschijnt in de GUI zodra je één van de twee skills op dat level hebt.
   - De synergie wordt **ontdekt** de eerste keer dat de situatie in het spel voorkomt terwijl je aan beide levels voldoet.
@@ -692,9 +711,42 @@ Ter referentie, de speeltijd van één level (zonder budgetfactor):
 - ✅ **Geen herstelmechanieken.** Er is geen schim, geen uitdaging en geen item om verlies terug te halen. Verlies is permanent (ronde 7).
 
 ## 9. GUI-navigatie
+### Bevestigd
 - ✅ Openen met een sneltoets **en** vanuit het inventory-scherm.
 - ✅ Een eigen client-scherm, geen kist-menu.
-- 💡 De inventory-knop staat naast de ED-knoppen, de sneltoets is standaard `K` (zie §1).
+- ✅ Geen timer voor doodsvermoeidheid in beeld (HUD); wel in de GUI (§7).
+
+### Voorstellen (💡, ronde 20)
+- **Openen:** de inventory-knop staat naast de knoppen van ED, of direct naast het receptenboek als ED er niet is. De sneltoets is standaard `K`.
+- **Stijl:** dezelfde vanilla-huisstijl als Extreme Dimensions: panelen als de tooltip-box, de 16 chatkleuren, platte meters en de opties voor kleurenblindheid en minder flitsen.
+  - Skill-iconen zijn vanilla-items: zwaard, boog, schild, houweel, log, tarwe, hengel, kompas, aambeeld en enchanted book.
+  - Accentkleur per categorie: Combat rood, Gathering groen, Survival aqua, Crafting goud.
+- **Schermen:**
+  1. **Karakterblad** (hoofdscherm):
+     - je spelerfiguur en naam;
+     - je totaal ten opzichte van het plafond (bijv. 212/400) en de budgetfactor;
+     - het aantal Mastery-ranks en ontgrendelde abilities;
+     - de doodsdruk;
+     - alle 10 skills als tegels, gegroepeerd per categorie. Per tegel: level, XP-balk, iconen van je specialisaties, en een waarschuwing bij een tegenpool-malus.
+  2. **Skillscherm** (klik op een tegel):
+     - een kop met naam, beschrijving, level, XP en de XP voor het volgende level, en de mijlpalen 25/75/100;
+     - de **tree** in het midden: de stam onderaan en drie takken als kolommen;
+     - een detailpaneel rechts voor de knoop onder je muis: kosten, vereisten, trade-off en conflicten;
+     - abilities met hun rank en cooldown, en statistieken van de skill.
+  3. **Mastery** (per skill, na level 100): 10 ranks met de gekozen perks.
+  4. **Doodsregister:**
+     - het aantal doden, de doodsdruk en wanneer die weer zakt;
+     - hoe lang de doodsvermoeidheid nog duurt;
+     - de geschiedenis van je doden: wanneer, waar, welke dimensie en wat je verloor;
+     - **"Op het spel"**: precies wat je zou verliezen als je **nu** stierf, per skill, met de factor van de dimensie en de doodsdruk erin verrekend.
+  5. **Codex en kroniek:** jouw ontdekte synergieën (met datum en plek), runen met hints voor de rest, en de eerste ontdekkers op de server.
+- **Skill tree:** één vaste indeling die op één scherm past, zonder scrollen.
+  - Knopen hebben duidelijke toestanden: gekocht, koopbaar, nog niet bereikbaar, vereiste ontbreekt, conflict, slapend.
+- **HUD buiten de GUI:** minimaal.
+  - Een korte melding bij een level-up of een ontdekte synergie.
+  - Een klein cooldown-icoon als een ability klaar is.
+  - Geen XP-balk in beeld.
+- **Na een dood:** na het respawnen verschijnt een scherm met precies wat je verloor (vast principe uit §7).
 
 ## 10. Spelerdata
 - 💡 Gson-JSON per wereld, net als Extreme Dimensions, met migratie en tests (wordt uitgewerkt in fase 8).
