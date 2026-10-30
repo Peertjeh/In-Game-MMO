@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION — Ontwerpdocument
 
 > Werktitel. De definitieve naam is nog niet gekozen.
-> Status: **Interview ronde 15 (fase 5: skill 7/10, Fishing). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
+> Status: **Interview ronde 16 (fase 5: skill 8/10, Exploration). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
 
 Legenda per mechaniek:
 - ✅ **Bevestigd**: door de eigenaar goedgekeurd
@@ -28,7 +28,8 @@ Legenda per mechaniek:
 | 12 | Skill 4/10: Mining | ✅ akkoord |
 | 13 | Skill 5/10: Foraging | ✅ akkoord |
 | 14 | Skill 6/10: Farming | ✅ akkoord, bonemeal geeft geen XP |
-| 15 | Skill 7/10: Fishing | ❓ wacht op antwoorden |
+| 15 | Skill 7/10: Fishing | ✅ akkoord, kleine put geeft geen XP |
+| 16 | Skill 8/10: Exploration | ❓ wacht op antwoorden |
 
 ---
 
@@ -363,7 +364,7 @@ Keuzes in dit voorstel:
 
 **Geen nieuwe items nodig.**
 
-### Skill 7/10: Fishing (💡 voorstel, ronde 15)
+### Skill 7/10: Fishing (✅ goedgekeurd in ronde 15)
 **Identiteit:** op en aan het water: vis, schatten, en de hengel als gereedschap.
 
 **XP:**
@@ -375,7 +376,8 @@ Keuzes in dit voorstel:
   - je krijgt alleen XP als je de afgelopen minuten hebt bewogen of rondgekeken;
   - na 10 vangsten binnen 3 blokken van dezelfde plek neemt de XP sterk af ("overbevist"), en hij herstelt pas als je verderop vist. Zo werkt mcMMO ook;
   - details in fase 7.
-- Vissen in open water (zoals vanilla dat voor schatten al vraagt) geeft volle XP. In een kleine put wordt het minder.
+- ✅ Alleen vissen in **open water** (zoals vanilla dat voor schatten al vraagt) geeft XP. **Een kleine put geeft geen XP** (ronde 15).
+- ✅ De afname na 10 vangsten op dezelfde plek is streng genoeg; de XP gaat niet naar nul.
 
 **Stam** (gratis, vanzelf vrij):
 | Level | Bonus |
@@ -398,6 +400,45 @@ Keuzes in dit voorstel:
 **Tegenwerking:** geen tegenpool.
 
 **Geen nieuwe items nodig.** Heart of the Sea en trident zijn vanilla-items die je normaal niet kunt opvissen.
+
+- ✅ Treasure Hunter mag met een kleine kans een Heart of the Sea of een trident opvissen.
+
+### Skill 8/10: Exploration (💡 voorstel, ronde 16)
+**Identiteit:** reizen, ontdekken en bewegen. Acrobatics uit mcMMO zit hierin.
+
+**XP:**
+- **Nieuwe chunks:** je eerste bezoek aan een chunk geeft een klein beetje XP. Dat wordt per speler bijgehouden, dus rondjes in een minecart leveren niets op.
+- **Nieuwe biomen:** de eerste keer dat je in een biome komt, geeft veel XP.
+- **Nieuwe structuren:** de eerste keer dat je een structuur binnengaat, geeft veel XP. Bijvoorbeeld een dorp, tempel, stronghold, ancient city, trial chamber, bastion of end city.
+- **Overleefde vallen:** XP naar de valschade die je kreeg. Dezelfde plek blijft een tijd geblokkeerd, net als de anti-farmregel van mcMMO.
+- **Met elytra** geven nieuwe chunks **25% XP**, omdat je dan heel snel heel veel ziet.
+- **Geen XP voor afstand lopen of zwemmen.** Dat kun je te makkelijk AFK farmen in een waterstroom.
+
+**Stam** (gratis, vanzelf vrij). Deze bonussen werken niet in zware armor (3 of meer stukken van ijzer of zwaarder; zie §2):
+| Level | Bonus |
+|---|---|
+| 5 | Lichtvoetig: 5% minder valschade |
+| 10 | Uithoudingsvermogen: sprinten kost 5% minder honger |
+| 15 | Zwemmer: +5% zwemsnelheid |
+| 20 | Rol: 10% kans dat een val maar de helft van de schade doet (sluipend landen: 20%) |
+
+**Specialisaties:**
+| | **Wanderer** | **Survivalist** | **Acrobat** |
+|---|---|---|---|
+| Speelstijl | Snel en ver reizen | Honger en omgeving doorstaan | Vallen, springen en ontwijken |
+| Actieve ability | **Stride**: 10 seconden lang +30% snelheid en hoger springen. Cooldown 4 min. | **Endure**: 20 seconden lang geen honger, en 75% minder schade van de omgeving (vuur, lava, kou, verdrinken). Cooldown 5 min. | **Daredevil**: 15 seconden lang geen valschade, en +50% springhoogte. Cooldown 4 min. |
+| Trade-off | Je krijgt +10% schade van mobs | −10% sprintsnelheid | Je krijgt +25% knockback |
+| Voorbeeld keuzeknoop | Bergstap (je stapt vanzelf 1 blok omhoog, zoals een paard) **of** Lange adem (sprinten kost geen extra honger) | Vuurvast (−50% schade van vuur en lava) **of** Kieuwen (je kunt 2× zo lang onder water blijven) | Ontwijken (10% kans om een melee-klap te ontwijken terwijl je sprint) **of** Klimmer (50% sneller klimmen op ladders en klimop) |
+
+**Mastery-perks** (voorbeeld, 1 van 2 per rank): +1% loopsnelheid **of** 1% minder valschade.
+
+**Tegenwerking:**
+- Tegenpool: **Defense**.
+- Uitrustingsconflict: in zware armor werken de bewegingsbonussen niet.
+
+**Technische noot (fase 8):** bezochte chunks worden compact opgeslagen per regio (1 bit per chunk), zodat ook een speler die heel veel verkent maar een klein bestand heeft.
+
+**Geen nieuwe items nodig.**
 
 ### Voorbeelden van harde vereisten (D) (💡)
 - Smithing: de netherite-upgrade-specialisatie vereist Mining 30.
