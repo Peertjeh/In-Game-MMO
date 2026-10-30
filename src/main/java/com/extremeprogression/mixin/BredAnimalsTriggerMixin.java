@@ -5,6 +5,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import com.extremeprogression.trunk.Trunks;
 import com.extremeprogression.xp.AnimalXp;
 
 import net.minecraft.advancements.triggers.BredAnimalsTrigger;
@@ -18,5 +19,6 @@ public abstract class BredAnimalsTriggerMixin {
 	@Inject(method = "trigger", at = @At("HEAD"), require = 1)
 	private void extremeprogression$bred(ServerPlayer player, Animal parent, Animal partner, AgeableMob child, CallbackInfo ci) {
 		AnimalXp.bred(player);
+		Trunks.bred(player, child);
 	}
 }

@@ -8,10 +8,13 @@ import com.extremeprogression.antiexploit.AfkTracker;
 import com.extremeprogression.antiexploit.PlacedBlocks;
 import com.extremeprogression.config.Config;
 import com.extremeprogression.skill.Skill;
+import com.extremeprogression.trunk.Trunks;
 
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Player;
@@ -22,9 +25,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CaveVines;
 import net.minecraft.world.level.block.CocoaBlock;
 import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.NetherWartBlock;
 import net.minecraft.world.level.block.PitcherCropBlock;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
@@ -55,7 +60,7 @@ public final class GatheringXp {
 			before = null;
 			// (a block broken without the check before it: its marks are gone, so it gives nothing)
 			if (player instanceof ServerPlayer p && b != null && b.level == level && b.pos.equals(pos)) {
-				broken(p, level, pos, state, b);
+				broken(p, level, pos, state, be, b);
 			}
 		});
 	}
@@ -78,15 +83,19 @@ public final class GatheringXp {
 		return false;
 	}
 
-	private static void broken(ServerPlayer player, Level level, BlockPos pos, BlockState state, Before b) {
+	private static void broken(ServerPlayer player, Level level, BlockPos pos, BlockState state, BlockEntity be, Before b) {
 		Block block = state.getBlock();
 		int flags = b.flags;
+		ServerLevel server = (ServerLevel) level;
 
 		// Mining: with a pickaxe that can mine it, or a shovel
 		double pick = XpTables.pickaxe(state);
 		if (pick > 0) {
 			if ((flags & PLACED) == 0 && player.getMainHandItem().is(ItemTags.PICKAXES) && player.hasCorrectToolForDrops(state)) {
 				XpService.award(player, Skill.MINING, pick);
+				if (BuiltInRegistries.BLOCK.getKey(block).getPath().endsWith("_ore")) {
+					Trunks.extraDrops(player, server, pos, state, be, Trunks.Yield.ORE);
+				}
 			}
 			return;
 		}
@@ -104,6 +113,9 @@ public final class GatheringXp {
 			if ((flags & PLACED) == 0) {
 				double share = (flags & BONEMEALED) != 0 ? Config.BONEMEAL_FACTOR : (flags & PLANTED) != 0 ? Config.PLANTED_TREE_FACTOR : 1.0;
 				XpService.award(player, Skill.FORAGING, log * share);
+				if (share > 0) {
+					Trunks.extraDrops(player, server, pos, state, be, Trunks.Yield.LOG);
+				}
 			}
 			return;
 		}
@@ -112,12 +124,24 @@ public final class GatheringXp {
 		if (block instanceof CropBlock crop) {
 			if (crop.isMaxAge(state)) {
 				farming(player, XpTables.crop(state), flags);
+				if ((flags & BONEMEALED) == 0) {
+					Trunks.extraDrops(player, server, pos, state, be, Trunks.Yield.CROP);
+				}
 			}
 			return;
 		}
 		if (block instanceof NetherWartBlock) {
 			if (state.getValue(NetherWartBlock.AGE) >= NetherWartBlock.MAX_AGE) {
 				farming(player, XpTables.NETHER_WART, flags);
+				if ((flags & BONEMEALED) == 0) {
+					Trunks.extraDrops(player, server, pos, state, be, Trunks.Yield.CROP);
+				}
+			}
+			return;
+		}
+		if (block instanceof LeavesBlock) {
+			if ((flags & PLACED) == 0) {
+				Trunks.extraDrops(player, server, pos, state, be, Trunks.Yield.LEAVES);
 			}
 			return;
 		}

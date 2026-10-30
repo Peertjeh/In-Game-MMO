@@ -15,7 +15,8 @@
 			"com.extremeprogression.gametest.CombatTests",
 			"com.extremeprogression.gametest.ExplorationTests",
 			"com.extremeprogression.gametest.CraftingTests",
-			"com.extremeprogression.gametest.TreeTests"
+			"com.extremeprogression.gametest.TreeTests",
+			"com.extremeprogression.gametest.TrunkTests"
 		],
 		"fabric-client-gametest": [
 			"com.extremeprogression.gametest.ClientShots"

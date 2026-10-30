@@ -11,6 +11,7 @@ import com.extremeprogression.data.PlayerProgress;
 import com.extremeprogression.data.PlayerStore;
 import com.extremeprogression.network.Sync;
 import com.extremeprogression.tree.TreeService;
+import com.extremeprogression.trunk.Trunks;
 import com.extremeprogression.xp.CombatXp;
 import com.extremeprogression.xp.CraftingXp;
 import com.extremeprogression.xp.ExplorationXp;
@@ -76,6 +77,7 @@ public final class ServerEvents {
 		// Trees and abilities (design §6)
 		TreeService.register();
 		AbilityService.register();
+		Trunks.register();
 		UseItemCallback.EVENT.register((player, level, hand) -> {
 			if (!level.isClientSide()) {
 				AfkTracker.interacted(player.getUUID(), level.getServer().getTickCount());
@@ -89,6 +91,7 @@ public final class ServerEvents {
 			}
 			Harvests.tick(s);
 			ExplorationXp.tick(s);
+			Trunks.tick(s);
 			XpService.tick(s);
 		});
 

@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 
+import com.extremeprogression.trunk.Trunks;
 import com.extremeprogression.xp.CraftingXp;
 
 import net.minecraft.core.component.DataComponents;
@@ -35,6 +36,7 @@ public abstract class EnchantmentMenuMixin {
 		ItemStack item = ((EnchantmentMenu) (Object) this).getSlot(0).getItem();
 		if (cir.getReturnValueZ() && (item.isEnchanted() || item.has(DataComponents.STORED_ENCHANTMENTS))) {
 			CraftingXp.enchanted(player, cost.get());
+			Trunks.enchanted(player, (EnchantmentMenu) (Object) this);
 		}
 	}
 }

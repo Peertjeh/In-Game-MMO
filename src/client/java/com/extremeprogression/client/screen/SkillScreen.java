@@ -29,8 +29,9 @@ import net.minecraft.network.chat.Component;
  * which a specialization is chosen or a node bought. Every request goes to the server, which decides.
  */
 public class SkillScreen extends Screen {
-	private static final int W = 440, H = 300;
-	private static final int TREE_W = 300, HEADER_H = 44;
+	/** Small enough for GUI scale 3 at 1280 × 720 (426 × 240), the scale Minecraft picks there by itself. */
+	private static final int W = 420, H = 236;
+	private static final int TREE_W = 276, HEADER_H = 34, ROW = 12;
 	private static final String[] ROMAN = {"", "I", "II", "III", "IV", "V"};
 
 	private final Skill skill;
@@ -68,45 +69,45 @@ public class SkillScreen extends Screen {
 	protected void init() {
 		x0 = (this.width - W) / 2;
 		y0 = Math.max(2, (this.height - H) / 2);
-		int ty = y0 + HEADER_H + 6;
-		int colW = (TREE_W - 12 - 8) / 3;
+		int ty = y0 + HEADER_H + 4;
+		int colW = (TREE_W - 8 - 6) / 3;
 		int half = (colW - 2) / 2;
 		List<Specialization> specs = Specialization.of(skill);
 		for (int i = 0; i < specs.size(); i++) {
 			Specialization spec = specs.get(i);
-			int cx = x0 + 6 + i * (colW + 4);
+			int cx = x0 + 4 + i * (colW + 3);
 			if (selectedKey == null) {
 				selectedKey = spec.id;
 			}
-			add(cx, ty + 6, colW, 16, Component.translatable(spec.translationKey()), spec.id, () -> specState(spec), () -> specBadge(spec));
+			add(cx, ty + 4, colW, ROW, Component.translatable(spec.translationKey()), spec.id, () -> specState(spec), () -> specBadge(spec));
 			for (NodeSlot slot : NodeSlot.values()) {
 				boolean single = slot.kind == NodeSlot.Kind.ABILITY;
 				int nx = single ? cx : cx + slot.column * (half + 2);
-				int ny = ty + 6 + 20 + (8 - slot.row) * 16;
+				int ny = ty + 19 + (8 - slot.row) * ROW;
 				String key = TreeRules.key(spec, slot);
-				add(nx, ny, single ? colW : half, 14, Component.literal(nodeName(spec, slot)), key, () -> nodeState(spec, slot), () -> nodeBadge(spec, slot));
+				add(nx, ny, single ? colW : half, ROW - 1, Component.literal(nodeName(spec, slot)), key, () -> nodeState(spec, slot), () -> nodeBadge(spec, slot));
 			}
 		}
 		// The trunk: two rows of two
-		int trunkY = ty + 6 + 20 + 8 * 16 + 14;
-		int nodeW = (TREE_W - 12 - 4) / 2;
+		int trunkY = ty + 19 + 8 * ROW + 12;
+		int nodeW = (TREE_W - 8 - 3) / 2;
 		for (int i = 0; i < Skill.TRUNK_LEVELS.length; i++) {
 			int level = Skill.TRUNK_LEVELS[i];
-			int nx = x0 + 6 + (i % 2) * (nodeW + 4);
-			int ny = trunkY + (i / 2) * 18;
+			int nx = x0 + 4 + (i % 2) * (nodeW + 3);
+			int ny = trunkY + (i / 2) * (ROW + 1);
 			String key = "trunk.extremeprogression." + skill.id + "." + level;
-			add(nx, ny, nodeW, 16, Component.literal(level + " · ").append(Component.translatable(key)), "trunk." + level,
+			add(nx, ny, nodeW, ROW, Component.literal(level + " · ").append(Component.translatable(key)), "trunk." + level,
 					() -> data().level >= level ? TreeNode.State.OWNED : TreeNode.State.LOCKED, () -> data().level >= level ? "✓" : null);
 		}
-		int dx = x0 + TREE_W + 6, dw = W - TREE_W - 6;
-		int th = H - HEADER_H - 6 - 26;
-		action = this.addRenderableWidget(Button.builder(Component.empty(), b -> act()).pos(dx + 6, ty + th - 24).size(dw - 12, 18).build());
+		int dx = x0 + TREE_W + 4, dw = W - TREE_W - 4;
+		int th = treeHeight();
+		action = this.addRenderableWidget(Button.builder(Component.empty(), b -> act()).pos(dx + 5, ty + th - 21).size(dw - 10, 16).build());
 		this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.skill.back"), b -> this.onClose())
-				.pos(this.width / 2 - 150, y0 + H - 20).size(120, 20).build());
+				.pos(this.width / 2 - 128, y0 + H - 20).size(110, 20).build());
 		respec = this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.skill.respec"),
-				b -> Minecraft.getInstance().gui.setScreen(new RespecScreen(skill, this))).pos(this.width / 2 - 26, y0 + H - 20).size(84, 20).build());
+				b -> Minecraft.getInstance().gui.setScreen(new RespecScreen(skill, this))).pos(this.width / 2 - 14, y0 + H - 20).size(70, 20).build());
 		this.addRenderableWidget(Button.builder(Component.translatable("gui.done"), b -> closeAll())
-				.pos(this.width / 2 + 62, y0 + H - 20).size(88, 20).build());
+				.pos(this.width / 2 + 60, y0 + H - 20).size(70, 20).build());
 		refreshButtons();
 	}
 
@@ -299,7 +300,11 @@ public class SkillScreen extends Screen {
 	}
 
 	private List<String> wrap(String text) {
-		return Ui.wrap(this.font, text, W - TREE_W - 6 - 12);
+		return Ui.wrap(this.font, text, W - TREE_W - 4 - 10);
+	}
+
+	private static int treeHeight() {
+		return H - HEADER_H - 4 - 24;
 	}
 
 	// --- Drawing ---------------------------------------------------------------------------------
@@ -313,57 +318,58 @@ public class SkillScreen extends Screen {
 
 		// The header: icon, name, category and opposing skill; level and bar; milestones and points
 		Ui.panel(g, x0, y0, W, HEADER_H);
-		g.fakeItem(SkillView.icon(skill), x0 + 6, y0 + 6);
-		Ui.text(g, this.font, this.title.getString(), x0 + 26, y0 + 6, skill.category.accent);
+		g.fakeItem(SkillView.icon(skill), x0 + 4, y0 + 4);
+		Ui.text(g, this.font, this.title.getString(), x0 + 24, y0 + 4, skill.category.accent);
 		String sub = Ui.tr(skill.category.translationKey());
 		if (skill.opposite() != null) {
 			sub = Ui.tr("gui.extremeprogression.skill.opposite", sub, Ui.tr(skill.opposite().translationKey()));
 		}
-		Ui.text(g, this.font, Ui.ellipsize(this.font, sub, 170), x0 + 26, y0 + 17, Ui.MUTED);
-		int bx = x0 + 202, bw = W - 202 - 8;
+		Ui.text(g, this.font, Ui.ellipsize(this.font, sub, 170), x0 + 24, y0 + 14, Ui.MUTED);
+		int bx = x0 + 202, bw = W - 202 - 6;
 		if (mastered && p != null) {
-			Ui.text(g, this.font, Ui.tr("gui.extremeprogression.skill.mastery", e.masteryRanks(), p.masteryRanksMax()), bx, y0 + 6, Ui.GOLD);
+			Ui.text(g, this.font, Ui.tr("gui.extremeprogression.skill.mastery", e.masteryRanks(), p.masteryRanksMax()), bx, y0 + 4, Ui.GOLD);
 			if (e.masteryRanks() < p.masteryRanksMax()) {
-				Ui.right(g, this.font, Ui.number(e.masteryXp()) + " / " + Ui.number(p.masteryXpPerRank()), bx + bw, y0 + 6, Ui.MUTED);
+				Ui.right(g, this.font, Ui.number(e.masteryXp()) + " / " + Ui.number(p.masteryXpPerRank()), bx + bw, y0 + 4, Ui.MUTED);
 			}
 		} else {
-			Ui.text(g, this.font, Ui.tr("gui.extremeprogression.skill.level", e.level()), bx, y0 + 6, Ui.TEXT);
-			Ui.right(g, this.font, Ui.number(e.xp()) + " / " + Ui.number(e.need()) + " XP", bx + bw, y0 + 6, Ui.MUTED);
+			Ui.text(g, this.font, Ui.tr("gui.extremeprogression.skill.level", e.level()), bx, y0 + 4, Ui.TEXT);
+			Ui.right(g, this.font, Ui.number(e.xp()) + " / " + Ui.number(e.need()) + " XP", bx + bw, y0 + 4, Ui.MUTED);
 		}
-		Ui.meter(g, bx, y0 + 17, bw, 5, SkillView.fill(e), mastered ? Ui.GOLD : skill.category.accent);
-		milestones(g, x0 + 6, y0 + 31, e.level());
+		Ui.meter(g, bx, y0 + 15, bw, 4, SkillView.fill(e), mastered ? Ui.GOLD : skill.category.accent);
+		milestones(g, x0 + 4, y0 + 24, e.level());
 		SkillData d = data();
 		int free = TreeRules.free(d);
-		Ui.right(g, this.font, Ui.tr("gui.extremeprogression.skill.points", free, TreeRules.earned(d)), x0 + W - 8, y0 + 31, free > 0 ? Ui.WARN : Ui.MUTED);
+		Ui.right(g, this.font, Ui.tr("gui.extremeprogression.skill.points", free, TreeRules.earned(d)), x0 + W - 6, y0 + 24, free > 0 ? Ui.WARN : Ui.MUTED);
 
 		// The tree and the detail panel
-		int ty = y0 + HEADER_H + 6, th = H - HEADER_H - 6 - 26;
+		int ty = y0 + HEADER_H + 4, th = treeHeight();
 		Ui.panel(g, x0, ty, TREE_W, th);
-		Ui.text(g, this.font, Ui.tr("gui.extremeprogression.skill.trunk"), x0 + 6, ty + 6 + 20 + 8 * 16 + 3, Ui.MUTED);
-		int dx = x0 + TREE_W + 6, dw = W - TREE_W - 6;
+		Ui.text(g, this.font, Ui.tr("gui.extremeprogression.skill.trunk"), x0 + 4, ty + 19 + 8 * ROW + 2, Ui.MUTED);
+		int dx = x0 + TREE_W + 4, dw = W - TREE_W - 4;
 		Ui.panel(g, dx, ty, dw, th);
 		Detail selected = detail(selectedKey);
 		if (selected != null) {
-			int y = ty + 6;
-			Ui.text(g, this.font, Ui.ellipsize(this.font, selected.title(), dw - 12), dx + 6, y, Ui.TEXT);
-			List<String> kind = Ui.wrap(this.font, selected.kind(), dw - 12);
+			int y = ty + 4;
+			Ui.text(g, this.font, Ui.ellipsize(this.font, selected.title(), dw - 10), dx + 5, y, Ui.TEXT);
+			List<String> kind = Ui.wrap(this.font, selected.kind(), dw - 10);
 			for (int i = 0; i < kind.size() && i < 2; i++) {
-				Ui.text(g, this.font, kind.get(i), dx + 6, y + 10 + i * 10, Ui.MUTED);
+				Ui.text(g, this.font, kind.get(i), dx + 5, y + 10 + i * 9, Ui.MUTED);
 			}
-			y += 10 + Math.min(2, kind.size()) * 10 + 2;
-			Ui.divider(g, dx + 6, y, dw - 12);
-			y += 5;
-			int bottom = ty + th - 24 - 22;
+			y += 10 + Math.min(2, kind.size()) * 9 + 1;
+			Ui.divider(g, dx + 5, y, dw - 10);
+			y += 4;
+			List<String> status = Ui.wrap(this.font, selected.status(), dw - 10);
+			int shown = Math.min(2, status.size());
+			int bottom = ty + th - 22 - shown * 9 - 9;
 			for (String line : selected.lines()) {
 				if (y > bottom) {
 					break;
 				}
-				Ui.text(g, this.font, line, dx + 6, y, Ui.TEXT);
-				y += 10;
+				Ui.text(g, this.font, line, dx + 5, y, Ui.TEXT);
+				y += 9;
 			}
-			List<String> status = Ui.wrap(this.font, selected.status(), dw - 12);
-			for (int i = 0; i < status.size() && i < 2; i++) {
-				Ui.text(g, this.font, status.get(i), dx + 6, ty + th - 24 - 20 + i * 10, selected.statusColor());
+			for (int i = 0; i < shown; i++) {
+				Ui.text(g, this.font, status.get(i), dx + 5, ty + th - 22 - shown * 9 + i * 9, selected.statusColor());
 			}
 		}
 	}

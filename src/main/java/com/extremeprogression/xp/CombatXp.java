@@ -43,8 +43,9 @@ import net.minecraft.world.entity.projectile.arrow.ThrownTrident;
 public final class CombatXp {
 	private CombatXp() {}
 
-	/** The tick of each player's last fully charged attack. */
+	/** The tick of each player's last fully charged attack, and of their last attack at all. */
 	private static final Map<UUID, Long> FULL_CHARGE = new HashMap<>();
+	private static final Map<UUID, Long> LAST_ATTACK = new HashMap<>();
 
 	/** Defense: hits per attacker, and when the last one came. */
 	private record Hits(int count, long last) {}
@@ -58,6 +59,7 @@ public final class CombatXp {
 				long tick = level.getServer().getTickCount();
 				AfkTracker.interacted(p.getUUID(), tick);
 				FULL_CHARGE.put(p.getUUID(), p.getAttackStrengthScale(0.5f) >= Config.MELEE_FULL_CHARGE ? tick : Long.MIN_VALUE);
+				LAST_ATTACK.put(p.getUUID(), tick);
 			}
 			return InteractionResult.PASS;
 		});
@@ -84,8 +86,7 @@ public final class CombatXp {
 
 		if (attacker instanceof ServerPlayer p && attacker != target && dealt > 0) {
 			if (direct == p) {
-				Long full = FULL_CHARGE.get(p.getUUID());
-				if (full != null && full == tick) {
+				if (fullCharge(p)) {
 					offence(p, target, Skill.MELEE, dealt, XpTables.MELEE_PER_DAMAGE, hostileBefore, tick);
 				}
 			} else if (fullShot(direct)) {
@@ -106,12 +107,27 @@ public final class CombatXp {
 			} else if (attacker instanceof LivingEntity enemy && attacker != victim) {
 				double absorbed = (blocked ? Math.max(0, original - afterShield) : 0) + Math.max(0, afterShield - dealt);
 				defense(victim, enemy, absorbed, tick);
+				if (enemy instanceof Enemy || enemy instanceof ServerPlayer) {
+					com.extremeprogression.trunk.Trunks.inAFight(victim);
+				}
 			}
 		}
 	}
 
+	/** Whether the player's attack this tick was fully charged. */
+	public static boolean fullCharge(ServerPlayer p) {
+		Long full = FULL_CHARGE.get(p.getUUID());
+		return full != null && full == p.level().getServer().getTickCount();
+	}
+
+	/** Whether the player attacked within this many ticks. */
+	public static boolean attackedWithin(ServerPlayer p, long ticks) {
+		Long last = LAST_ATTACK.get(p.getUUID());
+		return last != null && p.level().getServer().getTickCount() - last <= ticks;
+	}
+
 	/** A fully drawn arrow (vanilla marks it critical), a thrown trident, or a firework from a crossbow. */
-	private static boolean fullShot(Entity projectile) {
+	public static boolean fullShot(Entity projectile) {
 		if (projectile instanceof ThrownTrident || projectile instanceof FireworkRocketEntity) {
 			return true;
 		}
@@ -183,6 +199,7 @@ public final class CombatXp {
 
 	public static void forget(UUID id) {
 		FULL_CHARGE.remove(id);
+		LAST_ATTACK.remove(id);
 		DEFENSE_HITS.remove(id);
 		PvpLimits.forget(id);
 	}
