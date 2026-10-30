@@ -58,7 +58,8 @@ public class PlaceholderTests {
 		check(helper, "0/12".equals(text(m, "synergies")), "synergies read %s", text(m, "synergies"));
 		Component badge = m.get("badge");
 		check(helper, "✦108".equals(badge.getString()) && badge.getStyle().getColor() != null
-				&& badge.getStyle().getColor().getValue() == ChatFormatting.GREEN.getColor(), "the badge reads '%s' in %s", badge.getString(), badge.getStyle().getColor());
+				&& badge.getStyle().getColor().equals(Component.empty().withStyle(ChatFormatting.GREEN).getStyle().getColor()),
+				"the badge reads '%s' in %s", badge.getString(), badge.getStyle().getColor());
 		Progression.setLevel(progress, Skill.ARCANA, Config.MAX_LEVEL);
 		progress.get(Skill.ARCANA).masteryRanks = 2;
 		Map<String, Component> mastered = TabPlaceholders.values(p);
