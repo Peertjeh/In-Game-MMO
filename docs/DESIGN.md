@@ -892,8 +892,8 @@ For reference, the play time of a single level (without the budget factor):
     were already after you before the hit, so a gold farm or iron farm earns nothing.
   - Structures the table does not list: the witch hut **250**; structures of other mods (such as the Seam's) **300**;
     buried treasure and nether fossils nothing.
-  - The mace's smash and the spear's charge (hold to use) do not go through a normal attack, so they give no Melee XP
-    yet; a normal hit with either does.
+  - The spear's charge (hold to use) does not go through a normal attack, so it gives no Melee XP yet; a normal hit with
+    a spear does, and so does the mace's smash.
 - Not yet: the **opposing-skill** penalty (Melee ↔ Ranged, Defense ↔ Exploration, Smithing ↔ Arcana) comes with the
   connections in milestone 8, and the new Alchemist potions with the specializations in milestone 6.
 
