@@ -182,6 +182,17 @@ public class ClientShots implements FabricClientGameTest {
 				keys.add(spec.translationKey() + part);
 			}
 		}
+		// The nodes of the specializations whose content is built (milestone 6, part 1: Combat and Survival)
+		for (Specialization spec : Specialization.values()) {
+			if (spec.skill.category == Category.COMBAT || spec.skill.category == Category.SURVIVAL) {
+				keys.add(spec.translationKey() + ".ability.ranks");
+				for (String slot : new String[] {"p1", "p2", "p3", "p4", "c1", "c2"}) {
+					keys.add(spec.translationKey() + "." + slot);
+					keys.add(spec.translationKey() + "." + slot + ".desc");
+				}
+			}
+		}
+		keys.addAll(List.of("gui.extremeprogression.node.desc.ability_key", "gui.extremeprogression.node.desc.choice_rule", "gui.extremeprogression.node.light_only"));
 		for (TreeRules.Result r : TreeRules.Result.values()) {
 			if (r != TreeRules.Result.OK) {
 				keys.add("message.extremeprogression.tree." + r.name().toLowerCase(java.util.Locale.ROOT));
