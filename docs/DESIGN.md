@@ -1,767 +1,749 @@
-# EXTREME PROGRESSION — Ontwerpdocument
+# EXTREME PROGRESSION: Design Document
 
-> Werktitel. De definitieve naam is nog niet gekozen.
-> Status: **Fase 6: GUI-mockup ter beoordeling. Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
+> Working title. The final name has not been chosen yet.
+> Status: **Phase 7 (anti-exploit). There is no gameplay code yet; the design has not been approved as a whole.**
 
-Legenda per mechaniek:
-- ✅ **Bevestigd**: door de eigenaar goedgekeurd
-- 💡 **Voorstel**: idee van de ontwerper, nog niet goedgekeurd
-- ❓ **Open**: vraag die nog beantwoord moet worden
-
----
-
-## 0. Interviewlog
-
-| Ronde | Onderwerp | Status |
-|------:|-----------|--------|
-| 1 | Platform & architectuur + opzet skillsysteem | ✅ beantwoord |
-| 2 | Samenwerking met Extreme Dimensions, skilllijst, synergieën, trade-offs | ✅ beantwoord |
-| 3 | Skill-sjabloon: tegenwerking, actieve abilities, specialisaties, ontdekken | ✅ beantwoord |
-| 4 | Fase 3: schaal, totaalbudget, tempo, specialisatiemomenten, tegenpolen | ✅ beantwoord |
-| 5 | Fase 3 afronden: getallen voor tempo, plafond, Mastery, respec, tegenpolen | ✅ alles akkoord |
-| 6 | Fase 4 deel 1: wat een dood kost, welke skills, herstel, vangnet, Extreme Dimensions | ✅ beantwoord |
-| 7 | Fase 4 deel 2: herhaalde doden, dimensies, vermoeidheid, Mastery, PvP | ✅ beantwoord |
-| 8 | Fase 5: opbouw van de trees, punten, ranks, cooldowns, afleren | ✅ beantwoord |
-| 9 | Skill 1/10: Melee | ✅ alles akkoord |
-| 10 | Skill 2/10: Ranged (+ drie specialisaties per skill) | ✅ alles akkoord |
-| 11 | Skill 3/10: Defense | ✅ akkoord |
-| 12 | Skill 4/10: Mining | ✅ akkoord |
-| 13 | Skill 5/10: Foraging | ✅ akkoord |
-| 14 | Skill 6/10: Farming | ✅ akkoord, bonemeal geeft geen XP |
-| 15 | Skill 7/10: Fishing | ✅ akkoord, kleine put geeft geen XP |
-| 16 | Skill 8/10: Exploration | ✅ akkoord |
-| 17 | Skill 9/10: Smithing | ✅ akkoord, Masterwork afgezwakt |
-| 18 | Skill 10/10: Arcana | ✅ akkoord |
-| 19 | Conflicten tussen specialisaties, synergieën, harde vereisten | ✅ akkoord; synergieën mogen in de repo |
-| 20 | Fase 6: stijl, schermen, skill tree, "op het spel", HUD | ✅ akkoord |
-| 21 | GUI-mockup | ❓ wacht op beoordeling |
+Legend for every mechanic:
+- ✅ **Confirmed**: approved by the owner
+- 💡 **Suggestion**: the designer's idea, not approved yet
+- ❓ **Open**: a question still to be answered
 
 ---
 
-## 1. Projectarchitectuur
+## 0. Interview log
 
-### Bevestigd
-- ✅ **Optie A**: een Fabric-mod die op de server **en** op elke client verplicht is. De client toont een volledig eigen GUI (geen kist-menu's).
-- ✅ Het menu opent met een **sneltoets** en is **ook bereikbaar vanuit het inventory-scherm**.
-- ✅ Nieuwe items en blokken **alleen als het echt noodzakelijk is**. Uitgangspunt: vanilla-mechanieken versterken.
-- ✅ **Minecraft 26.3, Fabric** (Java 25), dezelfde stack als Extreme Dimensions.
-- ✅ **Zelfstandig**: de mod werkt zonder Extreme Dimensions. **Optionele koppeling** met ED is gewenst.
-  - 💡 Technisch: ED komt in `fabric.mod.json` alleen onder `suggests`, niet onder `depends`. Alle koppelcode staat apart (`compat/extremedimensions`) en draait alleen als `FabricLoader.isModLoaded("extremedimensions")` waar is. Zonder ED wordt die code nooit geladen.
-  - ❓ Wat de koppeling precies doet, bespreken we later (XP in de Seam/Nether/End, samenspel van de doodsstraffen).
+| Round | Topic | Status |
+|------:|-------|--------|
+| 1 | Platform and architecture, outline of the skill system | ✅ answered |
+| 2 | Working with Extreme Dimensions, skill list, synergies, trade-offs | ✅ answered |
+| 3 | Skill template: counteraction, active abilities, specializations, discovery | ✅ answered |
+| 4 | Phase 3: scale, total budget, pace, specialization levels, opposing skills | ✅ answered |
+| 5 | Phase 3 numbers: pace, cap, Mastery, respec, opposing skills | ✅ all approved |
+| 6 | Phase 4 part 1: what a death costs, which skills, recovery, safety net, Extreme Dimensions | ✅ answered |
+| 7 | Phase 4 part 2: repeated deaths, dimensions, fatigue, Mastery, PvP | ✅ answered |
+| 8 | Phase 5: tree structure, points, ranks, cooldowns, unlearning | ✅ answered |
+| 9 | Skill 1/10: Melee | ✅ all approved |
+| 10 | Skill 2/10: Ranged (+ three specializations per skill) | ✅ all approved |
+| 11 | Skill 3/10: Defense | ✅ approved |
+| 12 | Skill 4/10: Mining | ✅ approved |
+| 13 | Skill 5/10: Foraging | ✅ approved |
+| 14 | Skill 6/10: Farming | ✅ approved; bonemeal gives no XP |
+| 15 | Skill 7/10: Fishing | ✅ approved; a small pit gives no XP |
+| 16 | Skill 8/10: Exploration | ✅ approved |
+| 17 | Skill 9/10: Smithing | ✅ approved; Masterwork weakened |
+| 18 | Skill 10/10: Arcana | ✅ approved |
+| 19 | Specialization conflicts, synergies, hard requirements | ✅ approved; synergies may be in the repo |
+| 20 | Phase 6: style, screens, skill tree, "At Stake", HUD | ✅ approved |
+| 21 | GUI mockup | ✅ approved ("let's go on with this"); feedback may follow later |
+| 22 | Language | ✅ the mod and its repository in English; the design chat stays in Dutch |
+| 23 | Phase 7: anti-exploit | ❓ awaiting answers |
 
-### Huidige stand van de repo (onderzocht op 2026-10-30)
-- `Peertjeh/In-Game-MMO`: 1 commit, alleen `README.md` ("MMO With GUI"). Greenfield: geen code, build, GUI of opslag.
+---
 
-### Referentie 1: Extreme Dimensions (`Peertjeh/extremedimensions`, v3.7.0)
-Dit is de stijl- en conventiereferentie, van dezelfde auteur.
-- **Stack:** Minecraft **26.3**, Fabric Loader 0.19.5, Fabric API 0.162.0+26.3, Loom 1.18 met `splitEnvironmentSourceSets` (`src/main` en `src/client`), **Java 25**, Gradle.
-- **Tests & CI:** server-gametests en een client-gametest met screenshots in GitHub Actions; compatibiliteitsrun met Sodium/Iris/Mod Menu; automatische release per versie met `CHANGELOG.md`.
-- **Talen:** `en_us.json` + `nl_nl.json`. `checkTranslations` dwingt af dat `nl_nl` compleet is en dezelfde placeholders gebruikt.
-- **GUI:** eigen client-`Screen`s (Journal, Curses, Status, Trials, ...), allemaal getekend via `client/ui/Ui.java`. Die huisstijl is die van vanilla zelf: panelen als de tooltip-box (bijna zwart violet, verlopend violet kader), de 16 chatkleuren, platte meters als een bossbar, een kleurenblind-optie en een optie voor minder flitsen.
-- **Inventory:** knoppen rechts van het receptenboek. Journal op `boek + 2`, Curses op `boek + 24` (20×18 px); ze schuiven mee als het boek opent.
-- **Sneltoetsen:** in een eigen categorie, standaard **niet** toegewezen (`InputConstants.UNKNOWN`).
-- **Netwerk:** de server is leidend. De client vraagt met een packet, de server stuurt de staat, de client opent het scherm.
-- **Opslag:** per wereld één JSON-bestand (`<wereld>/extremedimensions.json`, Gson). Wijzigingen worden als "dirty" gemarkeerd en samen met de wereld opgeslagen. Oude saves worden aangevuld (`filled`), en `MigrationTests` laadt saves van oudere versies.
-- **Bestaand doodssysteem:** Collapse (Tether leeg) → 1 van 3 curses kiezen; 92 curses + 24 Abyssal; atonement, scars, Mending Cloth; "elke dood maakt de helft van de atonement ongedaan". **Relevant voor fase 4 (stapeling van straffen).**
+## 1. Project architecture
 
-### Referentie 2: mcMMO (alleen ontwerpreferentie, geen dependency)
-Bron: `mcMMO-Dev/mcmmo-wiki-repo` (documentatie, geen broncode).
-- Spigot/Paper/Folia-plugin, MC 1.20.5+. **Niet bruikbaar als codebasis.**
-- 19 skills: combat (Swords, Axes, Archery, Crossbows, Maces, Spears, Tridents, Unarmed, Taming), gathering (Mining, Woodcutting, Excavation, Herbalism, Fishing), passief (Acrobatics), utility (Alchemy, Repair) en child skills (Salvage, Smelting).
-- Levels 0–100 of 0–1000 (RetroMode). XP-curve: lineair `1020 + 20 × level`, of exponentieel `0.1 × level^1.8 + 2000`.
-- Sub-skills met vaste ranks, plus één actieve "Super Ability" per skill (rechtsklik met tool).
-- Child skills: level = gemiddelde van twee parents.
-- Hardcore: X% van de levels boven een drempel kwijt (standaard 75%), geen herstel.
-- Vampirism: bij PvP steelt de doder levels.
-- Anti-exploit: geplaatste blokken geven geen XP, spawner/egg/portal-mobs geven 0 XP, diminishing returns, fishing-bewegingscheck, XP-plafond voor combat.
-- Interface: chatcommando's en een XP-bossbar.
+### Confirmed
+- ✅ **Option A**: a Fabric mod that is required on the server **and** on every client. The client shows a fully custom GUI (no chest menus).
+- ✅ The menu opens with a **hotkey** and can **also be reached from the inventory screen**.
+- ✅ New items and blocks **only when truly necessary**. The rule is to strengthen vanilla mechanics.
+- ✅ **Minecraft 26.3, Fabric** (Java 25), the same stack as Extreme Dimensions.
+- ✅ **Standalone**: the mod works without Extreme Dimensions. An **optional integration** with ED is wanted.
+  - 💡 Technically: ED is listed only under `suggests` in `fabric.mod.json`, never under `depends`. All integration code lives apart (`compat/extremedimensions`) and only runs when `FabricLoader.isModLoaded("extremedimensions")` is true. Without ED that code is never loaded.
+  - ❓ What the integration does exactly is still to be discussed (the Seam's penalty multiplier, how the death penalties interact).
+- ✅ **The mod is in English** (round 22): all in-game text, the documentation and this document. Only the design conversation with the owner is in Dutch.
+  - ❓ Should the mod also ship a Dutch translation (`nl_nl`), as Extreme Dimensions does, or English only?
 
-Zwaktes die we bewust oplossen:
-1. Wapenskills overlappen. → ✅ opgelost met **skills per speelstijl**.
-2. Geen keuzes. → specialisaties (fase 5).
-3. Hardcore is bot en ondoorzichtig. → fase 4.
-4. Geen echte interface. → ✅ eigen client-GUI.
+### State of the repository (inspected on 2026-10-30)
+- `Peertjeh/In-Game-MMO`: 1 commit, only `README.md` ("MMO With GUI"). Greenfield: no code, build, GUI or storage.
 
-### Voorstellen (op basis van Extreme Dimensions)
-- 💡 **Zelfde stack:** MC 26.3, Fabric, Java 25, dezelfde Fabric API-versie. Zo draaien beide mods op dezelfde server.
-- 💡 **Zelfde conventies:** split source sets, gametests in CI, Gson-JSON per wereld met migratietests, `en_us` + `nl_nl` met vertaalcheck, CHANGELOG-releases.
-- 💡 **Zelfde visuele taal:** een eigen `Ui`-klasse in dezelfde vanilla-stijl, zodat beide mods als één spel aanvoelen. Een eigen accentkleur per skillcategorie.
-- 💡 **Inventory-knop:** rechts naast de knoppen van Extreme Dimensions (`boek + 46`), of, als ED ontbreekt, direct naast het boek. Nooit overlappen.
-- 💡 **Sneltoets:** standaard `K`, aan te passen in Controls.
+### Reference 1: Extreme Dimensions (`Peertjeh/extremedimensions`, v3.7.0)
+The style and conventions reference, by the same author.
+- **Stack:** Minecraft **26.3**, Fabric Loader 0.19.5, Fabric API 0.162.0+26.3, Loom 1.18 with `splitEnvironmentSourceSets` (`src/main` and `src/client`), **Java 25**, Gradle.
+- **Tests and CI:** server game tests and a client game test with screenshots in GitHub Actions; a compatibility run with Sodium, Iris and Mod Menu; an automatic release per version with `CHANGELOG.md`.
+- **Languages:** `en_us.json` + `nl_nl.json`. `checkTranslations` enforces that `nl_nl` is complete and uses the same placeholders.
+- **GUI:** custom client `Screen`s (Journal, Curses, Status, Trials, ...), all drawn through `client/ui/Ui.java`. Its house style is vanilla's own: panels like the tooltip box (near-black violet with a fading violet frame), the 16 chat colours, meters as flat as a boss bar, a colour-blind option and a reduced-flashing option.
+- **Inventory:** buttons right of the recipe book. Journal at `book + 2`, Curses at `book + 24` (20×18 px); they follow the book when it opens.
+- **Hotkeys:** in a category of their own, **unbound** by default (`InputConstants.UNKNOWN`).
+- **Networking:** the server is authoritative. The client asks with a packet, the server sends the state, the client opens the screen.
+- **Storage:** one JSON file per world (`<world>/extremedimensions.json`, Gson). Changes are marked dirty and written together with the world's own saves. Older saves are filled in (`filled`), and `MigrationTests` loads saves of older versions.
+- **Its own death system:** Collapse (Tether runs dry) → pick 1 of 3 curses; 92 curses + 24 Abyssal; atonement, scars, Mending Cloth; "every death undoes half of the atonement". **Relevant to phase 4 (stacking penalties).**
+
+### Reference 2: mcMMO (design reference only, not a dependency)
+Source: `mcMMO-Dev/mcmmo-wiki-repo` (documentation, no source code).
+- A Spigot/Paper/Folia plugin for MC 1.20.5+. **Not usable as a code base.**
+- 19 skills: combat (Swords, Axes, Archery, Crossbows, Maces, Spears, Tridents, Unarmed, Taming), gathering (Mining, Woodcutting, Excavation, Herbalism, Fishing), passive (Acrobatics), utility (Alchemy, Repair) and child skills (Salvage, Smelting).
+- Levels 0–100 or 0–1000 (RetroMode). XP curve: linear `1020 + 20 × level`, or exponential `0.1 × level^1.8 + 2000`.
+- Sub-skills with fixed ranks, plus one active "Super Ability" per skill (right-click with a tool).
+- Child skills: level = the average of two parents.
+- Hardcore: lose X% of the levels above a threshold (75% by default), no recovery.
+- Vampirism: in PvP the killer steals levels.
+- Anti-exploit: placed blocks give no XP, spawner/egg/portal mobs give 0 XP, diminishing returns, a fishing movement check, an XP ceiling for combat.
+- Interface: chat commands and an XP boss bar.
+
+Weaknesses we solve on purpose:
+1. Weapon skills overlap. → ✅ solved with **playstyle skills**.
+2. No choices. → specializations (phase 5).
+3. Hardcore is blunt and opaque. → phase 4.
+4. No real interface. → ✅ a custom client GUI.
+
+### Conventions taken from Extreme Dimensions (💡)
+- **Same stack:** MC 26.3, Fabric, Java 25, the same Fabric API version, so both mods run on the same server.
+- **Same conventions:** split source sets, game tests in CI, Gson JSON per world with migration tests, translation files with a translation check, CHANGELOG releases.
+- **Same visual language:** a `Ui` class of our own in the same vanilla style, so both mods feel like one game, with an accent colour per skill category.
+- **Inventory button:** right of Extreme Dimensions' buttons (`book + 46`), or, without ED, right next to the book. Never overlapping.
+- **Hotkey:** `K` by default, rebindable in Controls.
 
 ---
 
 ## 2. Skills
 
-### Bevestigd
-- ✅ **Compacte set.** Elke skill heeft een eigen tree, een eigen GUI-pagina en een eigen XP-tabel.
-- ✅ **Skills per speelstijl**, niet per wapen of tool.
-- ✅ **Samenhang via synergieën die de speler zelf ontdekt.** Hier en daar een **harde vereiste** (optie D).
-- ✅ **De 10 skills hieronder zijn goedgekeurd.** De specialisaties in de tabel zijn nog **voorbeelden** (💡); die worden per skill uitgewerkt.
-- ✅ **Onontdekte synergieën** zijn zichtbaar als **runen met een vage hint** (optie B), zoals de onbekende curses in ED.
-- ✅ **Ontdekken is server-breed én persoonlijk** (eigenaar: "server-breed is lache, maar ik wil ook iets persoonlijks").
-  - ✅ Uitwerking (goedgekeurd in ronde 4):
-    - **Persoonlijk:** elke speler moet een synergie zelf ontdekken voordat hij voor hem werkt. Je eigen codex toont wanneer en waar je hem vond.
-    - **Server-breed:** de eerste ontdekker komt in de **kroniek** van de server (een GUI-pagina), eventueel met een aankondiging in de chat (instelbaar). Na die eerste ontdekking wordt de rune-hint voor de anderen duidelijker (een deel wordt leesbaar).
-    - **Eerste ontdekker:** krijgt een blijvende, puur cosmetische vermelding ("Eerste ontdekker") bij die synergie. Geen extra kracht.
-- ✅ **Specialisaties hebben altijd trade-offs**: elke keuze heeft een prijs.
-- ✅ **Skills mogen elkaar tegenwerken**, via:
-  - ✅ **a) Uitrustingsconflicten** (wat je draagt of vasthoudt bepaalt welke bonussen werken)
-  - ✅ **b) Specialisatieconflicten** (sommige specialisaties sluiten elkaar uit over skills heen)
-  - ✅ **c) Tegenpolen**, en die moeten **harder straffen** dan het eerste voorstel (−20%, pas vanaf level 50). Dat voorstel is afgewezen.
-    - ✅ Uitwerking (goedgekeurd in ronde 5):
-      - Paren: **Melee ↔ Ranged**, **Smithing ↔ Arcana**, **Defense ↔ Exploration**.
-      - De straf begint zodra de tegenpool **boven level 25** zit én hoger is dan deze skill.
-      - Hij groeit met het verschil in levels, tot **−60% XP** bij 50 levels verschil.
-      - Daarnaast werken de **passieve bonussen** van de zwakkere skill maar voor **75%**.
-      - Altijd zichtbaar in de GUI.
-  - ✅ **d) Totaalbudget: verplicht, in de hybride vorm** (zie §4).
+### Confirmed
+- ✅ **A compact set.** Every skill has its own tree, its own GUI page and its own XP table.
+- ✅ **Skills per playstyle**, not per weapon or tool.
+- ✅ **Skills connect through synergies that players discover themselves.** Here and there a **hard requirement** (option D).
+- ✅ **The 10 skills below are approved**, each with **three specializations** (round 10).
+- ✅ **Undiscovered synergies** show as **runes with a vague hint** (option B), like the unknown curses in ED.
+- ✅ **Discovery is both server-wide and personal** (the owner: "server-wide is fun, but I also want something personal"):
+  - **Personal:** every player must discover a synergy themselves before it works for them. Their own codex shows when and where they found it.
+  - **Server-wide:** the first discoverer goes into the server's **chronicle** (a GUI page), optionally with a chat announcement (configurable). After that first discovery the rune hint gets clearer for everyone else (part of it becomes readable).
+  - **First discoverer:** a lasting, purely cosmetic "First Discoverer" mark on that synergy. No extra power.
+- ✅ **Specializations always have trade-offs**: every choice has a price.
+- ✅ **Skills may counteract each other**, through:
+  - ✅ **a) Gear conflicts:** what you wear or hold decides which bonuses work. Example: in heavy armor the movement bonuses of Exploration do not work.
+  - ✅ **b) Specialization conflicts:** some specializations of different skills exclude each other (see the table below).
+  - ✅ **c) Opposing skills**, harsher than the first proposal (−20% from level 50, rejected):
+    - Pairs: **Melee ↔ Ranged**, **Smithing ↔ Arcana**, **Defense ↔ Exploration**.
+    - The penalty starts once the opposing skill is **above level 25** and higher than this skill.
+    - It grows with the level gap, up to **−60% XP** at a gap of 50 levels.
+    - On top of that, the **passive bonuses** of the weaker skill work at only **75%**.
+    - Always visible in the GUI.
+  - ✅ **d) Total budget: mandatory, in the hybrid form** (see §4).
 
-### De 10 skills (✅ lijst goedgekeurd; specialisaties nog 💡)
+### The 10 skills
 
-| # | Skill | Categorie | Speelstijl | XP vooral uit | Mogelijke specialisaties (voorbeeld) |
-|--:|-------|-----------|------------|---------------|--------------------------------------|
-| 1 | **Melee** | Combat | Alles op korte afstand: zwaard, bijl, mace, speer, trident, vuisten | Schade aan vijandige mobs/spelers, gewogen naar gevaar | Blade (parry, bleed) · Crusher (armor breken, stagger) · Brawler (snelheid, combo's) |
-| 2 | **Ranged** | Combat | Boog, kruisboog, gegooide trident | Raak schieten; meer voor afstand en bewegende doelen | Sniper (afstand, zwakke plekken) · Skirmisher (bewegen en schieten) |
-| 3 | **Defense** | Combat | Klappen opvangen en overleven | Schade geblokt met schild of opgevangen door armor (alleen vijandige bronnen) | Bulwark (schild) · Juggernaut (zwaar armor, trager) · Resilience (herstel, effecten weerstaan) |
-| 4 | **Mining** | Gathering | Ondergronds: houweel en schep | Ertsen (zeldzaam = meer), steen, diepte (géén dimensiebonus, zie §7) | Prospector (ertsen) · Excavator (schep, archaeology) · Tunneler (snelheid) |
-| 5 | **Foraging** | Gathering | De wilde natuur: bomen en wilde planten | Natuurlijke logs, wilde bessen, paddenstoelen, bloemen | Lumberjack (bomen vellen) · Gatherer (wilde opbrengst) |
-| 6 | **Farming** | Gathering | Verbouwen en verzorgen: gewassen en dieren | Volgroeide oogst, fokken, scheren, temmen | Grower · Herder · Beastmaster (getemde dieren sterker) |
-| 7 | **Fishing** | Gathering | Op en aan het water | Vangsten (zeldzamer = meer), schatten | Angler · Treasure Hunter |
-| 8 | **Exploration** | Survival | Reizen en beweging | Nieuwe chunks, biomen en structuren ontdekken, overleefde vallen, zwemafstand | Wanderer (beweging) · Survivalist (honger, omgeving) |
-| 9 | **Smithing** | Crafting | Metaal en uitrusting: oven, aambeeld, smithing table | Ertsen smelten, repareren, upgraden | Forgemaster · Tinkerer |
-| 10 | **Arcana** | Crafting | Brouwen en enchanten | Complexere drankjes, hogere enchants | Alchemist · Enchanter |
+| # | Skill | Category | Playstyle | XP mainly from | Specializations |
+|--:|-------|----------|-----------|----------------|-----------------|
+| 1 | **Melee** | Combat | Everything at close range: sword, axe, mace, spear, trident, fists | Damage to hostile mobs and players, weighted by danger | Blade · Crusher · Brawler |
+| 2 | **Ranged** | Combat | Bow, crossbow, thrown trident | Hits; more for distance | Sniper · Skirmisher · Harpooner |
+| 3 | **Defense** | Combat | Taking hits and surviving | Damage blocked by a shield or absorbed by armor (hostile sources only) | Bulwark · Juggernaut · Resilience |
+| 4 | **Mining** | Gathering | Underground: pickaxe and shovel | Ores (rarer = more), stone, depth (no dimension bonus, see §7) | Prospector · Excavator · Tunneler |
+| 5 | **Foraging** | Gathering | The wild: trees and wild plants | Natural logs, wild berries, mushrooms, flowers | Lumberjack · Gatherer · Herbalist |
+| 6 | **Farming** | Gathering | Growing and tending: crops and animals | Fully grown harvests, breeding, shearing, taming | Grower · Herder · Beastmaster |
+| 7 | **Fishing** | Gathering | On and by the water | Catches (rarer = more), treasure | Angler · Treasure Hunter · Hookmaster |
+| 8 | **Exploration** | Survival | Travel and movement | New chunks, biomes and structures, survived falls | Wanderer · Survivalist · Acrobat |
+| 9 | **Smithing** | Crafting | Metal and gear: furnace, anvil, smithing table | Smelting metal, repairing, upgrading | Forgemaster · Armorer · Tinkerer |
+| 10 | **Arcana** | Crafting | Brewing and enchanting | More complex potions, higher enchantments | Alchemist · Enchanter · Hexer |
 
-Keuzes in dit voorstel:
-- Woodcutting en Herbalism zijn verdeeld in **wild** (Foraging) en **verbouwd** (Farming). Dat is een duidelijker verschil in speelstijl.
-- Taming valt onder Farming (Beastmaster).
-- Acrobatics en Exploration zijn samengevoegd tot Exploration.
-- Brewing en Enchanting zijn samengevoegd tot Arcana.
-- Excavation valt onder Mining (Excavator).
-- Geen aparte Cooking-skill (in vanilla is koken alleen smelten). Voedselefficiëntie kan onder Farming of Exploration vallen.
+How the mcMMO skills were folded in:
+- Woodcutting and Herbalism are split into **wild** (Foraging) and **cultivated** (Farming): a clearer difference in playstyle.
+- Taming belongs to Farming (Beastmaster).
+- Acrobatics is part of Exploration (Acrobat).
+- Brewing and Enchanting are combined in Arcana.
+- Excavation belongs to Mining (Excavator).
+- There is no Cooking skill (in vanilla, cooking is only smelting). Food effects sit in Foraging (Herbalist) and in the trunks of Farming and Fishing.
 
-### Skill 1/10: Melee (✅ goedgekeurd in ronde 9)
-**Identiteit:** vechten van dichtbij. Melee beloont timing en goed gekozen wapens, niet klikspam.
+### Skill 1/10: Melee (✅ approved in round 9)
+**Identity:** fighting up close. Melee rewards timing and the right weapon, not click spam.
 
 **XP:**
-- XP = toegebrachte schade × gevarenfactor van het doelwit.
-  - De schade telt maximaal tot de resterende levens van het doelwit (geen XP voor overkill).
-  - Voorbeelden van gevarenfactoren: zombie 1,0 · skelet 1,2 · creeper 1,5 · enderman 1,5 · wither-skelet 2,0 · warden en bazen 3,0.
-- **Alleen volledig opgeladen klappen** (aanvalsbalk ≥ 90%) geven XP. Klikspam en macro's leveren dus niets op.
-- Passieve dieren geven geen XP. Mobs uit spawners of spawn-eggs geven geen XP (details in fase 7).
-- ✅ **PvP-schade geeft ook XP.** Maatregelen tegen farmen met een tweede account volgen in fase 7.
+- XP = damage dealt × the target's danger factor.
+  - Damage counts at most up to the target's remaining health (no XP for overkill).
+  - Example danger factors: zombie 1.0 · skeleton 1.2 · creeper 1.5 · enderman 1.5 · wither skeleton 2.0 · warden and bosses 3.0.
+- **Only fully charged hits** (attack bar ≥ 90%) give XP, so click spam and macros earn nothing.
+- Passive animals give no XP. Mobs from spawners or spawn eggs give no XP (phase 7).
+- ✅ **PvP damage gives XP too.** Measures against farming with a second account: phase 7.
 
-**Stam** (gratis, vanzelf vrij):
+**Trunk** (free, unlocks by itself):
 | Level | Bonus |
 |---|---|
-| 5 | Gevechtsritme: de aanvalsbalk laadt 3% sneller |
-| 10 | Volle zwaai: volledig opgeladen klappen doen +5% schade |
-| 15 | Vaste voet: 10% minder knockback terwijl je aanvalt |
-| 20 | Genadeslag: kritieke klappen (in de val) doen +10% schade |
+| 5 | Combat Rhythm: the attack bar charges 3% faster |
+| 10 | Full Swing: fully charged hits deal +5% damage |
+| 15 | Sure Footing: 10% less knockback while attacking |
+| 20 | Finishing Blow: critical hits (while falling) deal +10% damage |
 
-**Specialisaties** (eerste op 25, tweede op 75):
+**Specializations** (the first at level 25, the second at level 75):
 | | **Blade** | **Crusher** | **Brawler** |
 |---|---|---|---|
-| Wapens | Zwaard, speer, trident (van dichtbij) | Bijl, mace | Vuisten (lege hand) |
-| Speelstijl | Precisie, bloeden, pareren | Zware klappen, armor breken, wankelen | Snelheid, combo's, ontwapenen |
-| Actieve ability | **Riposte**: 3 seconden lang wordt de eerstvolgende klap die jou raakt volledig gepareerd, en je slaat terug met een zekere crit plus bloeden. Cooldown 4 min. | **Shatter**: je volgende volle klap binnen 5 seconden geeft een schokgolf. Die raakt alle vijanden binnen 3 blokken, slaat ze terug, en zet hun armor 8 seconden op 0. Cooldown 5 min. | **Flurry**: 6 seconden lang negeer je de aanvalsbalk, en elke klap bouwt je combo op. Cooldown 4 min. |
-| Trade-off | −15% schade tegen doelwitten met zware armor | −10% aanvalssnelheid met **alle** wapens | Werkt alleen met een lege hand **en** zonder borstplaat van ijzer of zwaarder |
-| Voorbeeld keuzeknoop | Diepe snede (langer bloeden) **of** Snelle snede (+aanvalssnelheid) | Aardbeving (mace-smash met een groter bereik) **of** Kloof (bijl houdt schilden langer uitgeschakeld) | IJzeren vuist (+schade) **of** Ontwapenen (kans dat een speler zijn wapen laat vallen) |
+| Weapons | Sword, spear, trident (up close) | Axe, mace | Fists (empty hand) |
+| Playstyle | Precision, bleeding, parrying | Heavy blows, breaking armor, staggering | Speed, combos, disarming |
+| Active ability | **Riposte**: for 3 seconds the next hit that lands on you is fully parried, and you strike back with a guaranteed crit plus bleeding. Cooldown 4 min. | **Shatter**: your next full hit within 5 seconds releases a shockwave. It hits every enemy within 3 blocks, knocks them back and sets their armor to 0 for 8 seconds. Cooldown 5 min. | **Flurry**: for 6 seconds you ignore the attack bar, and every hit builds your combo. Cooldown 4 min. |
+| Trade-off | −15% damage against targets in heavy armor | −10% attack speed with **all** weapons | Works only with an empty hand **and** without a chestplate of iron or heavier |
+| Example choice node | Deep Cut (longer bleeding) **or** Quick Cut (+attack speed) | Earthquake (a wider mace smash) **or** Cleave (the axe keeps shields disabled longer) | Iron Fist (+damage) **or** Disarm (a chance that a player drops their weapon) |
 
-**Mastery-perks** (voorbeeld, 1 van 2 per rank): +1% schade tegen bazen **of** +1% schade tegen spelers.
+**Mastery perks** (example, 1 of 2 per rank): +1% damage against bosses **or** +1% damage against players.
 
-**Tegenwerking:**
-- Tegenpool: **Ranged** (zie §2).
-- Uitrustingsconflict: Brawler (zie de trade-off hierboven).
-- Conflicten tussen specialisaties van verschillende skills leggen we vast als alle skills ontworpen zijn.
+**Counteraction:**
+- Opposing skill: **Ranged**.
+- Gear conflict: Brawler (see its trade-off).
 
-**Geen nieuwe items nodig.**
+**No new items needed.**
 
-### Skill 2/10: Ranged (✅ goedgekeurd in ronde 10)
-**Identiteit:** vechten op afstand. Ranged beloont geduld, positie en goed mikken.
+### Skill 2/10: Ranged (✅ approved in round 10)
+**Identity:** fighting at a distance. Ranged rewards patience, position and good aim.
 
 **XP:**
-- XP = toegebrachte schade × gevarenfactor × **afstandsbonus**.
-  - De afstandsbonus is +2% per blok boven de 10 blokken, tot maximaal +60% (op 40 blokken).
-  - De schade telt maximaal tot de resterende levens van het doelwit.
-  - De gevarenfactoren zijn dezelfde als bij Melee.
-- **Alleen een volledig gespannen boog** (≥ 90%) geeft XP. Een kruisboog is altijd volledig geladen.
-- PvP-schade telt, net als bij Melee.
-- Geen XP van passieve dieren of mobs uit spawners.
+- XP = damage dealt × danger factor × **distance bonus**.
+  - The distance bonus is +2% per block beyond 10 blocks, up to +60% (at 40 blocks). ✅ Approved.
+  - Damage counts at most up to the target's remaining health.
+  - The danger factors are the same as for Melee.
+- **Only a fully drawn bow** (≥ 90%) gives XP. A crossbow is always fully loaded.
+- PvP damage counts, as with Melee.
+- No XP from passive animals or spawner mobs.
 
-**Stam** (gratis, vanzelf vrij):
+**Trunk:**
 | Level | Bonus |
 |---|---|
-| 5 | Vaste hand: je spant de boog 5% sneller |
-| 10 | Pijlen terug: 10% kans om je pijlen terug te vinden bij een gedode mob |
-| 15 | Scherp oog: volledig gespannen schoten doen +5% schade |
-| 20 | Windlezer: pijlen vliegen 5% sneller (minder valhoek) |
+| 5 | Steady Hand: you draw the bow 5% faster |
+| 10 | Arrow Recovery: a 10% chance to recover your arrows from a slain mob |
+| 15 | Keen Eye: fully drawn shots deal +5% damage |
+| 20 | Wind Reader: arrows fly 5% faster (less drop) |
 
-**Specialisaties:**
+**Specializations:**
 | | **Sniper** | **Skirmisher** | **Harpooner** |
 |---|---|---|---|
-| Wapens | Boog, kruisboog | Boog, kruisboog | Gegooide trident |
-| Speelstijl | Afstand, kopschoten, doorboren | Bewegen en schieten, snel herladen | Werpen, binnentrekken, water en regen |
-| Actieve ability | **Deadeye**: inzoomen zoals een verrekijker. Je volgende volle schot binnen 8 seconden is een zekere crit en doorboort 1 doelwit; een kopschot doet +100%. Cooldown 4 min. | **Volley**: 5 seconden lang schiet elk schot 3 pijlen in een waaier, voor de prijs van 1 pijl. Cooldown 4 min. | **Harpoon**: je volgende geworpen trident trekt het doelwit naar je toe. Cooldown 4 min. |
-| Trade-off | −20% schade op doelwitten dichterbij dan 8 blokken | −20% schade op doelwitten verder dan 20 blokken | Boog en kruisboog doen −15% schade |
-| Voorbeeld keuzeknoop | Doorboren (+1 doelwit) **of** Kopschot (+schade op het hoofd) | Snel herladen (kruisboog −25% laadtijd) **of** Rennend schieten (niet vertragen tijdens het spannen) | Terugkeer (de trident komt ook zonder Loyalty terug, maar langzaam) **of** Getijdenkracht (+schade in water of regen) |
+| Weapons | Bow, crossbow | Bow, crossbow | Thrown trident |
+| Playstyle | Distance, headshots, piercing | Moving while shooting, fast reloads | Throwing, pulling in, water and rain |
+| Active ability | **Deadeye**: zoom in like a spyglass. Your next full shot within 8 seconds is a guaranteed crit and pierces 1 target; a headshot deals +100%. Cooldown 4 min. | **Volley**: for 5 seconds every shot fires 3 arrows in a fan, for the price of 1 arrow. Cooldown 4 min. | **Harpoon**: your next thrown trident pulls the target to you. Cooldown 4 min. |
+| Trade-off | −20% damage on targets closer than 8 blocks | −20% damage on targets beyond 20 blocks | Bow and crossbow deal −15% damage |
+| Example choice node | Piercing (+1 target) **or** Headshot (+damage to the head) | Quick Reload (crossbow −25% load time) **or** Running Shot (no slowdown while drawing) | Return (the trident comes back even without Loyalty, slowly) **or** Tidal Power (+damage in water or rain) |
 
-**Mastery-perks** (voorbeeld, 1 van 2 per rank): +1% schade tegen vliegende mobs **of** +1% schade tegen spelers.
+**Mastery perks** (example): +1% damage against flying mobs **or** +1% damage against players.
 
-**Tegenwerking:**
-- Tegenpool: **Melee**.
-- Harpooner: een trident van dichtbij valt onder Melee (Blade); een geworpen trident onder Ranged.
+**Counteraction:**
+- Opposing skill: **Melee**.
+- A trident used up close belongs to Melee (Blade); a thrown trident to Ranged.
 
-**Geen nieuwe items nodig.**
+**No new items needed.**
 
-### Skill 3/10: Defense (✅ goedgekeurd in ronde 11)
-**Identiteit:** klappen opvangen en overleven. Defense is de skill van wie vooraan staat.
+### Skill 3/10: Defense (✅ approved in round 11)
+**Identity:** taking hits and surviving. Defense is the skill of whoever stands in front.
 
 **XP:**
-- XP = schade die je **schild blokt** of die je **armor opvangt**, × de gevarenfactor van de aanvaller.
-  - Bij armor telt het verschil tussen de ruwe schade en de schade die je echt krijgt.
-- Alleen schade van **vijandige mobs en spelers** telt.
-  - Omgevingsschade (vallen, vuur, lava, verdrinken, cactus) geeft geen Defense-XP.
-  - Valschade hoort bij Exploration (zie skill 8).
-- Tegen AFK-farmen (stilstaan voor een spawner in volle armor):
-  - Je krijgt alleen XP als je de afgelopen seconden zelf hebt aangevallen of bewogen.
-  - Eén aanvaller geeft maximaal 6 keer XP, en daarna weer na 60 seconden zonder klappen van die aanvaller. Dat werkt zoals de dodge-regel van mcMMO; details in fase 7.
+- XP = damage your **shield blocks** or your **armor absorbs**, × the attacker's danger factor. ✅ No separate bonus for surviving at low health.
+  - For armor, the difference between the raw damage and the damage you actually take counts.
+- Only damage from **hostile mobs and players** counts.
+  - Environmental damage (falling, fire, lava, drowning, cactus) gives no Defense XP.
+  - Fall damage belongs to Exploration (skill 8).
+- Against AFK farming (standing in full armor in front of a spawner):
+  - you only get XP if you attacked or moved yourself in the last few seconds;
+  - one attacker gives XP at most 6 times, then again after 60 seconds without hits from that attacker (like mcMMO's dodge rule).
 
-**Stam** (gratis, vanzelf vrij):
+**Trunk:**
 | Level | Bonus |
 |---|---|
-| 5 | Schildreflex: je schild staat 1 tick sneller klaar (vanilla wacht 5 ticks) |
-| 10 | Gehard: 3% minder schade van vijandige mobs |
-| 15 | Op adem komen: natuurlijke regeneratie begint 2 seconden eerder na een gevecht |
-| 20 | Standvastig: 5% knockback-weerstand |
+| 5 | Shield Reflex: your shield is ready 1 tick sooner (vanilla waits 5 ticks) |
+| 10 | Hardened: 3% less damage from hostile mobs |
+| 15 | Catch Breath: natural regeneration starts 2 seconds sooner after a fight |
+| 20 | Steadfast: 5% knockback resistance |
 
-**Specialisaties:**
+**Specializations:**
 | | **Bulwark** | **Juggernaut** | **Resilience** |
 |---|---|---|---|
-| Uitrusting | Schild | Zware armor (ijzer en zwaarder) | Alles: herstel in plaats van pantser |
-| Speelstijl | Blokken, terugkaatsen, anderen beschermen | Klappen incasseren, niet wijken | Effecten afschudden, snel herstellen |
-| Actieve ability | **Bastion**: 6 seconden lang blokt je schild uit **alle** richtingen, en bondgenoten tot 3 blokken achter je krijgen 30% minder schade. Cooldown 4 min. | **Unbreakable**: 8 seconden lang geen knockback en 40% minder schade, maar je kunt niet sprinten. Cooldown 5 min. | **Second Wind**: in één keer alle negatieve effecten weg, plus 6 harten herstel over 5 seconden. Cooldown 5 min. |
-| Trade-off | **Zonder schild** in je hand krijg je +10% schade | −10% loopsnelheid met 3 of meer stukken armor van ijzer of zwaarder | Je armor beschermt 10% minder |
-| Voorbeeld keuzeknoop | Spiegelschild (25% van een geblokt projectiel kaatst terug) **of** Schildslag (blok je op het moment van de klap, dan staat de aanvaller 1 seconde stil) | Stekels (10% van de melee-schade gaat terug naar de aanvaller) **of** Anker (volledig knockback-vrij terwijl je sluipt) | Tegengif (immuun voor vergiftiging) **of** Koel bloed (je brandt 50% korter) |
+| Gear | Shield | Heavy armor (iron and heavier) | Anything: recovery instead of plate |
+| Playstyle | Blocking, reflecting, protecting others | Absorbing blows, never yielding | Shaking off effects, recovering fast |
+| Active ability | **Bastion**: for 6 seconds your shield blocks from **all** directions, and allies up to 3 blocks behind you take 30% less damage. Cooldown 4 min. | **Unbreakable**: for 8 seconds no knockback and 40% less damage, but you cannot sprint. Cooldown 5 min. | **Second Wind**: removes every negative effect at once, plus 6 hearts of healing over 5 seconds. Cooldown 5 min. |
+| Trade-off | **Without a shield** in hand you take +10% damage | −10% movement speed with 3 or more pieces of iron or heavier | Your armor protects 10% less |
+| Example choice node | Mirror Shield (25% of a blocked projectile bounces back) **or** Shield Bash (block at the moment of the hit and the attacker is stunned for 1 second) | Spikes (10% of melee damage returns to the attacker) **or** Anchor (full knockback immunity while sneaking) | Antidote (immune to poison) **or** Cool Blood (you burn 50% shorter) |
 
-**Mastery-perks** (voorbeeld, 1 van 2 per rank): +1% schadereductie tegen bazen **of** tegen spelers.
+**Mastery perks** (example): +1% damage reduction against bosses **or** against players.
 
-**Tegenwerking:**
-- Tegenpool: **Exploration** (zwaar tegenover licht).
-- Uitrustingsconflict: in zware armor (Juggernaut-stijl) werken de bewegingsbonussen van Exploration niet.
-- Brawler (Melee) mag geen borstplaat van ijzer of zwaarder dragen en botst dus vanzelf met Juggernaut.
+**Counteraction:**
+- Opposing skill: **Exploration** (heavy against light).
+- Gear conflict: in heavy armor the movement bonuses of Exploration do not work.
+- Brawler (Melee) may not wear a chestplate of iron or heavier, so it clashes with Juggernaut by itself.
 
-**Geen nieuwe items nodig.**
+- ✅ **Group abilities are allowed.** Abilities that also help allies, like Bastion, are fine.
 
-- ✅ **Groepsabilities mogen.** Abilities die ook bondgenoten helpen, zoals Bastion, zijn toegestaan.
-- ✅ **XP-bron:** schade die je opvangt (schild of armor). Er komt geen aparte bonus voor overleven met weinig levens.
+**No new items needed.**
 
-### Skill 4/10: Mining (✅ goedgekeurd in ronde 12)
-**Identiteit:** ondergronds werk met houweel en schep: ertsen vinden, tunnels graven en de grond doorzoeken.
+### Skill 4/10: Mining (✅ approved in round 12)
+**Identity:** work underground with pickaxe and shovel: finding ores, digging tunnels and searching the ground.
 
 **XP:**
-- XP per blok, uit een instelbare tabel.
-  - Zeldzame ertsen geven veel, steen weinig.
-  - Diepte zit in de tabel: deepslate en deepslate-ertsen geven meer dan hun gewone versie. Er is geen aparte dieptebonus en geen dimensiebonus.
-- Met de schep: aarde, zand, grind, klei, modder en soul sand (weinig). **Suspicious sand en gravel borstelen** (archaeology) geeft veel.
-- **Geplaatste blokken geven nooit XP.** Ook blokken uit een cobblestone-generator (lava + water) niet. Details in fase 7.
+- XP per block, from a configurable table.
+  - Rare ores give a lot, stone a little.
+  - Depth is part of the table: deepslate and deepslate ores give more than their normal versions. There is no separate depth bonus and no dimension bonus.
+- With the shovel: dirt, sand, gravel, clay, mud and soul sand (a little). **Brushing suspicious sand and gravel** (archaeology) gives a lot.
+- **Placed blocks never give XP.** Neither do blocks from a cobblestone generator (lava + water).
 
-**Stam** (gratis, vanzelf vrij):
+**Trunk:**
 | Level | Bonus |
 |---|---|
-| 5 | Mijnwerkersritme: +3% breeksnelheid met houweel en schep |
-| 10 | Stevig gereedschap: 5% kans dat een blok geen duurzaamheid kost |
-| 15 | Grotkennis: 10% minder schade van druipsteen, magmablokken en vallend grind of zand |
-| 20 | Dubbele vondst: 5% kans op een dubbele ertsdrop (Ancient Debris is uitgezonderd, instelbaar) |
+| 5 | Miner's Rhythm: +3% breaking speed with pickaxe and shovel |
+| 10 | Sturdy Tools: a 5% chance that a block costs no durability |
+| 15 | Cave Lore: 10% less damage from dripstone, magma blocks and falling gravel or sand |
+| 20 | Double Find: a 5% chance of a double ore drop (Ancient Debris excluded, configurable) |
 
-**Specialisaties:**
+**Specializations:**
 | | **Prospector** | **Excavator** | **Tunneler** |
 |---|---|---|---|
-| Gereedschap | Houweel | Schep en borstel | Houweel |
-| Speelstijl | Ertsen vinden en meer opbrengst | Graven, schatten en archaeology | Snelheid en grote tunnels |
-| Actieve ability | **Ore Sense**: 10 seconden lang zie je ertsen binnen 12 blokken door de muren heen oplichten. De server stuurt alleen die posities, dus het is geen x-ray voor de hele wereld. Cooldown 5 min. | **Earthmover**: 8 seconden lang breekt je schep 3×3 blokken tegelijk. Cooldown 4 min. | **Tunnel Bore**: 8 seconden lang breek je 1×3 blokken (rank V: 3×3). Cooldown 4 min. |
-| Trade-off | −10% breeksnelheid op gewone steen en deepslate | −15% breeksnelheid met een houweel | **Geen** kans op dubbele drops (ook niet die van de stam), en ertsen geven −25% XP |
-| Voorbeeld keuzeknoop | Edelsteenoog (alleen diamant en smaragd, maar een groter bereik) **of** Breed spectrum (alle ertsen, kleiner bereik) | Schatgraver (meer vondsten in aarde, zand en grind) **of** Archeoloog (betere vondsten bij het borstelen) | Diepgang (deepslate breekt even snel als steen) **of** Duurzaam (50% minder slijtage tijdens Tunnel Bore) |
+| Tool | Pickaxe | Shovel and brush | Pickaxe |
+| Playstyle | Finding ores and getting more from them | Digging, treasure and archaeology | Speed and big tunnels |
+| Active ability | **Ore Sense**: for 10 seconds ores within 12 blocks glow through the walls. The server only sends those positions, so it is no x-ray for the whole world. Cooldown 5 min. ✅ Approved as proposed. | **Earthmover**: for 8 seconds your shovel breaks 3×3 blocks at once. Cooldown 4 min. | **Tunnel Bore**: for 8 seconds you break 1×3 blocks (rank V: 3×3). Cooldown 4 min. |
+| Trade-off | −10% breaking speed on plain stone and deepslate | −15% breaking speed with a pickaxe | **No** chance of double drops (not even the trunk's), and ores give −25% XP |
+| Example choice node | Gem Eye (diamond and emerald only, but a wider range) **or** Broad Spectrum (every ore, a smaller range) | Treasure Digger (more finds in dirt, sand and gravel) **or** Archaeologist (better finds when brushing) | Deep Delver (deepslate breaks as fast as stone) **or** Enduring (50% less wear during Tunnel Bore) |
 
-**Vondsten van Excavator** zijn alleen vanilla-items: vuursteen, kleiballen, botten, goudklompjes, pottery sherds en dergelijke.
+**Excavator finds** are vanilla items only: flint, clay balls, bones, gold nuggets, pottery sherds and the like.
 
-**Mastery-perks** (voorbeeld, 1 van 2 per rank): +1% kans op dubbele erts **of** +1% breeksnelheid.
+**Mastery perks** (example): +1% chance of a double ore **or** +1% breaking speed.
 
-**Tegenwerking:** geen tegenpool. Verder gaat het via specialisatieconflicten, die volgen als alle skills ontworpen zijn.
+- ✅ **Double drops** stay, with Ancient Debris excluded.
 
-**Geen nieuwe items nodig.**
+**No new items needed.**
 
-- ✅ **Ore Sense** blijft zoals voorgesteld: ertsen door muren zien, binnen 12 blokken, met een cooldown van 5 min.
-- ✅ **Dubbele drops** blijven, met Ancient Debris uitgezonderd.
-
-### Skill 5/10: Foraging (✅ goedgekeurd in ronde 13)
-**Identiteit:** de wilde natuur: bomen kappen en verzamelen wat vanzelf groeit.
+### Skill 5/10: Foraging (✅ approved in round 13)
+**Identity:** the wild: felling trees and gathering what grows by itself.
 
 **XP:**
-- **Logs uit natuurlijke bomen**, per houtsoort uit een tabel. Zeldzame bomen geven meer, zoals jungle, cherry en pale oak.
-- **Bomen die een speler zelf heeft geplant** geven **25% XP**. Zo blijft een boomfarm nuttig, maar niet de snelste weg. Instelbaar.
-- **Wilde planten:** zoete bessen van wilde struiken, glow berries, natuurlijke paddenstoelen, bloemen, cacao uit de jungle, wilde meloenen en pompoenen, en honing en honingraat uit wilde bijenkorven.
-- Geplaatste blokken en planten die een speler met bonemeal heeft laten groeien, geven niets.
+- **Logs from natural trees**, per wood type from a table. Rare trees give more, such as jungle, cherry and pale oak.
+- ✅ **Trees a player planted** give **25% XP**. A tree farm stays useful, but it is not the fastest route. Configurable.
+- **Wild plants:** sweet berries from wild bushes, glow berries, natural mushrooms, flowers, jungle cocoa, wild melons and pumpkins, and honey and honeycomb from wild beehives.
+- Placed blocks, and plants or trees grown with bonemeal, give nothing.
 
-**Stam** (gratis, vanzelf vrij):
+**Trunk:**
 | Level | Bonus |
 |---|---|
-| 5 | Houthakkersritme: +3% kapsnelheid op logs |
-| 10 | Bladeren schudden: 10% meer kans op saplings, appels en stokken uit bladeren |
-| 15 | Bosvoet: bessenstruiken prikken je niet meer |
-| 20 | Dubbel hout: 5% kans op een dubbele log |
+| 5 | Woodcutter's Rhythm: +3% chopping speed on logs |
+| 10 | Leaf Shaker: 10% more saplings, apples and sticks from leaves |
+| 15 | Forest Foot: berry bushes no longer prick you |
+| 20 | Double Timber: a 5% chance of a double log |
 
-**Specialisaties:**
+**Specializations:**
 | | **Lumberjack** | **Gatherer** | **Herbalist** |
 |---|---|---|---|
-| Speelstijl | Bomen kappen | Wilde opbrengst verzamelen | Leven van wild voedsel |
-| Actieve ability | **Tree Feller**: de eerstvolgende boom die je binnen 6 seconden raakt, valt in één keer om. Elke log kost duurzaamheid. Rank I: max 16 logs, rank V: max 64. Cooldown 4 min. | **Bountiful Harvest**: 10 seconden lang geven alle wilde planten 3× opbrengst. Cooldown 5 min. | **Wild Remedy**: 30 seconden lang geeft al het voedsel dat je eet dubbele verzadiging, plus 5 seconden Regeneration I. Cooldown 5 min. |
-| Trade-off | Wilde planten geven −50% XP, en je krijgt er geen bonusopbrengst van | −15% kapsnelheid op logs | Verbouwd voedsel (brood, gewassen, vlees van gefokte dieren) vult 20% minder |
-| Voorbeeld keuzeknoop | Breed kappen (Tree Feller neemt grotere bomen) **of** Spaarzaam (Tree Feller kost de helft aan duurzaamheid) | Zeldzame zaden (kans op torchflower seeds of pitcher pods uit gras) **of** Honingoogst (dubbele honing uit wilde korven, zonder dat de bijen boos worden) | Paddenstoelkenner (paddenstoelensoep geeft Regeneration) **of** Bessenkenner (bessen vullen +2 honger) |
+| Playstyle | Felling trees | Gathering wild yields | Living off wild food |
+| Active ability | **Tree Feller**: the next tree you hit within 6 seconds falls at once. Every log costs durability. Rank I: up to 16 logs, rank V: up to 64. Cooldown 4 min. ✅ Whole trees allowed. | **Bountiful Harvest**: for 10 seconds all wild plants give 3× yield. Cooldown 5 min. | **Wild Remedy**: for 30 seconds all food you eat gives double saturation, plus 5 seconds of Regeneration I. Cooldown 5 min. |
+| Trade-off | Wild plants give −50% XP and no bonus yield | −15% chopping speed on logs | Cultivated food (bread, crops, meat from bred animals) fills 20% less |
+| Example choice node | Wide Fell (Tree Feller takes bigger trees) **or** Thrifty (Tree Feller costs half the durability) | Rare Seeds (a chance of torchflower seeds or pitcher pods from grass) **or** Honey Harvest (double honey from wild hives, without angering the bees) | Mushroom Lore (mushroom stew gives Regeneration) **or** Berry Lore (berries fill +2 hunger) |
 
-**Mastery-perks** (voorbeeld, 1 van 2 per rank): +1% kans op een dubbele log **of** +1% kans op dubbele wilde opbrengst.
+**Mastery perks** (example): +1% chance of a double log **or** +1% chance of a double wild yield.
 
-**Tegenwerking:** geen tegenpool. Herbalist botst inhoudelijk met Farming (verbouwd voedsel vult minder); een mogelijk specialisatieconflict volgt later.
+**No new items needed.** Torchflower seeds and pitcher pods are vanilla items that normally only come from a sniffer.
 
-**Geen nieuwe items nodig.** Torchflower seeds en pitcher pods zijn vanilla-items, die je normaal alleen via een sniffer krijgt.
-
-- ✅ Herbalist is de derde specialisatie. Zelf geplante bomen geven 25% XP. Tree Feller mag hele bomen kappen.
-
-### Skill 6/10: Farming (✅ goedgekeurd in ronde 14)
-**Identiteit:** verbouwen en verzorgen: gewassen, vee en getemde dieren.
+### Skill 6/10: Farming (✅ approved in round 14)
+**Identity:** growing and tending: crops, livestock and tamed animals.
 
 **XP:**
-- **Volgroeide gewassen** oogsten: tarwe, wortels, aardappels, bieten, nether wart, meloenen en pompoenen (van stengels), cacao, en geplante bessenstruiken.
-  - Zeldzame gewassen (torchflower, pitcher plant) geven meer.
-  - Suikerriet: alleen de bovenste blokken, niet de onderste.
-  - Een onrijp gewas geeft niets.
-- ✅ Gewassen die met **bonemeal** zijn gegroeid, geven **geen XP** (ronde 14; het voorstel van 50% is afgewezen). Hetzelfde geldt voor bomen en planten bij Foraging. Instelbaar.
-- **Automatisch geoogst** (zuigers, water, villagers) geeft niets. Alleen wat een speler zelf oogst telt.
-- **Dieren:**
-  - **fokken**: XP per jong;
-  - **scheren**;
-  - **temmen**: eenmalig per dier. Zeldzame dieren geven meer.
-- Melken en eieren rapen geven geen XP, want die kun je eindeloos herhalen.
-- **Schade die je getemde dieren doen**, geeft Farming-XP en geen Melee-XP. Daarvoor gelden dezelfde regels tegen farmen als bij Melee.
+- Harvesting **fully grown crops**: wheat, carrots, potatoes, beetroot, nether wart, melons and pumpkins (from stems), cocoa, and planted berry bushes.
+  - Rare crops (torchflower, pitcher plant) give more.
+  - Sugar cane: only the top blocks, not the bottom one.
+  - An unripe crop gives nothing.
+- ✅ Crops grown with **bonemeal** give **no XP** (round 14; the proposed 50% was rejected). Configurable.
+- **Automatic harvesting** (pistons, water, villagers) gives nothing. Only what a player harvests counts.
+- **Animals:**
+  - **breeding**: XP per baby;
+  - **shearing**;
+  - **taming**: once per animal. Rarer animals give more.
+- Milking and collecting eggs give no XP, because they can be repeated endlessly.
+- ✅ **Damage your tamed animals deal** gives Farming XP, not Melee XP, under the same anti-farming rules as Melee.
 
-**Stam** (gratis, vanzelf vrij):
+**Trunk:**
 | Level | Bonus |
 |---|---|
-| 5 | Lichte tred: je vertrapt geen akkerland meer |
-| 10 | Rijke oogst: 5% kans op een extra gewas |
-| 15 | Opgroeien: jonge dieren die jij hebt gefokt, groeien 10% sneller |
-| 20 | Boerenkost: voedsel van gewassen vult +1 honger |
+| 5 | Light Step: you no longer trample farmland |
+| 10 | Rich Harvest: a 5% chance of an extra crop |
+| 15 | Growing Up: babies you bred grow up 10% faster |
+| 20 | Farmhouse Fare: food made from crops fills +1 hunger |
 
-**Specialisaties:**
+**Specializations:**
 | | **Grower** | **Herder** | **Beastmaster** |
 |---|---|---|---|
-| Speelstijl | Gewassen | Vee: fokken, wol, vlees en leer | Getemde dieren: wolven, katten, paarden, kamelen en dergelijke |
-| Actieve ability | **Harvest Festival**: 10 seconden lang geven gewassen dubbele opbrengst en planten ze zichzelf opnieuw. Cooldown 4 min. | **Herding Call**: 10 seconden lang volgen dieren binnen 16 blokken je zonder voer, en je volgende kweek geeft een tweeling. Cooldown 4 min. | **Rally the Pack**: 15 seconden lang krijgen je getemde wolven binnen 24 blokken Strength en Resistance, en vallen ze jouw doelwit aan. Cooldown 5 min. |
-| Trade-off | Fokken geeft −50% XP en geen extra bonussen | Gewassen geven geen extra opbrengst, ook niet die van de stam | Zelf doe je −10% melee-schade zolang een getemde wolf van jou binnen 16 blokken is |
-| Voorbeeld keuzeknoop | Rijpe aura (gewassen binnen 4 blokken van jou groeien 15% sneller) **of** Zaadspaarder (je plant altijd vanzelf opnieuw) | Tweeling (grotere kans op een tweeling) **of** Wolhandel (dubbele wol en leer) | Roedelleider (de bonus geldt tot 3 wolven) **of** Ruiter (paarden en kamelen die jij berijdt, zijn 15% sneller en springen hoger) |
+| Playstyle | Crops | Livestock: breeding, wool, meat and leather | Tamed animals: wolves, cats, horses, camels and the like |
+| Active ability | **Harvest Festival**: for 10 seconds crops give double yield and replant themselves. Cooldown 4 min. | **Herding Call**: for 10 seconds animals within 16 blocks follow you without food, and your next breeding gives twins. Cooldown 4 min. | **Rally the Pack**: for 15 seconds your tamed wolves within 24 blocks get Strength and Resistance and attack your target. Cooldown 5 min. |
+| Trade-off | Breeding gives −50% XP and no bonuses | Crops give no extra yield, not even the trunk's | You deal −10% melee damage yourself while one of your tamed wolves is within 16 blocks |
+| Example choice node | Ripening Aura (crops within 4 blocks of you grow 15% faster) **or** Seed Saver (you always replant by yourself) | Twins (a bigger chance of twins) **or** Wool Trade (double wool and leather) | Pack Leader (the bonus works for up to 3 wolves) **or** Rider (horses and camels you ride are 15% faster and jump higher) |
 
-**Mastery-perks** (voorbeeld, 1 van 2 per rank): +1% gewasopbrengst **of** +1% schade van je getemde dieren.
+**Mastery perks** (example): +1% crop yield **or** +1% damage from your tamed animals.
 
-**Tegenwerking:**
-- Geen tegenpool.
-- Herbalist (Foraging) botst inhoudelijk met Farming.
-- Beastmaster ruilt eigen melee-kracht in voor die van zijn roedel.
+**No new items needed.**
 
-**Geen nieuwe items nodig.**
-
-### Skill 7/10: Fishing (✅ goedgekeurd in ronde 15)
-**Identiteit:** op en aan het water: vis, schatten, en de hengel als gereedschap.
+### Skill 7/10: Fishing (✅ approved in round 15)
+**Identity:** on and by the water: fish, treasure, and the rod as a tool.
 
 **XP:**
-- **Vangsten:**
-  - vis: kabeljauw, zalm, tropische vis, kogelvis;
-  - schatten: enchanted books, bogen, hengels, name tags, zadels, nautilusschelpen;
-  - rommel geeft weinig.
-- **Tegen AFK-vissen:**
-  - je krijgt alleen XP als je de afgelopen minuten hebt bewogen of rondgekeken;
-  - na 10 vangsten binnen 3 blokken van dezelfde plek neemt de XP sterk af ("overbevist"), en hij herstelt pas als je verderop vist. Zo werkt mcMMO ook;
-  - details in fase 7.
-- ✅ Alleen vissen in **open water** (zoals vanilla dat voor schatten al vraagt) geeft XP. **Een kleine put geeft geen XP** (ronde 15).
-- ✅ De afname na 10 vangsten op dezelfde plek is streng genoeg; de XP gaat niet naar nul.
+- **Catches:**
+  - fish: cod, salmon, tropical fish, pufferfish;
+  - treasure: enchanted books, bows, rods, name tags, saddles, nautilus shells;
+  - junk gives little.
+- **Against AFK fishing:**
+  - you only get XP if you moved or looked around in the last few minutes;
+  - ✅ after 10 catches within 3 blocks of the same spot the XP drops sharply ("overfished"), and it only recovers when you fish elsewhere. It does not drop to zero.
+- ✅ Only fishing in **open water** (as vanilla already requires for treasure) gives XP. **A small pit gives no XP** (round 15).
 
-**Stam** (gratis, vanzelf vrij):
+**Trunk:**
 | Level | Bonus |
 |---|---|
-| 5 | Geduld: vissen bijten 5% sneller |
-| 10 | Vaste lijn: 10% kans dat een vangst je hengel geen duurzaamheid kost |
-| 15 | Visserskost: gebakken vis vult +1 honger |
-| 20 | Zeegeluk: +5% kans op een schat |
+| 5 | Patience: fish bite 5% sooner |
+| 10 | Steady Line: a 10% chance that a catch costs the rod no durability |
+| 15 | Fisher's Fare: cooked fish fills +1 hunger |
+| 20 | Sea Luck: +5% treasure chance |
 
-**Specialisaties:**
+**Specializations:**
 | | **Angler** | **Treasure Hunter** | **Hookmaster** |
 |---|---|---|---|
-| Speelstijl | Veel vis, snel vangen | Schatten opvissen | De hengel als gereedschap tegen mobs en spelers |
-| Actieve ability | **Feeding Frenzy**: 20 seconden lang bijten vissen bijna meteen (−80% wachttijd). Cooldown 4 min. | **Lucky Cast**: je volgende vangst binnen 30 seconden is gegarandeerd een schat. Cooldown 5 min. | **Reel In**: de volgende mob die je haakt, wordt naar je toe gerukt en staat 2 seconden stil. Cooldown 4 min. |
-| Trade-off | −50% kans op schatten | Vissen bijten 25% trager | Vangsten (vis en schatten) geven −30% XP |
-| Voorbeeld keuzeknoop | IJsvissen (je hengel breekt door ijs heen) **of** Grote vangst (vis vult +2 honger) | Diepzee (kleine kans op een Heart of the Sea of een trident) **of** Boekenwurm (opgeviste enchanted books hebben hogere levels) | Afschudden (een gehaakte mob laat één van zijn normale drops vallen, één keer per mob) **of** Sleurhaak (je trekt mobs en spelers twee keer zo hard) |
+| Playstyle | Lots of fish, caught fast | Fishing up treasure | The rod as a tool against mobs and players |
+| Active ability | **Feeding Frenzy**: for 20 seconds fish bite almost at once (−80% wait). Cooldown 4 min. | **Lucky Cast**: your next catch within 30 seconds is guaranteed treasure. Cooldown 5 min. | **Reel In**: the next mob you hook is yanked to you and stunned for 2 seconds. Cooldown 4 min. |
+| Trade-off | −50% treasure chance | Fish bite 25% slower | Catches (fish and treasure) give −30% XP |
+| Example choice node | Ice Fishing (your rod breaks through ice) **or** Big Catch (fish fill +2 hunger) | Deep Sea (a small chance of a Heart of the Sea or a trident) **or** Bookworm (fished enchanted books have higher levels) | Shake (a hooked mob drops one of its normal drops, once per mob) **or** Drag Hook (you pull mobs and players twice as hard) |
 
-**Mastery-perks** (voorbeeld, 1 van 2 per rank): +1% kans op een schat **of** vissen bijten 1% sneller.
+**Mastery perks** (example): +1% treasure chance **or** fish bite 1% sooner.
 
-**Tegenwerking:** geen tegenpool.
+- ✅ Treasure Hunter may fish up a Heart of the Sea or a trident with a small chance.
 
-**Geen nieuwe items nodig.** Heart of the Sea en trident zijn vanilla-items die je normaal niet kunt opvissen.
+**No new items needed.** The Heart of the Sea and the trident are vanilla items that normally cannot be fished up.
 
-- ✅ Treasure Hunter mag met een kleine kans een Heart of the Sea of een trident opvissen.
-
-### Skill 8/10: Exploration (✅ goedgekeurd in ronde 16)
-**Identiteit:** reizen, ontdekken en bewegen. Acrobatics uit mcMMO zit hierin.
+### Skill 8/10: Exploration (✅ approved in round 16)
+**Identity:** travelling, discovering and moving. mcMMO's Acrobatics is part of it.
 
 **XP:**
-- **Nieuwe chunks:** je eerste bezoek aan een chunk geeft een klein beetje XP. Dat wordt per speler bijgehouden, dus rondjes in een minecart leveren niets op.
-- **Nieuwe biomen:** de eerste keer dat je in een biome komt, geeft veel XP.
-- **Nieuwe structuren:** de eerste keer dat je een structuur binnengaat, geeft veel XP. Bijvoorbeeld een dorp, tempel, stronghold, ancient city, trial chamber, bastion of end city.
-- **Overleefde vallen:** XP naar de valschade die je kreeg. Dezelfde plek blijft een tijd geblokkeerd, net als de anti-farmregel van mcMMO.
-- **Met elytra** geven nieuwe chunks **25% XP**, omdat je dan heel snel heel veel ziet.
-- **Geen XP voor afstand lopen of zwemmen.** Dat kun je te makkelijk AFK farmen in een waterstroom.
-- ✅ **Chunks opnieuw bezoeken:** een chunk die je lang niet hebt bezocht, geeft opnieuw XP. Dat helpt op servers met een world border (ronde 16).
-  - 💡 Getallen: na **30 echte dagen**, voor **25%** van de XP van het eerste bezoek. Biomen en structuren geven alleen de eerste keer XP.
+- **New chunks:** your first visit to a chunk gives a little XP. It is tracked per player, so laps in a minecart earn nothing.
+- **New biomes:** your first time in a biome gives a lot of XP.
+- **New structures:** your first time inside a structure gives a lot of XP, such as a village, temple, stronghold, ancient city, trial chamber, bastion or end city.
+- **Survived falls:** XP for the fall damage you took. The same spot stays blocked for a while, like mcMMO's anti-farming rule.
+- **With an elytra** new chunks give **25% XP**, because you see so much so fast.
+- **No XP for walking or swimming distance.** That is too easy to AFK-farm in a water current.
+- ✅ **Revisiting chunks:** a chunk you have not visited for a long time gives XP again, which helps on servers with a world border (round 16).
+  - 💡 Numbers: after **30 real days**, for **25%** of the XP of the first visit. Biomes and structures give XP only the first time.
 
-**Stam** (gratis, vanzelf vrij). Deze bonussen werken niet in zware armor (3 of meer stukken van ijzer of zwaarder; zie §2):
+**Trunk.** These bonuses do not work in heavy armor (3 or more pieces of iron or heavier):
 | Level | Bonus |
 |---|---|
-| 5 | Lichtvoetig: 5% minder valschade |
-| 10 | Uithoudingsvermogen: sprinten kost 5% minder honger |
-| 15 | Zwemmer: +5% zwemsnelheid |
-| 20 | Rol: 10% kans dat een val maar de helft van de schade doet (sluipend landen: 20%) |
+| 5 | Light-Footed: 5% less fall damage |
+| 10 | Stamina: sprinting costs 5% less hunger |
+| 15 | Swimmer: +5% swimming speed |
+| 20 | Roll: a 10% chance that a fall deals only half damage (landing while sneaking: 20%) |
 
-**Specialisaties:**
+**Specializations:**
 | | **Wanderer** | **Survivalist** | **Acrobat** |
 |---|---|---|---|
-| Speelstijl | Snel en ver reizen | Honger en omgeving doorstaan | Vallen, springen en ontwijken |
-| Actieve ability | **Stride**: 10 seconden lang +30% snelheid en hoger springen. Cooldown 4 min. | **Endure**: 20 seconden lang geen honger, en 75% minder schade van de omgeving (vuur, lava, kou, verdrinken). Cooldown 5 min. | **Daredevil**: 15 seconden lang geen valschade, en +50% springhoogte. Cooldown 4 min. |
-| Trade-off | Je krijgt +10% schade van mobs | −10% sprintsnelheid | Je krijgt +25% knockback |
-| Voorbeeld keuzeknoop | Bergstap (je stapt vanzelf 1 blok omhoog, zoals een paard) **of** Lange adem (sprinten kost geen extra honger) | Vuurvast (−50% schade van vuur en lava) **of** Kieuwen (je kunt 2× zo lang onder water blijven) | Ontwijken (10% kans om een melee-klap te ontwijken terwijl je sprint) **of** Klimmer (50% sneller klimmen op ladders en klimop) |
+| Playstyle | Travelling fast and far | Enduring hunger and the environment | Falling, jumping and dodging |
+| Active ability | **Stride**: for 10 seconds +30% speed and higher jumps. Cooldown 4 min. | **Endure**: for 20 seconds no hunger, and 75% less damage from the environment (fire, lava, freezing, drowning). Cooldown 5 min. | **Daredevil**: for 15 seconds no fall damage, and +50% jump height. Cooldown 4 min. |
+| Trade-off | You take +10% damage from mobs | −10% sprint speed | You take +25% knockback |
+| Example choice node | Step Up (you step up 1 block by yourself, like a horse) **or** Tireless (sprinting costs no extra hunger) | Fireproof (−50% damage from fire and lava) **or** Gills (you can stay underwater twice as long) | Dodge (a 10% chance to dodge a melee hit while sprinting) **or** Climber (climb ladders and vines 50% faster) |
 
-**Mastery-perks** (voorbeeld, 1 van 2 per rank): +1% loopsnelheid **of** 1% minder valschade.
+**Mastery perks** (example): +1% movement speed **or** 1% less fall damage.
 
-**Tegenwerking:**
-- Tegenpool: **Defense**.
-- Uitrustingsconflict: in zware armor werken de bewegingsbonussen niet.
+**Counteraction:**
+- Opposing skill: **Defense**.
+- Gear conflict: in heavy armor the movement bonuses do not work.
 
-**Technische noot (fase 8):** bezochte chunks worden compact opgeslagen per regio (1 bit per chunk), zodat ook een speler die heel veel verkent maar een klein bestand heeft. Voor het opnieuw-bezoeken komt er per regio een datum van het laatste bezoek bij.
+**Technical note (phase 8):** visited chunks are stored compactly per region (1 bit per chunk), so even a player who explores a lot has a small file. For revisits, each region also stores the date of the last visit.
 
-**Geen nieuwe items nodig.**
+**No new items needed.**
 
-### Skill 9/10: Smithing (✅ goedgekeurd in ronde 17)
-**Identiteit:** metaal en uitrusting: smelten, repareren en verbeteren aan de oven, het aambeeld en de smithing table.
+### Skill 9/10: Smithing (✅ approved in round 17)
+**Identity:** metal and gear: smelting, repairing and improving at the furnace, the anvil and the smithing table.
 
 **XP:**
-- **Metaal smelten** in een oven of blast furnace: ruwe ertsen, ertsblokken en Ancient Debris.
-  - Je krijgt de XP als je de opbrengst **zelf uit de oven haalt** (shift-klik telt ook). Een trechter die de oven leegt, geeft niets.
-  - Steen, zand, glas en voedsel bakken geven **geen** Smithing-XP. Dat zou een automatische steenfabriek een XP-bron maken.
-- **Repareren aan een aambeeld:** XP naar het materiaal, zoals de reparatietabel van mcMMO. Netherite en diamant geven het meest.
-- **Smithing table:** een netherite-upgrade geeft veel XP, een armor trim gemiddeld.
+- ✅ **Smelting metal** in a furnace or blast furnace: raw ores, ore blocks and Ancient Debris.
+  - You get the XP when you **take the output out of the furnace yourself** (shift-click counts too). A hopper emptying the furnace gives nothing.
+  - Stone, sand, glass and food give **no** Smithing XP, or an automatic stone factory would become an XP source.
+- **Repairing at an anvil:** XP by material, like mcMMO's repair table. Netherite and diamond give the most.
+- **Smithing table:** a netherite upgrade gives a lot of XP, an armor trim a medium amount.
 
-**Stam** (gratis, vanzelf vrij):
+**Trunk:**
 | Level | Bonus |
 |---|---|
-| 5 | Vuurmeester: ovens die jij vult, smelten 5% sneller |
-| 10 | Zuinig aambeeld: reparaties kosten 5% minder XP-levels |
-| 15 | Gehard staal: een reparatie herstelt 5% extra duurzaamheid |
-| 20 | Brandstofbesparing: 10% kans dat een brandstof niet wordt verbruikt |
+| 5 | Fire Master: furnaces you fill smelt 5% faster |
+| 10 | Thrifty Anvil: repairs cost 5% fewer XP levels |
+| 15 | Tempered Steel: a repair restores 5% extra durability |
+| 20 | Fuel Saver: a 10% chance that fuel is not consumed |
 
-**Specialisaties:**
+**Specializations:**
 | | **Forgemaster** | **Armorer** | **Tinkerer** |
 |---|---|---|---|
-| Werkplek | Oven en blast furnace | Aambeeld | Smithing table |
-| Speelstijl | Meer metaal uit dezelfde erts | Uitrusting in leven houden | Uitrusting verbeteren |
-| Actieve ability | **Flash Forge**: 30 seconden lang smelten ovens die jij opent 4× sneller. Cooldown 5 min. | ✅ **Masterwork**: je volgende reparatie binnen 30 seconden herstelt het item volledig. Er is **25% kans** dat hij geen XP-levels kost; anders betaal je gewoon. Cooldown 5 min. (Afgezwakt in ronde 17: "altijd gratis" was te sterk.) | **Reforge**: het volgende item dat je upgradet of repareert, krijgt blijvend +10% maximale duurzaamheid. Cooldown 5 min. |
-| Trade-off | Reparaties herstellen 15% minder | Smelten geeft geen bonusopbrengst en −25% XP | Reparaties aan het aambeeld herstellen 20% minder |
-| Voorbeeld keuzeknoop | Tweede smelt (kans op dubbele opbrengst) **of** Zuinige gloed (brandstof gaat 50% langer mee) | Behoud (✅ afgezwakt in ronde 18: de "too expensive"-grens gaat van 40 naar 50 levels, in plaats van helemaal weg, en reparaties verliezen geen enchants) **of** Snelle hamer (reparaties herstellen +25%) | Sjabloonbehoud (20% kans dat je een smithing template houdt; **vereist Mining 30**) **of** Trimkracht (elke armor trim geeft een klein effect, afhankelijk van het materiaal) |
+| Workstation | Furnace and blast furnace | Anvil | Smithing table |
+| Playstyle | More metal from the same ore | Keeping gear alive | Improving gear |
+| Active ability | **Flash Forge**: for 30 seconds furnaces you open smelt 4× faster. Cooldown 5 min. | ✅ **Masterwork**: your next repair within 30 seconds restores the item fully. There is a **25% chance** that it costs no XP levels; otherwise you pay as usual. Cooldown 5 min. (Weakened in round 17: "always free" was too strong.) | **Reforge**: the next item you upgrade or repair gets a permanent +10% maximum durability. Cooldown 5 min. |
+| Trade-off | Repairs restore 15% less | Smelting gives no bonus yield and −25% XP | Anvil repairs restore 20% less |
+| Example choice node | Second Smelt (a chance of double output) **or** Slow Burn (fuel lasts 50% longer) | ✅ Preservation (weakened in round 18: the "Too Expensive" limit goes from 40 to 50 levels instead of disappearing, and repairs never lose enchantments) **or** Quick Hammer (repairs restore +25%) | Template Saver (a 20% chance to keep a smithing template; **requires Mining 30**) **or** Trim Power (every armor trim gives a small effect, depending on its material) |
 
-**Mastery-perks** (voorbeeld, 1 van 2 per rank): +1% kans op dubbele opbrengst bij smelten **of** +1% extra herstel bij reparaties.
+**Mastery perks** (example): +1% chance of double output when smelting **or** +1% extra restored on repairs.
 
-**Abilities aan een werkplek:** Smithing heeft geen gereedschap in je hand. De ability activeer je met `R` terwijl je naar de werkplek kijkt: oven, aambeeld of smithing table.
+- ✅ **Abilities at a workstation:** Smithing has no tool in hand. You activate its ability with `R` while looking at the workstation: furnace, anvil or smithing table. The same goes for Arcana.
+- ✅ Tinkerer may give armor trims a small real effect.
 
-**Tegenwerking:**
-- Tegenpool: **Arcana** (staal tegenover magie).
-- Eerste voorbeeld van een **harde vereiste (D)**: Sjabloonbehoud van Tinkerer vereist Mining 30.
+**Counteraction:** opposing skill **Arcana** (steel against magic).
 
-**Geen nieuwe items nodig.** Maximale duurzaamheid en trim-effecten werken met vanilla item-components.
+**No new items needed.** Maximum durability and trim effects work through vanilla item components.
 
-- ✅ XP alleen van metaal smelten, en alleen als je de oven zelf leeghaalt.
-- ✅ Abilities van crafting-skills activeer je met `R` terwijl je naar de werkplek kijkt.
-- ✅ Tinkerer mag armor trims een klein echt effect geven. Mining 30 voor Sjabloonbehoud is de eerste harde vereiste.
-
-### Skill 10/10: Arcana (✅ goedgekeurd in ronde 18)
-**Identiteit:** magie: drankjes brouwen en uitrusting enchanten.
+### Skill 10/10: Arcana (✅ approved in round 18)
+**Identity:** magic: brewing potions and enchanting gear.
 
 **XP:**
-- **Brouwen:** je krijgt XP als je klare drankjes **zelf uit de brouwstandaard haalt**. Een trechter geeft niets, net als bij de oven. Hoe complexer het drankje, hoe meer XP:
+- **Brewing:** you get XP when you **take finished potions out of the brewing stand yourself**. A hopper gives nothing, as with the furnace. The more complex the potion, the more XP:
 
-  | Drankje | XP |
+  | Potion | XP |
   |---|---|
-  | Basis (awkward) | weinig |
-  | Met effect | gemiddeld |
-  | Verlengd of versterkt | meer |
-  | Splash of lingering | het meest |
+  | Base (awkward) | little |
+  | With an effect | medium |
+  | Extended or amplified | more |
+  | Splash or lingering | the most |
 
-- **Enchanten aan de enchanting table:** XP naar het aantal levels dat je uitgeeft en het niveau van de enchant.
-- **Enchanted books combineren aan het aambeeld:** Arcana-XP. Gewoon repareren aan het aambeeld blijft Smithing.
-- De grindstone geeft geen XP.
+- **Enchanting at an enchanting table:** XP for the levels spent and the level of the enchantment.
+- **Combining enchanted books at an anvil:** Arcana XP. Plain repairs at the anvil stay Smithing.
+- The grindstone gives no XP.
 
-**Stam** (gratis, vanzelf vrij):
+**Trunk:**
 | Level | Bonus |
 |---|---|
-| 5 | Bezige ketel: brouwstandaarden die jij vult, brouwen 5% sneller |
-| 10 | Lapisbesparing: 10% kans dat enchanten 1 lapis minder kost |
-| 15 | Krachtige dranken: drankjes die jij brouwt, werken 5% langer |
-| 20 | Zuinige magie: 10% kans dat enchanten 1 level minder kost |
+| 5 | Busy Stand: brewing stands you fill brew 5% faster |
+| 10 | Lapis Saver: a 10% chance that enchanting costs 1 lapis less |
+| 15 | Potent Brews: potions you brew last 5% longer |
+| 20 | Thrifty Magic: a 10% chance that enchanting costs 1 level less |
 
-**Specialisaties:**
+**Specializations:**
 | | **Alchemist** | **Enchanter** | **Hexer** |
 |---|---|---|---|
-| Werkplek / item | Brouwstandaard | Enchanting table | Splash- en lingering-drankjes |
-| Speelstijl | Betere en nieuwe drankjes | Betere enchants | Drankjes als wapen |
-| Actieve ability | **Catalyst**: 30 seconden lang brouwen standaarden die jij opent 10× sneller. Cooldown 5 min. | **Arcane Insight**: bij je volgende enchant binnen 30 seconden zie je **alle** enchants van elk aanbod (vanilla toont er maar één), en je mag het aanbod één keer gratis vernieuwen. Cooldown 5 min. | **Hex**: het volgende splash-drankje dat je binnen 15 seconden gooit, laat een wolk achter die 2× zo groot is en 2× zo lang blijft. Cooldown 4 min. |
-| Trade-off | Enchanten geeft −50% XP en geen bonussen | Brouwen geeft −50% XP en geen bonussen | Drankjes die je **zelf drinkt**, werken 25% korter |
-| Voorbeeld keuzeknoop | Verlengd (drankjes werken 25% langer) **of** Versterkt (kans dat een drankje één niveau sterker uitkomt) | Spaarzaam (enchanten kost 1 level minder, minimaal 1) **of** Rijke keuze (meer kans op de beste enchant in het aanbod) | Blijvend gif (negatieve effecten die jij geeft, duren 30% langer) **of** Wijde nevel (+50% straal voor splash) |
+| Workstation / item | Brewing stand | Enchanting table | Splash and lingering potions |
+| Playstyle | Better and new potions | Better enchantments | Potions as weapons |
+| Active ability | **Catalyst**: for 30 seconds brewing stands you open brew 10× faster. Cooldown 5 min. | **Arcane Insight**: at your next enchantment within 30 seconds you see **all** enchantments of each offer (vanilla shows only one), and you may reroll the offers once for free. Cooldown 5 min. | **Hex**: the next splash potion you throw within 15 seconds leaves a cloud twice as large that lasts twice as long. Cooldown 4 min. |
+| Trade-off | Enchanting gives −50% XP and no bonuses | Brewing gives −50% XP and no bonuses | Potions you **drink yourself** last 25% shorter |
+| Example choice node | Extended (potions last 25% longer) **or** Potent (a chance that a potion comes out one level stronger) | Frugal (enchanting costs 1 level less, at least 1) **or** Rich Choice (a better chance of the best enchantment in the offer) | Lingering Venom (negative effects you cause last 30% longer) **or** Wide Mist (+50% splash radius) |
 
-**Nieuwe drankjes voor Alchemist** (💡): recepten voor vanilla-effecten die je in vanilla niet kunt brouwen, zoals **Haste**, **Resistance** en **Absorption**. Het blijven gewone vanilla-drankjes met een vanilla-effect, dus het zijn geen nieuwe items.
+**New potions for the Alchemist** (✅): recipes for vanilla effects that vanilla cannot brew, such as **Haste**, **Resistance** and **Absorption**. They stay ordinary vanilla potions with vanilla effects, so they are not new items. **Requires Foraging 30** (see the hard requirements).
 
-**Mastery-perks** (voorbeeld, 1 van 2 per rank): drankjes werken 1% langer **of** +1% kans op een beter enchant-aanbod.
+**Mastery perks** (example): potions last 1% longer **or** +1% chance of a better enchantment offer.
 
-**Abilities:** `R` terwijl je naar de brouwstandaard of enchanting table kijkt. Bij Hexer: `R` met een splash- of lingering-drankje in je hand.
+**Abilities:** `R` while looking at the brewing stand or enchanting table. For Hexer: `R` with a splash or lingering potion in hand.
 
-**Tegenwerking:** tegenpool **Smithing** (magie tegenover staal).
+**Counteraction:** opposing skill **Smithing** (magic against steel).
 
-**Geen nieuwe items nodig.**
+**No new items needed.**
 
-- ✅ Hexer, de nieuwe drankjes voor de Alchemist en Arcane Insight zijn goedgekeurd zoals voorgesteld.
+### Specialization conflicts (✅ approved in round 19)
+Mechanism b: these specializations of **different** skills exclude each other. Whoever has one cannot choose the other. The GUI shows this up front, with the reason.
 
-### Conflicten tussen specialisaties (✅ goedgekeurd in ronde 19)
-Mechanisme b: deze specialisaties van **verschillende** skills sluiten elkaar uit. Wie de ene heeft, kan de andere niet kiezen. De GUI toont dat vooraf, met de reden erbij.
-
-| Specialisatie | ✕ | Specialisatie | Waarom |
+| Specialization | ✕ | Specialization | Why |
 |---|---|---|---|
-| Juggernaut (Defense) | ✕ | Acrobat (Exploration) | Zware platen tegenover salto's |
-| Brawler (Melee) | ✕ | Bulwark (Defense) | Blote vuisten tegenover een schild |
-| Sniper (Ranged) | ✕ | Wanderer (Exploration) | Stil liggen tegenover altijd onderweg |
-| Herbalist (Foraging) | ✕ | Grower (Farming) | Wild tegenover verbouwd |
-| Tinkerer (Smithing) | ✕ | Enchanter (Arcana) | Staal verbeteren tegenover magie verbeteren |
+| Juggernaut (Defense) | ✕ | Acrobat (Exploration) | Heavy plate against somersaults |
+| Brawler (Melee) | ✕ | Bulwark (Defense) | Bare fists against a shield |
+| Sniper (Ranged) | ✕ | Wanderer (Exploration) | Lying still against always on the move |
+| Herbalist (Foraging) | ✕ | Grower (Farming) | Wild against cultivated |
+| Tinkerer (Smithing) | ✕ | Enchanter (Arcana) | Improving with steel against improving with magic |
 
-### Harde vereisten (D) (✅ goedgekeurd in ronde 19)
-| Knoop of ability | Vereist | Waarom |
+### Hard requirements (D) (✅ approved in round 19)
+| Node or ability | Requires | Why |
 |---|---|---|
-| Sjabloonbehoud (Tinkerer, Smithing) | Mining 30 | ✅ al goedgekeurd |
-| Diepzee (Treasure Hunter, Fishing) | Exploration 40 | Wie de zee kent, vindt haar schatten |
-| Nieuwe drankjes (Alchemist, Arcana) | Foraging 30 | Kennis van wilde kruiden |
-| Ruiter (Beastmaster, Farming) | Exploration 30 | Wie veel reist, rijdt beter |
+| Template Saver (Tinkerer, Smithing) | Mining 30 | ✅ approved in round 17 |
+| Deep Sea (Treasure Hunter, Fishing) | Exploration 40 | Whoever knows the sea finds its treasure |
+| New potions (Alchemist, Arcana) | Foraging 30 | Knowledge of wild herbs |
+| Rider (Beastmaster, Farming) | Exploration 30 | Whoever travels a lot rides better |
 
-### Verborgen synergieën (✅ goedgekeurd in ronde 19)
-- ✅ De lijst **mag in deze openbare repo** staan (de eigenaar koos dat bewust). Spelers die de repo lezen, kunnen ze dus vooraf kennen.
-- 💡 Fase 9: de synergieën komen in een databestand, zodat een serverbeheerder ze kan aanpassen of vervangen.
-- Elke synergie vraagt **beide skills op level 30**. Tussen tegenpolen zijn er bewust geen synergieën.
+### Hidden synergies (✅ approved in round 19)
+- ✅ The list **may be in this public repo** (the owner chose this on purpose). Players who read the repo can know them in advance.
+- 💡 Phase 9: the synergies live in a data file, so a server owner can change or replace them.
+- Every synergy needs **both skills at level 30**. There are deliberately no synergies between opposing skills.
 
-| Skills | Synergie | Effect |
+| Skills | Synergy | Effect |
 |---|---|---|
-| Melee + Defense | Tegenstoot | Na een geslaagde blok met je schild doet je volgende klap binnen 2 seconden +20% |
-| Melee + Exploration | Stormloop | Klappen terwijl je sprint doen +10% |
-| Ranged + Exploration | Hoge grond | +10% schade op doelwitten die minstens 8 blokken lager staan |
-| Ranged + Arcana | Giftpunt | Effecten van tipped arrows duren 50% langer |
-| Mining + Smithing | Smidse van de diepte | +5% kans op dubbele opbrengst bij het smelten van ruwe erts |
-| Mining + Exploration | Diepteloper | Sculk sensors in de Deep Dark merken je pas 2 blokken later op |
-| Foraging + Farming | Groene hand | Saplings die jij plant, groeien 20% sneller |
-| Fishing + Exploration | Zeevaarder | Boten die jij stuurt, varen 10% sneller |
-| Farming + Defense | Trouwe wachter | Je wolven krijgen 20% minder schade terwijl jij blokt |
-| Smithing + Defense | Op maat | Je armor slijt 10% langzamer |
-| Fishing + Arcana | Getijdenmagie | Water Breathing-drankjes werken 50% langer |
-| Foraging + Arcana | Kruidenkenner | Glow berries geven 10 seconden Night Vision |
+| Melee + Defense | Counterstrike | After a successful shield block, your next hit within 2 seconds deals +20% |
+| Melee + Exploration | Charge | Hits while sprinting deal +10% |
+| Ranged + Exploration | High Ground | +10% damage on targets at least 8 blocks below you |
+| Ranged + Arcana | Venom Tip | Tipped arrow effects last 50% longer |
+| Mining + Smithing | Forge of the Deep | +5% chance of double output when smelting raw ore |
+| Mining + Exploration | Deep Walker | Sculk sensors in the Deep Dark notice you 2 blocks later |
+| Foraging + Farming | Green Thumb | Saplings you plant grow 20% faster |
+| Fishing + Exploration | Seafarer | Boats you steer go 10% faster |
+| Farming + Defense | Loyal Guard | Your wolves take 20% less damage while you block |
+| Smithing + Defense | Tailored | Your armor wears 10% slower |
+| Fishing + Arcana | Tidal Magic | Water Breathing potions last 50% longer |
+| Foraging + Arcana | Herb Lore | Glow berries give 10 seconds of Night Vision |
 
-- Algemene regels:
-  - Een synergie heeft twee skills nodig, elk op een minimumlevel.
-  - De rune-hint verschijnt in de GUI zodra je één van de twee skills op dat level hebt.
-  - De synergie wordt **ontdekt** de eerste keer dat de situatie in het spel voorkomt terwijl je aan beide levels voldoet.
-  - Er wordt nergens bijgehouden wie een item gemaakt of gevonden heeft. Daardoor blijven items gewoon stapelbaar.
+General rules:
+- The rune hint appears in the GUI once one of the two skills reaches the required level.
+- A synergy is **discovered** the first time its situation happens in play while both levels are met.
+- Nothing records who made or found an item, so items keep stacking normally.
 
-### Voorbeelden van harde vereisten (D) (💡)
-- Smithing: Sjabloonbehoud (Tinkerer) vereist Mining 30 (zie skill 9).
-- Arcana: enchants van het hoogste niveau vereisen ... (nog te bepalen)
+---
 
-### Tegenwerkende skills: de vier mechanismen (a, b, c licht en d gekozen, zie boven)
-- **a) Uitrustingsconflicten:** wat je draagt of vasthoudt bepaalt welke bonussen werken. Voorbeeld: in zwaar armor werken de bewegingsbonussen van Exploration niet.
-- **b) Specialisatieconflicten:** sommige specialisaties sluiten elkaar uit over skills heen. Voorbeeld: Juggernaut (Defense) en Wanderer (Exploration) kun je niet allebei hebben.
-- **c) Tegenpolen:** XP in de ene skill maakt XP in de tegenpool trager. Voorbeelden: Melee ↔ Ranged, Smithing ↔ Arcana.
-- **d) Totaalbudget:** hoe meer levels je in totaal hebt, hoe duurder elk volgend level wordt.
+## 3. XP generation
+- The XP sources per skill are in §2.
+- 💡 How the 400-hour pace turns into XP per action, and the anti-exploit rules: §12 (phase 7).
 
-## 3. XP-generatie
-_Nog niet besproken._
+## 4. Level progression and formulas
 
-## 4. Levelprogressie & formules
-### Bevestigd
-- ✅ **Schaal: 0–100 per skill**, met een **Mastery-laag** na het voltooien (na level 100).
-- ✅ **Totaalbudget: hybride.** Elk level wordt zacht duurder naarmate je totaal stijgt, en aan het eind ligt een hard plafond.
-- ✅ **Tempo: VEEL langzamer** dan het eerste voorbeeld (100 uur tot level 100). Dat voorbeeld is afgewezen.
-- ✅ **Respec: optie B.** Wisselen kan, maar het kost een flink deel van je voortgang in die skill plus een wachttijd.
+### Confirmed
+- ✅ **Scale: 0–100 per skill**, with a **Mastery layer** after completion (after level 100).
+- ✅ **Total budget: hybrid.** Every level gets gently more expensive as your total rises, with a hard cap at the end.
+- ✅ **Pace: MUCH slower** than the first example (100 hours to level 100, rejected).
+- ✅ **Respec: option B.** Switching is possible, but it costs a large share of your progress in that skill plus a waiting time.
 
-### Getallen (✅ goedgekeurd in ronde 5)
-**Tempo (de eerste skill, zonder budgetfactor):** `uren(L) = 400 × (L/100)^2.66`. De eerste levels gaan snel, zodat je het systeem meteen voelt. Daarna wordt de curve steil.
+### Numbers (✅ approved in round 5)
+**Pace (the first skill, without the budget factor):** `hours(L) = 400 × (L/100)^2.66`. The first levels come fast, so a new player feels the system at once. Then the curve gets steep.
 
 | Level | 1 | 5 | 10 | 25 | 50 | 75 | 100 |
 |---|---|---|---|---|---|---|---|
-| Cumulatieve speeltijd | seconden | ~8 min | ~1 uur | ~10 uur | ~63 uur | ~186 uur | ~400 uur |
+| Cumulative play time | seconds | ~8 min | ~1 hour | ~10 hours | ~63 hours | ~186 hours | ~400 hours |
 
-De uren worden later omgerekend naar XP per actie (fase 7), op basis van hoe snel een gemiddelde speler die actie uitvoert.
+The hours are later converted to XP per action (phase 7), based on how fast an average player performs that action.
 
-**Hybride budget:** XP nodig = `basis(level) × (1 + (totaal/300)²)`, met een **hard plafond van 400 totale levels**. Mastery telt niet mee voor het plafond.
+**Hybrid budget:** XP required = `base(level) × (1 + (total/300)²)`, with a **hard cap of 400 total levels**. Mastery does not count toward the cap.
 
-| Meesters na elkaar (elk 0 → 100) | 1e | 2e | 3e | 4e (plafond) |
+| Masters one after another (each 0 → 100) | 1st | 2nd | 3rd | 4th (cap) |
 |---|---|---|---|---|
-| Uren voor die skill | ~425 | ~534 | ~731 | ~1017 |
-| Cumulatief | ~425 | ~959 | ~1690 | ~2707 |
+| Hours for that skill | ~425 | ~534 | ~731 | ~1017 |
+| Cumulative | ~425 | ~959 | ~1690 | ~2707 |
 
-**Mastery:** 10 Mastery-ranks per skill, elk ≈ 40 uur. Bij elke rank kies je 1 van 2 kleine perks. Mastery is het eerste dat je verliest bij een dood (fase 4).
+**Mastery:** 10 Mastery ranks per skill, each ≈ 40 hours. At every rank you pick 1 of 2 small perks. Mastery is the first thing you lose on death (§7).
 
-**Specialisaties:** de eerste kies je op **level 25** (≈ 10 uur), de tweede op **level 75** (≈ 186 uur).
+**Specializations:** the first at **level 25** (≈ 10 hours), the second at **level 75** (≈ 186 hours).
 
-**Respec (B):** wisselen kost **20% van de totale XP in die skill** (op level 100 zak je naar ~92, op level 75 naar ~69). Daarna moet je **7 echte dagen** wachten voordat je weer kunt wisselen. De nieuwe specialisatie begint op rank 1.
+**Respec (B):** switching costs **20% of the total XP in that skill** (at level 100 you drop to ~92, at level 75 to ~69). Then you must wait **7 real days** before you can switch again. The new specialization starts at rank 1.
 
-Ter referentie, de speeltijd van één level (zonder budgetfactor):
+For reference, the play time of a single level (without the budget factor):
 
-| Van level | 10 | 25 | 50 | 75 | 90 | 99 |
+| From level | 10 | 25 | 50 | 75 | 90 | 99 |
 |---|---|---|---|---|---|---|
-| Naar het volgende level | ~15 min | ~1,1 uur | ~3,4 uur | ~6,7 uur | ~9 uur | ~10,5 uur |
+| To the next level | ~15 min | ~1.1 hours | ~3.4 hours | ~6.7 hours | ~9 hours | ~10.5 hours |
 
-- ✅ **Geen afleren.** Wie het plafond van 400 haalt, zit vast aan zijn keuzes (ronde 8).
-  - Alleen een dood kan levels laten zakken. Dat is geen bruikbare truc om ruimte vrij te maken: het verlies valt over alle skills (de hoogste het meest) en je kunt niet kiezen waar.
+- ✅ **No unlearning.** Whoever reaches the cap of 400 is stuck with their choices (round 8).
+  - Only a death can lower levels. That is no usable trick to free up room: the loss falls on every skill (the highest the hardest) and you cannot choose where.
 
-## 5. Skill-unlocks
-- ✅ Specialisaties komen vrij op **level 25** en **level 75**. Mastery begint na **level 100** (zie §4 en §6).
-- 💡 De verdere structuur (vaste unlocks of punten) volgt in ronde 8 (§6).
+## 5. Skill unlocks
+- ✅ Specializations unlock at **level 25** and **level 75**. Mastery starts after **level 100**.
+- ✅ Within a specialization you buy nodes with points (§6).
 
-## 6. Abilities & skill trees
-### Bevestigd
-- ✅ Elke skill heeft een eigen tree (zie §2).
-- ✅ Specialisaties hebben altijd trade-offs.
-- ✅ **Eén actieve ability per specialisatie** (niet per skill).
-- ✅ **Volledig passieve skills mogen**, maar ze mogen niet te sterk worden. Bij zo'n skill krijgt een specialisatie een sterkere passieve bonus met trade-off, in plaats van een actieve ability.
-- ✅ **Specialisaties: optie B.** De eerste op **level 25**, de tweede op **level 75**.
-  - ✅ Respec kost **20% van de totale XP in die skill**, plus **7 echte dagen** wachttijd. De nieuwe specialisatie begint op rank 1.
-- ✅ **Mastery:** 10 ranks per skill na level 100, elk ≈ 40 uur. Bij elke rank kies je 1 van 2 kleine perks.
-- ✅ Actieve abilities activeer je met een **ability-toets** (standaard `R`, aan te passen) terwijl je het juiste gereedschap vasthoudt. Niet met rechtsklik.
+## 6. Abilities and skill trees
 
-### Opbouw van elke tree (✅ ronde 8)
-- ✅ **Stam en takken:**
-  - Elke skill heeft een **stam** met gedeelde passieve bonussen. Die komen vanzelf vrij op levels 5, 10, 15 en 20.
-  - Op level 25 kies je een tak (je specialisatie).
-- ✅ **Punten:**
-  - Vanaf level 25 krijg je **1 skillpunt per level**. Op level 100 heb je er dus 75.
-  - Een knoop kost 1–3 punten. Een volledige tak kost meer dan 75 punten, dus je kunt nooit alles nemen.
-  - Vanaf level 75 deelt je tweede specialisatie dezelfde puntenpot.
-- ✅ **Soms keuzeknopen:** op enkele plekken in een tak kies je A **of** B.
-- ✅ **Ability-ranks I–V** voor de actieve ability van een specialisatie, te kopen met punten.
-- ✅ **Punten herverdelen** binnen dezelfde specialisatie kost **evenveel als een volledige respec**: 20% XP en 7 dagen.
-- ✅ **Lange cooldowns:** 3–5 minuten, met een sterk en beslissend effect.
-- ✅ **Twee actieve abilities** in één skill (na level 75): `R` voor de eerste specialisatie, `Shift + R` voor de tweede.
-- ✅ **Punten bij levelverlies:** zak je onder een level, dan valt het laatst gekochte punt eerst weg. Wordt het level teruggewonnen, dan komt dat punt automatisch terug op dezelfde plek.
-- ✅ **Drie specialisaties per skill.** Met maar twee is de tweede keuze op level 75 geen keuze meer. Met drie kies je op 75 echt (ronde 10).
+### Confirmed
+- ✅ Every skill has its own tree.
+- ✅ Specializations always have trade-offs.
+- ✅ **One active ability per specialization** (not per skill).
+- ✅ **Fully passive skills are allowed**, as long as they are not too strong. A specialization of such a skill gets a stronger passive bonus with a trade-off instead of an active ability.
+- ✅ **Specializations: option B.** The first at **level 25**, the second at **level 75**, out of **three** per skill.
+  - ✅ Respec costs **20% of the total XP in that skill**, plus **7 real days** of waiting. The new specialization starts at rank 1.
+- ✅ **Mastery:** 10 ranks per skill after level 100, each ≈ 40 hours. At every rank you pick 1 of 2 small perks.
+- ✅ Active abilities are triggered with an **ability key** (`R` by default, rebindable) while holding the right tool, or while looking at the right workstation. Not with right-click, which clashes with placing blocks and blocking with a shield.
 
-## 7. Doodsstraffen
-### Vaste principes (uit de opdracht, geen keuze)
-- Doodsstraffen zijn **altijd zichtbaar**. De GUI toont per skill wat er "op het spel" staat.
-- Na een dood toont een overzicht **precies** wat je verloren hebt, en dat het **permanent** is.
-- Voortgang wordt **nooit stilletjes** weggehaald.
+### Structure of every tree (✅ round 8)
+- ✅ **Trunk and branches:**
+  - Every skill has a **trunk** of shared passive bonuses. They unlock by themselves at levels 5, 10, 15 and 20.
+  - At level 25 you choose a branch (your specialization).
+- ✅ **Points:**
+  - From level 25 you earn **1 skill point per level**, so 75 at level 100.
+  - A node costs 1–3 points. A full branch costs more than 75 points, so you can never take everything.
+  - From level 75 your second specialization shares the same pool of points.
+- ✅ **Occasional choice nodes:** at a few places in a branch you choose A **or** B.
+- ✅ **Ability ranks I–V** for a specialization's active ability, bought with points.
+- ✅ **Redistributing points** within the same specialization costs **as much as a full respec**: 20% XP and 7 days.
+- ✅ **Long cooldowns:** 3–5 minutes, with a strong and decisive effect.
+- ✅ **Two active abilities** in one skill (after level 75): `R` for the first specialization, `Shift + R` for the second.
+- ✅ **Points on level loss:** when you drop below a level, the most recently bought point is removed first. When you win the level back, that point returns to the same node by itself.
 
-### Ontwerpgevolg van het trage tempo
-- Level 100 kost ~400 uur, en één level rond level 75–99 kost 7–10 uur. Hele levels verliezen is dus zwaar.
+## 7. Death penalties
 
-### Bevestigd (ronde 6 en 7)
-- ✅ **Verlieslagen (optie B)**, in deze volgorde:
-  - (1) voortgang naar de volgende Mastery-rank
-  - (2) XP binnen je huidige level (je zakt niet onder het begin van je level)
-  - (3) hele Mastery-ranks of hele levels, alleen bij herhaalde doden
-- ✅ **Alle skills** worden geraakt, **je hoogste skill het meest**:
-  - Elke skill verliest `basis × (level van die skill / hoogste level)`.
-  - Met een basis van **50%** van de XP binnen het huidige level verliest je hoogste skill 50%, een skill op de helft van dat level 25%, en een skill op een kwart 12,5%.
-  - Voorbeeld: op level 90 (één level ≈ 9 uur) kost een dood je hoogste skill maximaal ~4,5 uur, en gemiddeld ~2,25 uur.
-- ✅ **Doodsdruk:**
-  - Elke dood verhoogt de druk met 1.
-  - Per uur actief spelen zonder te sterven zakt de druk met 1.
+### Fixed principles (from the brief, not a choice)
+- Death penalties are **always visible**. The GUI shows per skill what is "at stake".
+- After a death a summary shows **exactly** what you lost, and that it is **permanent**.
+- Progress is **never removed silently**.
 
-  | Doodsdruk bij het sterven | Straf |
+### Design consequence of the slow pace
+- Level 100 takes ~400 hours, and a single level around 75–99 takes 7–10 hours. Losing whole levels is heavy.
+
+### Confirmed (rounds 6 and 7)
+- ✅ **Loss layers (option B)**, in this order:
+  - (1) progress toward the next Mastery rank
+  - (2) XP within your current level (you never drop below the start of your level)
+  - (3) whole Mastery ranks or whole levels, only on repeated deaths
+- ✅ **Every skill** is hit, **your highest skill the hardest**:
+  - Every skill loses `base × (that skill's level / highest level)`.
+  - With a base of **50%** of the XP within the current level, your highest skill loses 50%, a skill at half that level 25%, and a skill at a quarter 12.5%.
+  - Example: at level 90 (one level ≈ 9 hours) a death costs your highest skill at most ~4.5 hours, and on average ~2.25 hours.
+- ✅ **Death pressure:**
+  - Every death raises the pressure by 1.
+  - Every hour of active play without dying lowers it by 1.
+
+  | Death pressure at the moment of death | Penalty |
   |---|---|
-  | 0 | Laag 1 + 2: basis **50%** |
-  | 1 | Laag 1 + 2: basis **100%** |
-  | 2 of meer | Zoals bij 1, plus laag 3 in je hoogste skill |
+  | 0 | Layers 1 + 2: base **50%** |
+  | 1 | Layers 1 + 2: base **100%** |
+  | 2 or more | As at 1, plus layer 3 in your highest skill |
 
-- ✅ **Mastery-ranks kun je verliezen**, inclusief de perk die je bij die rank koos.
-  - 💡 Laag 3 neemt bij een skill met Mastery eerst **1 Mastery-rank**. Pas als er geen ranks meer zijn, gaat er **1 heel level** af.
-- ✅ **Dimensies** vermenigvuldigen de straf: Overworld ×1, Nether ×1,5, End ×2, en met Extreme Dimensions de Seam ×2,5.
-- ✅ **Gevaarlijke dimensies geven géén extra XP.** Het risico is hoger, de beloning niet.
-- ✅ **Doodsvermoeidheid:** na een dood werken je passieve bonussen 10 minuten op 50%.
-  - ✅ **Geen timer in beeld (HUD).** De resterende tijd staat **wel in de GUI** (en in het overzicht na de dood).
-- ✅ **Geen vampirism.** Bij een PvP-dood verdwijnt het verlies gewoon; de doder krijgt niets.
-- ✅ **Geen schim** of terughaalplek bij de plek van je dood.
-- ✅ **Verlies is altijd permanent.** Er zijn geen herstelmechanieken. Je verdient het alleen terug door opnieuw XP te verdienen.
-- ✅ **Geen mijlpaalvloeren.** Je kunt onder level 25 of 75 zakken. Je specialisatie wordt dan **onbruikbaar** tot je dat level terugwint.
-  - 💡 De keuze blijft wel bewaard: wie het level terugwint, heeft de specialisatie meteen weer, zonder respec-kosten.
-- ✅ **Extreme Dimensions: volledig stapelen (optie A).** Als beide mods draaien, gelden beide straffen volledig.
+- ✅ **Mastery ranks can be lost**, including the perk you picked at that rank.
+  - 💡 For a skill with Mastery, layer 3 first takes **1 Mastery rank**. Only when there are no ranks left does it take **1 whole level**.
+- ✅ **Dimensions** multiply the penalty: Overworld ×1, Nether ×1.5, End ×2, and with Extreme Dimensions the Seam ×2.5.
+- ✅ **Dangerous dimensions give no extra XP.** The risk is higher, the reward is not.
+- ✅ **Death fatigue:** after a death your passive bonuses work at 50% for 10 minutes.
+  - ✅ **No timer on the HUD.** The remaining time is shown **in the GUI** (and in the summary after the death).
+- ✅ **No vampirism.** In a PvP death the loss simply disappears; the killer gains nothing.
+- ✅ **No shade** or recovery marker at the place of death.
+- ✅ **Loss is always permanent.** There are no recovery mechanics. You only earn it back by earning XP again.
+- ✅ **No milestone floors.** You can drop below level 25 or 75. Your specialization then becomes **unusable** until you win the level back.
+  - 💡 The choice is kept: whoever wins the level back has the specialization again at once, without respec costs.
+- ✅ **Extreme Dimensions: full stacking (option A).** When both mods run, both penalties apply in full.
 
-### Voorstellen (💡)
-- **Beheer** (fase 9): alle straffen zijn instelbaar, met **presets** zoals de `Preset`-klasse van Extreme Dimensions. Jouw keuzes zijn de standaard.
+### Suggestions (💡)
+- **Administration** (phase 9): every penalty is configurable, with **presets** like Extreme Dimensions' `Preset` class. The owner's choices are the default.
 
-### Open vragen
-- ❓ Telt een **Collapse** in Extreme Dimensions (de Tether loopt leeg en je wordt thuis wakker) ook als dood voor deze mod? (koppeling met ED)
+### Open questions
+- ❓ Does a **Collapse** in Extreme Dimensions (the Tether runs dry and you wake up at home) also count as a death for this mod? (ED integration)
 
-## 8. Herstelmechanieken
-- ✅ **Geen herstelmechanieken.** Er is geen schim, geen uitdaging en geen item om verlies terug te halen. Verlies is permanent (ronde 7).
+## 8. Recovery mechanics
+- ✅ **No recovery mechanics.** There is no shade, no challenge and no item to win back a loss. Loss is permanent (round 7).
 
-## 9. GUI-navigatie
-### Bevestigd
-- ✅ Openen met een sneltoets **en** vanuit het inventory-scherm.
-- ✅ Een eigen client-scherm, geen kist-menu.
-- ✅ Geen timer voor doodsvermoeidheid in beeld (HUD); wel in de GUI (§7).
+## 9. GUI navigation
 
-### Ontwerp (✅ goedgekeurd in ronde 20)
-- **Openen:** de inventory-knop staat naast de knoppen van ED, of direct naast het receptenboek als ED er niet is. De sneltoets is standaard `K`.
-- **Stijl:** dezelfde vanilla-huisstijl als Extreme Dimensions: panelen als de tooltip-box, de 16 chatkleuren, platte meters en de opties voor kleurenblindheid en minder flitsen.
-  - Skill-iconen zijn vanilla-items: zwaard, boog, schild, houweel, log, tarwe, hengel, kompas, aambeeld en enchanted book.
-  - Accentkleur per categorie: Combat rood, Gathering groen, Survival aqua, Crafting goud.
-- **Schermen:**
-  1. **Karakterblad** (hoofdscherm):
-     - je spelerfiguur en naam;
-     - je totaal ten opzichte van het plafond (bijv. 212/400) en de budgetfactor;
-     - het aantal Mastery-ranks en ontgrendelde abilities;
-     - de doodsdruk;
-     - alle 10 skills als tegels, gegroepeerd per categorie. Per tegel: level, XP-balk, iconen van je specialisaties, en een waarschuwing bij een tegenpool-malus.
-  2. **Skillscherm** (klik op een tegel):
-     - een kop met naam, beschrijving, level, XP en de XP voor het volgende level, en de mijlpalen 25/75/100;
-     - de **tree** in het midden: de stam onderaan en drie takken als kolommen;
-     - een detailpaneel rechts voor de knoop onder je muis: kosten, vereisten, trade-off en conflicten;
-     - abilities met hun rank en cooldown, en statistieken van de skill.
-  3. **Mastery** (per skill, na level 100): 10 ranks met de gekozen perks.
-  4. **Doodsregister:**
-     - het aantal doden, de doodsdruk en wanneer die weer zakt;
-     - hoe lang de doodsvermoeidheid nog duurt;
-     - de geschiedenis van je doden: wanneer, waar, welke dimensie en wat je verloor;
-     - **"Op het spel"**: precies wat je zou verliezen als je **nu** stierf, per skill, met de factor van de dimensie en de doodsdruk erin verrekend.
-  5. **Codex en kroniek:** jouw ontdekte synergieën (met datum en plek), runen met hints voor de rest, en de eerste ontdekkers op de server.
-- **Skill tree:** één vaste indeling die op één scherm past, zonder scrollen.
-  - Knopen hebben duidelijke toestanden: gekocht, koopbaar, nog niet bereikbaar, vereiste ontbreekt, conflict, slapend.
-- **HUD buiten de GUI:** minimaal.
-  - Een korte melding bij een level-up of een ontdekte synergie.
-  - Een klein cooldown-icoon als een ability klaar is.
-  - Geen XP-balk in beeld.
-- **Na een dood:** na het respawnen verschijnt een scherm met precies wat je verloor (vast principe uit §7).
+### Confirmed
+- ✅ Opens with a hotkey **and** from the inventory screen.
+- ✅ A custom client screen, no chest menu.
+- ✅ No death fatigue timer on the HUD; it is shown in the GUI (§7).
+- ✅ All in-game text is in English (round 22).
 
-### Mockup (ronde 21)
-- Klikbare mockup van het karakterblad, het skillscherm (Melee) en het doodsregister: https://claude.ai/artifact/UQ5xsBnWqyvD7ShrWcudv8 (privé; alleen de eigenaar kan hem openen, tenzij hij hem deelt).
-- De voorbeeldspeler heeft 212/400 levels, doodsdruk 1, en Blade, Bulwark en Prospector als specialisaties. Alle getallen volgen de goedgekeurde formules.
-- De **namen en effecten van knopen** in de tree die niet hierboven zijn goedgekeurd (bijv. Zwaardmeester, Speerbereik, Pantserbreker), zijn **voorbeelden** (💡). De echte inhoud van elke tree wordt bij de implementatie per skill uitgewerkt.
+### Design (✅ approved in round 20)
+- **Opening:** the inventory button sits next to ED's buttons, or right next to the recipe book without ED. The hotkey is `K` by default.
+- **Style:** the same vanilla house style as Extreme Dimensions: panels like the tooltip box, the 16 chat colours, flat meters, and the colour-blind and reduced-flashing options.
+  - Skill icons are vanilla items: sword, bow, shield, pickaxe, log, wheat, fishing rod, compass, anvil and enchanted book.
+  - Accent colour per category: Combat red, Gathering green, Survival aqua, Crafting gold.
+- **Screens:**
+  1. **Character Sheet** (main screen):
+     - your player figure and name;
+     - your total against the cap (e.g. 212/400) and the budget factor;
+     - your number of Mastery ranks and unlocked abilities;
+     - your death pressure;
+     - all 10 skills as tiles, grouped by category. Each tile shows level, XP bar, your specializations, and a warning when an opposing skill costs you XP.
+  2. **Skill Screen** (click a tile):
+     - a header with name, description, level, XP and the XP to the next level, and the milestones 25/75/100;
+     - the **tree** in the middle: the trunk at the bottom and the three branches as columns;
+     - a detail panel on the right for the selected node: cost, requirements, trade-off and conflicts;
+     - abilities with their rank and cooldown, and the skill's statistics.
+  3. **Mastery** (per skill, after level 100): the 10 ranks with the chosen perks.
+  4. **Death Register:**
+     - the number of deaths, the death pressure and when it drops;
+     - how long death fatigue still lasts;
+     - your death history: when, where, which dimension and what you lost;
+     - **"At Stake"**: exactly what you would lose if you died **now**, per skill, with the dimension factor and the death pressure included.
+  5. **Codex & Chronicle:** your discovered synergies (with date and place), runes with hints for the rest, and the server's first discoverers.
+- **Skill tree:** one fixed layout that fits on one screen, without scrolling.
+  - Nodes have clear states: owned, buyable, out of reach, requirement missing, conflict, dormant.
+- **HUD outside the GUI:** minimal.
+  - A short notice on a level-up or a discovered synergy.
+  - A small icon when an ability is ready.
+  - No XP bar on screen.
+- **After a death:** after respawning a screen shows exactly what you lost (a fixed principle from §7).
 
-## 10. Spelerdata
-- 💡 Gson-JSON per wereld, net als Extreme Dimensions, met migratie en tests (wordt uitgewerkt in fase 8).
+### Mockup (round 21, ✅ approved)
+- A clickable mockup of the Character Sheet, the Skill Screen (Melee) and the Death Register: https://claude.ai/artifact/UQ5xsBnWqyvD7ShrWcudv8 (private; only its owner can open it unless they share it).
+- The example player has 212/400 levels, death pressure 1, and Blade, Bulwark and Prospector as specializations. All numbers follow the approved formulas.
+- **Node names and effects** in the tree that are not approved above (e.g. Swordmaster, Spear Reach, Armor Breaker) are **examples** (💡). The real content of every tree is worked out per skill during implementation.
 
-## 11. Configuratie
-_Nog niet besproken._
+## 10. Player data
+- 💡 Gson JSON per world, as in Extreme Dimensions, with migration and tests (phase 8).
+- 💡 Placed-block tracking and mob origin flags need per-chunk and per-entity storage (phase 8).
+
+## 11. Configuration
+_Phase 9._
 
 ## 12. Anti-exploit
-- 💡 Alle XP wordt op de server berekend; de client toont alleen (volgt uit optie A).
+- 💡 All XP is computed on the server; the client only displays it (follows from option A).
+- Rules already approved per skill (§2):
+  - **Combat:** only fully charged hits (Melee) or fully drawn bows (Ranged) count. Damage counts at most up to the target's remaining health. No XP from passive animals, spawner mobs or spawn-egg mobs.
+  - **Defense:** XP only if you attacked or moved recently, and at most 6 times per attacker per 60 seconds.
+  - **Blocks:** placed blocks, cobblestone generators and bonemeal-grown crops, trees and plants give no XP. Player-planted trees give 25%.
+  - **Automation:** pistons, water, villagers and hoppers give no XP. Only what a player does by hand counts.
+  - **Fishing:** open water only, an "overfished" decline after 10 catches in one spot, and a movement check.
+  - **Exploration:** new chunks per player, 25% with an elytra, no walking or swimming XP, falls blocked per spot.
+- ❓ Phase 7 (round 23): trial spawner mobs, mob farms, diminishing returns, a general AFK rule, PvP between the same players, and how the XP tables are set.
 
-## 13. Implementatieroadmap
-_Pas na goedkeuring van het volledige ontwerp._
+## 13. Implementation roadmap
+_Only after the full design is approved._
