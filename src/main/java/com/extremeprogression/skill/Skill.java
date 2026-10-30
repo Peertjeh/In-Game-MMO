@@ -30,6 +30,22 @@ public enum Skill {
 		return "skill.extremeprogression." + id;
 	}
 
+	/** The opposing skill (design §2, mechanism c), or null. The pairs go both ways. */
+	public Skill opposite() {
+		return switch (this) {
+			case MELEE -> RANGED;
+			case RANGED -> MELEE;
+			case DEFENSE -> EXPLORATION;
+			case EXPLORATION -> DEFENSE;
+			case SMITHING -> ARCANA;
+			case ARCANA -> SMITHING;
+			default -> null;
+		};
+	}
+
+	/** The levels at which the trunk's four bonuses unlock (design §6). */
+	public static final int[] TRUNK_LEVELS = {5, 10, 15, 20};
+
 	/** The skill with this id, or null when there is none. */
 	public static Skill byId(String id) {
 		for (Skill s : values()) {

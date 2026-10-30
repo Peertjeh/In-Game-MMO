@@ -33,6 +33,9 @@ public final class Config {
 	public static int MASTERY_RANKS = 10;
 	/** XP per Mastery rank (≈ 40 hours). The budget factor does not apply. */
 	public static double MASTERY_XP_PER_RANK = 400000.0;
+	/** The levels at which a skill's first and second specialization are chosen (design §6). */
+	public static int FIRST_SPECIALIZATION_LEVEL = 25;
+	public static int SECOND_SPECIALIZATION_LEVEL = 75;
 
 	// --- Saving (design §10) ---------------------------------------------------------------------
 
@@ -115,6 +118,10 @@ public final class Config {
 			TOTAL_LEVEL_CAP = (int) DEFAULTS.get("TOTAL_LEVEL_CAP");
 		}
 		MASTERY_RANKS = Math.max(0, MASTERY_RANKS);
+		if (FIRST_SPECIALIZATION_LEVEL < 1 || SECOND_SPECIALIZATION_LEVEL <= FIRST_SPECIALIZATION_LEVEL) {
+			FIRST_SPECIALIZATION_LEVEL = (int) DEFAULTS.get("FIRST_SPECIALIZATION_LEVEL");
+			SECOND_SPECIALIZATION_LEVEL = (int) DEFAULTS.get("SECOND_SPECIALIZATION_LEVEL");
+		}
 		if (!(MASTERY_XP_PER_RANK > 0)) {
 			MASTERY_XP_PER_RANK = (double) DEFAULTS.get("MASTERY_XP_PER_RANK");
 		}

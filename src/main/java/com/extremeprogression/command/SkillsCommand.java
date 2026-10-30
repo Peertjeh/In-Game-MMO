@@ -28,8 +28,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 /**
- * {@code /skills} and its subcommands (design §11). Milestone 1 has the overview in chat and the operators' tools to
- * set levels and give XP; the Character Sheet takes over {@code /skills} in milestone 2.
+ * {@code /skills} and its subcommands (design §11): {@code /skills} opens the Character Sheet, and operators set levels
+ * and give XP.
  *
  * <p>An operator's change is never silent: the player is told, and the change goes to the server log.
  */
@@ -57,9 +57,12 @@ public final class SkillsCommand {
 														.executes(c -> add(c, DoubleArgumentType.getDouble(c, "xp")))))))));
 	}
 
-	/** Every skill's level, in chat. */
+	/** Opens the Character Sheet; a client that cannot show it gets every skill's level in chat instead. */
 	private static int overview(CommandSourceStack src) throws CommandSyntaxException {
 		ServerPlayer player = src.getPlayerOrException();
+		if (Sync.openSheet(player)) {
+			return 1;
+		}
 		PlayerProgress p = PlayerStore.get(player.getUUID());
 		int total = p.totalLevel();
 		src.sendSuccess(() -> Component.translatable("commands.extremeprogression.overview.total", total, Config.TOTAL_LEVEL_CAP,

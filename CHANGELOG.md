@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0: The GUI (in development)
+
+- The **Character Sheet**: your figure, your total against the cap of 400, the budget factor and your Mastery ranks, and
+  all ten skills as tiles grouped by category, each with its level, bar and a tooltip with the exact numbers.
+- The **Skill Screen**: a skill's level, XP and milestones (25, 75, Mastery), its opposing skill, its three
+  specializations with their ability and price, and its trunk; a detail panel shows whatever you select.
+- Opens with **K** (rebindable), with a **button in the inventory** (beside Extreme Dimensions' buttons when that mod is
+  there), or with **/skills**.
+- In the house style of Extreme Dimensions: Minecraft's own tooltip panels, chat colours and flat meters.
+
 ## 0.2.0: Core progression (in development)
 
 - The ten skills, in four categories.

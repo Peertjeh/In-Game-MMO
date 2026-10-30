@@ -21,6 +21,17 @@ public final class Sync {
 
 	public static void register() {
 		PayloadTypeRegistry.clientboundPlay().register(ProgressPayload.TYPE, ProgressPayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(OpenSheetPayload.TYPE, OpenSheetPayload.CODEC);
+	}
+
+	/** Opens the Character Sheet on the player's client. False when their client cannot (a client without the mod). */
+	public static boolean openSheet(ServerPlayer player) {
+		if (!ServerPlayNetworking.canSend(player, OpenSheetPayload.TYPE)) {
+			return false;
+		}
+		send(player);
+		ServerPlayNetworking.send(player, new OpenSheetPayload());
+		return true;
 	}
 
 	public static ProgressPayload payload(PlayerProgress p) {
