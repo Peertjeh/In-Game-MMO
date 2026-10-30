@@ -60,8 +60,8 @@ public final class AdminCommands {
 
 	/** The subcommands, added to {@code /skills}. */
 	static void register(LiteralArgumentBuilder<CommandSourceStack> skills) {
-		var ops = Commands.hasPermission(Commands.LEVEL_GAMEMASTERS);
-		var admins = Commands.hasPermission(Commands.LEVEL_ADMINS);
+		java.util.function.Predicate<CommandSourceStack> ops = Commands.hasPermission(Commands.LEVEL_GAMEMASTERS);
+		java.util.function.Predicate<CommandSourceStack> admins = Commands.hasPermission(Commands.LEVEL_ADMINS);
 		skills.then(Commands.literal("top")
 				.executes(c -> top(c.getSource(), null))
 				.then(Commands.argument("skill", StringArgumentType.word()).suggests((c, b) -> SharedSuggestionProvider.suggest(skillIds(), b))
@@ -109,7 +109,8 @@ public final class AdminCommands {
 
 	/** {@code /skills admin reset}, added to the admin branch (admins only). */
 	static LiteralArgumentBuilder<CommandSourceStack> reset() {
-		return Commands.literal("reset").requires(Commands.hasPermission(Commands.LEVEL_ADMINS))
+		java.util.function.Predicate<CommandSourceStack> admins = Commands.hasPermission(Commands.LEVEL_ADMINS);
+		return Commands.literal("reset").requires(admins)
 				.then(Commands.literal("confirm").executes(AdminCommands::confirm))
 				.then(Commands.argument("player", StringArgumentType.word()).suggests((c, b) -> SharedSuggestionProvider.suggest(knownNames(c.getSource().getServer()), b))
 						.executes(c -> askReset(c, null))

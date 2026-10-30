@@ -73,7 +73,8 @@ public final class Settings {
 
 	/** Whether a player may change the settings: an admin (op level 3), as for {@code /skills reload}. */
 	public static boolean mayEdit(ServerPlayer p) {
-		return Commands.hasPermission(Commands.LEVEL_ADMINS).test(p.createCommandSourceStack());
+		java.util.function.Predicate<net.minecraft.commands.CommandSourceStack> admins = Commands.hasPermission(Commands.LEVEL_ADMINS);
+		return admins.test(p.createCommandSourceStack());
 	}
 
 	public static void send(ServerPlayer p, boolean open) {
