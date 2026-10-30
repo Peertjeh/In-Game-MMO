@@ -838,7 +838,7 @@ For reference, the play time of a single level (without the budget factor):
 
 Work starts only after the owner's final approval (§15). Each milestone ends with: compiling, running the tests, checking for regressions, a report of what was built and what is still open, and the owner's approval before the next major system.
 
-Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (version 0.2.0) · milestone 2 next.
+Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 next.
 
 | # | Milestone | Contents | Tests |
 |---|---|---|---|
