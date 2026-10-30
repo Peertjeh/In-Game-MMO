@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION — Ontwerpdocument
 
 > Werktitel. De definitieve naam is nog niet gekozen.
-> Status: **Interview ronde 7 (fase 4 deel 2: doodsstraffen). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
+> Status: **Interview ronde 8 (fase 5: skill trees). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
 
 Legenda per mechaniek:
 - ✅ **Bevestigd**: door de eigenaar goedgekeurd
@@ -20,7 +20,8 @@ Legenda per mechaniek:
 | 4 | Fase 3: schaal, totaalbudget, tempo, specialisatiemomenten, tegenpolen | ✅ beantwoord |
 | 5 | Fase 3 afronden: getallen voor tempo, plafond, Mastery, respec, tegenpolen | ✅ alles akkoord |
 | 6 | Fase 4 deel 1: wat een dood kost, welke skills, herstel, vangnet, Extreme Dimensions | ✅ beantwoord |
-| 7 | Fase 4 deel 2: herhaalde doden, dimensies, vermoeidheid, Mastery, PvP | ❓ wacht op antwoorden |
+| 7 | Fase 4 deel 2: herhaalde doden, dimensies, vermoeidheid, Mastery, PvP | ✅ beantwoord |
+| 8 | Fase 5: opbouw van de trees, punten, ranks, cooldowns, afleren | ❓ wacht op antwoorden |
 
 ---
 
@@ -110,7 +111,7 @@ Zwaktes die we bewust oplossen:
 | 1 | **Melee** | Combat | Alles op korte afstand: zwaard, bijl, mace, speer, trident, vuisten | Schade aan vijandige mobs/spelers, gewogen naar gevaar | Blade (parry, bleed) · Crusher (armor breken, stagger) · Brawler (snelheid, combo's) |
 | 2 | **Ranged** | Combat | Boog, kruisboog, gegooide trident | Raak schieten; meer voor afstand en bewegende doelen | Sniper (afstand, zwakke plekken) · Skirmisher (bewegen en schieten) |
 | 3 | **Defense** | Combat | Klappen opvangen en overleven | Schade geblokt met schild of opgevangen door armor (alleen vijandige bronnen) | Bulwark (schild) · Juggernaut (zwaar armor, trager) · Resilience (herstel, effecten weerstaan) |
-| 4 | **Mining** | Gathering | Ondergronds: houweel en schep | Ertsen (zeldzaam = meer), steen, diepte, gevaarlijke dimensies | Prospector (ertsen) · Excavator (schep, archaeology) · Tunneler (snelheid) |
+| 4 | **Mining** | Gathering | Ondergronds: houweel en schep | Ertsen (zeldzaam = meer), steen, diepte (géén dimensiebonus, zie §7) | Prospector (ertsen) · Excavator (schep, archaeology) · Tunneler (snelheid) |
 | 5 | **Foraging** | Gathering | De wilde natuur: bomen en wilde planten | Natuurlijke logs, wilde bessen, paddenstoelen, bloemen | Lumberjack (bomen vellen) · Gatherer (wilde opbrengst) |
 | 6 | **Farming** | Gathering | Verbouwen en verzorgen: gewassen en dieren | Volgroeide oogst, fokken, scheren, temmen | Grower · Herder · Beastmaster (getemde dieren sterker) |
 | 7 | **Fishing** | Gathering | Op en aan het water | Vangsten (zeldzamer = meer), schatten | Angler · Treasure Hunter |
@@ -178,9 +179,11 @@ Ter referentie, de speeltijd van één level (zonder budgetfactor):
 - ❓ Mag je een skill bewust laten zakken ("afleren") om onder het plafond ruimte vrij te maken? (komt terug bij de skill trees)
 
 ## 5. Skill-unlocks
-_Nog niet besproken._
+- ✅ Specialisaties komen vrij op **level 25** en **level 75**. Mastery begint na **level 100** (zie §4 en §6).
+- 💡 De verdere structuur (vaste unlocks of punten) volgt in ronde 8 (§6).
 
 ## 6. Abilities & skill trees
+### Bevestigd
 - ✅ Elke skill heeft een eigen tree (zie §2).
 - ✅ Specialisaties hebben altijd trade-offs.
 - ✅ **Eén actieve ability per specialisatie** (niet per skill).
@@ -189,71 +192,71 @@ _Nog niet besproken._
   - ✅ Respec kost **20% van de totale XP in die skill**, plus **7 echte dagen** wachttijd. De nieuwe specialisatie begint op rank 1.
 - ✅ **Mastery:** 10 ranks per skill na level 100, elk ≈ 40 uur. Bij elke rank kies je 1 van 2 kleine perks.
 - ✅ Actieve abilities activeer je met een **ability-toets** (standaard `R`, aan te passen) terwijl je het juiste gereedschap vasthoudt. Niet met rechtsklik.
-- _Rest nog niet besproken._
 
+### Voorstellen (💡, ronde 8)
+- **Stam en takken:**
+  - Elke skill heeft een **stam** met gedeelde passieve bonussen. Die komen vanzelf vrij op levels 5, 10, 15 en 20.
+  - Vanaf level 25 kies je een tak (je specialisatie).
+- **Punten:**
+  - Vanaf level 25 krijg je **1 skillpunt per level**. Op level 100 heb je er dus 75.
+  - Een knoop in de tak kost 1–3 punten. Een tak kost meer dan 75 punten, dus je kunt niet alles nemen. Twee spelers met dezelfde specialisatie verschillen daardoor nog steeds.
+  - Vanaf level 75 deelt je tweede specialisatie dezelfde puntenpot.
+- **Keuzeknopen:** op sommige plekken in een tak kies je A **of** B. Die keuze is definitief, behalve via respec.
+- **Ability-ranks:** de actieve ability van een specialisatie heeft ranks I–V, die je koopt met punten.
+- **Punten herverdelen** binnen dezelfde specialisatie kost minder dan een volledige respec: 5% XP en 1 dag wachten.
+- **Cooldowns:** lang en beslissend, 3–5 minuten met een sterk effect. Geen korte spam-abilities.
+- **Twee actieve abilities** in één skill (na level 75): `R` voor de eerste specialisatie, `Shift + R` voor de tweede.
+- **Afleren:** onder het plafond van 400 kun je een skill bewust laten zakken om ruimte vrij te maken. Dat verlies is permanent, net als bij een dood.
+
+## 7. Doodsstraffen
 ### Vaste principes (uit de opdracht, geen keuze)
 - Doodsstraffen zijn **altijd zichtbaar**. De GUI toont per skill wat er "op het spel" staat.
-- Na een dood toont een overzicht **precies** wat je verloren hebt en wat je nog kunt terugwinnen.
+- Na een dood toont een overzicht **precies** wat je verloren hebt, en dat het **permanent** is.
 - Voortgang wordt **nooit stilletjes** weggehaald.
 
 ### Ontwerpgevolg van het trage tempo
 - Level 100 kost ~400 uur, en één level rond level 75–99 kost 7–10 uur. Hele levels verliezen is dus zwaar.
 
-### Bevestigd (ronde 6)
+### Bevestigd (ronde 6 en 7)
 - ✅ **Verlieslagen (optie B)**, in deze volgorde:
   - (1) voortgang naar de volgende Mastery-rank
   - (2) XP binnen je huidige level (je zakt niet onder het begin van je level)
-  - (3) hele levels, alleen bij herhaalde doden
-- ✅ **Alle skills** worden geraakt, **je hoogste skill het meest**.
+  - (3) hele Mastery-ranks of hele levels, alleen bij herhaalde doden
+- ✅ **Alle skills** worden geraakt, **je hoogste skill het meest**:
+  - Elke skill verliest `basis × (level van die skill / hoogste level)`.
+  - Met een basis van **50%** van de XP binnen het huidige level verliest je hoogste skill 50%, een skill op de helft van dat level 25%, en een skill op een kwart 12,5%.
+  - Voorbeeld: op level 90 (één level ≈ 9 uur) kost een dood je hoogste skill maximaal ~4,5 uur, en gemiddeld ~2,25 uur.
+- ✅ **Doodsdruk:**
+  - Elke dood verhoogt de druk met 1.
+  - Per uur actief spelen zonder te sterven zakt de druk met 1.
+
+  | Doodsdruk bij het sterven | Straf |
+  |---|---|
+  | 0 | Laag 1 + 2: basis **50%** |
+  | 1 | Laag 1 + 2: basis **100%** |
+  | 2 of meer | Zoals bij 1, plus laag 3 in je hoogste skill |
+
+- ✅ **Mastery-ranks kun je verliezen**, inclusief de perk die je bij die rank koos.
+  - 💡 Laag 3 neemt bij een skill met Mastery eerst **1 Mastery-rank**. Pas als er geen ranks meer zijn, gaat er **1 heel level** af.
+- ✅ **Dimensies** vermenigvuldigen de straf: Overworld ×1, Nether ×1,5, End ×2, en met Extreme Dimensions de Seam ×2,5.
+- ✅ **Gevaarlijke dimensies geven géén extra XP.** Het risico is hoger, de beloning niet.
+- ✅ **Doodsvermoeidheid:** na een dood werken je passieve bonussen 10 minuten op 50%.
+  - ✅ **Geen timer in beeld (HUD).** De resterende tijd staat **wel in de GUI** (en in het overzicht na de dood).
+- ✅ **Geen vampirism.** Bij een PvP-dood verdwijnt het verlies gewoon; de doder krijgt niets.
 - ✅ **Geen schim** of terughaalplek bij de plek van je dood.
-  - ❓ Betekent dit dat **verlies altijd permanent** is, ook niet terug te winnen via uitdagingen? (controle in ronde 7)
+- ✅ **Verlies is altijd permanent.** Er zijn geen herstelmechanieken. Je verdient het alleen terug door opnieuw XP te verdienen.
 - ✅ **Geen mijlpaalvloeren.** Je kunt onder level 25 of 75 zakken. Je specialisatie wordt dan **onbruikbaar** tot je dat level terugwint.
   - 💡 De keuze blijft wel bewaard: wie het level terugwint, heeft de specialisatie meteen weer, zonder respec-kosten.
 - ✅ **Extreme Dimensions: volledig stapelen (optie A).** Als beide mods draaien, gelden beide straffen volledig.
 
 ### Voorstellen (💡)
-**Verdeling over de skills** (ronde 7):
-- Elke skill verliest `basis × (level van die skill / hoogste level)`.
-- Met een basis van **50%** van de XP binnen het huidige level:
-  - je hoogste skill verliest 50%
-  - een skill op de helft van dat level verliest 25%
-  - een skill op een kwart verliest 12,5%
-- Voorbeeld: je hoogste skill staat op level 90 (één level ≈ 9 uur). Een dood kost daar maximaal ~4,5 uur, en gemiddeld ~2,25 uur.
-
-**Herhaalde doden: doodsdruk** (ronde 7):
-- Elke dood verhoogt je **doodsdruk** met 1.
-- Per uur actief spelen zonder te sterven zakt de druk met 1.
-
-| Doodsdruk bij het sterven | Straf |
-|---|---|
-| 0 | Laag 1 + 2: basis **50%** |
-| 1 | Laag 1 + 2: basis **100%** |
-| 2 of meer | Zoals bij 1, plus **1 heel level** in je hoogste skill (laag 3) |
-
-**Dimensies** (ronde 7): de straf wordt vermenigvuldigd naar het gevaar van de plek.
-- Overworld ×1, Nether ×1,5, End ×2.
-- Met Extreme Dimensions erbij: de Seam ×2,5.
-- Bijvraag: geven gevaarlijke dimensies ook meer XP (risico tegenover beloning)?
-
-**Doodsvermoeidheid** (ronde 7): na een dood werken je passieve bonussen **10 minuten op 50%**. Dit staat in beeld als een effect met een timer.
-
-**Mastery** (ronde 7): bij doodsdruk 2 of meer kun je ook een **hele Mastery-rank** verliezen, inclusief de perk die je bij die rank koos.
-
-**PvP** (ronde 7): wie jou doodt, krijgt een deel van wat jij verliest (zoals Vampirism in mcMMO), alleen als jouw level minstens de helft van dat van de doder is. Anders verdwijnt het gewoon.
-
-**Beheer** (fase 9): alle straffen zijn instelbaar, met **presets** zoals de `Preset`-klasse van Extreme Dimensions. Jouw keuzes zijn de standaard.
+- **Beheer** (fase 9): alle straffen zijn instelbaar, met **presets** zoals de `Preset`-klasse van Extreme Dimensions. Jouw keuzes zijn de standaard.
 
 ### Open vragen
-- ❓ Is verlies altijd permanent?
-- ❓ Doodsdruk: akkoord met de trappen en het afnemen?
-- ❓ Dimensie-vermenigvuldigers, en meer XP in gevaarlijke dimensies?
-- ❓ Doodsvermoeidheid: ja of nee, en hoe zwaar?
-- ❓ Mastery-ranks verliezen: ja of nee?
-- ❓ PvP: steelt de doder XP, of verdwijnt het?
+- ❓ Telt een **Collapse** in Extreme Dimensions (de Tether loopt leeg en je wordt thuis wakker) ook als dood voor deze mod? (koppeling met ED)
 
 ## 8. Herstelmechanieken
-- ✅ **Geen schim** of terughaalplek bij de plek van je dood (ronde 6).
-- ❓ Is er helemaal geen herstel (ook niet via uitdagingen)? Zie §7.
+- ✅ **Geen herstelmechanieken.** Er is geen schim, geen uitdaging en geen item om verlies terug te halen. Verlies is permanent (ronde 7).
 
 ## 9. GUI-navigatie
 - ✅ Openen met een sneltoets **en** vanuit het inventory-scherm.
