@@ -49,3 +49,6 @@ net.minecraft.server.level.ServerLevel
 net.minecraft.core.Holder
 net.minecraft.world.item.ItemStack
 net.minecraft.world.item.Items
+net.minecraft.server.network.ServerGamePacketListenerImpl
+net.minecraft.server.network.ServerCommonPacketListenerImpl
+net.minecraft.world.damagesource.DamageSources

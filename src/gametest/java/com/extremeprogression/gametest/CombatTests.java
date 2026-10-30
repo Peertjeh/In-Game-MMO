@@ -44,15 +44,13 @@ public class CombatTests {
 		AttackEntityCallback.EVENT.invoker().interact(p, p.level(), InteractionHand.MAIN_HAND, target, null);
 	}
 
-	/** Lets the next hit land at once (no invulnerability after the last one). */
-	static void ready(Entity e) {
-		try {
-			Field f = Entity.class.getDeclaredField("invulnerableTime");
-			f.setAccessible(true);
-			f.setInt(e, 0);
-		} catch (ReflectiveOperationException ex) {
-			throw new IllegalStateException(ex);
+	/** Hits on the same target a second apart (past its invulnerability after a hit), then the check. */
+	static void spaced(GameTestHelper helper, int hits, java.util.function.IntConsumer hit, Runnable then) {
+		for (int i = 0; i < hits; i++) {
+			int n = i;
+			helper.runAfterDelay(1 + 20L * i, () -> hit.accept(n));
 		}
+		helper.runAfterDelay(1 + 20L * hits, then);
 	}
 
 	static LivingEntity mob(GameTestHelper helper, net.minecraft.world.entity.EntityType<? extends LivingEntity> type, BlockPos pos,
@@ -69,7 +67,7 @@ public class CombatTests {
 		swing(p, creeper, true);
 		creeper.hurtServer(level, level.damageSources().playerAttack(p), 6);
 		near(helper, earned(p, Skill.MELEE), 6 * 1.5 * 4, "a full hit of 6 on a creeper");
-		ready(creeper);
+		// (still invulnerable from the first hit, so vanilla deals 100 − 6; either way more than its 14 health left)
 		swing(p, creeper, true);
 		creeper.hurtServer(level, level.damageSources().playerAttack(p), 100);
 		check(helper, !creeper.isAlive(), "the creeper survived 100 damage");
@@ -115,14 +113,17 @@ public class CombatTests {
 		arrow.setCritArrow(false);
 		creeper.hurtServer(level, level.damageSources().arrow(arrow, p), 5);
 		near(helper, earned(p, Skill.RANGED), 0, "an arrow that was not fully drawn");
-		ready(creeper);
-		arrow.setCritArrow(true);
-		creeper.hurtServer(level, level.damageSources().arrow(arrow, p), 11);
+		LivingEntity second = mob(helper, EntityTypes.CREEPER, new BlockPos(1, 1, 3), EntitySpawnReason.NATURAL);
+		AbstractArrow full = EntityTypes.ARROW.create(level, EntitySpawnReason.TRIGGERED);
+		full.setOwner(p);
+		full.setCritArrow(true);
+		p.setPos(second.getX() + 30, second.getY(), second.getZ());
+		second.hurtServer(level, level.damageSources().arrow(full, p), 11);
 		near(helper, earned(p, Skill.RANGED), 11 * 1.5 * 4 * 1.4, "a full arrow from 30 blocks (+40%)");
 		helper.succeed();
 	}
 
-	@GameTest
+	@GameTest(maxTicks = 300)
 	public void defenseCountsWhatArmorAbsorbsAtMostSixTimesPerAttacker(GameTestHelper helper) {
 		Config.reset();
 		ServerLevel level = helper.getLevel();
@@ -133,51 +134,49 @@ public class CombatTests {
 		p.setItemSlot(EquipmentSlot.FEET, new ItemStack(Items.DIAMOND_BOOTS));
 		LivingEntity zombie = mob(helper, EntityTypes.ZOMBIE, new BlockPos(1, 1, 1), EntitySpawnReason.NATURAL);
 		double[] after = new double[8];
-		for (int i = 0; i < 8; i++) {
-			ready(p);
+		boolean[] landed = new boolean[8];
+		spaced(helper, 8, i -> {
 			p.setHealth(20);
-			p.hurtServer(level, level.damageSources().mobAttack(zombie), 8);
+			landed[i] = p.hurtServer(level, level.damageSources().mobAttack(zombie), 8);
 			after[i] = earned(p, Skill.DEFENSE);
-		}
-		check(helper, after[0] > 0, "armor absorbing a zombie's hit gave no Defense XP");
-		check(helper, after[5] > after[4] && after[6] == after[5] && after[7] == after[5], "the cap of 6 hits per attacker did not hold: %s",
-				java.util.Arrays.toString(after));
-
-		// Damage from the environment gives nothing; neither does an idle player
-		ready(p);
-		p.setHealth(20);
-		p.hurtServer(level, level.damageSources().generic(), 8);
-		LivingEntity other = mob(helper, EntityTypes.ZOMBIE, new BlockPos(3, 1, 3), EntitySpawnReason.NATURAL);
-		AfkTracker.idleFor(p, level.getServer().getTickCount(), 20 * 20);
-		ready(p);
-		p.setHealth(20);
-		p.hurtServer(level, level.damageSources().mobAttack(other), 8);
-		near(helper, earned(p, Skill.DEFENSE), after[5], "environmental damage and a hit while idle");
-		helper.succeed();
+		}, () -> {
+			check(helper, landed[0], "a zombie's hit did not land on the test player (%s)", TestPlayers.LOADED);
+			check(helper, after[0] > 0, "armor absorbing a zombie's hit gave no Defense XP");
+			check(helper, after[5] > after[4] && after[6] == after[5] && after[7] == after[5], "the cap of 6 hits per attacker did not hold: %s",
+					java.util.Arrays.toString(after));
+			// Damage from the environment gives nothing; neither does a hit while idle
+			p.setHealth(20);
+			p.hurtServer(level, level.damageSources().generic(), 8);
+			LivingEntity other = mob(helper, EntityTypes.ZOMBIE, new BlockPos(3, 1, 3), EntitySpawnReason.NATURAL);
+			AfkTracker.idleFor(p, level.getServer().getTickCount(), 20 * 20);
+			p.hurtServer(level, level.damageSources().mobAttack(other), 8);
+			near(helper, earned(p, Skill.DEFENSE), after[5], "environmental damage and a hit while idle");
+			helper.succeed();
+		});
 	}
 
-	@GameTest
+	@GameTest(maxTicks = 300)
 	public void pvpCountsThreeLivesPerHourAndNotFromMuchWeakerPlayers(GameTestHelper helper) {
 		Config.reset();
 		ServerLevel level = helper.getLevel();
 		ServerPlayer a = TestPlayers.survivor(helper, "duelA");
 		ServerPlayer b = TestPlayers.survivor(helper, "duelB");
-		for (int i = 0; i < 8; i++) {
-			ready(b);
+		boolean[] landed = new boolean[8];
+		spaced(helper, 8, i -> {
 			b.setHealth(20);
 			swing(a, b, true);
-			b.hurtServer(level, level.damageSources().playerAttack(a), 10);
-		}
-		near(helper, earned(a, Skill.MELEE), 60 * 1.5 * 4, "80 damage to one player within the hour");
-
-		ServerPlayer c = TestPlayers.survivor(helper, "duelC");
-		Progression.setLevel(PlayerStore.get(a.getUUID()), Skill.MINING, 100);
-		double before = earned(a, Skill.MELEE);
-		ready(c);
-		swing(a, c, true);
-		c.hurtServer(level, level.damageSources().playerAttack(a), 10);
-		near(helper, earned(a, Skill.MELEE), before, "a hit on a player with less than half of your total level");
-		helper.succeed();
+			landed[i] = b.hurtServer(level, level.damageSources().playerAttack(a), 10);
+		}, () -> {
+			check(helper, landed[0], "a player's hit did not land on another player (%s)", TestPlayers.LOADED);
+			near(helper, earned(a, Skill.MELEE), 60 * 1.5 * 4, "80 damage to one player within the hour");
+			ServerPlayer c = TestPlayers.survivor(helper, "duelC");
+			Progression.setLevel(PlayerStore.get(a.getUUID()), Skill.MINING, 100);
+			double before = earned(a, Skill.MELEE);
+			swing(a, c, true);
+			c.hurtServer(level, level.damageSources().playerAttack(a), 10);
+			near(helper, earned(a, Skill.MELEE), before, "a hit on a player with less than half of your total level");
+			helper.succeed();
+		});
 	}
 
 	@GameTest

@@ -17,6 +17,7 @@
 		"FurnaceResultSlotMixin",
 		"LevelChunkMixin",
 		"LivingEntityMixin",
+		"MobMixin",
 		"PotionSlotMixin",
 		"SaplingBlockMixin",
 		"SmithingMenuMixin",

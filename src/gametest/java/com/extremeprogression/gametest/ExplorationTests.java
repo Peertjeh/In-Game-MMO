@@ -1,6 +1,5 @@
 package com.extremeprogression.gametest;
 
-import static com.extremeprogression.gametest.CombatTests.ready;
 import static com.extremeprogression.gametest.GatheringTests.earned;
 import static com.extremeprogression.gametest.GatheringTests.near;
 import static com.extremeprogression.gametest.SkeletonTests.check;
@@ -62,24 +61,26 @@ public class ExplorationTests {
 		helper.succeed();
 	}
 
-	@GameTest
+	@GameTest(maxTicks = 200)
 	public void survivedFallsCountOncePerSpot(GameTestHelper helper) {
 		Config.reset();
 		ServerLevel level = helper.getLevel();
 		ServerPlayer p = TestPlayers.survivor(helper, "faller");
-		double before = earned(p, Skill.EXPLORATION);
-		p.hurtServer(level, level.damageSources().fall(), 5);
-		near(helper, earned(p, Skill.EXPLORATION) - before, 200, "a fall of 5 damage");
-		ready(p);
-		p.setHealth(20);
-		p.hurtServer(level, level.damageSources().fall(), 5);
-		near(helper, earned(p, Skill.EXPLORATION) - before, 200, "a second fall on the same spot");
-		ready(p);
-		p.setHealth(20);
-		p.setPos(p.getX() + 10, p.getY(), p.getZ());
-		p.hurtServer(level, level.damageSources().fall(), 5);
-		near(helper, earned(p, Skill.EXPLORATION) - before, 400, "a fall 10 blocks away");
-		helper.succeed();
+		double[] gained = new double[3];
+		CombatTests.spaced(helper, 3, i -> {
+			double before = earned(p, Skill.EXPLORATION);
+			p.setHealth(20);
+			if (i == 2) {
+				p.setPos(p.getX() + 10, p.getY(), p.getZ());
+			}
+			p.hurtServer(level, level.damageSources().fall(), 5);
+			gained[i] = earned(p, Skill.EXPLORATION) - before;
+		}, () -> {
+			near(helper, gained[0], 200, "a fall of 5 damage (" + TestPlayers.LOADED + ")");
+			near(helper, gained[1], 0, "a second fall on the same spot");
+			near(helper, gained[2], 200, "a fall 10 blocks away");
+			helper.succeed();
+		});
 	}
 
 	@GameTest
