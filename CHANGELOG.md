@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.10.0: Administration (in development)
+
+Server owners can now shape the mod without touching code.
+
+- **Presets**: Hardcore (the default), Normal (half the death loss, no whole levels lost, 50% faster XP) and Custom.
+- **Data files** in `config/extremeprogression/`:
+  - `xp/<skill>.json`, every XP value of Appendix A (another mod's blocks and mobs too, as `namespace:path`);
+  - `skills.json`, skills on or off, their XP rate, ability cooldowns and hard requirements;
+  - `synergies.json`, each synergy on or off and its strength.
+- **`/skills reload`** rereads everything, and every client shows the server's own numbers.
+- **A settings screen** for admins (`/skills settings`, or a button on the Character Sheet): every option, searchable,
+  with the presets.
+- **XP events**: `/skills xprate 2 mining 60`, announced in the chat and shown on the Character Sheet, ending by
+  themselves.
+- **Leaderboard**: a page on the Character Sheet (total or per skill) and `/skills top [skill]`.
+- **`/skills inspect <player>`**: a read-only look at anyone's progression, offline players too.
+- **`/skills admin reset <player> [skill]`**: only after `/skills admin reset confirm`.
+
 ## 0.9.0: Connections (in development)
 
 The skills now push and pull on each other.

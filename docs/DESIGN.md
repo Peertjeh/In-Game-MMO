@@ -1115,6 +1115,75 @@ The confirmed rules above, as built. Everything marked 💡 was decided while bu
 - Permissions follow Extreme Dimensions: operators are op level 2 (`LEVEL_GAMEMASTERS`), admins op level 3 (`LEVEL_ADMINS`).
 - **Admin changes are never silent:** the player gets a message, and the change is written to the server log.
 
+### How milestone 9 implements it (version 0.10.0)
+Everything marked 💡 was decided while building.
+
+**Presets**
+- The option `preset` is "hardcore" (the default), "normal" or "custom".
+- 💡 Hardcore and Normal set only the four options they govern:
+
+  | Option | Hardcore | Normal |
+  |---|---|---|
+  | `death_base` | 0.5 | 0.25 |
+  | `death_base_pressured` | 1.0 | 0.5 |
+  | `death_whole_loss` (layer 3 at all, new) | true | false |
+  | `xp_multiplier` | 1.0 | 1.5 |
+
+- Every other option stays as the file says.
+- 💡 To change one of the four by hand, choose "custom". With Hardcore or Normal, the file is written back with the
+  preset's values.
+  - The settings screen switches to "custom" by itself when you edit one of them.
+- 💡 An unknown preset counts as "custom", with a warning in the log.
+
+**Data files** in `config/extremeprogression/`, read on startup and on `/skills reload`:
+- `xp/<skill>.json`: Appendix A, one file per skill. It holds the single values by name (`brushing`, `new_biome`) and
+  the tables of ids (`pickaxe`, `logs`, `danger`, `catches`, `structures` by type).
+  - Minecraft's ids go without their namespace.
+  - 💡 Another mod's blocks, mobs and items give XP when a table lists them as `"namespace:path"`.
+  - 💡 A table in a file is the whole table: an id left out gives nothing.
+- `skills.json`, per skill:
+  - `enabled` (💡 a disabled skill earns no XP; what it reached keeps working) and `xp_multiplier`;
+  - every specialization's ability `cooldown_minutes`;
+  - every hard requirement's `skill` and `level`.
+- `synergies.json`: per synergy, `enabled` and its `strength`. The strength is the share it adds (0.2 = 20%), for Deep
+  Walker the blocks, for Herb Lore the seconds.
+- Files are written back complete when they lack something.
+  - 💡 A file that cannot be read is left for the admin to fix, and its defaults are used.
+
+**The settings between server and clients**
+- 💡 The server sends its config, `skills.json` and `synergies.json` to every client on joining and after every
+  change. The GUI then shows the server's own numbers.
+  - The XP tables only matter on the server and stay there.
+  - A client in its own singleplayer world takes nothing over (it is the same game).
+  - On leaving a server the client goes back to its own files.
+- **The settings screen** (admins; `/skills settings`, or a Settings button on the Character Sheet for whoever may
+  change them):
+  - every option of the three, searchable and in pages of eight;
+  - the presets as buttons;
+  - Save and Revert.
+- The server checks that the player is an admin, applies the settings, writes the files, tells every client, and logs
+  the change.
+  - 💡 Anyone else's settings are ignored and logged.
+
+**XP events**
+- `/skills xprate <multiplier> [all|skill] [minutes]` starts an event, announced in the chat. Without minutes it runs
+  until `/skills xprate reset`.
+- 💡 A new event for the same skills replaces the running one. An event for one skill and one for all multiply.
+- An event ends by itself, on reset, or when the server stops, announced each time.
+- The Character Sheet shows a running event with its minutes.
+
+**Commands**
+- `/skills top [skill]` (everyone): the first ten in the chat.
+- `/skills inspect <player>` (operators) opens a read-only screen of that player. It works for offline players too, from
+  their file.
+  - The screen shows totals, deaths, synergies, and every skill's level, specializations, points and perks.
+- `/skills admin reset <player> [skill]` (admins) asks first. `/skills admin reset confirm` within 30 seconds does it.
+  - A full reset keeps only the name.
+  - The file is written at once, the player is told, and the log records it.
+- `/skills preset <hardcore|normal|custom>` and `/skills reload` (admins).
+- **The leaderboard page** (a button on the Character Sheet): every player with a file, by total level or by one skill,
+  with Mastery ranks. The first 100 come from the server.
+
 ## 12. Anti-exploit
 - 💡 All XP is computed on the server; the client only displays it (follows from option A).
 - Rules already approved per skill (§2):
@@ -1209,7 +1278,7 @@ The confirmed rules above, as built. Everything marked 💡 was decided while bu
 
 Work starts only after the owner's final approval (§15). Each milestone ends with: compiling, running the tests, checking for regressions, a report of what was built and what is still open, and the owner's approval before the next major system.
 
-Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 ✅ done (0.4.0) · milestone 4 ✅ done (0.5.0) · milestone 5 ✅ done (0.6.0) · milestone 6 ✅ done (0.7.0) · milestone 7 ✅ done (0.8.0) · milestone 8 ✅ done (0.9.0) · milestone 9 next.
+Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 ✅ done (0.4.0) · milestone 4 ✅ done (0.5.0) · milestone 5 ✅ done (0.6.0) · milestone 6 ✅ done (0.7.0) · milestone 7 ✅ done (0.8.0) · milestone 8 ✅ done (0.9.0) · milestone 9 ✅ done (0.10.0) · milestone 10 next.
 
 | # | Milestone | Contents | Tests |
 |---|---|---|---|

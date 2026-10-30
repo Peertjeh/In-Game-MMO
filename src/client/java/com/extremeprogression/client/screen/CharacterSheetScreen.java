@@ -134,8 +134,9 @@ public class CharacterSheetScreen extends Screen {
 				var e = events.get(0);
 				String what = e.skill().isEmpty() ? Ui.tr("gui.extremeprogression.sheet.xp_event_all") : Ui.tr("skill.extremeprogression." + e.skill());
 				long left = com.extremeprogression.client.state.ClientAdmin.left(e);
-				String value = com.extremeprogression.client.ui.DeathView.factor(e.multiplier()) + (left > 0 ? " · " + (left + 59_999) / 60_000 + " min" : "");
-				row(g, lx, ry + 68, Ui.ellipsize(this.font, Ui.tr("gui.extremeprogression.sheet.xp_event", what), LEFT_W - 12 - this.font.width(value) - 4), value, Ui.GOLD);
+				String value = left > 0 ? (left + 59_999) / 60_000 + " min" : "";
+				String label = Ui.tr("gui.extremeprogression.sheet.xp_event", com.extremeprogression.client.ui.DeathView.factor(e.multiplier()), what);
+				row(g, lx, ry + 68, Ui.ellipsize(this.font, label, LEFT_W - 12 - this.font.width(value) - 4), value, Ui.GOLD);
 			}
 		}
 

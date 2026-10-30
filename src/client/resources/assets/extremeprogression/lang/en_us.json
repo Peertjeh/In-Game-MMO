@@ -1020,7 +1020,7 @@
 	"gui.extremeprogression.settings.preset.hardcore": "Hardcore",
 	"gui.extremeprogression.settings.preset.normal": "Normal",
 	"gui.extremeprogression.settings.preset.custom": "Custom",
-	"gui.extremeprogression.settings.search": "Search",
+	"gui.extremeprogression.settings.search": "Search:",
 	"gui.extremeprogression.settings.save": "Save",
 	"gui.extremeprogression.settings.revert": "Revert",
 	"gui.extremeprogression.settings.invalid": "Not valid: %s",
@@ -1029,7 +1029,7 @@
 	"gui.extremeprogression.settings.preset": "Preset: %s",
 	"gui.extremeprogression.settings.page": "Page %s / %s · %s options · %s changed",
 	"gui.extremeprogression.settings.read_only": "Only admins can change these",
-	"gui.extremeprogression.sheet.xp_event": "XP event: %s",
+	"gui.extremeprogression.sheet.xp_event": "XP %s %s",
 	"gui.extremeprogression.sheet.xp_event_all": "all skills",
 	"gui.extremeprogression.death.step2_off": "2+·off"
 }

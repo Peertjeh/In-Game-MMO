@@ -1,6 +1,6 @@
 # Testing Extreme Progression
 
-This is for trying the mod in a real game while it is still in development (version 0.9.0, milestones 0–8 of the
+This is for trying the mod in a real game while it is still in development (version 0.10.0, milestones 0–9 of the
 [roadmap](DESIGN.md#13-implementation-roadmap--proposal)). What is not built yet is listed at the end.
 
 ## What you need
@@ -9,7 +9,7 @@ This is for trying the mod in a real game while it is still in development (vers
 - **Fabric Loader 0.19.5** or newer for 26.3 (the [Fabric installer](https://fabricmc.net/use/installer/))
 - **Fabric API 0.162.0+26.3** or newer ([Modrinth](https://modrinth.com/mod/fabric-api))
 - **Java 25** (the Minecraft launcher brings its own)
-- The mod's jar: `extremeprogression-0.9.0.jar`
+- The mod's jar: `extremeprogression-0.10.0.jar`
   - the latest green build is always on the
     [`ci-jar` branch](https://github.com/Peertjeh/In-Game-MMO/tree/ci-jar) (click the jar, then "Download raw file");
   - or under **Artifacts** of any [build run](https://github.com/Peertjeh/In-Game-MMO/actions).
@@ -17,7 +17,7 @@ This is for trying the mod in a real game while it is still in development (vers
 ## Installing
 
 1. Install Fabric Loader for 26.3 with the installer, and start that profile once.
-2. Put the Fabric API jar and `extremeprogression-0.9.0.jar` in the `mods` folder of that game directory.
+2. Put the Fabric API jar and `extremeprogression-0.10.0.jar` in the `mods` folder of that game directory.
 3. Start the game. The title screen's mod list (Mods) should show Extreme Progression.
 
 On a **server**, the same two jars go in the server's `mods` folder; every player needs the mod too (it has a GUI and a
@@ -45,12 +45,20 @@ key of its own). Extreme Dimensions is optional; the two work side by side.
 | `/skills admin add <player> <skill> <xp>` | gives (or with a minus, takes) XP |
 | `/skills admin respec <player> <skill>` | a free respec: both specializations and every point back |
 | `/skills admin cooldowns <player>` | every ability ready again (cooldowns are 4–5 minutes) |
+| `/skills admin reset <player> [skill]` | a reset, after `/skills admin reset confirm` within 30 seconds |
+| `/skills xprate <multiplier> [all\|skill] [minutes]` | an XP event (`/skills xprate reset` ends it) |
+| `/skills top [skill]` | the leaderboard in the chat |
+| `/skills inspect <player>` | a read-only look at a player, offline ones too |
+| `/skills settings` | the settings screen (admins) |
+| `/skills preset <hardcore\|normal\|custom>`, `/skills reload` | a preset; reread the config and data files |
 
 Skill ids: `melee`, `ranged`, `defense`, `mining`, `foraging`, `farming`, `fishing`, `exploration`, `smithing`,
 `arcana`. Points: from level 25 one point a level (75 at level 100), shared by both specializations of a skill. XP
 raises your levels up to a total of 400 across all skills; `set` is not held to that cap.
 
-Options are in `config/extremeprogression.json` (read at start). `xp_multiplier` speeds up XP for a test world.
+Options are in `config/extremeprogression.json` (read at start, or with `/skills reload`). To speed up XP for a test
+world, set `preset` to `custom` and raise `xp_multiplier` (with the Hardcore preset it stays 1), or start an XP event.
+The XP tables and the skill and synergy settings are in `config/extremeprogression/`.
 Player data is in `<world>/extremeprogression/players/`.
 
 ## A test plan
@@ -102,10 +110,18 @@ Player data is in `<world>/extremeprogression/players/`.
     - Foraging and Arcana at 30: eat glow berries. This discovers Herb Lore.
     - The Codex shows what you found, and runes with a hint for the rest once one skill is at 30. A second player who
       finds the same synergy is not the first in the Chronicle.
+12. **Administration** (as an admin, op level 3; in singleplayer with cheats on):
+    - `/skills settings`: change an option and save. Every client gets it, and the file in `config/` changes.
+    - Choose the Normal preset: the Death Register shows "2+·off".
+    - `/skills xprate 2 all 10`: a chat message, the Character Sheet shows "XP ×2", and XP doubles.
+    - Edit `config/extremeprogression/xp/mining.json` (for example `"stone": 30`), then `/skills reload`: stone gives
+      ten times as much.
+    - The Leaderboard button, `/skills top mining`, `/skills inspect <name>` (offline players too), and a reset with its
+      confirmation.
 
 ## Not built yet
 
-- **Presets, the settings screen, the leaderboard, XP events**: milestone 9.
+- **Extreme Dimensions integration, the balancing pass and the release**: milestone 10.
 
 ## Known rough edges
 

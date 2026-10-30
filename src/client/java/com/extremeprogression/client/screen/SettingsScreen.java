@@ -136,7 +136,7 @@ public class SettingsScreen extends Screen {
 					.pos(bx, y0 + 14).size(72, 14).build()).active = editor;
 			bx += 74;
 		}
-		search = this.addRenderableWidget(new EditBox(this.font, x0 + W - 6 - 150, y0 + 14, 150, 14, Component.translatable("gui.extremeprogression.settings.search")));
+		search = this.addRenderableWidget(new EditBox(this.font, x0 + W - 6 - 120, y0 + 14, 120, 14, Component.translatable("gui.extremeprogression.settings.search")));
 		search.setValue(filter);
 		search.setResponder(text -> {
 			filter = text;
@@ -294,7 +294,8 @@ public class SettingsScreen extends Screen {
 			return;
 		}
 		String preset = value("config.preset");
-		Ui.text(g, this.font, Ui.tr("gui.extremeprogression.settings.preset", preset), x0 + 6 + 3 * 74 + 4, y0 + 17, Ui.GOLD);
+		Ui.text(g, this.font, Ui.tr("gui.extremeprogression.settings.preset", preset), x0 + 6, y0 + 2, Ui.GOLD);
+		Ui.right(g, this.font, Ui.tr("gui.extremeprogression.settings.search"), x0 + W - 6 - 124, y0 + 17, Ui.MUTED);
 		List<String> shown = shown();
 		int y = y0 + 36;
 		for (int i = page * perPage(); i < shown.size() && i < (page + 1) * perPage(); i++) {

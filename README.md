@@ -9,7 +9,8 @@ that you discover yourself. Slow, meaningful progression, and deaths that cost y
 > skills earn XP (with the rules against exploits), and their trunks, specializations, points and respec work, and all
 > thirty specializations have their abilities, nodes and prices. Deaths cost progress, with death pressure, the
 > dimensions' factors, death fatigue and the Death Register. Opposing skills, Mastery perks and twelve hidden synergies
-> (with a Codex and the server's Chronicle) connect the skills. Administration and the release follow.
+> (with a Codex and the server's Chronicle) connect the skills. Presets, data files, a settings screen, XP events, a
+> leaderboard and the admin commands are in. The release follows.
 
 - The full design: [docs/DESIGN.md](docs/DESIGN.md)
 - Works on its own, and optionally together with [Extreme Dimensions](https://github.com/Peertjeh/extremedimensions).
