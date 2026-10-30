@@ -1,7 +1,7 @@
-# EXTREME PROGRESSION: Design Document
+# Extreme Progression: Design Document
 
-> Working title. The final name has not been chosen yet.
-> Status: **Phases 8 and 9: storage, configuration and commands. There is no gameplay code yet; the design has not been approved as a whole.**
+> Name: **Extreme Progression**, mod ID `extremeprogression` (round 25).
+> Status: **Complete design, awaiting the owner's final approval (§15). There is no gameplay code yet.**
 
 Legend for every mechanic:
 - ✅ **Confirmed**: approved by the owner
@@ -38,7 +38,8 @@ Legend for every mechanic:
 | 22 | Language | ✅ the mod and its repository in English; the design chat stays in Dutch |
 | 23 | Phase 7: anti-exploit | ✅ approved |
 | 24 | Appendix A: XP tables; Dutch translation | ✅ approved; English only, no translation |
-| 25 | Phases 8 and 9: name, storage, configuration, commands, leaderboard | ❓ awaiting answers |
+| 25 | Phases 8 and 9: name, storage, configuration, commands, leaderboard | ✅ approved |
+| 26 | Phase 10: the complete design | ❓ awaiting final approval |
 
 ---
 
@@ -51,9 +52,19 @@ Legend for every mechanic:
 - ✅ **Minecraft 26.3, Fabric** (Java 25), the same stack as Extreme Dimensions.
 - ✅ **Standalone**: the mod works without Extreme Dimensions. An **optional integration** with ED is wanted.
   - 💡 Technically: ED is listed only under `suggests` in `fabric.mod.json`, never under `depends`. All integration code lives apart (`compat/extremedimensions`) and only runs when `FabricLoader.isModLoaded("extremedimensions")` is true. Without ED that code is never loaded.
-  - ❓ What the integration does exactly is still to be discussed (the Seam's penalty multiplier, how the death penalties interact).
+  - What the integration does: §1, "Extreme Dimensions integration" below.
 - ✅ **The mod is in English** (round 22): all in-game text, the documentation and this document. Only the design conversation with the owner is in Dutch.
   - ✅ **English only** (round 24): no Dutch translation is shipped. The text still lives in `en_us.json`, so translations stay possible later.
+
+### Extreme Dimensions integration (💡 proposal, round 26)
+Only when Extreme Dimensions is installed:
+- ✅ The **Seam** multiplies the death penalty by **×2.5** (round 7).
+- ✅ Both mods' death penalties **stack in full** (round 6).
+- 💡 Our inventory button sits right of ED's Journal and Curses buttons, so they never overlap (§9).
+- 💡 The Seam's structures (villages, looms, colossal buildings, the Return Gate) count as **new structures** for Exploration.
+- ❓ Does a **Collapse** (the Tether runs dry and the player wakes up at home) count as a death for this mod? (§7)
+
+Without Extreme Dimensions none of this code is loaded.
 
 ### State of the repository (inspected on 2026-10-30)
 - `Peertjeh/In-Game-MMO`: 1 commit, only `README.md` ("MMO With GUI"). Greenfield: no code, build, GUI or storage.
@@ -718,6 +729,8 @@ For reference, the play time of a single level (without the budget factor):
      - your death history: when, where, which dimension and what you lost;
      - **"At Stake"**: exactly what you would lose if you died **now**, per skill, with the dimension factor and the death pressure included.
   5. **Codex & Chronicle:** your discovered synergies (with date and place), runes with hints for the rest, and the server's first discoverers.
+  6. ✅ **Leaderboard** (round 25): the total and every skill, with every player's levels.
+  7. ✅ **Settings** (operators only, round 25): the configuration in the game, like Extreme Dimensions' settings screen.
 - **Skill tree:** one fixed layout that fits on one screen, without scrolling.
   - Nodes have clear states: owned, buyable, out of reach, requirement missing, conflict, dormant.
 - **HUD outside the GUI:** minimal.
@@ -736,8 +749,8 @@ For reference, the play time of a single level (without the budget factor):
 ### Where it lives
 | Data | Storage | Why |
 |---|---|---|
-| A player's progression | One Gson JSON file per player: `<world>/<modid>/players/<uuid>.json` | Easy to inspect and back up; one busy player never rewrites everyone's data. Same format as Extreme Dimensions. |
-| Server-wide data (chronicle, first discoverers) | `<world>/<modid>/world.json` | One small file per world. |
+| A player's progression | One Gson JSON file per player: `<world>/extremeprogression/players/<uuid>.json` | Easy to inspect and back up; one busy player never rewrites everyone's data. Same format as Extreme Dimensions. |
+| Server-wide data (chronicle, first discoverers) | `<world>/extremeprogression/world.json` | One small file per world. |
 | Placed blocks | A Fabric data attachment on each chunk: a bitset per chunk section, only where something was placed | Saved and loaded with the chunk itself, so it never runs ahead of or behind the blocks. |
 | Mob origin flags (spawner, spawn egg, `/summon`) | A Fabric data attachment on the entity | Survives restarts and unloaded chunks. |
 | Anti-exploit state (AFK timer, diminishing-returns window, PvP caps, fall spots) | Memory only | Short-lived; nothing is lost that matters when the server restarts. |
@@ -761,9 +774,17 @@ For reference, the play time of a single level (without the budget factor):
 
 ## 11. Configuration and administration (💡 proposal, round 25)
 
+### Confirmed (round 25)
+- ✅ The configuration, presets and commands below.
+- ✅ An **in-game settings screen** for operators, like Extreme Dimensions' `SettingsScreen`, next to the config file and `/skills reload`.
+- ✅ **XP events**: an admin can raise the XP rate for a while, globally or per skill, like mcMMO's `/xprate`.
+  - 💡 `/skills xprate <multiplier> [skill] [minutes]`, announced in chat. They end by themselves, on `/skills xprate reset`, or on a restart.
+- ✅ A **leaderboard page** in the GUI, next to `/skills top`. Players may see each other's levels.
+- ✅ The **Normal** preset as a milder alternative.
+
 ### Configuration
-- **`config/<modid>.json`** for every balance value, as in Extreme Dimensions: missing keys are written back, so the file always lists every option.
-- **Data files** for the larger tables: `config/<modid>/xp/<skill>.json` (Appendix A) and `config/<modid>/synergies.json`.
+- **`config/extremeprogression.json`** for every balance value, as in Extreme Dimensions: missing keys are written back, so the file always lists every option.
+- **Data files** for the larger tables: `config/extremeprogression/xp/<skill>.json` (Appendix A) and `config/extremeprogression/synergies.json`.
 - **Presets**, like Extreme Dimensions' `Preset`:
   - **Hardcore** (the default): the owner's choices in this document.
   - **Normal**: half the death loss, no layer 3, 50% faster XP.
@@ -780,6 +801,7 @@ For reference, the play time of a single level (without the budget factor):
 | `/skills admin add <player> <skill> <xp>` | Operators | Adds or removes XP |
 | `/skills admin respec <player> <skill>` | Operators | A free respec |
 | `/skills admin reset <player> [skill]` | Admins | Resets progression, only after a confirmation |
+| `/skills xprate <multiplier> [skill] [minutes]` | Admins | Starts an XP event; `reset` ends it |
 | `/skills reload` | Admins | Reloads the config |
 
 - Permissions follow Extreme Dimensions: operators are op level 2 (`LEVEL_GAMEMASTERS`), admins op level 3 (`LEVEL_ADMINS`).
@@ -812,8 +834,55 @@ For reference, the play time of a single level (without the budget factor):
 - **Creative and Spectator** mode give no XP.
 - Mobs from **`/summon`**, spawn eggs (also from a dispenser) and plain spawners are flagged and give 0 XP. The flag is stored on the entity, so it survives restarts and unloaded chunks.
 
-## 13. Implementation roadmap
-_Only after the full design is approved._
+## 13. Implementation roadmap (💡 proposal)
+
+Work starts only after the owner's final approval (§15). Each milestone ends with: compiling, running the tests, checking for regressions, a report of what was built and what is still open, and the owner's approval before the next major system.
+
+| # | Milestone | Contents | Tests |
+|---|---|---|---|
+| 0 | Project skeleton | Gradle and Loom as in Extreme Dimensions (MC 26.3, Java 25, split source sets), `fabric.mod.json`, CI with build, server game tests and a client screenshot test. The empty mod loads on server and client. | CI green |
+| 1 | Core progression | Skill definitions, the XP curve and budget, the player data model with saving (atomic, backups, schema version), syncing to the client, `/skills admin set/add` | Unit tests for every formula; a migration test |
+| 2 | GUI foundation | The `Ui` house style, Character Sheet, Skill Screen (read only), inventory button, the `K` hotkey | Client screenshots |
+| 3 | XP: gathering | Mining, Foraging, Farming, Fishing; placed-block tracking, bonemeal and automation rules, open water and "overfished", diminishing returns, the AFK rule | Game tests per exploit rule |
+| 4 | XP: the rest | Melee, Ranged, Defense, Exploration, Smithing, Arcana; mob origin flags, PvP limits, chunk, biome and structure tracking | Game tests |
+| 5 | Trees and abilities | Points, buying nodes, choice nodes, the `R` / `Shift + R` keys, cooldowns, respec; all 10 trunks | Unit and game tests |
+| 6 | Specializations | All 30 specializations: abilities, nodes and trade-offs, in three parts (Combat; Gathering; Survival and Crafting) | Game tests per ability |
+| 7 | Death system | Loss layers, distribution, death pressure, dimension multipliers, death fatigue, points on level loss, the Death Register, the summary after death, "At Stake" | Edge-case tests (see below) |
+| 8 | Connections | Mastery, synergies (discovery, Codex & Chronicle), opposing skills, specialization conflicts, hard requirements, gear conflicts | Unit and game tests |
+| 9 | Administration | Presets, data files, the settings screen, leaderboard, XP events, `inspect`, `reload` | Game tests |
+| 10 | Release | Extreme Dimensions integration, a balancing pass, the Modrinth page and icon, the first release | Full CI incl. compatibility run |
+
+**Edge cases the death tests must cover:** a death at level 0; a death exactly at the start of a level; death pressure 2 with Mastery ranks (a rank goes first); a skill dropping below 25 or 75 (the specialization goes dormant and comes back without cost); points removed in the right order; a death in the Seam without ED loaded (no multiplier); two deaths within the same tick; the server stopping right after a death (the loss is saved, never applied twice).
+
+## 14. Code structure (💡 proposal)
+One component per responsibility, never one giant class. Package `com.extremeprogression`:
+
+| Package | Responsibility |
+|---|---|
+| `skill` | Definitions of skills, specializations, nodes and abilities (data-driven) |
+| `progression` | The XP curve, budget, levels, Mastery, opposing skills |
+| `xp` | The XP sources per skill and the central XP service (multipliers, events) |
+| `antiexploit` | Placed blocks, mob origins, AFK, diminishing returns, PvP limits |
+| `ability` | Activation, cooldowns, the abilities themselves |
+| `tree` | Points, buying nodes, choice nodes, respec |
+| `death` | Loss layers, death pressure, fatigue, the death history |
+| `synergy` | Synergies, discovery, the chronicle |
+| `data` | Player and world storage, backups, migrations |
+| `config` | The config, presets, data files |
+| `command` | `/skills` and its subcommands |
+| `network` | Packets between server and client |
+| `compat.extremedimensions` | The optional integration (§1) |
+| `client.ui`, `client.screen`, `client.hud`, `client.inventory`, `client.state` | The house style, the seven screens, the HUD notices, the inventory button, the client's copy of the progression |
+
+## 15. Final approval
+Approving this document approves:
+- every ✅ decision;
+- every 💡 suggestion in it, unless the owner names one to change. Example node names, choice nodes and Mastery perks stay examples: their final content is worked out per skill during milestone 6 and shown to the owner then;
+- the roadmap in §13.
+
+Still open:
+1. ❓ Does a **Collapse** in Extreme Dimensions count as a death for this mod?
+2. ❓ The owner answered round 25 with a single "approved". It was read as: name Extreme Progression, yes to the settings screen, yes to XP events, yes to the leaderboard page (players see each other's levels), yes to the Normal preset. Correct?
 
 ---
 
