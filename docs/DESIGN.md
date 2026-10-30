@@ -749,6 +749,11 @@ Ter referentie, de speeltijd van één level (zonder budgetfactor):
   - Geen XP-balk in beeld.
 - **Na een dood:** na het respawnen verschijnt een scherm met precies wat je verloor (vast principe uit §7).
 
+### Mockup (ronde 21)
+- Klikbare mockup van het karakterblad, het skillscherm (Melee) en het doodsregister: https://claude.ai/artifact/UQ5xsBnWqyvD7ShrWcudv8 (privé; alleen de eigenaar kan hem openen, tenzij hij hem deelt).
+- De voorbeeldspeler heeft 212/400 levels, doodsdruk 1, en Blade, Bulwark en Prospector als specialisaties. Alle getallen volgen de goedgekeurde formules.
+- De **namen en effecten van knopen** in de tree die niet hierboven zijn goedgekeurd (bijv. Zwaardmeester, Speerbereik, Pantserbreker), zijn **voorbeelden** (💡). De echte inhoud van elke tree wordt bij de implementatie per skill uitgewerkt.
+
 ## 10. Spelerdata
 - 💡 Gson-JSON per wereld, net als Extreme Dimensions, met migratie en tests (wordt uitgewerkt in fase 8).
 
