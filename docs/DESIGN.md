@@ -855,7 +855,7 @@ For reference, the play time of a single level (without the budget factor):
   around or the keys, because casting can be done with an auto-clicker.
 - **Diminishing returns:** a gain keeps `threshold ÷ XP in the window` once the window is past the threshold, never
   less than the floor (so 50% at 10,000 XP in 10 minutes, 5% from 100,000).
-- 💡 Choices made while building, open to change (all in the config or the XP table):
+- ✅ Choices made while building, accepted with milestone 3 (all in the config or the XP table):
   - "Overfished": catches 11–20 in one spot give **25%**, from the 21st **10%**.
   - Wood new in 26.3: **poplar logs 18 XP**, like birch.
   - Rare flowers (10 XP): blue orchid, allium, lily of the valley, the eyeblossoms, the golden dandelion (new in 26.3),
@@ -863,8 +863,8 @@ For reference, the play time of a single level (without the budget factor):
   - Taming an animal the table does not list: 200 XP.
 - Still to come: **damage your tamed animals deal** (Farming XP) needs the mob danger factors and origin flags, so it
   comes with the combat XP in milestone 4.
-- ❓ **Foxes** cannot be tamed in vanilla, only bred (the baby trusts you). For now a fox baby gives the normal 40
-  breeding XP. Giving the 300 taming XP per bred fox would make a fox farm far faster than any other Farming.
+- ✅ **Foxes** cannot be tamed in vanilla, only bred (the baby trusts you): a fox baby gives the normal **40** breeding
+  XP, not the 300 of taming, so a fox farm is no faster than other Farming (the owner, after milestone 3).
 
 ## 13. Implementation roadmap (💡 proposal)
 
