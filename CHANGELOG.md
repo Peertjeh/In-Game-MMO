@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.7.0: Specializations
+## 0.7.0: Specializations (in development)
 
 Part 1 of 3: the twelve specializations of Melee, Ranged, Defense and Exploration now do what they say.
 
@@ -31,7 +31,7 @@ Part 3 of 3: the six specializations of Smithing and Arcana.
   Choice and Wide Mist. Potent Brews now also works on splash and lingering potions.
 - With this, all thirty specializations do what they say.
 
-## 0.6.0: Trees and abilities
+## 0.6.0: Trees and abilities (in development)
 
 - **Specializations**: choose the first at level 25 and the second at 75 on the Skill Screen. Specializations of
   different skills that exclude each other (such as Brawler and Bulwark) cannot be combined.
