@@ -18,7 +18,8 @@
 			"com.extremeprogression.gametest.TreeTests",
 			"com.extremeprogression.gametest.TrunkTests",
 			"com.extremeprogression.gametest.SpecTests",
-			"com.extremeprogression.gametest.SpecNodeTests"
+			"com.extremeprogression.gametest.SpecNodeTests",
+			"com.extremeprogression.gametest.SpecGatherTests"
 		],
 		"fabric-client-gametest": [
 			"com.extremeprogression.gametest.ClientShots"

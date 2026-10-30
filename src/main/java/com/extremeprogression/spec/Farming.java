@@ -201,7 +201,9 @@ public final class Farming {
 	public static void sheared(ServerPlayer p, Sheep sheep) {
 		if (Specs.roll(p, 0.20 * rank(p, HERDER, C2)) && sheep.level() instanceof ServerLevel level) {
 			Item wool = BuiltInRegistries.ITEM.getValue(Identifier.fromNamespaceAndPath("minecraft", sheep.getColor().getName() + "_wool"));
-			sheep.spawnAtLocation(level, new ItemStack(wool == Items.AIR ? Items.WHITE_WOOL : wool));
+			if (wool != Items.AIR) {
+				sheep.spawnAtLocation(level, new ItemStack(wool));
+			}
 		}
 	}
 

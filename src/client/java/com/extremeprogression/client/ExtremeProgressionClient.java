@@ -34,6 +34,8 @@ public class ExtremeProgressionClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		ClientPlayNetworking.registerGlobalReceiver(ProgressPayload.TYPE, (payload, context) ->
 				context.client().execute(() -> ClientProgress.apply(payload)));
+		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.OreSensePayload.TYPE, (payload, context) ->
+				context.client().execute(() -> OreSense.show(payload)));
 		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.ActivePayload.TYPE, (payload, context) ->
 				context.client().execute(() -> ClientProgress.applyActive(payload)));
 		// The few specialization effects felt on the client (movement, the view) read its own player's tree from here
@@ -41,7 +43,10 @@ public class ExtremeProgressionClient implements ClientModInitializer {
 		com.extremeprogression.spec.Specs.localActive = spec -> ClientProgress.activeTicks(spec.id) > 0;
 		ClientPlayNetworking.registerGlobalReceiver(OpenSheetPayload.TYPE, (payload, context) ->
 				context.client().execute(() -> context.client().gui.setScreen(new CharacterSheetScreen(null))));
-		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> client.execute(ClientProgress::clear));
+		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> client.execute(() -> {
+			ClientProgress.clear();
+			OreSense.clear();
+		}));
 
 		KeyMappingHelper.registerKeyMapping(OPEN_SHEET);
 		KeyMappingHelper.registerKeyMapping(ABILITY);
@@ -49,6 +54,7 @@ public class ExtremeProgressionClient implements ClientModInitializer {
 		// Key mappings only register presses while no screen is open, so this never opens over another screen
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			ClientProgress.tick();
+			OreSense.tick();
 			while (ABILITY.consumeClick()) {
 				if (client.getConnection() != null && ClientPlayNetworking.canSend(AbilityPayload.TYPE)) {
 					ClientPlayNetworking.send(new AbilityPayload(client.options.keyShift.isDown()));
