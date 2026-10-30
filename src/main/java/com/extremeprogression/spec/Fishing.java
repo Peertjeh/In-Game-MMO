@@ -149,7 +149,7 @@ public final class Fishing {
 				replace(items, roll(p, hook, rod, BuiltInLootTables.FISHING_FISH));
 			}
 			// Deep Sea needs Exploration 40 (design §2, hard requirement)
-			if (com.extremeprogression.data.PlayerStore.get(p.getUUID()).get(com.extremeprogression.skill.Skill.EXPLORATION).level >= 40
+			if (com.extremeprogression.skill.HardRequirement.DEEP_SEA.met(p)
 					&& Specs.roll(p, 0.002 * rank(p, TREASURE_HUNTER, C1))) {
 				replace(items, List.of(new ItemStack(p.getRandom().nextBoolean() ? Items.HEART_OF_THE_SEA : Items.TRIDENT)));
 			}

@@ -16,7 +16,6 @@ import java.util.Map;
 
 import com.extremeprogression.ExtremeProgression;
 import com.extremeprogression.ability.AbilityService;
-import com.extremeprogression.data.PlayerStore;
 import com.extremeprogression.skill.Skill;
 import com.extremeprogression.trunk.Trunks;
 
@@ -171,7 +170,7 @@ public final class Smithing {
 
 	/** Template Saver: a 4% chance a rank to keep the template; it needs Mining 30 (design §2, hard requirement). */
 	public static boolean templateSaved(ServerPlayer p) {
-		return PlayerStore.get(p.getUUID()).get(Skill.MINING).level >= 30 && Specs.roll(p, 0.04 * rank(p, TINKERER, C1));
+		return com.extremeprogression.skill.HardRequirement.TEMPLATE_SAVER.met(p) && Specs.roll(p, 0.04 * rank(p, TINKERER, C1));
 	}
 
 	public static boolean reforged(ItemStack stack) {

@@ -349,7 +349,7 @@ public final class Farming {
 	/** Rider: the horse or camel you ride is 3% faster and jumps 2% higher a rank. */
 	private static void rider(ServerPlayer p) {
 		// (Rider needs Exploration 30: design §2, hard requirement)
-		double rider = com.extremeprogression.data.PlayerStore.get(p.getUUID()).get(com.extremeprogression.skill.Skill.EXPLORATION).level >= 30
+		double rider = com.extremeprogression.skill.HardRequirement.RIDER.met(p)
 				? rank(p, BEASTMASTER, C2) : 0;
 		AbstractHorse now = rider > 0 && p.getVehicle() instanceof AbstractHorse h ? h : null;
 		AbstractHorse before = RIDDEN.get(p.getUUID());

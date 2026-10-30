@@ -72,7 +72,7 @@
 	"gui.extremeprogression.skill.spec_kind": "Specialization",
 	"gui.extremeprogression.skill.spec_levels": "Chosen at %s or %s",
 	"gui.extremeprogression.skill.gear": "Gear: %s",
-	"gui.extremeprogression.skill.conflict": "Cannot be combined with %s (%s).",
+	"gui.extremeprogression.skill.conflict": "Cannot be combined with %s (%s): %s.",
 	"gui.extremeprogression.skill.ability_kind": "Active ability of %s",
 	"gui.extremeprogression.skill.ability_key": "Key R · ranks I to V",
 	"gui.extremeprogression.skill.price": "Price",
@@ -965,5 +965,18 @@
 	"gui.extremeprogression.chronicle.footer": "The first discoverer of every synergy on this server. A first discovery makes its hint clearer for all.",
 	"message.extremeprogression.synergy.discovered": "Synergy discovered: %s (%s + %s). %s",
 	"message.extremeprogression.synergy.first": "%s is the first on this server to discover the synergy %s!",
-	"message.extremeprogression.synergy.first_you": "You are the first on this server to discover it."
+	"message.extremeprogression.synergy.first_you": "You are the first on this server to discover it.",
+	"spec.extremeprogression.juggernaut.conflict_reason": "heavy plate against somersaults",
+	"spec.extremeprogression.acrobat.conflict_reason": "heavy plate against somersaults",
+	"spec.extremeprogression.brawler.conflict_reason": "bare fists against a shield",
+	"spec.extremeprogression.bulwark.conflict_reason": "bare fists against a shield",
+	"spec.extremeprogression.sniper.conflict_reason": "lying still against always on the move",
+	"spec.extremeprogression.wanderer.conflict_reason": "lying still against always on the move",
+	"spec.extremeprogression.herbalist.conflict_reason": "wild against cultivated",
+	"spec.extremeprogression.grower.conflict_reason": "wild against cultivated",
+	"spec.extremeprogression.tinkerer.conflict_reason": "improving with steel against improving with magic",
+	"spec.extremeprogression.enchanter.conflict_reason": "improving with steel against improving with magic",
+	"gui.extremeprogression.node.hard_missing": "Works only with %s %s (you have %s): it does nothing until then.",
+	"gui.extremeprogression.node.hard_met": "Needs %s %s: you have it (%s).",
+	"gui.extremeprogression.skill.heavy_armor": "Heavy armor: passives off"
 }

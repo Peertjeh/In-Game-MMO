@@ -233,12 +233,12 @@ public final class SynergyEffects {
 	 */
 	public static boolean unheard(ServerLevel level, net.minecraft.world.level.gameevent.vibrations.VibrationSystem.User user,
 			net.minecraft.world.level.gameevent.GameEvent.Context context, net.minecraft.world.phys.Vec3 source) {
-		if (!(context.sourceEntity() instanceof ServerPlayer p) || !(user instanceof net.minecraft.world.level.block.entity.SculkSensorBlockEntity.VibrationUser)
-				|| !level.getBiome(p.blockPosition()).is(net.minecraft.world.level.biome.Biomes.DEEP_DARK)) {
+		if (!(context.sourceEntity() instanceof ServerPlayer p) || !level.getBiome(p.blockPosition()).is(net.minecraft.world.level.biome.Biomes.DEEP_DARK)) {
 			return false;
 		}
 		var at = user.getPositionSource().getPosition(level);
-		if (at.isEmpty()) {
+		// (only sculk sensors, calibrated ones too: a warden listens for itself)
+		if (at.isEmpty() || !(level.getBlockState(BlockPos.containing(at.get())).getBlock() instanceof net.minecraft.world.level.block.SculkSensorBlock)) {
 			return false;
 		}
 		double distance = at.get().distanceTo(source);

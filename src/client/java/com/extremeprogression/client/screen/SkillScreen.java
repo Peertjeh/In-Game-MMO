@@ -261,7 +261,13 @@ public class SkillScreen extends Screen {
 			lines.addAll(wrap(Ui.tr(k + ".style")));
 			lines.addAll(wrap(Ui.tr("gui.extremeprogression.skill.price_of", Ui.tr(k)) + ": " + Ui.tr(k + ".tradeoff")));
 			if (spec.conflict() != null) {
-				lines.addAll(wrap(Ui.tr("gui.extremeprogression.skill.conflict", Ui.tr(spec.conflict().translationKey()), Ui.tr(spec.conflict().skill.translationKey()))));
+				lines.addAll(wrap(Ui.tr("gui.extremeprogression.skill.conflict", Ui.tr(spec.conflict().translationKey()), Ui.tr(spec.conflict().skill.translationKey()),
+						Ui.tr(k + ".conflict_reason"))));
+			}
+			// A hard requirement on the specialization itself (the Alchemist's new potions)
+			com.extremeprogression.skill.HardRequirement own = com.extremeprogression.skill.HardRequirement.of(spec, null);
+			if (own != null) {
+				lines.addAll(wrap(requirement(own)));
 			}
 			int index = TreeRules.indexOf(d, spec);
 			String status;
@@ -326,11 +332,22 @@ public class SkillScreen extends Screen {
 		if (slot.level > 0) {
 			lines.addAll(wrap(Ui.tr("gui.extremeprogression.node.requires_level", slot.level)));
 		}
+		com.extremeprogression.skill.HardRequirement hard = com.extremeprogression.skill.HardRequirement.of(spec, slot);
+		if (hard != null) {
+			lines.addAll(wrap(requirement(hard)));
+		}
 		TreeRules.Result r = TreeRules.canBuy(view(), spec, slot);
 		String status = r == TreeRules.Result.OK ? Ui.tr("gui.extremeprogression.node.status.buyable")
 				: r == TreeRules.Result.MAX_RANK ? Ui.tr("gui.extremeprogression.node.status.owned") : status(r, spec);
 		int color = r == TreeRules.Result.OK ? Ui.WARN : r == TreeRules.Result.MAX_RANK ? Ui.OK : Ui.MUTED;
 		return new Detail(nodeName(spec, slot), kind, lines, status, color);
+	}
+
+	/** A hard requirement (design §2, D): which skill at which level, and whether the player has it. */
+	private String requirement(com.extremeprogression.skill.HardRequirement r) {
+		int have = SkillView.entry(r.skill).level();
+		return Ui.tr(have >= r.level ? "gui.extremeprogression.node.hard_met" : "gui.extremeprogression.node.hard_missing", Ui.tr(r.skill.translationKey()), r.level,
+				have);
 	}
 
 	private static String status(TreeRules.Result r, Specialization spec) {
@@ -362,8 +379,13 @@ public class SkillScreen extends Screen {
 		if (skill.opposite() != null) {
 			sub = Ui.tr("gui.extremeprogression.skill.opposite", sub, Ui.tr(skill.opposite().translationKey()));
 		}
-		// While the opposing skill presses on this one, the header says what it costs (design §2: always visible)
+		// While the opposing skill presses on this one, the header says what it costs (design §2: always visible); for
+		// Exploration also when heavy armor turns its passives off (gear conflict a)
 		String warning = SkillView.opposingWarning(skill);
+		if (skill == Skill.EXPLORATION && Minecraft.getInstance().player != null && com.extremeprogression.trunk.Trunks.heavyArmor(Minecraft.getInstance().player)) {
+			String heavy = Ui.tr("gui.extremeprogression.skill.heavy_armor");
+			warning = warning == null ? heavy : heavy + " · " + warning;
+		}
 		Ui.text(g, this.font, Ui.ellipsize(this.font, warning != null ? warning : sub, 170), x0 + 24, y0 + 14, warning != null ? Ui.DANGER : Ui.MUTED);
 		if (warning != null && mouseX >= x0 + 24 && mouseX < x0 + 194 && mouseY >= y0 + 13 && mouseY < y0 + 23) {
 			g.setComponentTooltipForNextFrame(this.font, List.of(Component.literal(sub), Component.literal(warning).withStyle(s -> s.withColor(Ui.DANGER))), mouseX, mouseY);

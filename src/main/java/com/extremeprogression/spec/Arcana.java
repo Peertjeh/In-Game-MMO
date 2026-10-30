@@ -19,7 +19,6 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 import com.extremeprogression.ability.AbilityService;
-import com.extremeprogression.data.PlayerStore;
 import com.extremeprogression.network.InsightPayload;
 import com.extremeprogression.skill.Skill;
 import com.extremeprogression.trunk.PotentPotions;
@@ -110,7 +109,7 @@ public final class Arcana {
 	/** Whether this stand's user may brew the Alchemist's potions: an Alchemist with Foraging 30 (design §2, hard requirement). */
 	public static boolean herbalist(BrewingStandBlockEntity stand) {
 		ServerPlayer p = Trunks.userOf(stand);
-		return p != null && Specs.has(p, ALCHEMIST) && PlayerStore.get(p.getUUID()).get(Skill.FORAGING).level >= 30;
+		return p != null && Specs.has(p, ALCHEMIST) && com.extremeprogression.skill.HardRequirement.NEW_POTIONS.met(p);
 	}
 
 	/** A stand may brew now: not one of the Alchemist's potions unless its user may. */
