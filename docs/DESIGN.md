@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION — Ontwerpdocument
 
 > Werktitel. De definitieve naam is nog niet gekozen.
-> Status: **Interview ronde 13 (fase 5: skill 5/10, Foraging). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
+> Status: **Interview ronde 14 (fase 5: skill 6/10, Farming). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
 
 Legenda per mechaniek:
 - ✅ **Bevestigd**: door de eigenaar goedgekeurd
@@ -26,7 +26,8 @@ Legenda per mechaniek:
 | 10 | Skill 2/10: Ranged (+ drie specialisaties per skill) | ✅ alles akkoord |
 | 11 | Skill 3/10: Defense | ✅ akkoord |
 | 12 | Skill 4/10: Mining | ✅ akkoord |
-| 13 | Skill 5/10: Foraging | ❓ wacht op antwoorden |
+| 13 | Skill 5/10: Foraging | ✅ akkoord |
+| 14 | Skill 6/10: Farming | ❓ wacht op antwoorden |
 
 ---
 
@@ -286,7 +287,7 @@ Keuzes in dit voorstel:
 - ✅ **Ore Sense** blijft zoals voorgesteld: ertsen door muren zien, binnen 12 blokken, met een cooldown van 5 min.
 - ✅ **Dubbele drops** blijven, met Ancient Debris uitgezonderd.
 
-### Skill 5/10: Foraging (💡 voorstel, ronde 13)
+### Skill 5/10: Foraging (✅ goedgekeurd in ronde 13)
 **Identiteit:** de wilde natuur: bomen kappen en verzamelen wat vanzelf groeit.
 
 **XP:**
@@ -316,6 +317,50 @@ Keuzes in dit voorstel:
 **Tegenwerking:** geen tegenpool. Herbalist botst inhoudelijk met Farming (verbouwd voedsel vult minder); een mogelijk specialisatieconflict volgt later.
 
 **Geen nieuwe items nodig.** Torchflower seeds en pitcher pods zijn vanilla-items, die je normaal alleen via een sniffer krijgt.
+
+- ✅ Herbalist is de derde specialisatie. Zelf geplante bomen geven 25% XP. Tree Feller mag hele bomen kappen.
+
+### Skill 6/10: Farming (💡 voorstel, ronde 14)
+**Identiteit:** verbouwen en verzorgen: gewassen, vee en getemde dieren.
+
+**XP:**
+- **Volgroeide gewassen** oogsten: tarwe, wortels, aardappels, bieten, nether wart, meloenen en pompoenen (van stengels), cacao, en geplante bessenstruiken.
+  - Zeldzame gewassen (torchflower, pitcher plant) geven meer.
+  - Suikerriet: alleen de bovenste blokken, niet de onderste.
+  - Een onrijp gewas geeft niets.
+- Gewassen die met **bonemeal** zijn gegroeid, geven **50% XP**. Instelbaar.
+- **Automatisch geoogst** (zuigers, water, villagers) geeft niets. Alleen wat een speler zelf oogst telt.
+- **Dieren:**
+  - **fokken**: XP per jong;
+  - **scheren**;
+  - **temmen**: eenmalig per dier. Zeldzame dieren geven meer.
+- Melken en eieren rapen geven geen XP, want die kun je eindeloos herhalen.
+- **Schade die je getemde dieren doen**, geeft Farming-XP en geen Melee-XP. Daarvoor gelden dezelfde regels tegen farmen als bij Melee.
+
+**Stam** (gratis, vanzelf vrij):
+| Level | Bonus |
+|---|---|
+| 5 | Lichte tred: je vertrapt geen akkerland meer |
+| 10 | Rijke oogst: 5% kans op een extra gewas |
+| 15 | Opgroeien: jonge dieren die jij hebt gefokt, groeien 10% sneller |
+| 20 | Boerenkost: voedsel van gewassen vult +1 honger |
+
+**Specialisaties:**
+| | **Grower** | **Herder** | **Beastmaster** |
+|---|---|---|---|
+| Speelstijl | Gewassen | Vee: fokken, wol, vlees en leer | Getemde dieren: wolven, katten, paarden, kamelen en dergelijke |
+| Actieve ability | **Harvest Festival**: 10 seconden lang geven gewassen dubbele opbrengst en planten ze zichzelf opnieuw. Cooldown 4 min. | **Herding Call**: 10 seconden lang volgen dieren binnen 16 blokken je zonder voer, en je volgende kweek geeft een tweeling. Cooldown 4 min. | **Rally the Pack**: 15 seconden lang krijgen je getemde wolven binnen 24 blokken Strength en Resistance, en vallen ze jouw doelwit aan. Cooldown 5 min. |
+| Trade-off | Fokken geeft −50% XP en geen extra bonussen | Gewassen geven geen extra opbrengst, ook niet die van de stam | Zelf doe je −10% melee-schade zolang een getemde wolf van jou binnen 16 blokken is |
+| Voorbeeld keuzeknoop | Rijpe aura (gewassen binnen 4 blokken van jou groeien 15% sneller) **of** Zaadspaarder (je plant altijd vanzelf opnieuw) | Tweeling (grotere kans op een tweeling) **of** Wolhandel (dubbele wol en leer) | Roedelleider (de bonus geldt tot 3 wolven) **of** Ruiter (paarden en kamelen die jij berijdt, zijn 15% sneller en springen hoger) |
+
+**Mastery-perks** (voorbeeld, 1 van 2 per rank): +1% gewasopbrengst **of** +1% schade van je getemde dieren.
+
+**Tegenwerking:**
+- Geen tegenpool.
+- Herbalist (Foraging) botst inhoudelijk met Farming.
+- Beastmaster ruilt eigen melee-kracht in voor die van zijn roedel.
+
+**Geen nieuwe items nodig.**
 
 ### Voorbeelden van harde vereisten (D) (💡)
 - Smithing: de netherite-upgrade-specialisatie vereist Mining 30.
