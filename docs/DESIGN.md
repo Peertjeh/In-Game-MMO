@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION — Ontwerpdocument
 
 > Werktitel. De definitieve naam is nog niet gekozen.
-> Status: **Interview ronde 2. Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
+> Status: **Interview ronde 3. Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
 
 Legenda per mechaniek:
 - ✅ **Bevestigd**: door de eigenaar goedgekeurd
@@ -15,7 +15,8 @@ Legenda per mechaniek:
 | Ronde | Onderwerp | Status |
 |------:|-----------|--------|
 | 1 | Platform & architectuur + opzet skillsysteem | ✅ beantwoord |
-| 2 | Samenwerking met Extreme Dimensions, skilllijst, synergieën, trade-offs | ❓ wacht op antwoorden |
+| 2 | Samenwerking met Extreme Dimensions, skilllijst, synergieën, trade-offs | ✅ beantwoord |
+| 3 | Skill-sjabloon: tegenwerking, actieve abilities, specialisaties, ontdekken | ❓ wacht op antwoorden |
 
 ---
 
@@ -25,6 +26,10 @@ Legenda per mechaniek:
 - ✅ **Optie A**: een Fabric-mod die op de server **en** op elke client verplicht is. De client toont een volledig eigen GUI (geen kist-menu's).
 - ✅ Het menu opent met een **sneltoets** en is **ook bereikbaar vanuit het inventory-scherm**.
 - ✅ Nieuwe items en blokken **alleen als het echt noodzakelijk is**. Uitgangspunt: vanilla-mechanieken versterken.
+- ✅ **Minecraft 26.3, Fabric** (Java 25), dezelfde stack als Extreme Dimensions.
+- ✅ **Zelfstandig**: de mod werkt zonder Extreme Dimensions. **Optionele koppeling** met ED is gewenst.
+  - 💡 Technisch: ED komt in `fabric.mod.json` alleen onder `suggests`, niet onder `depends`. Alle koppelcode staat apart (`compat/extremedimensions`) en draait alleen als `FabricLoader.isModLoaded("extremedimensions")` waar is. Zonder ED wordt die code nooit geladen.
+  - ❓ Wat de koppeling precies doet, bespreken we later (XP in de Seam/Nether/End, samenspel van de doodsstraffen).
 
 ### Huidige stand van de repo (onderzocht op 2026-10-30)
 - `Peertjeh/In-Game-MMO`: 1 commit, alleen `README.md` ("MMO With GUI"). Greenfield: geen code, build, GUI of opslag.
@@ -66,10 +71,6 @@ Zwaktes die we bewust oplossen:
 - 💡 **Inventory-knop:** rechts naast de knoppen van Extreme Dimensions (`boek + 46`), of, als ED ontbreekt, direct naast het boek. Nooit overlappen.
 - 💡 **Sneltoets:** standaard `K`, aan te passen in Controls.
 
-### Open vragen
-- ❓ Draaien beide mods samen, en hoe sterk mogen ze gekoppeld zijn? (zelfstandig met optionele koppeling / harde afhankelijkheid / volledig los)
-- ❓ Bevestiging: MC 26.3 + Fabric + Java 25?
-
 ---
 
 ## 2. Skills
@@ -78,8 +79,14 @@ Zwaktes die we bewust oplossen:
 - ✅ **Compacte set.** Elke skill heeft een eigen tree, een eigen GUI-pagina en een eigen XP-tabel.
 - ✅ **Skills per speelstijl**, niet per wapen of tool.
 - ✅ **Samenhang via synergieën die de speler zelf ontdekt.** Hier en daar een **harde vereiste** (optie D).
+- ✅ **De 10 skills hieronder zijn goedgekeurd.** De specialisaties in de tabel zijn nog **voorbeelden** (💡); die worden per skill uitgewerkt.
+- ✅ **Onontdekte synergieën** zijn zichtbaar als **runen met een vage hint** (optie B), zoals de onbekende curses in ED.
+  - ❓ Ontdekt elke speler ze zelf, of geldt een ontdekking voor de hele server?
+- ✅ **Specialisaties hebben altijd trade-offs**: elke keuze heeft een prijs.
+- ✅ **Skills mogen elkaar tegenwerken.**
+  - ❓ Via welk mechanisme (zie ronde 3)?
 
-### Voorstel: 10 skills (💡, nog niet goedgekeurd)
+### De 10 skills (✅ lijst goedgekeurd; specialisaties nog 💡)
 
 | # | Skill | Categorie | Speelstijl | XP vooral uit | Mogelijke specialisaties (voorbeeld) |
 |--:|-------|-----------|------------|---------------|--------------------------------------|
@@ -106,10 +113,17 @@ Keuzes in dit voorstel:
 - Smithing: de netherite-upgrade-specialisatie vereist Mining 30.
 - Arcana: enchants van het hoogste niveau vereisen ... (nog te bepalen)
 
+### Tegenwerkende skills: mogelijke mechanismen (💡, ronde 3)
+- **a) Uitrustingsconflicten:** wat je draagt of vasthoudt bepaalt welke bonussen werken. Voorbeeld: in zwaar armor werken de bewegingsbonussen van Exploration niet.
+- **b) Specialisatieconflicten:** sommige specialisaties sluiten elkaar uit over skills heen. Voorbeeld: Juggernaut (Defense) en Wanderer (Exploration) kun je niet allebei hebben.
+- **c) Tegenpolen:** XP in de ene skill maakt XP in de tegenpool trager. Voorbeelden: Melee ↔ Ranged, Smithing ↔ Arcana.
+- **d) Totaalbudget:** hoe meer levels je in totaal hebt, hoe duurder elk volgend level wordt.
+
 ### Open vragen
-- ❓ Akkoord met deze 10, of schrappen, samenvoegen, toevoegen of hernoemen?
-- ❓ Hoe verborgen zijn de synergieën?
-- ❓ Hebben specialisaties echte nadelen (trade-offs)?
+- ❓ Welke mechanismen voor tegenwerking?
+- ❓ Actieve abilities: per skill of per specialisatie, en hoe activeer je ze?
+- ❓ Specialisaties: hoeveel per skill, en kun je wisselen (respec)?
+- ❓ Synergieën ontdekken: per speler of voor de hele server?
 
 ## 3. XP-generatie
 _Nog niet besproken._
@@ -122,6 +136,7 @@ _Nog niet besproken._
 
 ## 6. Abilities & skill trees
 - ✅ Elke skill heeft een eigen tree (zie §2).
+- ✅ Specialisaties hebben altijd trade-offs.
 - _Rest nog niet besproken._
 
 ## 7. Doodsstraffen
