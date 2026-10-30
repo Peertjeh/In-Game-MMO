@@ -484,11 +484,11 @@ public class SkillScreen extends Screen {
 	}
 
 	/**
-	 * The lines of the branch: from every node down to the nodes it needs, and "or" between the two choices, so the
-	 * way up the branch reads at a glance. Drawn under the nodes.
+	 * The lines of the branch: from every node down to the nodes it needs, so the way up the branch reads at a glance.
+	 * Drawn under the nodes. (The two choices say "or" on themselves once one of them is bought.)
 	 */
 	private void branchLines(GuiGraphicsExtractor g) {
-		int line = Ui.argb(255, Ui.mix(Ui.DIM, Ui.INK, 0.2));
+		int line = Ui.argb(255, Ui.mix(Ui.DIM, Ui.MUTED, 0.35));
 		for (java.util.Map.Entry<NodeSlot, int[]> e : cells.entrySet()) {
 			int[] c = e.getValue();
 			int cx = c[0] + c[2] / 2;
@@ -505,10 +505,6 @@ public class SkillScreen extends Screen {
 				g.fill(Math.min(cx, nx), mid, Math.max(cx, nx) + 1, mid + 1, line);
 				g.fill(nx, mid, nx + 1, bottom, line);
 			}
-		}
-		int[] a = cells.get(NodeSlot.C1), b = cells.get(NodeSlot.C2);
-		if (a != null && b != null) {
-			Ui.centered(g, this.font, Ui.tr("gui.extremeprogression.skill.or"), (a[0] + a[2] + b[0]) / 2 + 1, a[1] + (a[3] - 8) / 2, Ui.DIM);
 		}
 	}
 
