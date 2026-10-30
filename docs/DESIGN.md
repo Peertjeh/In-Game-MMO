@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION — Ontwerpdocument
 
 > Werktitel. De definitieve naam is nog niet gekozen.
-> Status: **Interview ronde 3. Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
+> Status: **Interview ronde 4 (fase 3: XP en levels). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
 
 Legenda per mechaniek:
 - ✅ **Bevestigd**: door de eigenaar goedgekeurd
@@ -16,7 +16,8 @@ Legenda per mechaniek:
 |------:|-----------|--------|
 | 1 | Platform & architectuur + opzet skillsysteem | ✅ beantwoord |
 | 2 | Samenwerking met Extreme Dimensions, skilllijst, synergieën, trade-offs | ✅ beantwoord |
-| 3 | Skill-sjabloon: tegenwerking, actieve abilities, specialisaties, ontdekken | ❓ wacht op antwoorden |
+| 3 | Skill-sjabloon: tegenwerking, actieve abilities, specialisaties, ontdekken | ✅ beantwoord |
+| 4 | Fase 3: schaal, totaalbudget, tempo, specialisatiemomenten, tegenpolen | ❓ wacht op antwoorden |
 
 ---
 
@@ -81,10 +82,20 @@ Zwaktes die we bewust oplossen:
 - ✅ **Samenhang via synergieën die de speler zelf ontdekt.** Hier en daar een **harde vereiste** (optie D).
 - ✅ **De 10 skills hieronder zijn goedgekeurd.** De specialisaties in de tabel zijn nog **voorbeelden** (💡); die worden per skill uitgewerkt.
 - ✅ **Onontdekte synergieën** zijn zichtbaar als **runen met een vage hint** (optie B), zoals de onbekende curses in ED.
-  - ❓ Ontdekt elke speler ze zelf, of geldt een ontdekking voor de hele server?
+- ✅ **Ontdekken is server-breed én persoonlijk** (eigenaar: "server-breed is lache, maar ik wil ook iets persoonlijks").
+  - 💡 Uitwerking:
+    - **Persoonlijk:** elke speler moet een synergie zelf ontdekken voordat hij voor hem werkt. Je eigen codex toont wanneer en waar je hem vond.
+    - **Server-breed:** de eerste ontdekker komt in de **kroniek** van de server (een GUI-pagina), eventueel met een aankondiging in de chat (instelbaar). Na die eerste ontdekking wordt de rune-hint voor de anderen duidelijker (een deel wordt leesbaar).
+    - **Eerste ontdekker:** krijgt een blijvende, puur cosmetische vermelding ("Eerste ontdekker") bij die synergie. Geen extra kracht.
 - ✅ **Specialisaties hebben altijd trade-offs**: elke keuze heeft een prijs.
-- ✅ **Skills mogen elkaar tegenwerken.**
-  - ❓ Via welk mechanisme (zie ronde 3)?
+- ✅ **Skills mogen elkaar tegenwerken**, via:
+  - ✅ **a) Uitrustingsconflicten** (wat je draagt of vasthoudt bepaalt welke bonussen werken)
+  - ✅ **b) Specialisatieconflicten** (sommige specialisaties sluiten elkaar uit over skills heen)
+  - ✅ **c) Tegenpolen, maar licht**
+    - 💡 Voorstel: alleen de paren Melee ↔ Ranged en Smithing ↔ Arcana. Maximaal −20% XP in de tegenpool, en alleen als die skill boven level 50 zit en hoger is. Altijd zichtbaar in de GUI.
+    - ❓ Welke paren en hoe sterk?
+  - ✅ **d) Totaalbudget: verplicht**
+    - ❓ Zacht, hard of hybride (§4)?
 
 ### De 10 skills (✅ lijst goedgekeurd; specialisaties nog 💡)
 
@@ -113,23 +124,31 @@ Keuzes in dit voorstel:
 - Smithing: de netherite-upgrade-specialisatie vereist Mining 30.
 - Arcana: enchants van het hoogste niveau vereisen ... (nog te bepalen)
 
-### Tegenwerkende skills: mogelijke mechanismen (💡, ronde 3)
+### Tegenwerkende skills: de vier mechanismen (a, b, c licht en d gekozen, zie boven)
 - **a) Uitrustingsconflicten:** wat je draagt of vasthoudt bepaalt welke bonussen werken. Voorbeeld: in zwaar armor werken de bewegingsbonussen van Exploration niet.
 - **b) Specialisatieconflicten:** sommige specialisaties sluiten elkaar uit over skills heen. Voorbeeld: Juggernaut (Defense) en Wanderer (Exploration) kun je niet allebei hebben.
 - **c) Tegenpolen:** XP in de ene skill maakt XP in de tegenpool trager. Voorbeelden: Melee ↔ Ranged, Smithing ↔ Arcana.
 - **d) Totaalbudget:** hoe meer levels je in totaal hebt, hoe duurder elk volgend level wordt.
 
-### Open vragen
-- ❓ Welke mechanismen voor tegenwerking?
-- ❓ Actieve abilities: per skill of per specialisatie, en hoe activeer je ze?
-- ❓ Specialisaties: hoeveel per skill, en kun je wisselen (respec)?
-- ❓ Synergieën ontdekken: per speler of voor de hele server?
-
 ## 3. XP-generatie
 _Nog niet besproken._
 
 ## 4. Levelprogressie & formules
-_Nog niet besproken._
+- ✅ Er komt een **totaalbudget** (d).
+
+### Voorstellen (💡, ronde 4)
+- **Schaal:** 0–100 per skill (10 skills, dus 1000 in totaal), eventueel met een Mastery-laag na 100.
+- **Zacht budget:** XP nodig = `basis(level) × budgetfactor(totaal)`. Voorbeeld: `budgetfactor = 1 + (totaal / 300)²`.
+  - Met 3 skills op 100 kost elk nieuw level ~2×, met 5 skills ~3,8×, met (bijna) alles ~10×.
+- **Hard budget:** een totaalplafond, bijvoorbeeld 400 levels.
+- **Hybride:** de kosten stijgen zacht, met een hard plafond aan het eind.
+- **Tempo (voorbeeld, voor de eerste skill, zonder budgetfactor):** level 25 ≈ 3 uur, level 50 ≈ 15 uur, level 75 ≈ 40 uur, level 100 ≈ 100 uur actief spelen.
+
+### Open vragen
+- ❓ Schaal en maximum; wel of geen Mastery na het maximum?
+- ❓ Vorm van het budget: zacht, hard of hybride?
+- ❓ Tempo: hoeveel speeluren tot level 50 en 100?
+- ❓ Op welk level kies je de eerste en de tweede specialisatie? Wat kost wisselen (respec)?
 
 ## 5. Skill-unlocks
 _Nog niet besproken._
@@ -137,6 +156,11 @@ _Nog niet besproken._
 ## 6. Abilities & skill trees
 - ✅ Elke skill heeft een eigen tree (zie §2).
 - ✅ Specialisaties hebben altijd trade-offs.
+- ✅ **Eén actieve ability per specialisatie** (niet per skill).
+- ✅ **Volledig passieve skills mogen**, maar ze mogen niet te sterk worden. Bij zo'n skill krijgt een specialisatie een sterkere passieve bonus met trade-off, in plaats van een actieve ability.
+- ✅ **Specialisaties: optie B.** Eén hoofdspecialisatie, later een tweede.
+  - ❓ Op welke levels, en wat kost wisselen (zie §4)?
+- 💡 Actieve abilities activeer je met een **ability-toets** (standaard `R`, aan te passen) terwijl je het juiste gereedschap vasthoudt. Niet met rechtsklik, want dat botst met blokken plaatsen en blokkeren met een schild.
 - _Rest nog niet besproken._
 
 ## 7. Doodsstraffen
