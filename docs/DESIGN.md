@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION — Ontwerpdocument
 
 > Werktitel. De definitieve naam is nog niet gekozen.
-> Status: **Interview ronde 20 (fase 6: de GUI). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
+> Status: **Fase 6: GUI-mockup ter beoordeling. Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
 
 Legenda per mechaniek:
 - ✅ **Bevestigd**: door de eigenaar goedgekeurd
@@ -33,7 +33,8 @@ Legenda per mechaniek:
 | 17 | Skill 9/10: Smithing | ✅ akkoord, Masterwork afgezwakt |
 | 18 | Skill 10/10: Arcana | ✅ akkoord |
 | 19 | Conflicten tussen specialisaties, synergieën, harde vereisten | ✅ akkoord; synergieën mogen in de repo |
-| 20 | Fase 6: stijl, schermen, skill tree, "op het spel", HUD | ❓ wacht op antwoorden |
+| 20 | Fase 6: stijl, schermen, skill tree, "op het spel", HUD | ✅ akkoord |
+| 21 | GUI-mockup | ❓ wacht op beoordeling |
 
 ---
 
@@ -716,7 +717,7 @@ Ter referentie, de speeltijd van één level (zonder budgetfactor):
 - ✅ Een eigen client-scherm, geen kist-menu.
 - ✅ Geen timer voor doodsvermoeidheid in beeld (HUD); wel in de GUI (§7).
 
-### Voorstellen (💡, ronde 20)
+### Ontwerp (✅ goedgekeurd in ronde 20)
 - **Openen:** de inventory-knop staat naast de knoppen van ED, of direct naast het receptenboek als ED er niet is. De sneltoets is standaard `K`.
 - **Stijl:** dezelfde vanilla-huisstijl als Extreme Dimensions: panelen als de tooltip-box, de 16 chatkleuren, platte meters en de opties voor kleurenblindheid en minder flitsen.
   - Skill-iconen zijn vanilla-items: zwaard, boog, schild, houweel, log, tarwe, hengel, kompas, aambeeld en enchanted book.
