@@ -166,7 +166,7 @@ public class SkillScreen extends Screen {
 		}
 	}
 
-	static void send(TreePayload request) {
+	public static void send(TreePayload request) {
 		if (ClientPlayNetworking.canSend(TreePayload.TYPE)) {
 			ClientPlayNetworking.send(request);
 		}

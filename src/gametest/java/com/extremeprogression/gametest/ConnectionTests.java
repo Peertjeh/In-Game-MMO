@@ -166,7 +166,8 @@ public class ConnectionTests {
 		ServerPlayer target = TestPlayers.survivor(helper, "Target");
 		float hit = MasteryEffects.damage(target, p.damageSources().playerAttack(p), 10);
 		check(helper, close(hit, 10.3f), "three ranks of Duelist deal %s, expected 10.3", hit);
-		check(helper, close(MasteryEffects.damage(helper.spawn(net.minecraft.world.entity.EntityType.ZOMBIE, 1, 2, 1), p.damageSources().playerAttack(p), 10), 10),
+		check(helper, close(MasteryEffects.damage((net.minecraft.world.entity.LivingEntity) helper.spawn(net.minecraft.world.entity.EntityTypes.ZOMBIE,
+				new net.minecraft.core.BlockPos(1, 2, 1), net.minecraft.world.entity.EntitySpawnReason.NATURAL), p.damageSources().playerAttack(p), 10), 10),
 				"Duelist counted against a zombie");
 		// Swift Feet and Soft Landing are Exploration's: not in heavy armor
 		Progression.setLevel(progress, Skill.EXPLORATION, Config.MAX_LEVEL);
