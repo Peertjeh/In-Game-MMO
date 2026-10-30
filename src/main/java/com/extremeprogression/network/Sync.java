@@ -26,6 +26,7 @@ public final class Sync {
 		PayloadTypeRegistry.clientboundPlay().register(OpenSheetPayload.TYPE, OpenSheetPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(ActivePayload.TYPE, ActivePayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(OreSensePayload.TYPE, OreSensePayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(InsightPayload.TYPE, InsightPayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(TreePayload.TYPE, TreePayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(AbilityPayload.TYPE, AbilityPayload.CODEC);
 	}

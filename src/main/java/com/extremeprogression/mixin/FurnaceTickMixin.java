@@ -17,19 +17,20 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-/** Every furnace tick: the fuel as it was before, so a fuel the trunk saves can be put back. */
+/** Every furnace tick: the fuel and output as they were before, so a saved fuel can be put back and a new output seen. */
 @Mixin(AbstractFurnaceBlockEntity.class)
 public abstract class FurnaceTickMixin {
 	@Inject(method = "serverTick", at = @At("HEAD"), require = 1)
 	private static void extremeprogression$before(ServerLevel level, BlockPos pos, BlockState state, AbstractFurnaceBlockEntity furnace, CallbackInfo ci,
-			@Share("fuel") LocalRef<ItemStack> fuel, @Share("lit") LocalIntRef lit) {
+			@Share("fuel") LocalRef<ItemStack> fuel, @Share("lit") LocalIntRef lit, @Share("output") LocalRef<ItemStack> output) {
 		fuel.set(furnace.getItem(1).copy());
 		lit.set(((FurnaceAccess) furnace).extremeprogression$getLitTimeRemaining());
+		output.set(furnace.getItem(2).copy());
 	}
 
 	@Inject(method = "serverTick", at = @At("TAIL"), require = 1)
 	private static void extremeprogression$after(ServerLevel level, BlockPos pos, BlockState state, AbstractFurnaceBlockEntity furnace, CallbackInfo ci,
-			@Share("fuel") LocalRef<ItemStack> fuel, @Share("lit") LocalIntRef lit) {
-		Trunks.furnaceTick(furnace, fuel.get(), lit.get());
+			@Share("fuel") LocalRef<ItemStack> fuel, @Share("lit") LocalIntRef lit, @Share("output") LocalRef<ItemStack> output) {
+		Trunks.furnaceTick(furnace, fuel.get(), lit.get(), output.get());
 	}
 }

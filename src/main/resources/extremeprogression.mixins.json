@@ -5,7 +5,9 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"AbstractArrowAccess",
+		"AbstractThrownPotionMixin",
 		"AnvilMenuMixin",
+		"AreaEffectCloudMixin",
 		"BaseContainerBlockEntityMixin",
 		"BeehiveBlockMixin",
 		"BlockItemMixin",
@@ -18,6 +20,7 @@
 		"BrushableBlockEntityMixin",
 		"CrossbowItemMixin",
 		"EnchantmentHelperMixin",
+		"EnchantmentMenuAccess",
 		"EnchantmentMenuMixin",
 		"EntityAccess",
 		"EntityTypeMixin",

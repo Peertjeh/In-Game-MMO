@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "custom_color": 2445989,
+        "custom_effects": [
+          {
+            "id": "minecraft:absorption",
+            "duration": 2400
+          }
+        ],
+        "custom_name": "absorption"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:honeycomb"
+  }
+}

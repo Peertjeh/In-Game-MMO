@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 
-/** A furnace's progress and fuel (Fire Master and Fuel Saver, Smithing 5 and 20). */
+/** A furnace's progress and fuel (Fire Master and Fuel Saver, Smithing 5 and 20; the Forgemaster's nodes). */
 @Mixin(AbstractFurnaceBlockEntity.class)
 public interface FurnaceAccess {
 	@Accessor("cookingTimer")
@@ -19,4 +19,10 @@ public interface FurnaceAccess {
 
 	@Accessor("litTimeRemaining")
 	int extremeprogression$getLitTimeRemaining();
+
+	@Accessor("litTimeRemaining")
+	void extremeprogression$setLitTimeRemaining(int ticks);
+
+	@Accessor("litTotalTime")
+	void extremeprogression$setLitTotalTime(int ticks);
 }

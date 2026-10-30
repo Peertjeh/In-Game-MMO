@@ -58,6 +58,8 @@ public final class Specs {
 		Foraging.register();
 		Farming.register();
 		Fishing.register();
+		Smithing.register();
+		Arcana.register();
 		ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) -> secondary() || allow(entity, source, amount));
 		ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> {
 			if (entity instanceof Projectile projectile && entity.tickCount == 0 && projectile.getOwner() instanceof ServerPlayer p) {
@@ -212,6 +214,7 @@ public final class Specs {
 
 	/** Every server tick, after the trunks. */
 	public static void tick(MinecraftServer server) {
+		Arcana.server(server);
 		Active.tick(server);
 		Wounds.tick(server);
 		Foraging.tick(server);
@@ -223,6 +226,7 @@ public final class Specs {
 			Mining.tick(p);
 			Farming.tick(p);
 			Fishing.tick(p);
+			Smithing.tick(p);
 		}
 		Farming.endOfTick();
 	}
@@ -235,6 +239,7 @@ public final class Specs {
 	/** An effect about to be given to an entity: changed, or null when it is shaken off. */
 	public static MobEffectInstance effect(LivingEntity target, MobEffectInstance effect) {
 		MobEffectInstance out = Defense.effect(target, effect);
+		out = out == null ? null : Arcana.effect(target, out);
 		return out == null ? null : Foraging.effect(target, out);
 	}
 

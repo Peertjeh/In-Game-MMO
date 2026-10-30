@@ -34,6 +34,8 @@ public class ExtremeProgressionClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		ClientPlayNetworking.registerGlobalReceiver(ProgressPayload.TYPE, (payload, context) ->
 				context.client().execute(() -> ClientProgress.apply(payload)));
+		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.InsightPayload.TYPE, (payload, context) ->
+				context.client().execute(() -> com.extremeprogression.client.inventory.InsightPanel.apply(payload)));
 		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.OreSensePayload.TYPE, (payload, context) ->
 				context.client().execute(() -> OreSense.show(payload)));
 		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.ActivePayload.TYPE, (payload, context) ->
@@ -70,6 +72,10 @@ public class ExtremeProgressionClient implements ClientModInitializer {
 		ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
 			if (screen instanceof InventoryScreen inv && ClientProgress.current() != null) {
 				SheetButton.attach(inv);
+			}
+			if (screen instanceof net.minecraft.client.gui.screens.inventory.EnchantmentScreen table) {
+				com.extremeprogression.client.inventory.InsightPanel.clear();
+				com.extremeprogression.client.inventory.InsightPanel.attach(table);
 			}
 		});
 	}

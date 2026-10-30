@@ -207,9 +207,9 @@ public class ClientShots implements FabricClientGameTest {
 				keys.add(spec.translationKey() + part);
 			}
 		}
-		// The nodes of the specializations whose content is built (milestone 6, parts 1 and 2: all but Crafting)
+		// The nodes of all thirty specializations (milestone 6)
 		for (Specialization spec : Specialization.values()) {
-			if (spec.skill.category != Category.CRAFTING) {
+			{
 				keys.add(spec.translationKey() + ".ability.ranks");
 				for (String slot : new String[] {"p1", "p2", "p3", "p4", "c1", "c2"}) {
 					keys.add(spec.translationKey() + "." + slot);
@@ -217,7 +217,9 @@ public class ClientShots implements FabricClientGameTest {
 				}
 			}
 		}
-		keys.addAll(List.of("gui.extremeprogression.node.desc.ability_key", "gui.extremeprogression.node.desc.choice_rule", "gui.extremeprogression.node.light_only"));
+		keys.addAll(List.of("gui.extremeprogression.node.desc.ability_key", "gui.extremeprogression.node.desc.choice_rule", "gui.extremeprogression.node.light_only",
+				"gui.extremeprogression.insight.title", "gui.extremeprogression.insight.offer", "gui.extremeprogression.insight.reroll",
+				"item.minecraft.potion.effect.haste", "item.minecraft.splash_potion.effect.resistance", "item.minecraft.lingering_potion.effect.absorption"));
 		for (TreeRules.Result r : TreeRules.Result.values()) {
 			if (r != TreeRules.Result.OK) {
 				keys.add("message.extremeprogression.tree." + r.name().toLowerCase(java.util.Locale.ROOT));

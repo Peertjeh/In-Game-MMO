@@ -360,48 +360,75 @@ public final class Trunks {
 
 	private static final WeakHashMap<BlockEntity, Double> SPEED_UP = new WeakHashMap<>();
 
-	/** 5% faster: every tick, 0.05 of an extra tick of progress, given out whole. */
-	private static boolean extraTick(BlockEntity be) {
-		double carry = SPEED_UP.getOrDefault(be, 0.0) + 0.05;
-		boolean whole = carry >= 1;
-		SPEED_UP.put(be, whole ? carry - 1 : carry);
+	/** A speed-up of this many extra ticks a tick (0.05 for 5% faster, 3 for 4×): the whole ticks due now, the rest carried. */
+	private static int extraTicks(BlockEntity be, double rate) {
+		double carry = SPEED_UP.getOrDefault(be, 0.0) + rate;
+		int whole = (int) carry;
+		SPEED_UP.put(be, carry - whole);
 		return whole;
 	}
 
 	/**
-	 * After a furnace's tick. Fire Master (Smithing 5): the furnaces you use smelt 5% faster. Fuel Saver (Smithing 20):
-	 * a 10% chance that the fuel it just took is not consumed.
+	 * After a furnace's tick, for the player who last opened it. Fire Master (Smithing 5): 5% faster, with the
+	 * Forgemaster's Hot Coals and Flash Forge on top. Fuel Saver (Smithing 20): a 10% chance that the fuel it just took is
+	 * not consumed (Coal Miser more). Slow Burn: that fuel burns longer. Second Smelt: a chance of one more output.
 	 */
-	public static void furnaceTick(AbstractFurnaceBlockEntity furnace, ItemStack fuelBefore, int litBefore) {
+	public static void furnaceTick(AbstractFurnaceBlockEntity furnace, ItemStack fuelBefore, int litBefore, ItemStack outputBefore) {
 		ServerPlayer p = user(furnace);
 		if (p == null) {
 			return;
 		}
 		com.extremeprogression.mixin.FurnaceAccess f = (com.extremeprogression.mixin.FurnaceAccess) furnace;
 		int timer = f.extremeprogression$getCookingTimer();
-		if (timer > 0 && timer < f.extremeprogression$getCookingTotalTime() - 1 && has(p, Skill.SMITHING, 5) && extraTick(furnace)) {
-			f.extremeprogression$setCookingTimer(timer + 1);
+		int total = f.extremeprogression$getCookingTotalTime();
+		double speed = com.extremeprogression.spec.Smithing.furnaceSpeed(p);
+		if (timer > 0 && timer < total - 1 && speed > 0) {
+			int extra = extraTicks(furnace, speed);
+			if (extra > 0) {
+				f.extremeprogression$setCookingTimer(Math.min(total - 1, timer + extra));
+			}
 		}
-		if (f.extremeprogression$getLitTimeRemaining() > litBefore && !fuelBefore.isEmpty() && !ItemStack.matches(fuelBefore, furnace.getItem(1))
-				&& has(p, Skill.SMITHING, 20) && p.getRandom().nextDouble() < 0.10) {
-			furnace.setItem(1, fuelBefore);
+		int lit = f.extremeprogression$getLitTimeRemaining();
+		if (lit > litBefore && !fuelBefore.isEmpty() && !ItemStack.matches(fuelBefore, furnace.getItem(1))) {
+			if (p.getRandom().nextDouble() < com.extremeprogression.spec.Smithing.fuelSaved(p)) {
+				furnace.setItem(1, fuelBefore);
+			}
+			double slow = com.extremeprogression.spec.Smithing.slowBurn(p);
+			if (slow > 0) {
+				int longer = lit + (int) Math.round(lit * slow);
+				f.extremeprogression$setLitTimeRemaining(longer);
+				f.extremeprogression$setLitTotalTime(longer);
+			}
+		}
+		ItemStack out = furnace.getItem(2);
+		if (out.getCount() > outputBefore.getCount() && out.getCount() < out.getMaxStackSize() && com.extremeprogression.xp.XpTables.smelted(out) > 0
+				&& p.getRandom().nextDouble() < com.extremeprogression.spec.Smithing.secondSmelt(p)) {
+			out.grow(1);
 		}
 	}
 
-	/** After a brewing stand's tick. Busy Stand (Arcana 5): the stands you use brew 5% faster. */
+	/** After a brewing stand's tick. Busy Stand (Arcana 5): the stands you use brew 5% faster (the Alchemist's more). */
 	public static void brewingTick(BrewingStandBlockEntity stand) {
 		ServerPlayer p = user(stand);
 		com.extremeprogression.mixin.BrewingStandAccess b = (com.extremeprogression.mixin.BrewingStandAccess) stand;
 		int time = b.extremeprogression$getBrewTime();
-		if (p != null && time > 1 && has(p, Skill.ARCANA, 5) && extraTick(stand)) {
-			b.extremeprogression$setBrewTime(time - 1);
+		if (p != null && time > 1) {
+			int extra = extraTicks(stand, com.extremeprogression.spec.Arcana.brewSpeed(p));
+			if (extra > 0) {
+				b.extremeprogression$setBrewTime(Math.max(1, time - extra));
+			}
 		}
 	}
 
-	/** Whether the player who last used this brewing stand has Potent Brews (Arcana 15). */
+	/** The player who last opened this brewing stand or furnace, if online. */
+	public static ServerPlayer userOf(BlockEntity be) {
+		return user(be);
+	}
+
+	/** Whether the player who last used this brewing stand has Potent Brews (Arcana 15); never an Enchanter (their price). */
 	public static boolean potentBrews(BrewingStandBlockEntity stand) {
 		ServerPlayer p = user(stand);
-		return p != null && has(p, Skill.ARCANA, 15);
+		return p != null && has(p, Skill.ARCANA, 15) && !com.extremeprogression.spec.Specs.has(p, com.extremeprogression.skill.Specialization.ENCHANTER);
 	}
 
 	/** Thrifty Anvil (Smithing 10): 5% fewer levels. Tempered Steel (Smithing 15): a repair restores 5% more. */
@@ -413,10 +440,19 @@ public final class Trunks {
 		if (!result.isEmpty() && left.isDamageableItem() && result.getDamageValue() < left.getDamageValue() && has(player, Skill.SMITHING, 15)) {
 			result.setDamageValue(Math.max(0, result.getDamageValue() - (int) Math.ceil(result.getMaxDamage() * 0.05)));
 		}
+		// (the Smithing specializations' repairs come after the trunk's)
+		if (!result.isEmpty() && left.isDamageableItem()) {
+			com.extremeprogression.spec.Smithing.repaired(player, left, result);
+		}
 	}
 
 	/** Lapis Saver (Arcana 10) and Thrifty Magic (Arcana 20): after an enchantment, a chance of a lapis or a level back. */
 	public static void enchanted(Player player, net.minecraft.world.inventory.EnchantmentMenu menu) {
+		com.extremeprogression.spec.Arcana.enchanted(player, menu);
+		// The Alchemist's price: enchanting gets no bonuses
+		if (com.extremeprogression.spec.Specs.has(player, com.extremeprogression.skill.Specialization.ALCHEMIST)) {
+			return;
+		}
 		if (has(player, Skill.ARCANA, 10) && player.getRandom().nextDouble() < 0.10) {
 			ItemStack lapis = menu.getSlot(1).getItem();
 			if (lapis.isEmpty()) {

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "custom_color": 14270531,
+        "custom_effects": [
+          {
+            "id": "minecraft:haste",
+            "duration": 3600
+          }
+        ],
+        "custom_name": "haste"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:cocoa_beans"
+  }
+}

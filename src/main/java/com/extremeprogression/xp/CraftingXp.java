@@ -42,7 +42,7 @@ public final class CraftingXp {
 	/** A player took smelted items out of a furnace's output slot (by hand or shift-click). */
 	public static void smelted(Player player, ItemStack stack, int count) {
 		if (player instanceof ServerPlayer p && count > 0) {
-			XpService.award(p, Skill.SMITHING, XpTables.smelted(stack) * count);
+			XpService.award(p, Skill.SMITHING, XpTables.smelted(stack) * count * com.extremeprogression.spec.Smithing.smeltXp(p));
 		}
 	}
 
@@ -55,7 +55,7 @@ public final class CraftingXp {
 		if (left.isDamageableItem() && left.getMaxDamage() > 0) {
 			double restored = (double) (left.getDamageValue() - result.getDamageValue()) / left.getMaxDamage();
 			if (restored > 0) {
-				XpService.award(p, Skill.SMITHING, XpTables.REPAIR * XpTables.material(left) * restored);
+				XpService.award(p, Skill.SMITHING, XpTables.REPAIR * XpTables.material(left) * restored * com.extremeprogression.spec.Smithing.repairXp(p));
 			}
 		}
 		boolean enchanted = !Objects.equals(left.get(DataComponents.ENCHANTMENTS), result.get(DataComponents.ENCHANTMENTS))
@@ -72,9 +72,9 @@ public final class CraftingXp {
 		}
 		String id = BuiltInRegistries.ITEM.getKey(template.getItem()).getPath();
 		if (id.equals("netherite_upgrade_smithing_template")) {
-			XpService.award(p, Skill.SMITHING, XpTables.NETHERITE_UPGRADE);
+			XpService.award(p, Skill.SMITHING, XpTables.NETHERITE_UPGRADE * com.extremeprogression.spec.Smithing.smithXp(p));
 		} else if (id.endsWith("_armor_trim_smithing_template")) {
-			XpService.award(p, Skill.SMITHING, XpTables.ARMOR_TRIM);
+			XpService.award(p, Skill.SMITHING, XpTables.ARMOR_TRIM * com.extremeprogression.spec.Smithing.smithXp(p));
 		}
 	}
 
@@ -83,7 +83,7 @@ public final class CraftingXp {
 	/** A player enchanted at an enchanting table an offer that required this level. */
 	public static void enchanted(Player player, int requiredLevel) {
 		if (player instanceof ServerPlayer p && requiredLevel > 0) {
-			XpService.award(p, Skill.ARCANA, XpTables.ENCHANTING_PER_LEVEL * requiredLevel);
+			XpService.award(p, Skill.ARCANA, XpTables.ENCHANTING_PER_LEVEL * requiredLevel * com.extremeprogression.spec.Arcana.enchantXp(p));
 		}
 	}
 
@@ -126,14 +126,18 @@ public final class CraftingXp {
 			return;
 		}
 		setBrewed(stand, brewed(stand) & ~(1 << slot));
-		XpService.award(p, Skill.ARCANA, potionXp(stack));
+		XpService.award(p, Skill.ARCANA, potionXp(stack) * com.extremeprogression.spec.Arcana.brewXp(p));
 	}
 
 	/** A potion's Arcana XP by its form and kind (Appendix A.10). */
 	public static double potionXp(ItemStack stack) {
 		PotionContents contents = stack.get(DataComponents.POTION_CONTENTS);
-		if (contents == null || contents.potion().isEmpty()) {
+		if (contents == null) {
 			return 0;
+		}
+		if (contents.potion().isEmpty()) {
+			// (the Alchemist's own potions have their effects without a vanilla potion: they count as one with an effect)
+			return contents.customEffects().isEmpty() ? 0 : XpTables.potion(BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath(), "custom");
 		}
 		String potion = contents.potion().get().getRegisteredName();
 		potion = potion.substring(potion.indexOf(':') + 1);

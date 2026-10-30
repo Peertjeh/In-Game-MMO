@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "custom_color": 9154528,
+        "custom_effects": [
+          {
+            "id": "minecraft:resistance",
+            "duration": 3600
+          }
+        ],
+        "custom_name": "resistance"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:armadillo_scute"
+  }
+}
