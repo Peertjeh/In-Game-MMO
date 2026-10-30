@@ -338,6 +338,8 @@ public class SpecTests {
 		heavyArmor(thick);
 		helper.runAfterDelay(110, () -> {
 			check(helper, p.getHealth() >= 15.5f, "Second Wind healed to %s health, not 16", p.getHealth());
+			// (a test player does not tick by itself, so its armor's points are put on here)
+			thick.doTick();
 			check(helper, near(thick.getAttributeValue(Attributes.ARMOR), 13 * 0.9), "Resilience's iron armor gives %s, not 90%% of 13",
 					thick.getAttributeValue(Attributes.ARMOR));
 			helper.succeed();
