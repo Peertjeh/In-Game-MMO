@@ -6,7 +6,8 @@
 	"client": [
 		"AbstractClientPlayerMixin",
 		"AnvilScreenMixin",
-		"LocalPlayerMixin"
+		"LocalPlayerMixin",
+		"ContainerScreenAccess"
 	],
 	"injectors": {
 		"defaultRequire": 0

@@ -1031,5 +1031,6 @@
 	"gui.extremeprogression.settings.read_only": "Only admins can change these",
 	"gui.extremeprogression.sheet.xp_event": "XP %s %s",
 	"gui.extremeprogression.sheet.xp_event_all": "all skills",
-	"gui.extremeprogression.death.step2_off": "2+·off"
+	"gui.extremeprogression.death.step2_off": "2+·off",
+	"gui.extremeprogression.skill.or": "or"
 }

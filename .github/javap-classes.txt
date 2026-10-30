@@ -155,3 +155,12 @@ EntityType
 EditBox
 Commands
 Screen
+# Name tags with the power level
+EntityRenderer
+EntityRenderState
+AvatarRenderer
+AvatarRenderState
+PlayerRenderer
+PlayerRenderState
+LivingEntityRenderer
+AbstractClientPlayer

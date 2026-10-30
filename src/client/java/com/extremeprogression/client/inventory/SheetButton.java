@@ -1,14 +1,12 @@
 package com.extremeprogression.client.inventory;
 
+import com.extremeprogression.client.mixin.ContainerScreenAccess;
 import com.extremeprogression.client.screen.CharacterSheetScreen;
 
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -19,30 +17,34 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 /**
- * The Character Sheet, one click away from the inventory: a button right of the recipe book, or right of Extreme
- * Dimensions' Journal and Curses buttons when that mod is installed, so they never overlap (design §9). It follows the
- * recipe book button when the book opens or closes.
+ * The Character Sheet, one click away from the inventory: a small button inside the inventory's own panel, in the empty
+ * space between the player's figure and the crafting grid, above the off-hand slot. It stays clear of the recipe book's
+ * button and of the buttons other mods put beside it (Extreme Dimensions' Journal and Curses), and moves with the panel
+ * when the recipe book opens or closes.
  */
 public final class SheetButton extends AbstractButton {
 	private static final ItemStack ICON = new ItemStack(Items.EXPERIENCE_BOTTLE);
-	/** Extreme Dimensions puts its two 20-pixel buttons at the book's right edge + 2 and + 24. */
-	private static final int OFFSET = FabricLoader.getInstance().isModLoaded("extremedimensions") ? 46 : 2;
+	/** Its place in the 176 × 166 inventory panel: x 77 to 95, y 41 to 59 (the off-hand slot starts at y 62). */
+	private static final int X = 77, Y = 41, SIZE = 18;
 
-	private final AbstractWidget anchor;
+	private final InventoryScreen screen;
 
-	private SheetButton(AbstractWidget anchor) {
-		super(anchor.getX() + anchor.getWidth() + OFFSET, anchor.getY(), 20, 18, Component.translatable("gui.extremeprogression.sheet.title"));
-		this.anchor = anchor;
+	private SheetButton(InventoryScreen screen) {
+		super(0, 0, SIZE, SIZE, Component.translatable("gui.extremeprogression.sheet.title"));
+		this.screen = screen;
 		this.setTooltip(Tooltip.create(Component.translatable("gui.extremeprogression.sheet.button")));
+		place();
 	}
 
 	public static void attach(InventoryScreen screen) {
-		for (AbstractWidget w : Screens.getWidgets(screen)) {
-			if (w instanceof ImageButton) {
-				Screens.getWidgets(screen).add(new SheetButton(w));
-				return;
-			}
-		}
+		Screens.getWidgets(screen).add(new SheetButton(screen));
+	}
+
+	/** Inside the panel, wherever the panel is now. */
+	private void place() {
+		ContainerScreenAccess panel = (ContainerScreenAccess) screen;
+		this.setX(panel.extremeprogression$leftPos() + X);
+		this.setY(panel.extremeprogression$topPos() + Y);
 	}
 
 	@Override
@@ -53,11 +55,9 @@ public final class SheetButton extends AbstractButton {
 
 	@Override
 	protected void extractContents(GuiGraphicsExtractor g, int mouseX, int mouseY, float delta) {
-		// Stay beside the recipe book button wherever it moves
-		this.setX(anchor.getX() + anchor.getWidth() + OFFSET);
-		this.setY(anchor.getY());
+		place();
 		this.extractDefaultSprite(g);
-		g.fakeItem(ICON, this.getX() + 2, this.getY() + 1);
+		g.fakeItem(ICON, this.getX() + 1, this.getY() + 1);
 	}
 
 	@Override

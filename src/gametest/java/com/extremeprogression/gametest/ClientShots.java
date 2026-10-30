@@ -229,6 +229,11 @@ public class ClientShots implements FabricClientGameTest {
 				var widgets = Screens.getWidgets(inventory[0]);
 				var sheet = widgets.stream().filter(w -> w instanceof SheetButton).findFirst().orElse(null);
 				check(sheet != null, "the inventory has no Character Sheet button");
+				// Inside the inventory's own panel (176 × 166)
+				var panel = (com.extremeprogression.client.mixin.ContainerScreenAccess) inventory[0];
+				int left = panel.extremeprogression$leftPos(), top = panel.extremeprogression$topPos();
+				check(sheet.getX() >= left && sheet.getX() + sheet.getWidth() <= left + 176 && sheet.getY() >= top && sheet.getY() + sheet.getHeight() <= top + 166,
+						"the Character Sheet button lies outside the inventory, at " + (sheet.getX() - left) + ", " + (sheet.getY() - top));
 				// Beside the recipe book, and beside Extreme Dimensions' buttons when that mod is there: never over another
 				for (var w : widgets) {
 					if (w != sheet && w.visible && w.getX() < sheet.getX() + sheet.getWidth() && sheet.getX() < w.getX() + w.getWidth()

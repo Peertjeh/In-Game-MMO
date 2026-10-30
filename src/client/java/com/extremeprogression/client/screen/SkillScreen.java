@@ -30,9 +30,12 @@ import net.minecraft.network.chat.Component;
  * which a specialization is chosen or a node bought. Every request goes to the server, which decides.
  */
 public class SkillScreen extends Screen {
-	/** Small enough for GUI scale 3 at 1280 × 720 (426 × 240), the scale Minecraft picks there by itself. */
-	private static final int W = 420, H = 236;
-	private static final int TREE_W = 276, HEADER_H = 34, ROW = 12;
+	/**
+	 * The smallest size fits GUI scale 3 at 1280 × 720 (426 × 240), the scale Minecraft picks there by itself; with more
+	 * room the screen grows, up to 560 × 330, and its rows with it.
+	 */
+	private static final int MIN_W = 420, MIN_H = 236, MAX_W = 560, MAX_H = 330, HEADER_H = 34;
+	private int W = MIN_W, H = MIN_H, TREE_W = 276, ROW = 12;
 	private static final String[] ROMAN = {"", "I", "II", "III", "IV", "V"};
 
 	private final Skill skill;
@@ -40,6 +43,10 @@ public class SkillScreen extends Screen {
 	private int x0, y0;
 	/** What the detail panel shows: a specialization's id, a node's key, or "trunk.<level>" (kept across resizes). */
 	private String selectedKey = null;
+	/** Which specialization's branch the tree shows (0 to 2), chosen with its tab. */
+	private int shown = -1;
+	/** Where each node of the branch shown sits, for the lines between them. */
+	private final java.util.Map<NodeSlot, int[]> cells = new java.util.EnumMap<>(NodeSlot.class);
 	private Button action;
 	private Button respec;
 	private Button mastery;
@@ -69,36 +76,65 @@ public class SkillScreen extends Screen {
 
 	@Override
 	protected void init() {
+		W = Math.max(MIN_W, Math.min(MAX_W, this.width - 12));
+		H = Math.max(MIN_H, Math.min(MAX_H, this.height - 6));
+		TREE_W = W - Math.max(150, Math.min(200, W * 36 / 100)) - 4;
 		x0 = (this.width - W) / 2;
 		y0 = Math.max(2, (this.height - H) / 2);
 		int ty = y0 + HEADER_H + 4;
-		int colW = (TREE_W - 8 - 6) / 3;
-		int half = (colW - 2) / 2;
 		List<Specialization> specs = Specialization.of(skill);
-		for (int i = 0; i < specs.size(); i++) {
-			Specialization spec = specs.get(i);
-			int cx = x0 + 4 + i * (colW + 3);
-			if (selectedKey == null) {
-				selectedKey = spec.id;
-			}
-			add(cx, ty + 4, colW, ROW, Component.translatable(spec.translationKey()), spec.id, () -> specState(spec), () -> specBadge(spec));
-			for (NodeSlot slot : NodeSlot.values()) {
-				boolean single = slot.kind == NodeSlot.Kind.ABILITY;
-				int nx = single ? cx : cx + slot.column * (half + 2);
-				int ny = ty + 19 + (8 - slot.row) * ROW;
-				String key = TreeRules.key(spec, slot);
-				add(nx, ny, single ? colW : half, ROW - 1, Component.literal(single ? nodeName(spec, slot) : cellName(slot)), key, () -> nodeState(spec, slot), () -> nodeBadge(spec, slot));
+		SkillData d = data();
+		if (shown < 0) {
+			// (the branch of a chosen specialization first)
+			shown = 0;
+			for (int i = 0; i < specs.size(); i++) {
+				if (TreeRules.indexOf(d, specs.get(i)) == 0) {
+					shown = i;
+				}
 			}
 		}
+		if (selectedKey == null) {
+			selectedKey = specs.get(shown).id;
+		}
+		// The three specializations as tabs; the branch of the one shown below them, the full width of the tree
+		int inner = TREE_W - 8;
+		int tabW = (inner - 6) / 3;
+		for (int i = 0; i < specs.size(); i++) {
+			Specialization spec = specs.get(i);
+			int index = i;
+			this.addRenderableWidget(new TreeNode(x0 + 4 + i * (tabW + 3), ty + 4, tabW, 16, Component.translatable(spec.translationKey()), () -> specState(spec),
+					() -> index == shown, () -> {
+						selectedKey = spec.id;
+						if (shown != index) {
+							shown = index;
+							this.rebuild();
+						} else {
+							refreshButtons();
+						}
+					}, () -> specBadge(spec)));
+		}
+		// Ten rows below the tabs: eight of the branch and two of the trunk, each as tall as the room allows
+		int rows = 10;
+		ROW = Math.max(12, Math.min(18, (treeHeight() - 24 - 14 - 4) / rows));
+		Specialization spec = specs.get(shown);
+		int half = (inner - 4) / 2;
+		cells.clear();
+		for (NodeSlot slot : NodeSlot.values()) {
+			boolean single = slot.kind == NodeSlot.Kind.ABILITY;
+			int nx = single ? x0 + 4 : x0 + 4 + slot.column * (half + 4);
+			int ny = ty + 24 + (8 - slot.row) * ROW;
+			int nw = single ? inner : half;
+			cells.put(slot, new int[] {nx, ny, nw, ROW - 2});
+			add(nx, ny, nw, ROW - 2, Component.literal(nodeName(spec, slot)), TreeRules.key(spec, slot), () -> nodeState(spec, slot), () -> nodeBadge(spec, slot));
+		}
 		// The trunk: two rows of two
-		int trunkY = ty + 19 + 8 * ROW + 12;
-		int nodeW = (TREE_W - 8 - 3) / 2;
+		int trunkY = trunkY();
 		for (int i = 0; i < Skill.TRUNK_LEVELS.length; i++) {
 			int level = Skill.TRUNK_LEVELS[i];
-			int nx = x0 + 4 + (i % 2) * (nodeW + 3);
-			int ny = trunkY + (i / 2) * (ROW + 1);
+			int nx = x0 + 4 + (i % 2) * (half + 4);
+			int ny = trunkY + (i / 2) * ROW;
 			String key = "trunk.extremeprogression." + skill.id + "." + level;
-			add(nx, ny, nodeW, ROW, Component.literal(level + " · ").append(Component.translatable(key)), "trunk." + level,
+			add(nx, ny, half, ROW - 2, Component.literal(level + " · ").append(Component.translatable(key)), "trunk." + level,
 					() -> data().level >= level ? TreeNode.State.OWNED : TreeNode.State.LOCKED, () -> data().level >= level ? "✓" : null);
 		}
 		int dx = x0 + TREE_W + 4, dw = W - TREE_W - 4;
@@ -113,6 +149,17 @@ public class SkillScreen extends Screen {
 		this.addRenderableWidget(Button.builder(Component.translatable("gui.done"), b -> closeAll())
 				.pos(this.width / 2 + 96, y0 + H - 20).size(70, 20).build());
 		refreshButtons();
+	}
+
+	/** The top of the trunk's two rows, under the branch and its label. */
+	private int trunkY() {
+		return y0 + HEADER_H + 4 + 24 + 8 * ROW + 14;
+	}
+
+	/** All widgets anew (another branch shown). */
+	private void rebuild() {
+		this.clearWidgets();
+		this.init();
 	}
 
 	private void add(int x, int y, int w, int h, Component label, String key, java.util.function.Supplier<TreeNode.State> state,
@@ -201,10 +248,6 @@ public class SkillScreen extends Screen {
 		};
 	}
 
-	/** The short label of a half-width cell (P1 to P4, A or B), where the full name would not fit beside its rank. */
-	private static String cellName(NodeSlot slot) {
-		return slot.kind == NodeSlot.Kind.CHOICE ? (slot == NodeSlot.C1 ? "A" : "B") : "P" + (slot.ordinal() < 2 ? slot.column + 1 : slot.column + 3);
-	}
 
 	private TreeNode.State nodeState(Specialization spec, NodeSlot slot) {
 		SkillData d = data();
@@ -358,7 +401,7 @@ public class SkillScreen extends Screen {
 		return Ui.wrap(this.font, text, W - TREE_W - 4 - 10);
 	}
 
-	private static int treeHeight() {
+	private int treeHeight() {
 		return H - HEADER_H - 4 - 24;
 	}
 
@@ -409,7 +452,8 @@ public class SkillScreen extends Screen {
 		// The tree and the detail panel
 		int ty = y0 + HEADER_H + 4, th = treeHeight();
 		Ui.panel(g, x0, ty, TREE_W, th);
-		Ui.text(g, this.font, Ui.tr("gui.extremeprogression.skill.trunk"), x0 + 4, ty + 19 + 8 * ROW + 2, Ui.MUTED);
+		branchLines(g);
+		Ui.text(g, this.font, Ui.tr("gui.extremeprogression.skill.trunk"), x0 + 4, trunkY() - 11, Ui.MUTED);
 		int dx = x0 + TREE_W + 4, dw = W - TREE_W - 4;
 		Ui.panel(g, dx, ty, dw, th);
 		Detail selected = detail(selectedKey);
@@ -436,6 +480,35 @@ public class SkillScreen extends Screen {
 			for (int i = 0; i < shown; i++) {
 				Ui.text(g, this.font, status.get(i), dx + 5, ty + th - 22 - shown * 9 + i * 9, selected.statusColor());
 			}
+		}
+	}
+
+	/**
+	 * The lines of the branch: from every node down to the nodes it needs, and "or" between the two choices, so the
+	 * way up the branch reads at a glance. Drawn under the nodes.
+	 */
+	private void branchLines(GuiGraphicsExtractor g) {
+		int line = Ui.argb(255, Ui.mix(Ui.DIM, Ui.INK, 0.2));
+		for (java.util.Map.Entry<NodeSlot, int[]> e : cells.entrySet()) {
+			int[] c = e.getValue();
+			int cx = c[0] + c[2] / 2;
+			for (NodeSlot need : e.getKey().requires()) {
+				int[] n = cells.get(need);
+				if (n == null) {
+					continue;
+				}
+				int nx = n[0] + n[2] / 2;
+				int top = c[1] + c[3], bottom = n[1];
+				int mid = (top + bottom) / 2;
+				// down from this node, across, and down into the one it needs
+				g.fill(cx, top, cx + 1, mid + 1, line);
+				g.fill(Math.min(cx, nx), mid, Math.max(cx, nx) + 1, mid + 1, line);
+				g.fill(nx, mid, nx + 1, bottom, line);
+			}
+		}
+		int[] a = cells.get(NodeSlot.C1), b = cells.get(NodeSlot.C2);
+		if (a != null && b != null) {
+			Ui.centered(g, this.font, Ui.tr("gui.extremeprogression.skill.or"), (a[0] + a[2] + b[0]) / 2 + 1, a[1] + (a[3] - 8) / 2, Ui.DIM);
 		}
 	}
 
@@ -473,6 +546,15 @@ public class SkillScreen extends Screen {
 	/** The selected part, for tests. */
 	public void select(String key) {
 		selectedKey = key;
-		refreshButtons();
+		// (a node of another branch shows that branch)
+		int slash = key.indexOf('/');
+		Specialization spec = Specialization.byId(slash < 0 ? key : key.substring(0, slash));
+		int index = spec == null ? -1 : Specialization.of(skill).indexOf(spec);
+		if (index >= 0 && index != shown) {
+			shown = index;
+			rebuild();
+		} else {
+			refreshButtons();
+		}
 	}
 }
