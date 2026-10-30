@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION — Ontwerpdocument
 
 > Werktitel. De definitieve naam is nog niet gekozen.
-> Status: **Interview ronde 8 (fase 5: skill trees). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
+> Status: **Interview ronde 9 (fase 5: skills per stuk, te beginnen met Melee). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
 
 Legenda per mechaniek:
 - ✅ **Bevestigd**: door de eigenaar goedgekeurd
@@ -21,7 +21,8 @@ Legenda per mechaniek:
 | 5 | Fase 3 afronden: getallen voor tempo, plafond, Mastery, respec, tegenpolen | ✅ alles akkoord |
 | 6 | Fase 4 deel 1: wat een dood kost, welke skills, herstel, vangnet, Extreme Dimensions | ✅ beantwoord |
 | 7 | Fase 4 deel 2: herhaalde doden, dimensies, vermoeidheid, Mastery, PvP | ✅ beantwoord |
-| 8 | Fase 5: opbouw van de trees, punten, ranks, cooldowns, afleren | ❓ wacht op antwoorden |
+| 8 | Fase 5: opbouw van de trees, punten, ranks, cooldowns, afleren | ✅ beantwoord |
+| 9 | Skill 1/10: Melee | ❓ wacht op antwoorden |
 
 ---
 
@@ -127,6 +128,42 @@ Keuzes in dit voorstel:
 - Excavation valt onder Mining (Excavator).
 - Geen aparte Cooking-skill (in vanilla is koken alleen smelten). Voedselefficiëntie kan onder Farming of Exploration vallen.
 
+### Skill 1/10: Melee (💡 voorstel, ronde 9)
+**Identiteit:** vechten van dichtbij. Melee beloont timing en goed gekozen wapens, niet klikspam.
+
+**XP:**
+- XP = toegebrachte schade × gevarenfactor van het doelwit.
+  - De schade telt maximaal tot de resterende levens van het doelwit (geen XP voor overkill).
+  - Voorbeelden van gevarenfactoren: zombie 1,0 · skelet 1,2 · creeper 1,5 · enderman 1,5 · wither-skelet 2,0 · warden en bazen 3,0.
+- **Alleen volledig opgeladen klappen** (aanvalsbalk ≥ 90%) geven XP. Klikspam en macro's leveren dus niets op.
+- Passieve dieren geven geen XP. Mobs uit spawners of spawn-eggs geven geen XP (details in fase 7).
+
+**Stam** (gratis, vanzelf vrij):
+| Level | Bonus |
+|---|---|
+| 5 | Gevechtsritme: de aanvalsbalk laadt 3% sneller |
+| 10 | Volle zwaai: volledig opgeladen klappen doen +5% schade |
+| 15 | Vaste voet: 10% minder knockback terwijl je aanvalt |
+| 20 | Genadeslag: kritieke klappen (in de val) doen +10% schade |
+
+**Specialisaties** (eerste op 25, tweede op 75):
+| | **Blade** | **Crusher** | **Brawler** |
+|---|---|---|---|
+| Wapens | Zwaard, speer, trident (van dichtbij) | Bijl, mace | Vuisten (lege hand) |
+| Speelstijl | Precisie, bloeden, pareren | Zware klappen, armor breken, wankelen | Snelheid, combo's, ontwapenen |
+| Actieve ability | **Riposte**: 3 seconden lang wordt de eerstvolgende klap die jou raakt volledig gepareerd, en je slaat terug met een zekere crit plus bloeden. Cooldown 4 min. | **Shatter**: je volgende volle klap binnen 5 seconden geeft een schokgolf. Die raakt alle vijanden binnen 3 blokken, slaat ze terug, en zet hun armor 8 seconden op 0. Cooldown 5 min. | **Flurry**: 6 seconden lang negeer je de aanvalsbalk, en elke klap bouwt je combo op. Cooldown 4 min. |
+| Trade-off | −15% schade tegen doelwitten met zware armor | −10% aanvalssnelheid met **alle** wapens | Werkt alleen met een lege hand **en** zonder borstplaat van ijzer of zwaarder |
+| Voorbeeld keuzeknoop | Diepe snede (langer bloeden) **of** Snelle snede (+aanvalssnelheid) | Aardbeving (mace-smash met een groter bereik) **of** Kloof (bijl houdt schilden langer uitgeschakeld) | IJzeren vuist (+schade) **of** Ontwapenen (kans dat een speler zijn wapen laat vallen) |
+
+**Mastery-perks** (voorbeeld, 1 van 2 per rank): +1% schade tegen bazen **of** +1% schade tegen spelers.
+
+**Tegenwerking:**
+- Tegenpool: **Ranged** (zie §2).
+- Uitrustingsconflict: Brawler (zie de trade-off hierboven).
+- Conflicten tussen specialisaties van verschillende skills leggen we vast als alle skills ontworpen zijn.
+
+**Geen nieuwe items nodig.**
+
 ### Voorbeelden van harde vereisten (D) (💡)
 - Smithing: de netherite-upgrade-specialisatie vereist Mining 30.
 - Arcana: enchants van het hoogste niveau vereisen ... (nog te bepalen)
@@ -175,8 +212,8 @@ Ter referentie, de speeltijd van één level (zonder budgetfactor):
 |---|---|---|---|---|---|---|
 | Naar het volgende level | ~15 min | ~1,1 uur | ~3,4 uur | ~6,7 uur | ~9 uur | ~10,5 uur |
 
-### Open vragen
-- ❓ Mag je een skill bewust laten zakken ("afleren") om onder het plafond ruimte vrij te maken? (komt terug bij de skill trees)
+- ✅ **Geen afleren.** Wie het plafond van 400 haalt, zit vast aan zijn keuzes (ronde 8).
+  - Alleen een dood kan levels laten zakken. Dat is geen bruikbare truc om ruimte vrij te maken: het verlies valt over alle skills (de hoogste het meest) en je kunt niet kiezen waar.
 
 ## 5. Skill-unlocks
 - ✅ Specialisaties komen vrij op **level 25** en **level 75**. Mastery begint na **level 100** (zie §4 en §6).
@@ -193,20 +230,20 @@ Ter referentie, de speeltijd van één level (zonder budgetfactor):
 - ✅ **Mastery:** 10 ranks per skill na level 100, elk ≈ 40 uur. Bij elke rank kies je 1 van 2 kleine perks.
 - ✅ Actieve abilities activeer je met een **ability-toets** (standaard `R`, aan te passen) terwijl je het juiste gereedschap vasthoudt. Niet met rechtsklik.
 
-### Voorstellen (💡, ronde 8)
-- **Stam en takken:**
+### Opbouw van elke tree (✅ ronde 8)
+- ✅ **Stam en takken:**
   - Elke skill heeft een **stam** met gedeelde passieve bonussen. Die komen vanzelf vrij op levels 5, 10, 15 en 20.
-  - Vanaf level 25 kies je een tak (je specialisatie).
-- **Punten:**
+  - Op level 25 kies je een tak (je specialisatie).
+- ✅ **Punten:**
   - Vanaf level 25 krijg je **1 skillpunt per level**. Op level 100 heb je er dus 75.
-  - Een knoop in de tak kost 1–3 punten. Een tak kost meer dan 75 punten, dus je kunt niet alles nemen. Twee spelers met dezelfde specialisatie verschillen daardoor nog steeds.
+  - Een knoop kost 1–3 punten. Een volledige tak kost meer dan 75 punten, dus je kunt nooit alles nemen.
   - Vanaf level 75 deelt je tweede specialisatie dezelfde puntenpot.
-- **Keuzeknopen:** op sommige plekken in een tak kies je A **of** B. Die keuze is definitief, behalve via respec.
-- **Ability-ranks:** de actieve ability van een specialisatie heeft ranks I–V, die je koopt met punten.
-- **Punten herverdelen** binnen dezelfde specialisatie kost minder dan een volledige respec: 5% XP en 1 dag wachten.
-- **Cooldowns:** lang en beslissend, 3–5 minuten met een sterk effect. Geen korte spam-abilities.
-- **Twee actieve abilities** in één skill (na level 75): `R` voor de eerste specialisatie, `Shift + R` voor de tweede.
-- **Afleren:** onder het plafond van 400 kun je een skill bewust laten zakken om ruimte vrij te maken. Dat verlies is permanent, net als bij een dood.
+- ✅ **Soms keuzeknopen:** op enkele plekken in een tak kies je A **of** B.
+- ✅ **Ability-ranks I–V** voor de actieve ability van een specialisatie, te kopen met punten.
+- ✅ **Punten herverdelen** binnen dezelfde specialisatie kost **evenveel als een volledige respec**: 20% XP en 7 dagen.
+- ✅ **Lange cooldowns:** 3–5 minuten, met een sterk en beslissend effect.
+- 💡 **Twee actieve abilities** in één skill (na level 75): `R` voor de eerste specialisatie, `Shift + R` voor de tweede.
+- 💡 **Punten bij levelverlies:** zak je onder een level, dan valt het laatst gekochte punt eerst weg. Wordt het level teruggewonnen, dan komt dat punt automatisch terug op dezelfde plek.
 
 ## 7. Doodsstraffen
 ### Vaste principes (uit de opdracht, geen keuze)
