@@ -834,11 +834,43 @@ For reference, the play time of a single level (without the budget factor):
 - **Creative and Spectator** mode give no XP.
 - Mobs from **`/summon`**, spawn eggs (also from a dispenser) and plain spawners are flagged and give 0 XP. The flag is stored on the entity, so it survives restarts and unloaded chunks.
 
+### How milestone 3 implements it (version 0.4.0)
+- **Marks per block**, saved with the chunk as three bitsets per section (§10): *placed*, *bonemealed*, and *planted*
+  (grown by itself from something a player planted).
+  - *Placed:* every block placed from an item (by a player or a dispenser), every block a piston moved, and stone,
+    cobblestone, obsidian and basalt that lava and water formed.
+  - A block's marks go when it is replaced by another block. They stay between blocks that turn into each other: the
+    soils (dirt, grass, farmland, mud, clay and so on), a log and its stripped log, the parts of a cave vine. A falling
+    block takes its marks along.
+  - *Bonemealed:* everything bonemeal changes or grows, by hand or from a dispenser: the crop or bush itself, a whole
+    tree, the flowers on a grass block. Picking berries that bonemeal ripened clears the mark, so what grows back by
+    itself counts again.
+  - *Planted:* the logs of a tree grown from a placed sapling (25% XP), mushrooms spread from a placed one and vines
+    grown down from planted glow berries (no Foraging XP: they are not wild).
+- **Only a player's own hand counts:** XP comes from breaking a block, picking or shearing by hand, fishing, breeding and
+  taming. Explosions, pistons, water, dispensers and villagers never give any.
+- **Mining** needs a pickaxe that can mine the block (a wooden pickaxe on diamond ore gives nothing), and a shovel for
+  the shovel blocks. Logs need no axe.
+- **AFK:** real play is looking around, a change in the movement keys, or an interaction. Fishing asks for looking
+  around or the keys, because casting can be done with an auto-clicker.
+- **Diminishing returns:** a gain keeps `threshold ÷ XP in the window` once the window is past the threshold, never
+  less than the floor (so 50% at 10,000 XP in 10 minutes, 5% from 100,000).
+- 💡 Choices made while building, open to change (all in the config or the XP table):
+  - "Overfished": catches 11–20 in one spot give **25%**, from the 21st **10%**.
+  - Wood new in 26.3: **poplar logs 18 XP**, like birch.
+  - Rare flowers (10 XP): blue orchid, allium, lily of the valley, the eyeblossoms, the golden dandelion (new in 26.3),
+    the spore blossom and the cactus flower. Every other wild flower 6 XP.
+  - Taming an animal the table does not list: 200 XP.
+- Still to come: **damage your tamed animals deal** (Farming XP) needs the mob danger factors and origin flags, so it
+  comes with the combat XP in milestone 4.
+- ❓ **Foxes** cannot be tamed in vanilla, only bred (the baby trusts you). For now a fox baby gives the normal 40
+  breeding XP. Giving the 300 taming XP per bred fox would make a fox farm far faster than any other Farming.
+
 ## 13. Implementation roadmap (💡 proposal)
 
 Work starts only after the owner's final approval (§15). Each milestone ends with: compiling, running the tests, checking for regressions, a report of what was built and what is still open, and the owner's approval before the next major system.
 
-Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 next.
+Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 built (0.4.0), being verified.
 
 | # | Milestone | Contents | Tests |
 |---|---|---|---|
