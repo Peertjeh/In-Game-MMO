@@ -1,7 +1,6 @@
 package com.extremeprogression.gametest;
 
-import java.lang.reflect.Field;
-import java.util.Locale;
+import java.lang.reflect.Method;
 import java.util.UUID;
 
 import com.mojang.authlib.GameProfile;
@@ -13,6 +12,7 @@ import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.level.GameType;
 
 /**
@@ -32,41 +32,21 @@ final class TestPlayers {
 		new EmbeddedChannel(connection);
 		level.getServer().getPlayerList().placeNewPlayer(connection, p, cookie);
 		p.setGameMode(GameType.SURVIVAL);
-		LOADED = clientLoaded(p);
+		clientLoaded(p);
 		return p;
 	}
 
-	/** What {@link #clientLoaded} found the last time, for failure messages. */
-	static String LOADED = "";
-
 	/**
-	 * A player takes no damage until their client reports it has loaded the world, and a test player has no client: the
-	 * flag is set here, wherever this version keeps it (found by name, as it moved between versions).
+	 * A player takes no damage until their client reports it has loaded the world (ServerboundPlayerLoadedPacket), and a
+	 * test player has no client: the server is told so directly.
 	 */
-	private static String clientLoaded(ServerPlayer p) {
-		StringBuilder found = new StringBuilder();
-		for (Object target : new Object[] {p, p.connection}) {
-			for (Class<?> c = target.getClass(); c != null && c != Object.class; c = c.getSuperclass()) {
-				for (Field f : c.getDeclaredFields()) {
-					String name = f.getName().toLowerCase(Locale.ROOT);
-					if (!name.contains("loaded") || java.lang.reflect.Modifier.isStatic(f.getModifiers())) {
-						continue;
-					}
-					try {
-						f.setAccessible(true);
-						if (f.getType() == boolean.class) {
-							f.setBoolean(target, true);
-							found.append(c.getSimpleName()).append('.').append(f.getName()).append("=true ");
-						} else if (f.getType() == int.class && name.contains("timeout")) {
-							f.setInt(target, 0);
-							found.append(c.getSimpleName()).append('.').append(f.getName()).append("=0 ");
-						}
-					} catch (ReflectiveOperationException | RuntimeException e) {
-						found.append(f.getName()).append("(").append(e.getClass().getSimpleName()).append(") ");
-					}
-				}
-			}
+	private static void clientLoaded(ServerPlayer p) {
+		try {
+			Method m = ServerGamePacketListenerImpl.class.getDeclaredMethod("markClientLoaded");
+			m.setAccessible(true);
+			m.invoke(p.connection);
+		} catch (ReflectiveOperationException e) {
+			throw new IllegalStateException("could not mark a test player's client as loaded", e);
 		}
-		return found.toString();
 	}
 }

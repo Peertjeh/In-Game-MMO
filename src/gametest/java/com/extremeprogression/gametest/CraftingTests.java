@@ -97,7 +97,7 @@ public class CraftingTests {
 		ServerPlayer p = TestPlayers.survivor(helper, "brewer");
 		helper.setBlock(new BlockPos(1, 1, 1), Blocks.BREWING_STAND);
 		BrewingStandBlockEntity stand = (BrewingStandBlockEntity) level.getBlockEntity(helper.absolutePos(new BlockPos(1, 1, 1)));
-		BrewingStandMenu menu = new BrewingStandMenu(0, p.getInventory(), stand, new SimpleContainerData(2));
+		BrewingStandMenu menu = new BrewingStandMenu(0, p.getInventory(), stand, new SimpleContainerData(4));
 		// A potion put in by hand and taken out again was not brewed
 		menu.getSlot(0).set(PotionContents.createItemStack(Items.POTION, Potions.AWKWARD));
 		menu.getSlot(0).onTake(p, menu.getSlot(0).remove(1));

@@ -76,7 +76,7 @@ public class ExplorationTests {
 			p.hurtServer(level, level.damageSources().fall(), 5);
 			gained[i] = earned(p, Skill.EXPLORATION) - before;
 		}, () -> {
-			near(helper, gained[0], 200, "a fall of 5 damage (" + TestPlayers.LOADED + ")");
+			near(helper, gained[0], 200, "a fall of 5 damage");
 			near(helper, gained[1], 0, "a second fall on the same spot");
 			near(helper, gained[2], 200, "a fall 10 blocks away");
 			helper.succeed();

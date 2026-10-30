@@ -132,6 +132,8 @@ public class CombatTests {
 		p.setItemSlot(EquipmentSlot.CHEST, new ItemStack(Items.DIAMOND_CHESTPLATE));
 		p.setItemSlot(EquipmentSlot.LEGS, new ItemStack(Items.DIAMOND_LEGGINGS));
 		p.setItemSlot(EquipmentSlot.FEET, new ItemStack(Items.DIAMOND_BOOTS));
+		// (armor counts once the player has ticked with it on; a test player only ticks when told)
+		p.doTick();
 		LivingEntity zombie = mob(helper, EntityTypes.ZOMBIE, new BlockPos(1, 1, 1), EntitySpawnReason.NATURAL);
 		double[] after = new double[8];
 		boolean[] landed = new boolean[8];
@@ -140,7 +142,7 @@ public class CombatTests {
 			landed[i] = p.hurtServer(level, level.damageSources().mobAttack(zombie), 8);
 			after[i] = earned(p, Skill.DEFENSE);
 		}, () -> {
-			check(helper, landed[0], "a zombie's hit did not land on the test player (%s)", TestPlayers.LOADED);
+			check(helper, landed[0], "a zombie's hit did not land on the test player");
 			check(helper, after[0] > 0, "armor absorbing a zombie's hit gave no Defense XP");
 			check(helper, after[5] > after[4] && after[6] == after[5] && after[7] == after[5], "the cap of 6 hits per attacker did not hold: %s",
 					java.util.Arrays.toString(after));
@@ -167,7 +169,7 @@ public class CombatTests {
 			swing(a, b, true);
 			landed[i] = b.hurtServer(level, level.damageSources().playerAttack(a), 10);
 		}, () -> {
-			check(helper, landed[0], "a player's hit did not land on another player (%s)", TestPlayers.LOADED);
+			check(helper, landed[0], "a player's hit did not land on another player");
 			near(helper, earned(a, Skill.MELEE), 60 * 1.5 * 4, "80 damage to one player within the hour");
 			ServerPlayer c = TestPlayers.survivor(helper, "duelC");
 			Progression.setLevel(PlayerStore.get(a.getUUID()), Skill.MINING, 100);

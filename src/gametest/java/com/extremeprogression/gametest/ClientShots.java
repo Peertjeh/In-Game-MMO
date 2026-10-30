@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.extremeprogression.ExtremeProgression;
+import com.extremeprogression.config.Config;
 import com.extremeprogression.client.ExtremeProgressionClient;
 import com.extremeprogression.client.inventory.SheetButton;
 import com.extremeprogression.client.screen.CharacterSheetScreen;
@@ -41,6 +42,9 @@ public class ClientShots implements FabricClientGameTest {
 		ctx.waitTicks(40);
 		ctx.runOnClient(mc -> everyTextIsThere());
 		ctx.takeScreenshot("00_title");
+		// No XP of its own while the screens are checked: exploring the spawn would otherwise raise Exploration, and the
+		// totals below would depend on how long the world took to load (an operator's changes do not use the multiplier)
+		Config.XP_MULTIPLIER = 0;
 		try (TestSingleplayerContext sp = ctx.worldBuilder().create()) {
 			sp.getConnection().waitForChunksRender();
 			ctx.takeScreenshot("01_world");
