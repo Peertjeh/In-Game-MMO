@@ -866,11 +866,42 @@ For reference, the play time of a single level (without the budget factor):
 - ✅ **Foxes** cannot be tamed in vanilla, only bred (the baby trusts you): a fox baby gives the normal **40** breeding
   XP, not the 300 of taming, so a fox farm is no faster than other Farming (the owner, after milestone 3).
 
+### How milestone 4 implements it (version 0.5.0)
+- **Every hit on the server** is measured, the killing blow included: the target's health and absorption before and
+  after, what a shield blocked, and what armor absorbed.
+  - Melee and Ranged count the damage that really came off the target, so never more than its remaining health.
+  - Melee: the attack bar is read just before the attack (the attack empties it). Sweeping hits count with it.
+  - Ranged: an arrow counts when vanilla marks it critical, which is a fully drawn bow (100%, a little stricter than the
+    90% in §2) and every crossbow arrow; thrown tridents and crossbow fireworks always count. The distance is measured
+    between the shooter and the target when the shot lands.
+  - Defense: shield-blocked damage plus `damage − damage taken` (armor, protection enchantments, Resistance).
+- **Mob origins:** spawners, spawn eggs (also from a dispenser) and commands mark the mob when it is made or set up; the
+  mark is saved on the mob and passes on when it turns into another mob (a zombie that drowns). Trial spawners give
+  full XP.
+- **Exploration** is stored in the player file (schema 2): per dimension a bitset of 32 × 32 chunks per region, with the
+  time of the last visit. A region left alone for 30 days starts a revisit round, in which each of its chunks counts
+  once more. Chunks only count while the player could earn XP (not AFK, not in Creative or Spectator), so nothing is
+  used up while it cannot pay. Structures count when you stand inside one of their pieces.
+- **Crafting:** only what a player takes out by hand counts. A brewing stand remembers which bottles it brewed itself
+  (saved on the stand); a bottle put in by hand or by a hopper is not its work. Enchanting only pays when the item was
+  really enchanted.
+- 💡 Choices made while building, open to change (all in the config or the XP table):
+  - Defense: "attacked or moved recently" is **10 seconds**.
+  - Falls: the spot is blocked within **3 blocks for 10 minutes**.
+  - A hostile mob the table does not list: danger factor **1.0**. Iron golems and zombified piglins only count when they
+    were already after you before the hit, so a gold farm or iron farm earns nothing.
+  - Structures the table does not list: the witch hut **250**; structures of other mods (such as the Seam's) **300**;
+    buried treasure and nether fossils nothing.
+  - The mace's smash and the spear's charge (hold to use) do not go through a normal attack, so they give no Melee XP
+    yet; a normal hit with either does.
+- Not yet: the **opposing-skill** penalty (Melee ↔ Ranged, Defense ↔ Exploration, Smithing ↔ Arcana) comes with the
+  connections in milestone 8, and the new Alchemist potions with the specializations in milestone 6.
+
 ## 13. Implementation roadmap (💡 proposal)
 
 Work starts only after the owner's final approval (§15). Each milestone ends with: compiling, running the tests, checking for regressions, a report of what was built and what is still open, and the owner's approval before the next major system.
 
-Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 ✅ done (0.4.0) · milestone 4 next.
+Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 ✅ done (0.4.0) · milestone 4 ✅ done (0.5.0) · milestone 5 next.
 
 | # | Milestone | Contents | Tests |
 |---|---|---|---|
