@@ -151,3 +151,7 @@ MobEffects
 PotionContents
 Biomes
 EntityType
+# Milestone 9
+EditBox
+Commands
+Screen

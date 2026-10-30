@@ -33,7 +33,7 @@ public final class DeathRules {
 
 	/** Whether a death at this pressure also takes a whole level or Mastery rank (layer 3). */
 	public static boolean whole(int pressure) {
-		return pressure >= Config.DEATH_WHOLE_LOSS_PRESSURE;
+		return Config.DEATH_WHOLE_LOSS && pressure >= Config.DEATH_WHOLE_LOSS_PRESSURE;
 	}
 
 	/** The dimension's factor: Overworld ×1, Nether ×1.5, End ×2, the Seam ×2.5 (only with Extreme Dimensions). */

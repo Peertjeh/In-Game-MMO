@@ -23,14 +23,29 @@ public enum HardRequirement {
 	public final Specialization spec;
 	/** The node, or null when it is the specialization's own (the new potions). */
 	public final NodeSlot slot;
-	public final Skill skill;
-	public final int level;
+	/** The skill and level it needs: §2's, or what {@code skills.json} says. */
+	public Skill skill;
+	public int level;
+	private final Skill defaultSkill;
+	private final int defaultLevel;
 
 	HardRequirement(Specialization spec, NodeSlot slot, Skill skill, int level) {
 		this.spec = spec;
 		this.slot = slot;
+		this.skill = this.defaultSkill = skill;
+		this.level = this.defaultLevel = level;
+	}
+
+	public void set(Skill skill, int level) {
 		this.skill = skill;
-		this.level = level;
+		this.level = Math.max(0, level);
+	}
+
+	public static void reset() {
+		for (HardRequirement r : values()) {
+			r.skill = r.defaultSkill;
+			r.level = r.defaultLevel;
+		}
 	}
 
 	/** Whether the player has the level (on the server; on the client for its own player). */

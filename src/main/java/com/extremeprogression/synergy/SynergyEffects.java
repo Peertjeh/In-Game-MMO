@@ -78,23 +78,23 @@ public final class SynergyEffects {
 				// Counterstrike: the next melee hit within 2 seconds of a block, +20%
 				Long at = BLOCKED.remove(p.getUUID());
 				if (at != null && tick(p) - at <= 40 && trigger(p, Synergy.COUNTERSTRIKE)) {
-					out *= 1 + 0.20 * power(p, Synergy.COUNTERSTRIKE);
+					out *= 1 + Synergy.COUNTERSTRIKE.strength * power(p, Synergy.COUNTERSTRIKE);
 				}
 				// Charge: melee hits while sprinting, +10%
 				if (p.isSprinting() && trigger(p, Synergy.CHARGE)) {
-					out *= 1 + 0.10 * power(p, Synergy.CHARGE);
+					out *= 1 + Synergy.CHARGE.strength * power(p, Synergy.CHARGE);
 				}
 			} else if (direct instanceof Projectile && !(direct instanceof FishingHook)) {
 				// High Ground: a target at least 8 blocks below, +10%
 				if (target.getY() <= p.getY() - 8 && trigger(p, Synergy.HIGH_GROUND)) {
-					out *= 1 + 0.10 * power(p, Synergy.HIGH_GROUND);
+					out *= 1 + Synergy.HIGH_GROUND.strength * power(p, Synergy.HIGH_GROUND);
 				}
 			}
 		}
 		// Loyal Guard: your wolves take 20% less while you block
 		if (target instanceof Wolf wolf && wolf.isTame() && wolf.getOwner() instanceof ServerPlayer owner && owner.isBlocking()
 				&& trigger(owner, Synergy.LOYAL_GUARD)) {
-			out *= 1 - 0.20 * power(owner, Synergy.LOYAL_GUARD);
+			out *= 1 - Math.min(1, Synergy.LOYAL_GUARD.strength * power(owner, Synergy.LOYAL_GUARD));
 		}
 		return (float) out;
 	}
@@ -104,7 +104,7 @@ public final class SynergyEffects {
 	/** An effect about to be given: Venom Tip makes a tipped arrow's last 50% longer. */
 	public static MobEffectInstance effect(LivingEntity target, MobEffectInstance effect) {
 		if (arrowOwner instanceof ServerPlayer p && p != target && !effect.getEffect().value().isInstantaneous() && trigger(p, Synergy.VENOM_TIP)) {
-			int longer = (int) Math.round(effect.getDuration() * (1 + 0.5 * power(p, Synergy.VENOM_TIP)));
+			int longer = (int) Math.round(effect.getDuration() * (1 + Synergy.VENOM_TIP.strength * power(p, Synergy.VENOM_TIP)));
 			return new MobEffectInstance(effect.getEffect(), longer, effect.getAmplifier(), effect.isAmbient(), effect.isVisible(), effect.showIcon());
 		}
 		return effect;
@@ -120,13 +120,13 @@ public final class SynergyEffects {
 		for (MobEffectInstance e : contents.getAllEffects()) {
 			breathing |= e.getEffect().equals(MobEffects.WATER_BREATHING);
 		}
-		return breathing && trigger(p, Synergy.TIDAL_MAGIC) ? 1 + 0.5 * power(p, Synergy.TIDAL_MAGIC) : 1;
+		return breathing && trigger(p, Synergy.TIDAL_MAGIC) ? 1 + Synergy.TIDAL_MAGIC.strength * power(p, Synergy.TIDAL_MAGIC) : 1;
 	}
 
 	/** Herb Lore: glow berries give 10 seconds of Night Vision. */
 	public static void ate(ServerPlayer p, ItemStack food) {
 		if (food.is(Items.GLOW_BERRIES) && trigger(p, Synergy.HERB_LORE)) {
-			p.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, (int) Math.round(200 * power(p, Synergy.HERB_LORE)), 0), p);
+			p.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, (int) Math.round(20 * Synergy.HERB_LORE.strength * power(p, Synergy.HERB_LORE)), 0), p);
 		}
 	}
 
@@ -146,7 +146,7 @@ public final class SynergyEffects {
 		if (amount <= 0 || !armor(stack) || !trigger(p, Synergy.TAILORED)) {
 			return amount;
 		}
-		double chance = 0.10 * power(p, Synergy.TAILORED);
+		double chance = Synergy.TAILORED.strength * power(p, Synergy.TAILORED);
 		int out = amount;
 		for (int i = 0; i < amount; i++) {
 			if (p.getRandom().nextDouble() < chance) {
@@ -169,7 +169,7 @@ public final class SynergyEffects {
 			return;
 		}
 		ServerPlayer p = Trunks.userOf(furnace);
-		if (p != null && trigger(p, Synergy.FORGE_OF_THE_DEEP) && p.getRandom().nextDouble() < 0.05 * power(p, Synergy.FORGE_OF_THE_DEEP)) {
+		if (p != null && trigger(p, Synergy.FORGE_OF_THE_DEEP) && p.getRandom().nextDouble() < Synergy.FORGE_OF_THE_DEEP.strength * power(p, Synergy.FORGE_OF_THE_DEEP)) {
 			out.grow(1);
 		}
 	}
@@ -216,7 +216,7 @@ public final class SynergyEffects {
 			return;
 		}
 		// (vanilla grows a sapling on 1 in 7 random ticks with light: 20% more is a chance of 0.2 / 7 a tick)
-		if (p != null && level.getMaxLocalRawBrightness(pos.above()) >= 9 && level.getRandom().nextDouble() < 0.2 / 7 * power(p, Synergy.GREEN_THUMB)
+		if (p != null && level.getMaxLocalRawBrightness(pos.above()) >= 9 && level.getRandom().nextDouble() < Synergy.GREEN_THUMB.strength / 7 * power(p, Synergy.GREEN_THUMB)
 				&& trigger(p, Synergy.GREEN_THUMB)) {
 			grow.run();
 		}
@@ -242,7 +242,7 @@ public final class SynergyEffects {
 			return false;
 		}
 		double distance = at.get().distanceTo(source);
-		return distance > user.getListenerRadius() - 2 * power(p, Synergy.DEEP_WALKER) && trigger(p, Synergy.DEEP_WALKER);
+		return distance > user.getListenerRadius() - Synergy.DEEP_WALKER.strength * power(p, Synergy.DEEP_WALKER) && trigger(p, Synergy.DEEP_WALKER);
 	}
 
 	/** Seafarer, on the driver's client: a boat steered forward pulls 10% harder (vanilla adds 0.04 a tick). */
@@ -250,7 +250,7 @@ public final class SynergyEffects {
 		if (!boat.level().isClientSide() || !(boat.getControllingPassenger() instanceof Player p) || !Synergies.active(p, Synergy.SEAFARER)) {
 			return;
 		}
-		double push = 0.04 * 0.10 * power(p, Synergy.SEAFARER);
+		double push = 0.04 * Synergy.SEAFARER.strength * power(p, Synergy.SEAFARER);
 		double yaw = Math.toRadians(boat.getYRot());
 		boat.setDeltaMovement(boat.getDeltaMovement().add(-Math.sin(yaw) * push, 0, Math.cos(yaw) * push));
 	}

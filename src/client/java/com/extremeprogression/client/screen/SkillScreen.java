@@ -304,7 +304,7 @@ public class SkillScreen extends Screen {
 			case ABILITY -> {
 				lines.addAll(wrap(Ui.tr(spec.translationKey() + ".ability.desc")));
 				lines.addAll(wrap(Language.getInstance().has(ranks) ? Ui.tr("gui.extremeprogression.node.desc.ability_key", keyName) + " " + Ui.tr(ranks)
-						: Ui.tr("gui.extremeprogression.node.desc.ability", keyName, spec.cooldownMinutes)));
+						: Ui.tr("gui.extremeprogression.node.desc.ability", keyName, com.extremeprogression.config.SkillSettings.cooldownMinutes(spec))));
 			}
 			case PASSIVE, CHOICE -> {
 				if (Language.getInstance().has(own)) {

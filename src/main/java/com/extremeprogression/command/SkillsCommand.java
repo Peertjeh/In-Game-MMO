@@ -39,9 +39,10 @@ public final class SkillsCommand {
 
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 		Predicate<CommandSourceStack> op = Commands.hasPermission(Commands.LEVEL_GAMEMASTERS);
-		dispatcher.register(Commands.literal("skills")
+		var skills = Commands.literal("skills")
 				.executes(c -> overview(c.getSource()))
 				.then(Commands.literal("admin").requires(op)
+						.then(AdminCommands.reset())
 						.then(Commands.literal("set")
 								.then(Commands.argument("player", StringArgumentType.word())
 										.suggests((c, b) -> SharedSuggestionProvider.suggest(c.getSource().getOnlinePlayerNames(), b))
@@ -65,7 +66,9 @@ public final class SkillsCommand {
 						.then(Commands.literal("cooldowns")
 								.then(Commands.argument("player", StringArgumentType.word())
 										.suggests((c, b) -> SharedSuggestionProvider.suggest(c.getSource().getOnlinePlayerNames(), b))
-										.executes(SkillsCommand::cooldowns)))));
+										.executes(SkillsCommand::cooldowns))));
+		AdminCommands.register(skills);
+		dispatcher.register(skills);
 	}
 
 	/** Every ability of the player is ready again (for testing, and for an operator undoing a mistake). */

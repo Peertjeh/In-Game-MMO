@@ -128,7 +128,7 @@ public class StoreTests {
 		check(helper, missing, "missing keys were not reported");
 		check(helper, Config.HOURS_TO_MAX == 800, "a value from the file was not taken");
 		check(helper, Config.MAX_LEVEL == 100, "a bad value was taken: max_level %s", Config.MAX_LEVEL);
-		check(helper, Config.toJson().has("total_level_cap") && Config.toJson().size() == 52, "the config does not list every option: %s", Config.toJson());
+		check(helper, Config.toJson().has("total_level_cap") && Config.toJson().size() == 54, "the config does not list every option: %s", Config.toJson());
 		Config.reset();
 		check(helper, Config.HOURS_TO_MAX == 400, "the config did not reset");
 		helper.succeed();

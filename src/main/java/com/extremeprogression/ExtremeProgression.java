@@ -22,6 +22,7 @@ public class ExtremeProgression implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ConfigFile.load();
+		com.extremeprogression.config.DataFiles.load();
 		Sync.register();
 		ServerEvents.register();
 	}

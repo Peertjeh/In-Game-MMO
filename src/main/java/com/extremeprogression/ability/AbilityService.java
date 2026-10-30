@@ -41,7 +41,7 @@ public final class AbilityService {
 
 	/** Ticks of cooldown after using a specialization's ability. */
 	public static long cooldownTicks(Specialization spec) {
-		return spec.cooldownMinutes * 60L * 20L;
+		return com.extremeprogression.config.SkillSettings.cooldownMinutes(spec) * 60L * 20L;
 	}
 
 	public static Result use(ServerPlayer player, boolean second) {

@@ -179,6 +179,45 @@ public class ClientShots implements FabricClientGameTest {
 			ctx.waitTicks(5);
 			ctx.takeScreenshot("05_chronicle");
 
+			// Administration (milestone 9): the settings reached the client, the leaderboard, an XP event, an inspection
+			check(ctx.computeOnClient(mc -> com.extremeprogression.client.state.ClientAdmin.settings() != null), "the client got no settings");
+			ctx.runOnClient(mc -> mc.gui.setScreen(new com.extremeprogression.client.screen.LeaderboardScreen(new CharacterSheetScreen(null))));
+			ctx.waitTicks(10);
+			ctx.runOnClient(mc -> {
+				var rows = com.extremeprogression.client.state.ClientAdmin.leaderboard();
+				check(rows != null && rows.stream().anyMatch(r -> r.name().equals(mc.player.getName().getString()) && r.total() == 312),
+						"the leaderboard does not show the player at 312");
+			});
+			ctx.getInput().setCursorPos(1, 1);
+			ctx.waitTicks(2);
+			ctx.takeScreenshot("05_leaderboard");
+			sp.getServer().runOnServer(s -> {
+				com.extremeprogression.xp.XpEvents.start(s, Skill.MINING, 2, 30, "test");
+				ServerPlayer player = s.getPlayerList().getPlayers().get(0);
+				net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.send(player,
+						com.extremeprogression.command.AdminCommands.inspectPayload(s, player.getUUID(), player.getName().getString()));
+			});
+			ctx.waitTicks(10);
+			check(ctx.computeOnClient(mc -> mc.gui.screen() instanceof com.extremeprogression.client.screen.InspectScreen), "the inspection did not open");
+			ctx.getInput().setCursorPos(1, 1);
+			ctx.waitTicks(2);
+			ctx.takeScreenshot("05_inspect");
+			ctx.runOnClient(mc -> {
+				check(com.extremeprogression.client.state.ClientAdmin.events().size() == 1, "the client does not know the XP event");
+				mc.gui.setScreen(new CharacterSheetScreen(null));
+			});
+			ctx.waitTicks(10);
+			ctx.takeScreenshot("05_character_sheet_xp_event");
+			sp.getServer().runOnServer(s -> com.extremeprogression.config.Settings.send(s.getPlayerList().getPlayers().get(0), true));
+			ctx.waitTicks(10);
+			check(ctx.computeOnClient(mc -> mc.gui.screen() instanceof com.extremeprogression.client.screen.SettingsScreen), "the settings screen did not open");
+			ctx.getInput().setCursorPos(1, 1);
+			ctx.waitTicks(2);
+			ctx.takeScreenshot("05_settings");
+			sp.getServer().runOnServer(s -> com.extremeprogression.xp.XpEvents.clear());
+			ctx.runOnClient(mc -> mc.gui.setScreen(null));
+			ctx.waitTicks(5);
+
 			// The inventory has the Character Sheet's button
 			InventoryScreen[] inventory = new InventoryScreen[1];
 			ctx.runOnClient(mc -> {
@@ -426,6 +465,13 @@ public class ClientShots implements FabricClientGameTest {
 		for (String k : new String[] {"codex.button", "codex.title", "codex.tab", "chronicle.tab", "codex.count", "codex.out_of_reach", "codex.out_of_reach_tip",
 				"codex.unknown_skills", "codex.found", "codex.first_discoverer", "codex.first_by", "codex.dormant", "codex.found_by_someone", "codex.needs",
 				"codex.footer", "chronicle.nobody", "chronicle.first", "chronicle.footer"}) {
+			keys.add("gui.extremeprogression." + k);
+		}
+		for (String k : new String[] {"leaderboard.title", "leaderboard.button", "leaderboard.total", "leaderboard.waiting", "leaderboard.players",
+				"leaderboard.level", "inspect.title", "inspect.online", "inspect.offline", "inspect.synergies", "inspect.read_only", "inspect.no_spec",
+				"inspect.points", "settings.title", "settings.button", "settings.preset.hardcore", "settings.preset.normal", "settings.preset.custom",
+				"settings.search", "settings.save", "settings.revert", "settings.invalid", "settings.sent", "settings.waiting", "settings.preset", "settings.page",
+				"settings.read_only", "sheet.xp_event", "sheet.xp_event_all", "death.step2_off"}) {
 			keys.add("gui.extremeprogression." + k);
 		}
 		keys.addAll(List.of("message.extremeprogression.synergy.discovered", "message.extremeprogression.synergy.first",

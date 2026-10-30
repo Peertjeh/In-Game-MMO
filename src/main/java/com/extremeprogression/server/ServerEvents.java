@@ -44,6 +44,8 @@ public final class ServerEvents {
 		ServerLifecycleEvents.SERVER_STOPPED.register(s -> {
 			PlayerStore.close();
 			com.extremeprogression.synergy.Chronicle.close();
+			com.extremeprogression.xp.XpEvents.clear();
+			com.extremeprogression.command.AdminCommands.clear();
 			AfkTracker.clear();
 			XpService.clear();
 		});
@@ -59,6 +61,8 @@ public final class ServerEvents {
 			Sync.send(player);
 			com.extremeprogression.death.DeathService.sendHistory(player, null);
 			com.extremeprogression.synergy.Synergies.send(player);
+			com.extremeprogression.config.Settings.send(player, false);
+			com.extremeprogression.xp.XpEvents.send(player);
 		});
 		// (on the server's thread: a player in a single-player world leaves from the connection's own)
 		ServerPlayConnectionEvents.DISCONNECT.register((handler, s) -> s.executeIfPossible(() -> {
@@ -90,6 +94,11 @@ public final class ServerEvents {
 		com.extremeprogression.spec.Specs.register();
 		com.extremeprogression.death.DeathService.register();
 		com.extremeprogression.synergy.SynergyEffects.register();
+		// An admin's settings from the settings screen
+		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.SettingsPayload.TYPE,
+				(payload, context) -> com.extremeprogression.command.AdminCommands.settingsSaved(context.player(), payload.json()));
+		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.LeaderboardPayload.TYPE,
+				(payload, context) -> com.extremeprogression.command.AdminCommands.sendLeaderboard(context.player()));
 		UseItemCallback.EVENT.register((player, level, hand) -> {
 			if (!level.isClientSide()) {
 				AfkTracker.interacted(player.getUUID(), level.getServer().getTickCount());
@@ -107,6 +116,7 @@ public final class ServerEvents {
 			com.extremeprogression.spec.Specs.tick(s);
 			com.extremeprogression.death.DeathService.tick(s);
 			com.extremeprogression.synergy.SynergyEffects.tick(s);
+			com.extremeprogression.xp.XpEvents.tick(s);
 			XpService.tick(s);
 		});
 

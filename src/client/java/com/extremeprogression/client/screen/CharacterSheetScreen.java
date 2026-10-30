@@ -48,12 +48,28 @@ public class CharacterSheetScreen extends Screen {
 		int rx = x0 + LEFT_W + 6;
 		column(rx + 6, y0 + 20, List.of(Category.COMBAT, Category.SURVIVAL));
 		column(rx + 6 + SkillTile.W + 4, y0 + 20, List.of(Category.GATHERING, Category.CRAFTING));
-		this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.codex.button"),
-				b -> Minecraft.getInstance().gui.setScreen(new CodexScreen(this))).pos(this.width / 2 - 153, y0 + H - 20).size(100, 20).build());
-		this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.death.title"),
-				b -> Minecraft.getInstance().gui.setScreen(new DeathRegisterScreen(this))).pos(this.width / 2 - 50, y0 + H - 20).size(100, 20).build());
-		this.addRenderableWidget(Button.builder(Component.translatable("gui.done"), b -> this.onClose())
-				.pos(this.width / 2 + 53, y0 + H - 20).size(100, 20).build());
+		// The other screens, along the foot: the settings only for those who may change them
+		List<Button> buttons = new java.util.ArrayList<>();
+		buttons.add(Button.builder(Component.translatable("gui.extremeprogression.leaderboard.button"),
+				b -> Minecraft.getInstance().gui.setScreen(new LeaderboardScreen(this))).build());
+		buttons.add(Button.builder(Component.translatable("gui.extremeprogression.codex.button"),
+				b -> Minecraft.getInstance().gui.setScreen(new CodexScreen(this))).build());
+		buttons.add(Button.builder(Component.translatable("gui.extremeprogression.death.title"),
+				b -> Minecraft.getInstance().gui.setScreen(new DeathRegisterScreen(this))).build());
+		if (com.extremeprogression.client.state.ClientAdmin.editor()) {
+			buttons.add(Button.builder(Component.translatable("gui.extremeprogression.settings.button"),
+					b -> Minecraft.getInstance().gui.setScreen(new SettingsScreen(this))).build());
+		}
+		buttons.add(Button.builder(Component.translatable("gui.done"), b -> this.onClose()).build());
+		int bw = (W - 3 * (buttons.size() - 1)) / buttons.size();
+		int bx = x0;
+		for (Button b : buttons) {
+			b.setX(bx);
+			b.setY(y0 + H - 20);
+			b.setWidth(bw);
+			this.addRenderableWidget(b);
+			bx += bw + 3;
+		}
 	}
 
 	private void column(int x, int y, List<Category> categories) {
@@ -111,6 +127,15 @@ public class CharacterSheetScreen extends Screen {
 			long fatigue = ClientProgress.fatigueLeft();
 			if (fatigue > 0) {
 				row(g, lx, ry + 56, Ui.tr("gui.extremeprogression.death.fatigue"), com.extremeprogression.client.ui.DeathView.duration(fatigue), Ui.DANGER);
+			}
+			// A running XP event (the first one; the tooltip of the line lists all)
+			var events = com.extremeprogression.client.state.ClientAdmin.events();
+			if (!events.isEmpty()) {
+				var e = events.get(0);
+				String what = e.skill().isEmpty() ? Ui.tr("gui.extremeprogression.sheet.xp_event_all") : Ui.tr("skill.extremeprogression." + e.skill());
+				long left = com.extremeprogression.client.state.ClientAdmin.left(e);
+				String value = com.extremeprogression.client.ui.DeathView.factor(e.multiplier()) + (left > 0 ? " · " + (left + 59_999) / 60_000 + " min" : "");
+				row(g, lx, ry + 68, Ui.ellipsize(this.font, Ui.tr("gui.extremeprogression.sheet.xp_event", what), LEFT_W - 12 - this.font.width(value) - 4), value, Ui.GOLD);
 			}
 		}
 

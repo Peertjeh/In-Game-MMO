@@ -13,8 +13,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * The approved XP values of every skill (design Appendix A), by registry id. Ids this version of Minecraft does not have
- * simply never match.
+ * The approved XP values of every skill (design Appendix A), by registry id: the defaults of the data files
+ * {@code config/extremeprogression/xp/<skill>.json} ({@link XpData}). Ids this version of Minecraft does not have simply
+ * never match; another mod's ids count when a data file lists them as {@code "namespace:path"}.
  */
 public final class XpTables {
 	private XpTables() {}
@@ -22,19 +23,19 @@ public final class XpTables {
 	// --- A.2 Melee and Ranged, A.3 Defense --------------------------------------------------------
 
 	/** XP per point of damage dealt, × the target's danger factor. */
-	public static final double MELEE_PER_DAMAGE = 4;
-	public static final double RANGED_PER_DAMAGE = 4;
+	public static double MELEE_PER_DAMAGE = 4;
+	public static double RANGED_PER_DAMAGE = 4;
 	/** XP per point of damage your shield blocked or your armor absorbed, × the attacker's danger factor. */
-	public static final double DEFENSE_PER_DAMAGE = 15;
+	public static double DEFENSE_PER_DAMAGE = 15;
 	/** Farming XP per point of damage your tamed animals deal, × the target's danger factor. */
-	public static final double PET_PER_DAMAGE = 3;
+	public static double PET_PER_DAMAGE = 3;
 	/** Ranged: +2% per block beyond 10 blocks, at most +60% (at 40 blocks). */
-	public static final double RANGED_FREE_DISTANCE = 10;
-	public static final double RANGED_BONUS_PER_BLOCK = 0.02;
-	public static final double RANGED_MAX_BONUS = 0.60;
+	public static double RANGED_FREE_DISTANCE = 10;
+	public static double RANGED_BONUS_PER_BLOCK = 0.02;
+	public static double RANGED_MAX_BONUS = 0.60;
 
 	/** Danger factors of hostile mobs. Passive animals are 0; a hostile mob not listed is 1.0. */
-	private static final Map<String, Double> DANGER = table(
+	static final Map<String, Double> DANGER = table(
 			"silverfish", 0.5, "endermite", 0.5,
 			"slime", 0.6, "magma_cube", 0.6,
 			"zombified_piglin", 0.8,
@@ -48,17 +49,17 @@ public final class XpTables {
 			"wither_skeleton", 2.0, "evoker", 2.0, "ravager", 2.0,
 			"piglin_brute", 2.2,
 			"warden", 3.0, "elder_guardian", 3.0, "wither", 3.0, "ender_dragon", 3.0);
-	public static final double DANGER_UNLISTED_HOSTILE = 1.0;
-	public static final double DANGER_PLAYER = 1.5;
+	public static double DANGER_UNLISTED_HOSTILE = 1.0;
+	public static double DANGER_PLAYER = 1.5;
 
 	/** The danger factor of a mob type, by id; null when the table does not list it. */
 	public static Double danger(String namespace, String path) {
-		return namespace.equals("minecraft") ? DANGER.get(path) : null;
+		return DANGER.get(key(namespace, path));
 	}
 
 	// --- A.4 Mining ------------------------------------------------------------------------------
 
-	private static final Map<String, Double> PICKAXE = table(
+	static final Map<String, Double> PICKAXE = table(
 			"stone", 3, "andesite", 3, "diorite", 3, "granite", 3, "tuff", 3,
 			"deepslate", 5, "cobbled_deepslate", 5,
 			"netherrack", 1,
@@ -77,35 +78,35 @@ public final class XpTables {
 			"nether_quartz_ore", 30, "nether_gold_ore", 40,
 			"ancient_debris", 1500, "amethyst_block", 10);
 	/** Terracotta in every colour (the badlands). */
-	private static final double TERRACOTTA = 5;
+	static double TERRACOTTA = 5;
 
-	private static final Map<String, Double> SHOVEL = table(
+	static final Map<String, Double> SHOVEL = table(
 			"dirt", 2, "grass_block", 2, "coarse_dirt", 2, "podzol", 2, "mycelium", 2, "rooted_dirt", 2,
 			"sand", 2, "red_sand", 2, "gravel", 2,
 			"clay", 6,
 			"mud", 3, "soul_sand", 3, "soul_soil", 3,
 			"snow", 1, "snow_block", 1);
 	/** Brushing suspicious sand or gravel until it gives up its find. */
-	public static final double BRUSHING = 250;
+	public static double BRUSHING = 250;
 
 	// --- A.5 Foraging ----------------------------------------------------------------------------
 
 	/** Logs of natural trees. (Poplar is new in 26.3 and not in the approved table: valued like birch.) */
-	private static final Map<String, Double> LOGS = table(
+	static final Map<String, Double> LOGS = table(
 			"oak_log", 16, "birch_log", 18, "spruce_log", 18, "poplar_log", 18,
 			"dark_oak_log", 20, "acacia_log", 20,
 			"jungle_log", 22, "mangrove_log", 22,
 			"cherry_log", 24, "crimson_stem", 24, "warped_stem", 24,
 			"pale_oak_log", 26);
 
-	public static final double WILD_SWEET_BERRIES = 15;
-	public static final double GLOW_BERRIES = 15;
-	public static final double MUSHROOM = 10;
-	public static final double FLOWER = 6;
-	public static final double RARE_FLOWER = 10;
-	public static final double WILD_COCOA = 12;
-	public static final double WILD_MELON = 30;
-	public static final double WILD_HONEY = 40;
+	public static double WILD_SWEET_BERRIES = 15;
+	public static double GLOW_BERRIES = 15;
+	public static double MUSHROOM = 10;
+	public static double FLOWER = 6;
+	public static double RARE_FLOWER = 10;
+	public static double WILD_COCOA = 12;
+	public static double WILD_MELON = 30;
+	public static double WILD_HONEY = 40;
 
 	private static final Set<String> MUSHROOMS = Set.of("brown_mushroom", "red_mushroom");
 	/** Flowers that are not small flowers. (Torchflowers are a Farming crop; wither roses never grow wild.) */
@@ -116,52 +117,52 @@ public final class XpTables {
 
 	// --- A.6 Farming -----------------------------------------------------------------------------
 
-	private static final Map<String, Double> CROPS = table(
+	static final Map<String, Double> CROPS = table(
 			"wheat", 8, "carrots", 8, "potatoes", 8, "beetroots", 9);
-	public static final double NETHER_WART = 10;
-	public static final double STEM_FRUIT = 10;
-	public static final double PLANTED_COCOA = 9;
-	public static final double PLANTED_SWEET_BERRIES = 6;
-	public static final double SUGAR_CANE = 4;
-	public static final double CACTUS = 3;
-	public static final double TORCHFLOWER = 60;
-	public static final double PITCHER = 80;
-	public static final double BREEDING = 40;
-	public static final double SHEARING = 15;
+	public static double NETHER_WART = 10;
+	public static double STEM_FRUIT = 10;
+	public static double PLANTED_COCOA = 9;
+	public static double PLANTED_SWEET_BERRIES = 6;
+	public static double SUGAR_CANE = 4;
+	public static double CACTUS = 3;
+	public static double TORCHFLOWER = 60;
+	public static double PITCHER = 80;
+	public static double BREEDING = 40;
+	public static double SHEARING = 15;
 
-	private static final Map<String, Double> TAMING = table(
+	static final Map<String, Double> TAMING = table(
 			"wolf", 200, "cat", 250, "fox", 300,
 			"horse", 300, "donkey", 300, "mule", 300, "llama", 300, "trader_llama", 300,
 			"parrot", 350, "camel", 400);
 	/** An animal the table does not list (one added by a later version or a mod). */
-	public static final double TAMING_OTHER = 200;
+	public static double TAMING_OTHER = 200;
 
 	// --- A.7 Fishing -----------------------------------------------------------------------------
 
-	private static final Map<String, Double> CATCHES = table(
+	static final Map<String, Double> CATCHES = table(
 			"cod", 60, "salmon", 80, "pufferfish", 100, "tropical_fish", 160,
 			"name_tag", 300, "saddle", 300, "nautilus_shell", 300,
 			"enchanted_book", 400,
 			"heart_of_the_sea", 1000, "trident", 1000);
 	/** A bow or fishing rod from the treasure table (they are always enchanted there). */
-	public static final double TREASURE_GEAR = 250;
+	public static double TREASURE_GEAR = 250;
 	/** Everything else: junk. */
-	public static final double JUNK = 15;
+	public static double JUNK = 15;
 
 	// --- A.8 Exploration -------------------------------------------------------------------------
 
-	public static final double NEW_CHUNK = 8;
-	public static final double NEW_CHUNK_ELYTRA = 2;
-	public static final double REVISITED_CHUNK = 2;
-	public static final double NEW_BIOME = 500;
-	public static final double FALL_PER_DAMAGE = 40;
+	public static double NEW_CHUNK = 8;
+	public static double NEW_CHUNK_ELYTRA = 2;
+	public static double REVISITED_CHUNK = 2;
+	public static double NEW_BIOME = 500;
+	public static double FALL_PER_DAMAGE = 40;
 	/** The first structure of each type you ever enter gives this many times its XP. */
-	public static final double FIRST_OF_TYPE = 3;
+	public static double FIRST_OF_TYPE = 3;
 
 	/** A structure type, as in the XP table, with its XP. */
 	public record StructureType(String name, double xp) {}
 
-	private static final Map<String, StructureType> STRUCTURES = new HashMap<>();
+	static final Map<String, StructureType> STRUCTURES = new HashMap<>();
 
 	private static void structures(String type, double xp, String... ids) {
 		for (String id : ids) {
@@ -195,7 +196,7 @@ public final class XpTables {
 	/** Structures nobody enters (buried in the ground, or only a few blocks). */
 	private static final Set<String> NO_STRUCTURE = Set.of("buried_treasure", "nether_fossil");
 	/** A structure of another mod (such as the Seam's in Extreme Dimensions): valued like a village. */
-	public static final double STRUCTURE_OTHER = 300;
+	public static double STRUCTURE_OTHER = 300;
 
 	/** A structure's type and XP, by id; null for one that gives nothing. */
 	public static StructureType structure(String namespace, String path) {
@@ -211,22 +212,22 @@ public final class XpTables {
 	// --- A.9 Smithing ----------------------------------------------------------------------------
 
 	/** Smelting, per item taken out by hand, by the output (the ingot of an ore is the same from raw ore or ore). */
-	private static final Map<String, Double> SMELTED = table(
+	static final Map<String, Double> SMELTED = table(
 			"copper_ingot", 15, "iron_ingot", 25, "gold_ingot", 30, "netherite_scrap", 300,
 			"copper_block", 15 * 9, "iron_block", 25 * 9, "gold_block", 30 * 9);
-	public static final double REPAIR = 200;
+	public static double REPAIR = 200;
 	/** Material factors of anvil repairs, by the start of the item's id. */
-	private static final Map<String, Double> MATERIAL = table(
+	static final Map<String, Double> MATERIAL = table(
 			"wooden_", 0.5, "stone_", 0.8, "leather_", 0.8, "chainmail_", 1.0, "copper_", 1.0, "golden_", 1.0,
 			"iron_", 1.5, "diamond_", 3.0, "netherite_", 4.0);
 	/** Gear of no listed material (an elytra, a trident, a mace, a shield, a bow). */
-	public static final double MATERIAL_OTHER = 1.0;
-	public static final double NETHERITE_UPGRADE = 1500;
-	public static final double ARMOR_TRIM = 300;
+	public static double MATERIAL_OTHER = 1.0;
+	public static double NETHERITE_UPGRADE = 1500;
+	public static double ARMOR_TRIM = 300;
 
 	public static double smelted(ItemStack stack) {
 		var key = BuiltInRegistries.ITEM.getKey(stack.getItem());
-		return key.getNamespace().equals("minecraft") ? SMELTED.getOrDefault(key.getPath(), 0.0) : 0;
+		return SMELTED.getOrDefault(key(key.getNamespace(), key.getPath()), 0.0);
 	}
 
 	public static double material(ItemStack stack) {
@@ -243,13 +244,13 @@ public final class XpTables {
 
 	// --- A.10 Arcana -----------------------------------------------------------------------------
 
-	public static final double POTION_BASE = 5;
-	public static final double POTION_EFFECT = 30;
-	public static final double POTION_STRONGER = 45;
-	public static final double POTION_SPLASH = 60;
-	public static final double POTION_LINGERING = 80;
-	public static final double ENCHANTING_PER_LEVEL = 15;
-	public static final double ANVIL_ENCHANTING_PER_LEVEL = 25;
+	public static double POTION_BASE = 5;
+	public static double POTION_EFFECT = 30;
+	public static double POTION_STRONGER = 45;
+	public static double POTION_SPLASH = 60;
+	public static double POTION_LINGERING = 80;
+	public static double ENCHANTING_PER_LEVEL = 15;
+	public static double ANVIL_ENCHANTING_PER_LEVEL = 25;
 
 	/** A brewed potion's XP, from its form (potion, splash, lingering) and its kind's id ("awkward", "long_swiftness"). */
 	public static double potion(String form, String potion) {
@@ -281,26 +282,24 @@ public final class XpTables {
 		return BuiltInRegistries.BLOCK.getKey(block).getNamespace().equals("minecraft");
 	}
 
+	// (another mod's blocks give XP only when a data file lists them, as "namespace:path")
 	public static double pickaxe(BlockState state) {
-		if (!vanilla(state.getBlock())) {
-			return 0;
-		}
-		if (state.is(BlockTags.TERRACOTTA)) {
+		if (vanilla(state.getBlock()) && state.is(BlockTags.TERRACOTTA)) {
 			return TERRACOTTA;
 		}
-		return PICKAXE.getOrDefault(id(state.getBlock()), 0.0);
+		return PICKAXE.getOrDefault(key(state.getBlock()), 0.0);
 	}
 
 	public static double shovel(BlockState state) {
-		return vanilla(state.getBlock()) ? SHOVEL.getOrDefault(id(state.getBlock()), 0.0) : 0;
+		return SHOVEL.getOrDefault(key(state.getBlock()), 0.0);
 	}
 
 	public static double log(BlockState state) {
-		return vanilla(state.getBlock()) ? LOGS.getOrDefault(id(state.getBlock()), 0.0) : 0;
+		return LOGS.getOrDefault(key(state.getBlock()), 0.0);
 	}
 
 	public static double crop(BlockState state) {
-		return vanilla(state.getBlock()) ? CROPS.getOrDefault(id(state.getBlock()), 0.0) : 0;
+		return CROPS.getOrDefault(key(state.getBlock()), 0.0);
 	}
 
 	public static boolean mushroom(BlockState state) {
@@ -321,17 +320,14 @@ public final class XpTables {
 
 	public static double taming(EntityType<?> type) {
 		var key = BuiltInRegistries.ENTITY_TYPE.getKey(type);
-		return key.getNamespace().equals("minecraft") ? TAMING.getOrDefault(key.getPath(), TAMING_OTHER) : TAMING_OTHER;
+		return TAMING.getOrDefault(key(key.getNamespace(), key.getPath()), TAMING_OTHER);
 	}
 
 	/** The XP of one fished item. */
 	public static double caught(ItemStack stack) {
 		Item item = stack.getItem();
 		var key = BuiltInRegistries.ITEM.getKey(item);
-		if (!key.getNamespace().equals("minecraft")) {
-			return JUNK;
-		}
-		String id = key.getPath();
+		String id = key(key.getNamespace(), key.getPath());
 		if ((id.equals("bow") || id.equals("fishing_rod")) && stack.isEnchanted()) {
 			return TREASURE_GEAR;
 		}
@@ -343,6 +339,16 @@ public final class XpTables {
 		for (int i = 0; i < pairs.length; i += 2) {
 			m.put((String) pairs[i], ((Number) pairs[i + 1]).doubleValue());
 		}
-		return Map.copyOf(m);
+		return m;
+	}
+
+	/** The key an id has in the tables: its path for Minecraft's own, "namespace:path" for another mod's. */
+	static String key(String namespace, String path) {
+		return namespace.equals("minecraft") ? path : namespace + ":" + path;
+	}
+
+	private static String key(Block block) {
+		var k = BuiltInRegistries.BLOCK.getKey(block);
+		return key(k.getNamespace(), k.getPath());
 	}
 }

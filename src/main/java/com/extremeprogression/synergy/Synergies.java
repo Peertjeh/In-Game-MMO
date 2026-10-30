@@ -34,7 +34,7 @@ public final class Synergies {
 	public static boolean eligible(Entity e, Synergy s) {
 		SkillData a = Specs.skillData(e, s.first);
 		SkillData b = Specs.skillData(e, s.second);
-		return a != null && b != null && a.level >= Config.SYNERGY_LEVEL && b.level >= Config.SYNERGY_LEVEL;
+		return s.enabled && a != null && b != null && a.level >= Config.SYNERGY_LEVEL && b.level >= Config.SYNERGY_LEVEL;
 	}
 
 	public static boolean known(Entity e, Synergy s) {

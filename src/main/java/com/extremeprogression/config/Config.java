@@ -17,6 +17,14 @@ import com.google.gson.JsonObject;
 public final class Config {
 	private Config() {}
 
+	// --- The preset (design §11) -----------------------------------------------------------------
+
+	/**
+	 * "hardcore" (the owner's choices, the default), "normal" (half the death loss, no layer 3, 50% faster XP) or
+	 * "custom". Hardcore and Normal set the options they govern ({@link Preset}); custom leaves every option to the file.
+	 */
+	public static String PRESET = "hardcore";
+
 	// --- Progression (design §4) -----------------------------------------------------------------
 
 	/** XP that one hour of focused play in a skill earns: the scale every XP value is measured against. */
@@ -101,6 +109,8 @@ public final class Config {
 	public static double DEATH_BASE_PRESSURED = 1.0;
 	/** From this death pressure a death also takes a whole level or Mastery rank of the highest skill (layer 3). */
 	public static int DEATH_WHOLE_LOSS_PRESSURE = 2;
+	/** Layer 3 at all (the Normal preset has none). */
+	public static boolean DEATH_WHOLE_LOSS = true;
 	/** The dimension factors on the loss (Overworld and others ×1). */
 	public static double DEATH_NETHER = 1.5;
 	public static double DEATH_END = 2.0;
@@ -137,7 +147,7 @@ public final class Config {
 	 * keys, so it should be written back. Values out of range fall back to the default.
 	 */
 	public static boolean apply(JsonObject json) {
-		reset();
+		resetOptions();
 		boolean missing = false;
 		for (Field f : fields()) {
 			String key = key(f);
@@ -152,7 +162,14 @@ public final class Config {
 			}
 		}
 		sanitize();
-		return missing;
+		// (a preset that changed an option the file held otherwise: the file is written back with it)
+		boolean preset = Preset.enforce();
+		return missing || preset;
+	}
+
+	/** An option's default value, by its field name (for the presets and the settings screen). */
+	static Object defaultOf(String field) {
+		return DEFAULTS.get(field);
 	}
 
 	/** Every option with its current value, as the config file lists them. */
@@ -175,8 +192,14 @@ public final class Config {
 		return json;
 	}
 
-	/** Back to the defaults (for tests, and before a file is applied). */
+	/** Back to the defaults, the data files' too (for tests). */
 	public static void reset() {
+		DataFiles.reset();
+		resetOptions();
+	}
+
+	/** The options back to their defaults (before a file is applied); the data files stay as they are. */
+	private static void resetOptions() {
 		for (Field f : fields()) {
 			try {
 				f.set(null, DEFAULTS.get(f.getName()));
@@ -187,6 +210,11 @@ public final class Config {
 	}
 
 	private static void sanitize() {
+		PRESET = PRESET == null ? "custom" : PRESET.trim().toLowerCase(Locale.ROOT);
+		if (Preset.of(PRESET) == null) {
+			com.extremeprogression.ExtremeProgression.LOGGER.warn("Unknown preset \"{}\": using custom (every option as the file says)", PRESET);
+			PRESET = "custom";
+		}
 		if (!(XP_PER_HOUR > 0)) {
 			XP_PER_HOUR = (double) DEFAULTS.get("XP_PER_HOUR");
 		}

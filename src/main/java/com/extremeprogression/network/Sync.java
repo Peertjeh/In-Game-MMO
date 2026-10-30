@@ -31,6 +31,12 @@ public final class Sync {
 		PayloadTypeRegistry.clientboundPlay().register(InsightPayload.TYPE, InsightPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(DeathPayload.TYPE, DeathPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(SynergyPayload.TYPE, SynergyPayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(XpEventPayload.TYPE, XpEventPayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(SettingsPayload.TYPE, SettingsPayload.CODEC);
+		PayloadTypeRegistry.serverboundPlay().register(SettingsPayload.TYPE, SettingsPayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(LeaderboardPayload.TYPE, LeaderboardPayload.CODEC);
+		PayloadTypeRegistry.serverboundPlay().register(LeaderboardPayload.TYPE, LeaderboardPayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(InspectPayload.TYPE, InspectPayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(TreePayload.TYPE, TreePayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(AbilityPayload.TYPE, AbilityPayload.CODEC);
 	}

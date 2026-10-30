@@ -106,7 +106,7 @@ public class DeathRegisterScreen extends Screen {
 		String[] labels = {
 				Ui.tr("gui.extremeprogression.death.step0", Ui.percent(Config.DEATH_BASE)),
 				Ui.tr("gui.extremeprogression.death.step1", Ui.percent(Config.DEATH_BASE_PRESSURED)),
-				Ui.tr("gui.extremeprogression.death.step2", Config.DEATH_WHOLE_LOSS_PRESSURE)};
+				Config.DEATH_WHOLE_LOSS ? Ui.tr("gui.extremeprogression.death.step2", Config.DEATH_WHOLE_LOSS_PRESSURE) : Ui.tr("gui.extremeprogression.death.step2_off")};
 		int step = Math.min(2, Math.max(0, pressure >= Config.DEATH_WHOLE_LOSS_PRESSURE ? 2 : pressure));
 		for (int i = 0; i < 3; i++) {
 			int sx = ix + i * (seg + 2);

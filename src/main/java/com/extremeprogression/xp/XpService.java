@@ -49,9 +49,14 @@ public final class XpService {
 		}
 		double share = WINDOWS.computeIfAbsent(player.getUUID(), k -> new EnumMap<>(Skill.class))
 				.computeIfAbsent(skill, k -> new DiminishingReturns()).take(tick, base);
+		if (!com.extremeprogression.config.SkillSettings.enabled(skill)) {
+			return 0;
+		}
 		PlayerProgress p = PlayerStore.get(player.getUUID());
-		// (an opposing skill above 25 and higher than this one takes its share, design §2)
-		double xp = base * share * Config.XP_MULTIPLIER * (1 - com.extremeprogression.progression.Opposing.penalty(p, skill));
+		// (an opposing skill above 25 and higher than this one takes its share, design §2; the skill's own multiplier and
+		// an XP event on top)
+		double xp = base * share * Config.XP_MULTIPLIER * com.extremeprogression.config.SkillSettings.multiplier(skill) * XpEvents.multiplier(skill)
+				* (1 - com.extremeprogression.progression.Opposing.penalty(p, skill));
 		Progression.Change c = Progression.add(p, skill, xp);
 		if (c.applied() > 0 || c.levelsGained() > 0 || c.ranksGained() > 0) {
 			PlayerStore.markDirty(player.getUUID());

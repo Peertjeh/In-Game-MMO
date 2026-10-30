@@ -44,6 +44,18 @@ public class ExtremeProgressionClient implements ClientModInitializer {
 				context.client().execute(() -> ClientProgress.applyDeaths(payload)));
 		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.SynergyPayload.TYPE, (payload, context) ->
 				context.client().execute(() -> com.extremeprogression.client.state.ClientSynergies.apply(payload)));
+		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.SettingsPayload.TYPE, (payload, context) -> context.client().execute(() -> {
+			com.extremeprogression.client.state.ClientAdmin.apply(payload);
+			if (payload.open()) {
+				context.client().gui.setScreen(new com.extremeprogression.client.screen.SettingsScreen(null));
+			}
+		}));
+		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.XpEventPayload.TYPE, (payload, context) ->
+				context.client().execute(() -> com.extremeprogression.client.state.ClientAdmin.apply(payload)));
+		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.LeaderboardPayload.TYPE, (payload, context) ->
+				context.client().execute(() -> com.extremeprogression.client.state.ClientAdmin.apply(payload)));
+		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.InspectPayload.TYPE, (payload, context) ->
+				context.client().execute(() -> context.client().gui.setScreen(new com.extremeprogression.client.screen.InspectScreen(payload))));
 		// The few specialization effects felt on the client (movement, the view) read its own player's tree from here
 		com.extremeprogression.spec.Specs.localSkills = ClientProgress::skillData;
 		com.extremeprogression.spec.Specs.localActive = spec -> ClientProgress.activeTicks(spec.id) > 0;
@@ -54,6 +66,7 @@ public class ExtremeProgressionClient implements ClientModInitializer {
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> client.execute(() -> {
 			ClientProgress.clear();
 			com.extremeprogression.client.state.ClientSynergies.clear();
+			com.extremeprogression.client.state.ClientAdmin.clear();
 			OreSense.clear();
 		}));
 

@@ -75,6 +75,45 @@ public final class PlayerStore {
 		LOADED.remove(id);
 	}
 
+	/** Every player file of the world (those of players who never joined since are not there). */
+	public static java.util.List<UUID> known() {
+		java.util.Set<UUID> out = new java.util.LinkedHashSet<>(LOADED.keySet());
+		if (dir != null && java.nio.file.Files.isDirectory(dir)) {
+			try (java.util.stream.Stream<Path> files = java.nio.file.Files.list(dir)) {
+				files.forEach(f -> {
+					String n = f.getFileName().toString();
+					if (n.endsWith(".json")) {
+						try {
+							out.add(UUID.fromString(n.substring(0, n.length() - 5)));
+						} catch (IllegalArgumentException e) {
+							// (not a player file)
+						}
+					}
+				});
+			} catch (IOException e) {
+				ExtremeProgression.LOGGER.error("Could not list the player files", e);
+			}
+		}
+		return new java.util.ArrayList<>(out);
+	}
+
+	/** A player's progression to look at: from memory when loaded, else read from the file without loading it. */
+	public static PlayerProgress peek(UUID id) {
+		PlayerProgress p = LOADED.get(id);
+		return p != null ? p : dir == null ? new PlayerProgress() : read(fileOf(id));
+	}
+
+	/** Replaces a player's progression (an admin's reset), saved at once. */
+	public static void replace(UUID id, PlayerProgress p) {
+		LOADED.put(id, p);
+		DIRTY.add(id);
+		save(id);
+	}
+
+	public static boolean loaded(UUID id) {
+		return LOADED.containsKey(id);
+	}
+
 	public static Path fileOf(UUID id) {
 		return dir.resolve(id + ".json");
 	}

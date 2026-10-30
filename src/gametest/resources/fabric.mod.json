@@ -23,7 +23,8 @@
 			"com.extremeprogression.gametest.SpecCraftTests",
 			"com.extremeprogression.gametest.DeathTests",
 			"com.extremeprogression.gametest.ConnectionTests",
-			"com.extremeprogression.gametest.SynergyTests"
+			"com.extremeprogression.gametest.SynergyTests",
+			"com.extremeprogression.gametest.AdminTests"
 		],
 		"fabric-client-gametest": [
 			"com.extremeprogression.gametest.ClientShots"
