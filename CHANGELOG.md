@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.9.0: Connections (in development)
+
+The skills now push and pull on each other.
+
+- **Opposing skills**: Melee ↔ Ranged, Defense ↔ Exploration, Smithing ↔ Arcana. Once one of a pair is above level 25
+  and higher than the other, the other earns less XP, up to −60% at a gap of 50 levels, and its passive bonuses work
+  at 75%. The Character Sheet and the Skill Screen show it.
+- **Mastery perks**: past level 100, every Mastery rank gives one of two perks per skill, such as Giant Slayer or
+  Duelist, Mother Lode or Swift Pick. Each rank adds 1%. Choose them on the new Mastery screen. A lost rank takes its
+  perk with it.
+- **Synergies**: twelve hidden synergies between two skills at level 30, such as Counterstrike, Charge, High Ground,
+  Deep Walker, Seafarer and Herb Lore. You discover each one yourself, the first time its situation happens in play.
+- **Codex & Chronicle** (a button on the Character Sheet): your synergies, with when and where you found them. The rest
+  show as runes with a hint, which gets clearer once somebody on the server found it. The Chronicle lists the server's
+  first discoverers, and a first discovery is announced in the chat.
+- A specialization conflict now says why. Nodes with a hard requirement show the skill and level they need and yours.
+  In heavy armor, Exploration's screen says that its passives are off.
+
 ## 0.8.0: Deaths (in development)
 
 Deaths now cost you for real, and the game always shows the cost up front.

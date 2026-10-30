@@ -124,7 +124,10 @@ public class CodexScreen extends Screen {
 				g.fill(ix - 2, y - 2, ix + iw + 2, y + ROW - 3, Ui.argb(0.12, Ui.TEXT));
 			}
 			if (chronicle) {
-				tip = chronicleRow(g, s, e, stage, ix, iw, y, hover) != null && hover ? chronicleTip(s, e, stage) : tip;
+				SynergyPayload.Entry found = chronicleRow(g, s, e, stage, ix, iw, y);
+				if (hover && found != null) {
+					tip = chronicleTip(s, found, stage);
+				}
 			} else {
 				codexRow(g, s, e, stage, ix, iw, y);
 				if (hover) {

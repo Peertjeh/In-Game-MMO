@@ -1,6 +1,6 @@
 # Testing Extreme Progression
 
-This is for trying the mod in a real game while it is still in development (version 0.8.0, milestones 0–7 of the
+This is for trying the mod in a real game while it is still in development (version 0.9.0, milestones 0–8 of the
 [roadmap](DESIGN.md#13-implementation-roadmap--proposal)). What is not built yet is listed at the end.
 
 ## What you need
@@ -9,7 +9,7 @@ This is for trying the mod in a real game while it is still in development (vers
 - **Fabric Loader 0.19.5** or newer for 26.3 (the [Fabric installer](https://fabricmc.net/use/installer/))
 - **Fabric API 0.162.0+26.3** or newer ([Modrinth](https://modrinth.com/mod/fabric-api))
 - **Java 25** (the Minecraft launcher brings its own)
-- The mod's jar: `extremeprogression-0.8.0.jar`
+- The mod's jar: `extremeprogression-0.9.0.jar`
   - the latest green build is always on the
     [`ci-jar` branch](https://github.com/Peertjeh/In-Game-MMO/tree/ci-jar) (click the jar, then "Download raw file");
   - or under **Artifacts** of any [build run](https://github.com/Peertjeh/In-Game-MMO/actions).
@@ -17,7 +17,7 @@ This is for trying the mod in a real game while it is still in development (vers
 ## Installing
 
 1. Install Fabric Loader for 26.3 with the installer, and start that profile once.
-2. Put the Fabric API jar and `extremeprogression-0.8.0.jar` in the `mods` folder of that game directory.
+2. Put the Fabric API jar and `extremeprogression-0.9.0.jar` in the `mods` folder of that game directory.
 3. Start the game. The title screen's mod list (Mods) should show Extreme Progression.
 
 On a **server**, the same two jars go in the server's `mods` folder; every player needs the mod too (it has a GUI and a
@@ -34,6 +34,8 @@ key of its own). Extreme Dimensions is optional; the two work side by side.
 | Your second specialization's ability | `Shift + R` |
 | Ability ready / in effect | the small icons right of the hotbar (in effect: with the seconds left) |
 | Death Register | the button at the foot of the Character Sheet |
+| Codex & Chronicle | the Codex button at the foot of the Character Sheet |
+| Mastery perks | the Mastery button on a Skill Screen (from level 100) |
 
 ## Commands for testing (operators, or cheats on in singleplayer)
 
@@ -88,11 +90,21 @@ Player data is in `<world>/extremeprogression/players/`.
    - A skill set to 25 with a specialization, then a death at pressure 2: the specialization sleeps until you win level
      25 back.
    - To start over: `/skills admin set` does not touch the death pressure. A new world or a removed player file does.
+9. **Opposing skills**: set Melee to 60 and Ranged to 10. The Ranged tile shows −60% and Ranged XP drops to 40%.
+   Ranged's bonuses work at 75%.
+10. **Mastery**: set a skill to 100 and add 400,000 XP per rank (`/skills admin add <player> mining 800000` for two
+    ranks). The Skill Screen's Mastery button shows "(!)" while a rank waits for its perk.
+11. **Synergies** (both skills at 30; see the table in
+    [DESIGN.md](DESIGN.md#how-milestone-8-implements-it-version-090)):
+    - Melee and Defense at 30: block a hit with a shield, then hit back within 2 seconds. This discovers
+      Counterstrike, with a chat message.
+    - Melee and Exploration at 30: hit something while sprinting. This discovers Charge.
+    - Foraging and Arcana at 30: eat glow berries. This discovers Herb Lore.
+    - The Codex shows what you found, and runes with a hint for the rest once one skill is at 30. A second player who
+      finds the same synergy is not the first in the Chronicle.
 
 ## Not built yet
 
-- **Mastery perks, synergies, opposing skills' XP penalty** and showing specialization conflicts and hard requirements
-  in more detail: milestone 8.
 - **Presets, the settings screen, the leaderboard, XP events**: milestone 9.
 
 ## Known rough edges

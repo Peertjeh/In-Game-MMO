@@ -568,6 +568,101 @@ General rules:
 - A synergy is **discovered** the first time its situation happens in play while both levels are met.
 - Nothing records who made or found an item, so items keep stacking normally.
 
+### How milestone 8 implements it (version 0.9.0)
+The connections between skills, as built. Everything marked 💡 was decided while building.
+
+**Opposing skills (mechanism c)**
+- A skill loses `60% × min(1, gap / 50)` of every XP gain. This applies once its opposing skill is above level 25 and
+  higher than it.
+  - Example: Melee 47 against Ranged 22 is a gap of 25, so Ranged earns 30% less.
+  - Operators' changes are not affected.
+- Meanwhile the weaker skill's passive bonuses work at 75%. That covers its trunk, its passives and choice nodes, and its
+  Mastery perks.
+  - 💡 Together with death fatigue the two multiply: 75% × 50% = 37.5%.
+  - 💡 A specialization's price and its ability's own rank are not affected.
+- Always visible:
+  - the skill's tile on the Character Sheet shows the penalty in red (−30%), and its tooltip says why;
+  - the Skill Screen's header shows "Melee 47: −30% XP · passives 75%" in place of the category line.
+
+**Mastery perks** (💡 named and settled here; the examples of the skill sections above)
+- Every rank after level 100 gets one of the skill's two perks, chosen on the new **Mastery** screen (a button on the
+  Skill Screen).
+- Each rank put in a perk adds 1% to it.
+- 💡 Ranks are chosen in order, and a choice is final while you hold the rank.
+- A lost rank takes its perk with it (§7). Winning the rank back asks for a new choice.
+- 💡 The perks follow the skill's power (death fatigue, an opposing skill). Exploration's perks, like its other bonuses,
+  do not work in heavy armor.
+
+| Skill | Perk "a" (+1% a rank) | Perk "b" (+1% a rank) |
+|---|---|---|
+| Melee | Giant Slayer: melee damage against bosses | Duelist: melee damage against players |
+| Ranged | Skyshot: ranged damage against flying mobs | Marksman: ranged damage against players |
+| Defense | Titan Guard: less damage from bosses | Duel Guard: less damage from players |
+| Mining | Mother Lode: chance of a double ore | Swift Pick: breaking speed with a pickaxe or shovel |
+| Foraging | Heartwood: chance of a double log | Wild Bounty: chance of a double wild yield |
+| Farming | Golden Harvest: chance of an extra crop | Kindred: your tamed animals' damage |
+| Fishing | Sea's Favor: chance that a fish is treasure | Eager Fish: fish bite sooner |
+| Exploration | Swift Feet: movement speed | Soft Landing: less fall damage |
+| Smithing | Rich Smelt: chance of a double smelting output | Fine Mend: anvil repairs restore more |
+| Arcana | Long Brew: potions you brew last longer | Bright Offer: chance an enchanting offer rolls 1 level higher |
+
+- 💡 Bosses are the Ender Dragon, the Wither, the Warden, the Elder Guardian, and any other mod's mob in the common
+  `c:bosses` tag.
+- 💡 Flying mobs are the phantom, ghast, happy ghast, blaze, vex, breeze, bee, bat, parrot, allay, Ender Dragon and
+  Wither.
+
+**Synergies**
+- A synergy works once both its skills are at level 30 and you discovered it yourself.
+- You discover it the first time its situation happens with both levels met.
+  - 💡 It already works on that occasion.
+  - A discovery is kept. Below level 30 the synergy sleeps until the level is back.
+- 💡 A synergy's strength is the weaker of its two skills' powers (death fatigue, an opposing skill).
+- 💡 Each synergy's situation, as built:
+
+  | Synergy | Situation and effect |
+  |---|---|
+  | Counterstrike | Your next melee hit within 2 seconds of a shield block, +20%. One hit per block. |
+  | Charge | A melee hit while sprinting, +10%. |
+  | High Ground | A projectile hit on a target at least 8 blocks below you, +10%. |
+  | Venom Tip | A tipped arrow's effects on its target, 50% longer. Spectral arrows are not tipped. |
+  | Forge of the Deep | A furnace you used last smelts raw ore or an ore block: a 5% chance of one more output. |
+  | Deep Walker | In the Deep Dark, a sculk sensor (calibrated ones too) does not notice you in the last 2 blocks of its range. |
+  | Green Thumb | A sapling you planted grows 20% more often, while you are on the server. |
+  | Seafarer | A boat you steer pulls 10% harder forward. This is worked out on your own client, where your boat moves. |
+  | Loyal Guard | Your tamed wolves take 20% less damage while you block. |
+  | Tailored | Every point of wear on your armor has a 10% chance to be spared. |
+  | Tidal Magic | A Water Breathing potion you drink lasts 50% longer. |
+  | Herb Lore | Eating glow berries gives 10 seconds of Night Vision. |
+
+- **The Chronicle:** `<world>/extremeprogression/world.json` holds every synergy's first discoverer, with the time and
+  the place. It is written at once on every first discovery.
+  - The first discovery is announced in the chat, unless the option `synergy_announce` is off.
+  - The first discoverer gets the "★ First Discoverer" mark. It is cosmetic.
+- **What the Codex shows** of a synergy you have not discovered:
+  - nothing while neither of its skills is at 30;
+  - its name in runes and a vague hint once one of them is;
+  - after somebody on the server found it first, half the name readable, the two skills, and a clearer hint.
+- **What the Codex shows** of a synergy you discovered: everything, with when and where.
+- **The Codex & Chronicle screen** (a button on the Character Sheet) has two tabs. The Codex holds your own synergies,
+  the Chronicle the server's first discoverers.
+
+**Specialization conflicts, hard requirements and gear conflicts in the GUI**
+- A specialization's detail panel names the one it excludes, with the reason from the table above.
+- A node with a hard requirement shows the skill and level it needs and your own level. The Alchemist's new potions
+  show the same on the specialization.
+  - The four requirements live in one table that the effects read too.
+  - 💡 Such a node can be bought before the level is there. It does nothing until then.
+- In heavy armor, Exploration's Skill Screen says that its passives are off.
+
+**Data and options**
+- Player file schema 5: the perk chosen at each Mastery rank, and the discovered synergies with when and where. An
+  older file loads with none.
+- Seven new options:
+  - the opposing skills' start level, maximum penalty, full gap and passive power;
+  - the Mastery perk step;
+  - the synergy level;
+  - the announcement.
+
 ---
 
 ## 3. XP generation
@@ -1114,7 +1209,7 @@ The confirmed rules above, as built. Everything marked 💡 was decided while bu
 
 Work starts only after the owner's final approval (§15). Each milestone ends with: compiling, running the tests, checking for regressions, a report of what was built and what is still open, and the owner's approval before the next major system.
 
-Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 ✅ done (0.4.0) · milestone 4 ✅ done (0.5.0) · milestone 5 ✅ done (0.6.0) · milestone 6 ✅ done (0.7.0) · milestone 7 ✅ done (0.8.0) · milestone 8 next.
+Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 ✅ done (0.4.0) · milestone 4 ✅ done (0.5.0) · milestone 5 ✅ done (0.6.0) · milestone 6 ✅ done (0.7.0) · milestone 7 ✅ done (0.8.0) · milestone 8 ✅ done (0.9.0) · milestone 9 next.
 
 | # | Milestone | Contents | Tests |
 |---|---|---|---|
