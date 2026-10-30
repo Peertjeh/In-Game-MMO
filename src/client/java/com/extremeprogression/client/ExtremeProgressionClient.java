@@ -1,6 +1,6 @@
 package com.extremeprogression.client;
 
-import org.lwjgl.glfw.GLFW;
+import com.mojang.blaze3d.platform.InputConstants;
 
 import com.extremeprogression.ExtremeProgression;
 import com.extremeprogression.client.inventory.SheetButton;
@@ -22,7 +22,7 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 public class ExtremeProgressionClient implements ClientModInitializer {
 	private static final KeyMapping.Category KEYS = KeyMapping.Category.register(ExtremeProgression.id("main"));
 	/** `K` by default (design §1), rebindable in Controls. */
-	public static final KeyMapping OPEN_SHEET = new KeyMapping("key.extremeprogression.sheet", GLFW.GLFW_KEY_K, KEYS);
+	public static final KeyMapping OPEN_SHEET = new KeyMapping("key.extremeprogression.sheet", InputConstants.KEY_K, KEYS);
 
 	@Override
 	public void onInitializeClient() {
