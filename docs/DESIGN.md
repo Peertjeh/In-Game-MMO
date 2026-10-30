@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION — Ontwerpdocument
 
 > Werktitel. De definitieve naam is nog niet gekozen.
-> Status: **Interview ronde 18 (fase 5: skill 10/10, Arcana). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
+> Status: **Interview ronde 19 (fase 5 afronden: conflicten, synergieën, harde vereisten). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
 
 Legenda per mechaniek:
 - ✅ **Bevestigd**: door de eigenaar goedgekeurd
@@ -31,7 +31,8 @@ Legenda per mechaniek:
 | 15 | Skill 7/10: Fishing | ✅ akkoord, kleine put geeft geen XP |
 | 16 | Skill 8/10: Exploration | ✅ akkoord |
 | 17 | Skill 9/10: Smithing | ✅ akkoord, Masterwork afgezwakt |
-| 18 | Skill 10/10: Arcana | ❓ wacht op antwoorden |
+| 18 | Skill 10/10: Arcana | ✅ akkoord |
+| 19 | Conflicten tussen specialisaties, synergieën, harde vereisten | ❓ wacht op antwoorden |
 
 ---
 
@@ -469,7 +470,7 @@ Keuzes in dit voorstel:
 | Speelstijl | Meer metaal uit dezelfde erts | Uitrusting in leven houden | Uitrusting verbeteren |
 | Actieve ability | **Flash Forge**: 30 seconden lang smelten ovens die jij opent 4× sneller. Cooldown 5 min. | ✅ **Masterwork**: je volgende reparatie binnen 30 seconden herstelt het item volledig. Er is **25% kans** dat hij geen XP-levels kost; anders betaal je gewoon. Cooldown 5 min. (Afgezwakt in ronde 17: "altijd gratis" was te sterk.) | **Reforge**: het volgende item dat je upgradet of repareert, krijgt blijvend +10% maximale duurzaamheid. Cooldown 5 min. |
 | Trade-off | Reparaties herstellen 15% minder | Smelten geeft geen bonusopbrengst en −25% XP | Reparaties aan het aambeeld herstellen 20% minder |
-| Voorbeeld keuzeknoop | Tweede smelt (kans op dubbele opbrengst) **of** Zuinige gloed (brandstof gaat 50% langer mee) | Behoud (💡 afgezwakt: de "too expensive"-grens gaat van 40 naar 50 levels, in plaats van helemaal weg, en reparaties verliezen geen enchants) **of** Snelle hamer (reparaties herstellen +25%) | Sjabloonbehoud (20% kans dat je een smithing template houdt; **vereist Mining 30**) **of** Trimkracht (elke armor trim geeft een klein effect, afhankelijk van het materiaal) |
+| Voorbeeld keuzeknoop | Tweede smelt (kans op dubbele opbrengst) **of** Zuinige gloed (brandstof gaat 50% langer mee) | Behoud (✅ afgezwakt in ronde 18: de "too expensive"-grens gaat van 40 naar 50 levels, in plaats van helemaal weg, en reparaties verliezen geen enchants) **of** Snelle hamer (reparaties herstellen +25%) | Sjabloonbehoud (20% kans dat je een smithing template houdt; **vereist Mining 30**) **of** Trimkracht (elke armor trim geeft een klein effect, afhankelijk van het materiaal) |
 
 **Mastery-perks** (voorbeeld, 1 van 2 per rank): +1% kans op dubbele opbrengst bij smelten **of** +1% extra herstel bij reparaties.
 
@@ -485,7 +486,7 @@ Keuzes in dit voorstel:
 - ✅ Abilities van crafting-skills activeer je met `R` terwijl je naar de werkplek kijkt.
 - ✅ Tinkerer mag armor trims een klein echt effect geven. Mining 30 voor Sjabloonbehoud is de eerste harde vereiste.
 
-### Skill 10/10: Arcana (💡 voorstel, ronde 18)
+### Skill 10/10: Arcana (✅ goedgekeurd in ronde 18)
 **Identiteit:** magie: drankjes brouwen en uitrusting enchanten.
 
 **XP:**
@@ -528,6 +529,35 @@ Keuzes in dit voorstel:
 **Tegenwerking:** tegenpool **Smithing** (magie tegenover staal).
 
 **Geen nieuwe items nodig.**
+
+- ✅ Hexer, de nieuwe drankjes voor de Alchemist en Arcane Insight zijn goedgekeurd zoals voorgesteld.
+
+### Conflicten tussen specialisaties (💡 voorstel, ronde 19)
+Mechanisme b: deze specialisaties van **verschillende** skills sluiten elkaar uit. Wie de ene heeft, kan de andere niet kiezen. De GUI toont dat vooraf, met de reden erbij.
+
+| Specialisatie | ✕ | Specialisatie | Waarom |
+|---|---|---|---|
+| Juggernaut (Defense) | ✕ | Acrobat (Exploration) | Zware platen tegenover salto's |
+| Brawler (Melee) | ✕ | Bulwark (Defense) | Blote vuisten tegenover een schild |
+| Sniper (Ranged) | ✕ | Wanderer (Exploration) | Stil liggen tegenover altijd onderweg |
+| Herbalist (Foraging) | ✕ | Grower (Farming) | Wild tegenover verbouwd |
+| Tinkerer (Smithing) | ✕ | Enchanter (Arcana) | Staal verbeteren tegenover magie verbeteren |
+
+### Harde vereisten (D) (💡 voorstel, ronde 19)
+| Knoop of ability | Vereist | Waarom |
+|---|---|---|
+| Sjabloonbehoud (Tinkerer, Smithing) | Mining 30 | ✅ al goedgekeurd |
+| Diepzee (Treasure Hunter, Fishing) | Exploration 40 | Wie de zee kent, vindt haar schatten |
+| Nieuwe drankjes (Alchemist, Arcana) | Foraging 30 | Kennis van wilde kruiden |
+| Ruiter (Beastmaster, Farming) | Exploration 30 | Wie veel reist, rijdt beter |
+
+### Verborgen synergieën
+- ❓ **Nog niet in dit document**, omdat deze repo openbaar is: een lijst hier zou alles verklappen. De voorstellen staan in de chat van ronde 19. Eerst moet gekozen worden hoe we de lijst geheim houden.
+- 💡 Algemene regels:
+  - Een synergie heeft twee skills nodig, elk op een minimumlevel.
+  - De rune-hint verschijnt in de GUI zodra je één van de twee skills op dat level hebt.
+  - De synergie wordt **ontdekt** de eerste keer dat de situatie in het spel voorkomt terwijl je aan beide levels voldoet.
+  - Er wordt nergens bijgehouden wie een item gemaakt of gevonden heeft. Daardoor blijven items gewoon stapelbaar.
 
 ### Voorbeelden van harde vereisten (D) (💡)
 - Smithing: Sjabloonbehoud (Tinkerer) vereist Mining 30 (zie skill 9).
