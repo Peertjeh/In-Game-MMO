@@ -725,6 +725,37 @@ All numbers are **per rank**. A few readings of §2 that needed a choice (💡):
 - **Unbreakable** stops sprinting on the server and on your client.
 - **Heavy armor** for Blade's price is the same as for Exploration: 3 or more pieces of iron or heavier.
 
+**Part 2: Gathering** (Mining, Foraging, Farming, Fishing). The same rules hold (💡); in addition:
+- **Area abilities** (Earthmover, Tunnel Bore, Tree Feller) break each block as if you broke it yourself, so every
+  block gives its own XP and drops, follows the placed-block rules and costs durability. Earthmover and Tunnel Bore take
+  only blocks of their tool, without a block entity, and no harder than twice the first block. **Tree Feller never takes
+  a placed log**, so houses of logs are safe.
+- **Ore Sense** sends only the ores near you to your client, which shows each as a glowing copy (in the ore's colour)
+  seen through the walls; nothing else of the world is sent.
+- **Catches** that change (Lucky Cast, Treasure Sense, Clean Water, Angler's price) are rolled again from vanilla's own
+  fishing tables, so data packs keep their say. Lucky Cast only works in open water, where treasure gives XP.
+- **Your companion** (Beastmaster) is your tamed animal nearest to you within 16 blocks; Pack Leader adds more.
+
+| Specialization | Ability ranks (after I) | P1 · P2 (2 points a rank) | P3 · P4 (3 points a rank) | Choice (3 points a rank) |
+|---|---|---|---|---|
+| **Prospector** | range +2 blocks (I: 12 blocks, 10 s) | Rich Vein: +1% double ores · Prospector's Eye: ores +3% XP | Quick Pick: +3% breaking speed on ores · Lingering Sense: Ore Sense +1 s | Gem Eye: only diamond, emerald and ancient debris, +4 blocks **or** Broad Spectrum: every ore, +2 s |
+| **Excavator** | +1 s (I: 8 s) | Fast Dig: +3% with a shovel · Finds: 1% chance of a find (flint, clay ball, bone, gold nugget, stick, string) | Shovel Saver: 5% chance a shovel or brush use costs no durability · Patient Brush: brushing +10% XP | Treasure Digger: +1% finds, one in ten rare (a pottery sherd or an emerald) **or** Archaeologist: 10% chance a brushed find comes twice |
+| **Tunneler** | +1 s (I: 8 s, 1 × 3; V: 3 × 3) | Momentum: +2% with a pickaxe · Cave Runner: +2% speed out of sight of the sky | Strong Back: 5% chance a pickaxe use costs no durability · Bore Master: Tunnel Bore +1 s | Deep Delver: +20% on deepslate (as fast as stone at V) **or** Enduring: during Tunnel Bore, 10% chance a block costs no durability |
+| **Lumberjack** | +12 logs (I: 16, V: 64) | Sharp Axe: +3% chopping on logs · Timber: +1% double logs | Woodsman: logs +3% XP · Steady Swing: 5% chance an axe use costs no durability | Wide Fell: Tree Feller +8 logs **or** Thrifty: 10% chance a log Tree Feller takes costs no durability |
+| **Gatherer** | +2 s (I: 10 s) | Green Fingers: wild plants +3% XP · Plenty: 4% chance of a double wild yield | Quick Picking: +5% on melons, pumpkins, cocoa, mushroom blocks · Season's Bounty: Bountiful Harvest +1 s | Rare Seeds: grass gives torchflower seeds or a pitcher pod, 1% **or** Honey Harvest: 20% double honey from wild hives, whose bees stay calm |
+| **Herbalist** | +5 s (I: 30 s) | Forager's Diet: wild food +10% saturation · Herb Knowledge: Regeneration +10% longer | Strong Stomach: Hunger 20% shorter (none at V) · Nourished: eating heals 0.4 | Mushroom Lore: stews give Regeneration I for 2 s **or** Berry Lore: berries fill +0.4 hunger (+2 at V) |
+| **Grower** | +2 s (I: 10 s) | Bumper Crop: +1% extra crops · Crop Lore: crops +3% XP | Tiller: 5% chance a hoe use costs no durability · Festival Spirit: Harvest Festival +1 s | Ripening Aura: crops within 4 blocks grow 3% faster **or** Seed Saver: 20% chance a harvested crop replants itself (always at V) |
+| **Herder** | +2 s (I: 10 s); the next breeding gives twins | Breeder: breeding and shearing +3% XP · Quick Growth: babies grow up 4% faster | Butcher: 10% chance of one more meat · Calm Herd: bred animals may breed again 5% sooner | Twins: 4% chance of twins **or** Wool Trade: 20% chance of one more wool when shearing, and one more leather from a cow |
+| **Beastmaster** | +3 s (I: 15 s) | Alpha Bond: your companion deals +4% · Thick Fur: your companion takes 4% less | Mending Pack: your companion heals 0.1 a second · Tamer: taming and your animals' fighting +5% XP | Pack Leader: the companion bonuses reach 2 animals (3 from rank III), +2% damage **or** Rider: horses and camels you ride +3% speed and +2% jump |
+| **Angler** | +4 s (I: 20 s, bites 80% sooner) | Quick Bite: fish bite 3% sooner · Fishmonger: fish +3% XP | Double Catch: 3% chance a fish comes twice · Strong Line: 5% chance a catch costs no durability | Ice Fishing: the bobber melts the ice it lands on (3 × 3 at I, 5 × 5 from II, 7 × 7 from IV; packed ice from III, blue ice at V) **or** Big Catch: fish fill +0.4 hunger (+2 at V) |
+| **Treasure Hunter** | it waits +10 s; 2 treasure catches from rank III, 3 at V | Treasure Sense: 1% chance a fish becomes treasure · Appraiser: treasure +4% XP | Clean Water: 10% chance junk becomes a fish · Old Salt: fish bite 4% sooner | Deep Sea: 0.2% chance of a Heart of the Sea or a trident **or** Bookworm: 20% chance an enchantment on a fished book is one level higher |
+| **Hookmaster** | stun +0.5 s (I: 2 s; it waits 10 s for the hook) | Barbed Hook: hooking deals 0.5 damage · Long Cast: the bobber flies 5% farther | Snag: what you hook is slowed 1 s · Hook Fighter: +3% melee on what is on your hook | Shake: 20% chance a hooked mob drops one of its normal drops, once per mob **or** Drag Hook: pull 20% harder (twice at V) |
+
+All numbers are **per rank**. Readings of §2 (💡): Herding Call's animals are untamed animals within 16 blocks, which
+walk to you; Rally the Pack's target is the mob you last hit (or the one that last hit you); the Herbalist's
+"cultivated food" is food made from crops and the meat of farm animals (beef, pork, mutton, chicken); "bred animals"
+for Calm Herd are the two parents.
+
 ## 7. Death penalties
 
 ### Fixed principles (from the brief, not a choice)
@@ -980,7 +1011,7 @@ All numbers are **per rank**. A few readings of §2 that needed a choice (💡):
 
 Work starts only after the owner's final approval (§15). Each milestone ends with: compiling, running the tests, checking for regressions, a report of what was built and what is still open, and the owner's approval before the next major system.
 
-Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 ✅ done (0.4.0) · milestone 4 ✅ done (0.5.0) · milestone 5 ✅ done (0.6.0) · milestone 6 in progress (0.7.0): part 1 of 3 ✅ built and verified, part 2 next.
+Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 ✅ done (0.4.0) · milestone 4 ✅ done (0.5.0) · milestone 5 ✅ done (0.6.0) · milestone 6 in progress (0.7.0): parts 1 and 2 of 3 built (part 2 being verified), part 3 next.
 
 | # | Milestone | Contents | Tests |
 |---|---|---|---|

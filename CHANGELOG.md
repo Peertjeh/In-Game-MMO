@@ -12,7 +12,16 @@ Part 1 of 3: the twelve specializations of Melee, Ranged, Defense and Exploratio
 - **Prices**: every specialization's trade-off now counts, such as Blade's −15% against heavy armor, Crusher's −10%
   attack speed and the Acrobat's extra knockback.
 - Damage an effect deals itself (bleeding, a shockwave, spikes) gives no XP; area effects never hit other players.
-- The other 18 specializations can be chosen and bought as before; their effects follow in parts 2 and 3.
+Part 2 of 3: the twelve specializations of Mining, Foraging, Farming and Fishing.
+
+- **Abilities**: Ore Sense (the ores near you glow through the walls, for you only), Earthmover (3 × 3 with a shovel),
+  Tunnel Bore (1 × 3, 3 × 3 at rank V), Tree Feller (a whole tree, never placed logs), Bountiful Harvest, Wild Remedy,
+  Harvest Festival (double yield, replants itself), Herding Call (animals follow you, twins), Rally the Pack, Feeding
+  Frenzy, Lucky Cast (guaranteed treasure in open water) and Reel In.
+- **Passives, choice nodes and prices** for all twelve, such as Rare Seeds, Honey Harvest (calm bees), Ice Fishing,
+  Bookworm, Rider and the Tunneler's "no double drops".
+- The six Crafting specializations (Smithing and Arcana) can be chosen and bought as before; their effects follow in
+  part 3.
 
 ## 0.6.0: Trees and abilities
 

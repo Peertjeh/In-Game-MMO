@@ -156,6 +156,31 @@ public class ClientShots implements FabricClientGameTest {
 			check(ctx.computeOnClient(mc -> AbilityHud.ready(false)) == null, "Riposte still shows as ready after R");
 			check(ctx.computeOnClient(mc -> ClientProgress.cooldown("melee", "blade")) > 0, "using Riposte started no cooldown");
 			ctx.takeScreenshot("09_ability_used");
+
+			// Ore Sense (Prospector): the ores in the ground ahead glow through it, on this client only
+			sp.getServer().runOnServer(s -> {
+				ServerPlayer player = s.getPlayerList().getPlayers().get(0);
+				PlayerProgress pr = PlayerStore.get(player.getUUID());
+				TreeRules.choose(pr, Specialization.PROSPECTOR);
+				TreeRules.buy(pr, Specialization.PROSPECTOR, NodeSlot.A1);
+				Sync.send(player);
+				net.minecraft.core.BlockPos feet = player.blockPosition();
+				for (int i = -2; i <= 2; i++) {
+					player.level().setBlockAndUpdate(feet.offset(i * 2, -3, 5), net.minecraft.world.level.block.Blocks.DIAMOND_ORE.defaultBlockState());
+					player.level().setBlockAndUpdate(feet.offset(i * 2 + 1, -4, 7), net.minecraft.world.level.block.Blocks.GOLD_ORE.defaultBlockState());
+				}
+				player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.IRON_PICKAXE));
+			});
+			ctx.runOnClient(mc -> {
+				mc.player.setYRot(0);
+				mc.player.setXRot(40);
+			});
+			ctx.waitTicks(10);
+			ctx.getInput().pressKey(o -> ExtremeProgressionClient.ABILITY);
+			ctx.waitTicks(10);
+			int glowing = ctx.computeOnClient(mc -> com.extremeprogression.client.OreSense.shown());
+			check(glowing >= 10, "Ore Sense shows " + glowing + " ores, not the 10 placed");
+			ctx.takeScreenshot("10_ore_sense");
 		}
 	}
 
