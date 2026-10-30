@@ -80,7 +80,7 @@ public class AdminTests {
 			check(helper, missing, "a file without every value did not ask to be written back");
 			check(helper, XpTables.pickaxe(Blocks.STONE.defaultBlockState()) == 7, "stone gives %s, not the file's 7", XpTables.pickaxe(Blocks.STONE.defaultBlockState()));
 			check(helper, XpTables.pickaxe(Blocks.COAL_ORE.defaultBlockState()) == 0, "a block the file's table leaves out still gives XP");
-			check(helper, XpTables.BRUSHING == 300 && XpTables.pickaxe(Blocks.TERRACOTTA.defaultBlockState()) == 5, "brushing is %s and terracotta %s", XpTables.BRUSHING, XpTables.TERRACOTTA);
+			check(helper, XpTables.BRUSHING == 300 && XpTables.pickaxe(Blocks.TERRACOTTA.defaultBlockState()) == 5, "brushing is %s and terracotta %s", XpTables.BRUSHING, XpTables.pickaxe(Blocks.TERRACOTTA.defaultBlockState()));
 			JsonObject back = XpData.toJson(Skill.MINING);
 			check(helper, back.has("terracotta") && back.getAsJsonObject("pickaxe").has("othermod:marble") && back.getAsJsonObject("pickaxe").has("stone"),
 					"the written file does not hold every value: %s", back);
