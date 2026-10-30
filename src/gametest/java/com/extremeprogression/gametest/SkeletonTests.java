@@ -44,7 +44,10 @@ public class SkeletonTests {
 
 	@GameTest
 	public void theModRunsWithoutExtremeDimensions(GameTestHelper helper) {
-		check(helper, !FabricLoader.getInstance().isModLoaded("extremedimensions"), "the test server should run without Extreme Dimensions");
+		// (the compatibility run loads it on purpose)
+		if (!Boolean.getBoolean("extremeprogression.compat")) {
+			check(helper, !FabricLoader.getInstance().isModLoaded("extremedimensions"), "the test server should run without Extreme Dimensions");
+		}
 		helper.succeed();
 	}
 }
