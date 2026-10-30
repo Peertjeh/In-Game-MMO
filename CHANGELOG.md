@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.5.0: XP from the other six skills (in development)
+
+- **Melee**: fully charged hits (attack bar at least 90%), by the damage dealt up to the target's remaining health × its
+  danger factor. **Ranged**: fully drawn arrows, thrown tridents and crossbow fireworks, the same way, +2% per block
+  beyond 10 blocks (at most +60%).
+- **Defense**: what your shield blocked and your armor absorbed, from hostile mobs and players; only while you are
+  playing, and at most 6 hits per attacker until it leaves you alone for a minute.
+- **Exploration**: your first visit to each chunk (a quarter with an elytra), chunks left alone for 30 days, your first
+  time in each biome, each structure the first time you enter it (the first of each type ×3), and falls you survive
+  (once per spot for 10 minutes). Discoveries are saved in the player file (schema 2; older files load unchanged).
+- **Smithing**: metal you take out of a furnace yourself, anvil repairs by material, netherite upgrades and armor trims.
+- **Arcana**: potions the stand brewed that you take out yourself, enchanting at the table, combining enchantments at
+  the anvil.
+- **Farming**: the damage your tamed animals deal.
+- Against exploits:
+  - mobs from spawners, spawn eggs (also from a dispenser) and `/summon` give no combat XP; the mark is saved on the
+    mob and passes to what it turns into. Trial spawners give full XP;
+  - passive animals, player-built iron golems, and iron golems or zombified piglins that were not yet after you give
+    nothing;
+  - PvP: at most 60 damage (3 lives) per player per hour counts, and nothing from players with less than half of your
+    total level. A same-IP rule can be turned on.
+
 ## 0.4.0: XP from gathering (in development)
 
 - **Mining**: XP per block with a pickaxe that can mine it (rare ores much more than stone; deepslate more than its

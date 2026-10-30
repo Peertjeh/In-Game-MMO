@@ -22,6 +22,10 @@ public final class Migrations {
 			// 0 → 1: a file without a schema holds the first schema's fields; what it lacks takes the defaults
 			json.addProperty("schema", 1);
 		}
+		if (from < 2) {
+			// 1 → 2: exploration was added; a file without it has discovered nothing yet
+			json.addProperty("schema", 2);
+		}
 		return json;
 	}
 }

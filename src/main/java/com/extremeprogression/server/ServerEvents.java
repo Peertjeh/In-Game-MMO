@@ -3,11 +3,15 @@ package com.extremeprogression.server;
 import java.util.UUID;
 
 import com.extremeprogression.antiexploit.AfkTracker;
+import com.extremeprogression.antiexploit.MobOrigins;
 import com.extremeprogression.antiexploit.PlacedBlocks;
 import com.extremeprogression.command.SkillsCommand;
 import com.extremeprogression.data.PlayerProgress;
 import com.extremeprogression.data.PlayerStore;
 import com.extremeprogression.network.Sync;
+import com.extremeprogression.xp.CombatXp;
+import com.extremeprogression.xp.CraftingXp;
+import com.extremeprogression.xp.ExplorationXp;
 import com.extremeprogression.xp.FishingXp;
 import com.extremeprogression.xp.GatheringXp;
 import com.extremeprogression.xp.Harvests;
@@ -16,7 +20,6 @@ import com.extremeprogression.xp.XpService;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.level.ServerPlayer;
@@ -56,19 +59,18 @@ public final class ServerEvents {
 			XpService.forget(id);
 			FishingXp.forget(id);
 			Harvests.forget(id);
+			CombatXp.forget(id);
+			ExplorationXp.forget(id);
 		}));
 
 		// XP sources (design §2) and the rules against exploits (design §12)
 		PlacedBlocks.register();
+		MobOrigins.register();
 		GatheringXp.register();
 		Harvests.register();
+		CombatXp.register();
+		CraftingXp.register();
 		UseItemCallback.EVENT.register((player, level, hand) -> {
-			if (!level.isClientSide()) {
-				AfkTracker.interacted(player.getUUID(), level.getServer().getTickCount());
-			}
-			return InteractionResult.PASS;
-		});
-		AttackEntityCallback.EVENT.register((player, level, hand, entity, hit) -> {
 			if (!level.isClientSide()) {
 				AfkTracker.interacted(player.getUUID(), level.getServer().getTickCount());
 			}
@@ -80,6 +82,7 @@ public final class ServerEvents {
 				AfkTracker.tick(p, tick);
 			}
 			Harvests.tick(s);
+			ExplorationXp.tick(s);
 			XpService.tick(s);
 		});
 

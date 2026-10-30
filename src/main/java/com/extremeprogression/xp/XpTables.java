@@ -13,11 +13,48 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * The approved XP values of the gathering skills (design Appendix A.4 to A.7), by registry id. Ids this version of
- * Minecraft does not have simply never match.
+ * The approved XP values of every skill (design Appendix A), by registry id. Ids this version of Minecraft does not have
+ * simply never match.
  */
 public final class XpTables {
 	private XpTables() {}
+
+	// --- A.2 Melee and Ranged, A.3 Defense --------------------------------------------------------
+
+	/** XP per point of damage dealt, × the target's danger factor. */
+	public static final double MELEE_PER_DAMAGE = 4;
+	public static final double RANGED_PER_DAMAGE = 4;
+	/** XP per point of damage your shield blocked or your armor absorbed, × the attacker's danger factor. */
+	public static final double DEFENSE_PER_DAMAGE = 15;
+	/** Farming XP per point of damage your tamed animals deal, × the target's danger factor. */
+	public static final double PET_PER_DAMAGE = 3;
+	/** Ranged: +2% per block beyond 10 blocks, at most +60% (at 40 blocks). */
+	public static final double RANGED_FREE_DISTANCE = 10;
+	public static final double RANGED_BONUS_PER_BLOCK = 0.02;
+	public static final double RANGED_MAX_BONUS = 0.60;
+
+	/** Danger factors of hostile mobs. Passive animals are 0; a hostile mob not listed is 1.0. */
+	private static final Map<String, Double> DANGER = table(
+			"silverfish", 0.5, "endermite", 0.5,
+			"slime", 0.6, "magma_cube", 0.6,
+			"zombified_piglin", 0.8,
+			"zombie", 1.0, "husk", 1.0, "drowned", 1.0, "zombie_villager", 1.0, "spider", 1.0, "vex", 1.0, "iron_golem", 1.0,
+			"skeleton", 1.2, "stray", 1.2, "bogged", 1.2, "piglin", 1.2,
+			"cave_spider", 1.3, "pillager", 1.3,
+			"phantom", 1.4,
+			"creeper", 1.5, "enderman", 1.5, "witch", 1.5, "guardian", 1.5, "creaking", 1.5,
+			"vindicator", 1.6, "blaze", 1.6, "ghast", 1.6, "hoglin", 1.6, "zoglin", 1.6, "shulker", 1.6,
+			"breeze", 1.8,
+			"wither_skeleton", 2.0, "evoker", 2.0, "ravager", 2.0,
+			"piglin_brute", 2.2,
+			"warden", 3.0, "elder_guardian", 3.0, "wither", 3.0, "ender_dragon", 3.0);
+	public static final double DANGER_UNLISTED_HOSTILE = 1.0;
+	public static final double DANGER_PLAYER = 1.5;
+
+	/** The danger factor of a mob type, by id; null when the table does not list it. */
+	public static Double danger(String namespace, String path) {
+		return namespace.equals("minecraft") ? DANGER.get(path) : null;
+	}
 
 	// --- A.4 Mining ------------------------------------------------------------------------------
 
@@ -110,6 +147,129 @@ public final class XpTables {
 	public static final double TREASURE_GEAR = 250;
 	/** Everything else: junk. */
 	public static final double JUNK = 15;
+
+	// --- A.8 Exploration -------------------------------------------------------------------------
+
+	public static final double NEW_CHUNK = 8;
+	public static final double NEW_CHUNK_ELYTRA = 2;
+	public static final double REVISITED_CHUNK = 2;
+	public static final double NEW_BIOME = 500;
+	public static final double FALL_PER_DAMAGE = 40;
+	/** The first structure of each type you ever enter gives this many times its XP. */
+	public static final double FIRST_OF_TYPE = 3;
+
+	/** A structure type, as in the XP table, with its XP. */
+	public record StructureType(String name, double xp) {}
+
+	private static final Map<String, StructureType> STRUCTURES = new HashMap<>();
+
+	private static void structures(String type, double xp, String... ids) {
+		for (String id : ids) {
+			STRUCTURES.put(id, new StructureType(type, xp));
+		}
+	}
+
+	static {
+		structures("ruined_portal", 100, "ruined_portal", "ruined_portal_desert", "ruined_portal_jungle", "ruined_portal_swamp",
+				"ruined_portal_mountain", "ruined_portal_ocean", "ruined_portal_nether");
+		structures("mineshaft", 150, "mineshaft", "mineshaft_mesa");
+		structures("shipwreck", 175, "shipwreck", "shipwreck_beached");
+		structures("ocean_ruin", 200, "ocean_ruin_cold", "ocean_ruin_warm");
+		structures("igloo", 250, "igloo");
+		structures("swamp_hut", 250, "swamp_hut");
+		structures("trail_ruins", 275, "trail_ruins");
+		structures("village", 300, "village_plains", "village_desert", "village_savanna", "village_snowy", "village_taiga");
+		structures("desert_pyramid", 400, "desert_pyramid");
+		structures("jungle_pyramid", 400, "jungle_pyramid");
+		structures("pillager_outpost", 400, "pillager_outpost");
+		structures("fortress", 800, "fortress");
+		structures("trial_chambers", 1000, "trial_chambers");
+		structures("end_city", 1000, "end_city");
+		structures("monument", 1200, "monument");
+		structures("bastion_remnant", 1200, "bastion_remnant");
+		structures("stronghold", 1500, "stronghold");
+		structures("mansion", 1500, "mansion");
+		structures("ancient_city", 2000, "ancient_city");
+	}
+
+	/** Structures nobody enters (buried in the ground, or only a few blocks). */
+	private static final Set<String> NO_STRUCTURE = Set.of("buried_treasure", "nether_fossil");
+	/** A structure of another mod (such as the Seam's in Extreme Dimensions): valued like a village. */
+	public static final double STRUCTURE_OTHER = 300;
+
+	/** A structure's type and XP, by id; null for one that gives nothing. */
+	public static StructureType structure(String namespace, String path) {
+		if (!namespace.equals("minecraft")) {
+			return new StructureType(namespace + ":" + path, STRUCTURE_OTHER);
+		}
+		if (NO_STRUCTURE.contains(path)) {
+			return null;
+		}
+		return STRUCTURES.getOrDefault(path, new StructureType(path, STRUCTURE_OTHER));
+	}
+
+	// --- A.9 Smithing ----------------------------------------------------------------------------
+
+	/** Smelting, per item taken out by hand, by the output (the ingot of an ore is the same from raw ore or ore). */
+	private static final Map<String, Double> SMELTED = table(
+			"copper_ingot", 15, "iron_ingot", 25, "gold_ingot", 30, "netherite_scrap", 300,
+			"copper_block", 15 * 9, "iron_block", 25 * 9, "gold_block", 30 * 9);
+	public static final double REPAIR = 200;
+	/** Material factors of anvil repairs, by the start of the item's id. */
+	private static final Map<String, Double> MATERIAL = table(
+			"wooden_", 0.5, "stone_", 0.8, "leather_", 0.8, "chainmail_", 1.0, "copper_", 1.0, "golden_", 1.0,
+			"iron_", 1.5, "diamond_", 3.0, "netherite_", 4.0);
+	/** Gear of no listed material (an elytra, a trident, a mace, a shield, a bow). */
+	public static final double MATERIAL_OTHER = 1.0;
+	public static final double NETHERITE_UPGRADE = 1500;
+	public static final double ARMOR_TRIM = 300;
+
+	public static double smelted(ItemStack stack) {
+		var key = BuiltInRegistries.ITEM.getKey(stack.getItem());
+		return key.getNamespace().equals("minecraft") ? SMELTED.getOrDefault(key.getPath(), 0.0) : 0;
+	}
+
+	public static double material(ItemStack stack) {
+		var key = BuiltInRegistries.ITEM.getKey(stack.getItem());
+		if (key.getNamespace().equals("minecraft")) {
+			for (Map.Entry<String, Double> e : MATERIAL.entrySet()) {
+				if (key.getPath().startsWith(e.getKey())) {
+					return e.getValue();
+				}
+			}
+		}
+		return MATERIAL_OTHER;
+	}
+
+	// --- A.10 Arcana -----------------------------------------------------------------------------
+
+	public static final double POTION_BASE = 5;
+	public static final double POTION_EFFECT = 30;
+	public static final double POTION_STRONGER = 45;
+	public static final double POTION_SPLASH = 60;
+	public static final double POTION_LINGERING = 80;
+	public static final double ENCHANTING_PER_LEVEL = 15;
+	public static final double ANVIL_ENCHANTING_PER_LEVEL = 25;
+
+	/** A brewed potion's XP, from its form (potion, splash, lingering) and its kind's id ("awkward", "long_swiftness"). */
+	public static double potion(String form, String potion) {
+		if (potion == null || potion.equals("water")) {
+			return 0;
+		}
+		if (form.equals("lingering_potion")) {
+			return POTION_LINGERING;
+		}
+		if (form.equals("splash_potion")) {
+			return POTION_SPLASH;
+		}
+		if (!form.equals("potion")) {
+			return 0;
+		}
+		if (potion.equals("awkward") || potion.equals("mundane") || potion.equals("thick")) {
+			return POTION_BASE;
+		}
+		return potion.startsWith("long_") || potion.startsWith("strong_") ? POTION_STRONGER : POTION_EFFECT;
+	}
 
 	// --- Lookups ---------------------------------------------------------------------------------
 

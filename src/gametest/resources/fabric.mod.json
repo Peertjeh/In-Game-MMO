@@ -11,7 +11,10 @@
 			"com.extremeprogression.gametest.StoreTests",
 			"com.extremeprogression.gametest.CommandTests",
 			"com.extremeprogression.gametest.GatheringTests",
-			"com.extremeprogression.gametest.AntiExploitTests"
+			"com.extremeprogression.gametest.AntiExploitTests",
+			"com.extremeprogression.gametest.CombatTests",
+			"com.extremeprogression.gametest.ExplorationTests",
+			"com.extremeprogression.gametest.CraftingTests"
 		],
 		"fabric-client-gametest": [
 			"com.extremeprogression.gametest.ClientShots"

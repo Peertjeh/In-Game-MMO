@@ -11,7 +11,7 @@ import com.extremeprogression.skill.Skill;
  */
 public class PlayerProgress {
 	/** The schema this version writes. */
-	public static final int SCHEMA = 1;
+	public static final int SCHEMA = 2;
 
 	public int schema = SCHEMA;
 	/** The player's name when last seen (for leaderboards and admins while they are offline). */
@@ -21,6 +21,8 @@ public class PlayerProgress {
 	 * are, never dropped.
 	 */
 	public Map<String, SkillData> skills = new LinkedHashMap<>();
+	/** What the player discovered (schema 2). */
+	public ExplorationData exploration = new ExplorationData();
 
 	public SkillData get(Skill skill) {
 		return skills.computeIfAbsent(skill.id, k -> new SkillData());
@@ -68,6 +70,7 @@ public class PlayerProgress {
 			d.masteryRanks = Math.max(0, d.masteryRanks);
 			d.masteryXp = finite(d.masteryXp);
 		}
+		exploration = (exploration == null ? new ExplorationData() : exploration).repaired();
 		return this;
 	}
 

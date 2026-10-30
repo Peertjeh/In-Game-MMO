@@ -64,6 +64,27 @@ public final class Config {
 	public static int OVERFISHED_LATE_CATCHES = 20;
 	public static double OVERFISHED_LATE_FACTOR = 0.10;
 
+	/** Melee: only hits with the attack bar at least this full give XP (design §2). */
+	public static double MELEE_FULL_CHARGE = 0.9;
+	/** Defense: XP only if you attacked, interacted or moved yourself within this many seconds. */
+	public static double DEFENSE_ACTIVE_SECONDS = 10.0;
+	/** Defense: one attacker gives XP at most this many times... */
+	public static int DEFENSE_HITS_PER_ATTACKER = 6;
+	/** ...and again only after this many seconds without hits from it. */
+	public static double DEFENSE_ATTACKER_RESET_SECONDS = 60.0;
+	/** PvP (a): damage to the same player gives XP for at most this much damage per hour (3 lives). */
+	public static double PVP_DAMAGE_PER_HOUR = 60.0;
+	/** PvP (b): no XP from players whose total level is below this share of yours. */
+	public static double PVP_MIN_LEVEL_SHARE = 0.5;
+	/** PvP (c): no XP from players on the same IP address. Off by default: it also hits siblings and housemates. */
+	public static boolean PVP_BLOCK_SAME_IP = false;
+	/** Exploration: a chunk left alone this many real days gives XP again. */
+	public static double REVISIT_DAYS = 30.0;
+	/** Exploration: a fall within this many blocks of an earlier one... */
+	public static double FALL_SPOT_RADIUS = 3.0;
+	/** ...within this many minutes gives no XP (the spot is blocked for a while). */
+	public static double FALL_SPOT_MINUTES = 10.0;
+
 	// --- Saving (design §10) ---------------------------------------------------------------------
 
 	/** Earlier versions of every player file kept beside it. */
@@ -171,6 +192,17 @@ public final class Config {
 		OVERFISHED_LATE_CATCHES = Math.max(OVERFISHED_CATCHES, OVERFISHED_LATE_CATCHES);
 		OVERFISHED_FACTOR = share(OVERFISHED_FACTOR, "OVERFISHED_FACTOR");
 		OVERFISHED_LATE_FACTOR = share(OVERFISHED_LATE_FACTOR, "OVERFISHED_LATE_FACTOR");
+		MELEE_FULL_CHARGE = share(MELEE_FULL_CHARGE, "MELEE_FULL_CHARGE");
+		DEFENSE_ACTIVE_SECONDS = nonNegative(DEFENSE_ACTIVE_SECONDS, "DEFENSE_ACTIVE_SECONDS");
+		DEFENSE_HITS_PER_ATTACKER = Math.max(1, DEFENSE_HITS_PER_ATTACKER);
+		DEFENSE_ATTACKER_RESET_SECONDS = nonNegative(DEFENSE_ATTACKER_RESET_SECONDS, "DEFENSE_ATTACKER_RESET_SECONDS");
+		PVP_DAMAGE_PER_HOUR = nonNegative(PVP_DAMAGE_PER_HOUR, "PVP_DAMAGE_PER_HOUR");
+		PVP_MIN_LEVEL_SHARE = share(PVP_MIN_LEVEL_SHARE, "PVP_MIN_LEVEL_SHARE");
+		if (!(REVISIT_DAYS > 0)) {
+			REVISIT_DAYS = (double) DEFAULTS.get("REVISIT_DAYS");
+		}
+		FALL_SPOT_RADIUS = nonNegative(FALL_SPOT_RADIUS, "FALL_SPOT_RADIUS");
+		FALL_SPOT_MINUTES = nonNegative(FALL_SPOT_MINUTES, "FALL_SPOT_MINUTES");
 	}
 
 	/** A share from 0 to 1; anything else falls back to the default. */
