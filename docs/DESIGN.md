@@ -62,9 +62,32 @@ Only when Extreme Dimensions is installed:
 - ✅ Both mods' death penalties **stack in full** (round 6).
 - 💡 Our inventory button sits right of ED's Journal and Curses buttons, so they never overlap (§9).
 - 💡 The Seam's structures (villages, looms, colossal buildings, the Return Gate) count as **new structures** for Exploration.
+  - Milestone 10: the Seam's buildings are not world structures. Extreme Dimensions builds them from its own plans
+    while you are there, and the Seam is wiped and grown anew, so a structure lookup cannot see them.
+  - What counts instead: every new chunk of the Seam and its biomes, like any other dimension's (once each, also after
+    a wipe). A real structure count would need an API of Extreme Dimensions; it stays open.
 - ❓ Does a **Collapse** (the Tether runs dry and the player wakes up at home) count as a death for this mod? (§7)
 
 Without Extreme Dimensions none of this code is loaded.
+
+**How milestone 10 implements it (version 1.0.0)**
+- The Seam's factor (×2.5) counts only while Extreme Dimensions is loaded, under the id of its own `SeamService.SEAM`.
+  The compatibility run checks that the id matches.
+- Both mods' death penalties apply in full: neither touches the other's.
+- The Character Sheet button sits right of ED's Journal and Curses buttons. The client test checks that it never lies
+  over another button.
+- **The compatibility run** (CI, on every push) runs every server game test and the client test with Extreme
+  Dimensions and the newest Sodium, Iris and Mod Menu for this game version.
+  - Extreme Dimensions comes from its latest GitHub release, or is built from its source when it has none.
+  - Sodium, Iris and Mod Menu come from Modrinth.
+- **The release** (CI): a version not released yet goes out as a GitHub release once the build, the client test and
+  the compatibility run pass on `develop` or the default branch. Its notes are that version's part of the changelog.
+  - With a `MODRINTH_TOKEN` secret and a `MODRINTH_PROJECT` variable in the repository's settings, the same jar goes
+    to Modrinth, with Fabric API as a required dependency.
+- The balancing pass: [BALANCE.md](BALANCE.md). The pace, Mastery, respec and death examples of §4 and §7 match the
+  code, and `BalanceTests` guards them. The observations there are for the owner to decide; nothing was changed.
+- The license is MIT. The icon is drawn by `tools/icon/make_icon.py`, and the Modrinth page text is in
+  `docs/modrinth/description.md`.
 
 ### State of the repository (inspected on 2026-10-30)
 - `Peertjeh/In-Game-MMO`: 1 commit, only `README.md` ("MMO With GUI"). Greenfield: no code, build, GUI or storage.
@@ -1278,7 +1301,7 @@ Everything marked 💡 was decided while building.
 
 Work starts only after the owner's final approval (§15). Each milestone ends with: compiling, running the tests, checking for regressions, a report of what was built and what is still open, and the owner's approval before the next major system.
 
-Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 ✅ done (0.4.0) · milestone 4 ✅ done (0.5.0) · milestone 5 ✅ done (0.6.0) · milestone 6 ✅ done (0.7.0) · milestone 7 ✅ done (0.8.0) · milestone 8 ✅ done (0.9.0) · milestone 9 ✅ done (0.10.0) · milestone 10 next.
+Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 ✅ done (0.4.0) · milestone 4 ✅ done (0.5.0) · milestone 5 ✅ done (0.6.0) · milestone 6 ✅ done (0.7.0) · milestone 7 ✅ done (0.8.0) · milestone 8 ✅ done (0.9.0) · milestone 9 ✅ done (0.10.0) · milestone 10 ✅ done (1.0.0).
 
 | # | Milestone | Contents | Tests |
 |---|---|---|---|
