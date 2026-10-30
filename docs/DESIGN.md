@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION — Ontwerpdocument
 
 > Werktitel. De definitieve naam is nog niet gekozen.
-> Status: **Interview ronde 5 (fase 3 afronden: getallen). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
+> Status: **Interview ronde 6 (fase 4: doodsstraffen). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
 
 Legenda per mechaniek:
 - ✅ **Bevestigd**: door de eigenaar goedgekeurd
@@ -18,7 +18,8 @@ Legenda per mechaniek:
 | 2 | Samenwerking met Extreme Dimensions, skilllijst, synergieën, trade-offs | ✅ beantwoord |
 | 3 | Skill-sjabloon: tegenwerking, actieve abilities, specialisaties, ontdekken | ✅ beantwoord |
 | 4 | Fase 3: schaal, totaalbudget, tempo, specialisatiemomenten, tegenpolen | ✅ beantwoord |
-| 5 | Fase 3 afronden: getallen voor tempo, plafond, Mastery, respec, tegenpolen | ❓ wacht op antwoorden |
+| 5 | Fase 3 afronden: getallen voor tempo, plafond, Mastery, respec, tegenpolen | ✅ alles akkoord |
+| 6 | Fase 4 deel 1: wat een dood kost, welke skills, herstel, vangnet, Extreme Dimensions | ❓ wacht op antwoorden |
 
 ---
 
@@ -93,13 +94,12 @@ Zwaktes die we bewust oplossen:
   - ✅ **a) Uitrustingsconflicten** (wat je draagt of vasthoudt bepaalt welke bonussen werken)
   - ✅ **b) Specialisatieconflicten** (sommige specialisaties sluiten elkaar uit over skills heen)
   - ✅ **c) Tegenpolen**, en die moeten **harder straffen** dan het eerste voorstel (−20%, pas vanaf level 50). Dat voorstel is afgewezen.
-    - 💡 Nieuw voorstel (ronde 5):
-      - Paren: Melee ↔ Ranged, Smithing ↔ Arcana, Defense ↔ Exploration.
-      - De straf begint zodra de tegenpool boven level 25 zit en hoger is dan deze skill.
+    - ✅ Uitwerking (goedgekeurd in ronde 5):
+      - Paren: **Melee ↔ Ranged**, **Smithing ↔ Arcana**, **Defense ↔ Exploration**.
+      - De straf begint zodra de tegenpool **boven level 25** zit én hoger is dan deze skill.
       - Hij groeit met het verschil in levels, tot **−60% XP** bij 50 levels verschil.
-      - Daarnaast werken de passieve bonussen van de zwakkere skill maar voor **75%**.
+      - Daarnaast werken de **passieve bonussen** van de zwakkere skill maar voor **75%**.
       - Altijd zichtbaar in de GUI.
-    - ❓ Akkoord, of harder of zachter?
   - ✅ **d) Totaalbudget: verplicht, in de hybride vorm** (zie §4).
 
 ### De 10 skills (✅ lijst goedgekeurd; specialisaties nog 💡)
@@ -145,7 +145,7 @@ _Nog niet besproken._
 - ✅ **Tempo: VEEL langzamer** dan het eerste voorbeeld (100 uur tot level 100). Dat voorbeeld is afgewezen.
 - ✅ **Respec: optie B.** Wisselen kan, maar het kost een flink deel van je voortgang in die skill plus een wachttijd.
 
-### Voorstellen met getallen (💡, ronde 5)
+### Getallen (✅ goedgekeurd in ronde 5)
 **Tempo (de eerste skill, zonder budgetfactor):** `uren(L) = 400 × (L/100)^2.66`. De eerste levels gaan snel, zodat je het systeem meteen voelt. Daarna wordt de curve steil.
 
 | Level | 1 | 5 | 10 | 25 | 50 | 75 | 100 |
@@ -167,11 +167,14 @@ De uren worden later omgerekend naar XP per actie (fase 7), op basis van hoe sne
 
 **Respec (B):** wisselen kost **20% van de totale XP in die skill** (op level 100 zak je naar ~92, op level 75 naar ~69). Daarna moet je **7 echte dagen** wachten voordat je weer kunt wisselen. De nieuwe specialisatie begint op rank 1.
 
+Ter referentie, de speeltijd van één level (zonder budgetfactor):
+
+| Van level | 10 | 25 | 50 | 75 | 90 | 99 |
+|---|---|---|---|---|---|---|
+| Naar het volgende level | ~15 min | ~1,1 uur | ~3,4 uur | ~6,7 uur | ~9 uur | ~10,5 uur |
+
 ### Open vragen
-- ❓ Tempo: is 400 uur tot level 100 goed?
-- ❓ Plafond: 400 totale levels? En kun je een skill bewust laten zakken ("afleren") om ruimte vrij te maken?
-- ❓ Mastery: 10 ranks van ~40 uur, met een keuze per rank?
-- ❓ Specialisaties op 25 en 75, en respec voor 20% XP plus 7 dagen?
+- ❓ Mag je een skill bewust laten zakken ("afleren") om onder het plafond ruimte vrij te maken? (komt terug bij de skill trees)
 
 ## 5. Skill-unlocks
 _Nog niet besproken._
@@ -181,15 +184,44 @@ _Nog niet besproken._
 - ✅ Specialisaties hebben altijd trade-offs.
 - ✅ **Eén actieve ability per specialisatie** (niet per skill).
 - ✅ **Volledig passieve skills mogen**, maar ze mogen niet te sterk worden. Bij zo'n skill krijgt een specialisatie een sterkere passieve bonus met trade-off, in plaats van een actieve ability.
-- ✅ **Specialisaties: optie B.** Eén hoofdspecialisatie, later een tweede.
-  - ✅ Wisselen kan, tegen een prijs (respec B).
-  - 💡 Levels en prijs: zie §4.
+- ✅ **Specialisaties: optie B.** De eerste op **level 25**, de tweede op **level 75**.
+  - ✅ Respec kost **20% van de totale XP in die skill**, plus **7 echte dagen** wachttijd. De nieuwe specialisatie begint op rank 1.
+- ✅ **Mastery:** 10 ranks per skill na level 100, elk ≈ 40 uur. Bij elke rank kies je 1 van 2 kleine perks.
 - ✅ Actieve abilities activeer je met een **ability-toets** (standaard `R`, aan te passen) terwijl je het juiste gereedschap vasthoudt. Niet met rechtsklik.
 - _Rest nog niet besproken._
 
-## 7. Doodsstraffen
-- ❓ Hoe verhoudt dit zich tot de curses van Extreme Dimensions als beide mods draaien? (fase 4)
-- 💡 Ontwerpgevolg van het trage tempo: als level 100 ~400 uur kost, is hele levels verliezen bij een dood erg zwaar. De straf moet daarom eerst Mastery en de XP binnen een level raken, en pas daarna hele levels.
+### Vaste principes (uit de opdracht, geen keuze)
+- Doodsstraffen zijn **altijd zichtbaar**. De GUI toont per skill wat er "op het spel" staat.
+- Na een dood toont een overzicht **precies** wat je verloren hebt en wat je nog kunt terugwinnen.
+- Voortgang wordt **nooit stilletjes** weggehaald.
+
+### Ontwerpgevolg van het trage tempo
+- Level 100 kost ~400 uur, en één level rond level 75–99 kost 7–10 uur. Hele levels verliezen is dus zwaar.
+- 💡 Daarom raakt de straf eerst **Mastery-voortgang** en de **XP binnen je huidige level**, en pas bij herhaalde doden **hele levels**.
+
+### Voorstellen (💡, ronde 6)
+1. **Verlieslagen**, in deze volgorde:
+   - (1) voortgang naar de volgende Mastery-rank
+   - (2) XP binnen je huidige level (je zakt niet onder het begin van je level)
+   - (3) hele levels, alleen bij herhaalde doden (deel 2)
+2. **Welke skills:** de skills die **betrokken waren bij je dood**:
+   - gedood in een gevecht met een zwaard → Melee en Defense
+   - doodgevallen → Exploration
+   - verdronken tijdens het vissen → Fishing
+   - gestorven in een mijn → Mining
+3. **Herstel:** wat je verliest blijft achter als een **"schim"** op de plek waar je stierf. Dat is geen item, maar een plek in de wereld.
+   - Haal je de schim binnen een tijdslimiet op, dan krijg je het grootste deel terug.
+   - Sterf je opnieuw voordat je hem hebt opgehaald, dan is de oude schim **definitief weg**.
+   - De naam "Echo" wordt niet gebruikt, omdat Extreme Dimensions al een `Echo` heeft.
+4. **Vangnet:** een maximum per dood, en **vloeren op de mijlpalen** (25 en 75). Daardoor verlies je een specialisatie nooit door één dood.
+5. **Extreme Dimensions:** als beide mods draaien, wordt onze straf zachter waar ED al straft. Instelbaar door de serverbeheerder.
+
+### Open vragen
+- ❓ Alleen XP, of ook levels?
+- ❓ Welke skills worden geraakt?
+- ❓ Herstel via een schim, en hoe streng?
+- ❓ Maximum per dood en mijlpaalvloeren?
+- ❓ Stapelen met Extreme Dimensions, of dempen?
 
 ## 8. Herstelmechanieken
 _Nog niet besproken._
