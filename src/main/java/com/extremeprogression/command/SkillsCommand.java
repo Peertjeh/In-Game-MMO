@@ -30,7 +30,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 /**
  * {@code /skills} and its subcommands (design §11): {@code /skills} opens the Character Sheet, and operators set levels,
- * give XP and grant a free respec.
+ * give XP, grant a free respec and make every ability ready again.
  *
  * <p>An operator's change is never silent: the player is told, and the change goes to the server log.
  */
@@ -61,7 +61,27 @@ public final class SkillsCommand {
 										.suggests((c, b) -> SharedSuggestionProvider.suggest(c.getSource().getOnlinePlayerNames(), b))
 										.then(Commands.argument("skill", StringArgumentType.word())
 												.suggests((c, b) -> SharedSuggestionProvider.suggest(Arrays.stream(Skill.values()).map(s -> s.id), b))
-												.executes(SkillsCommand::respec))))));
+												.executes(SkillsCommand::respec))))
+						.then(Commands.literal("cooldowns")
+								.then(Commands.argument("player", StringArgumentType.word())
+										.suggests((c, b) -> SharedSuggestionProvider.suggest(c.getSource().getOnlinePlayerNames(), b))
+										.executes(SkillsCommand::cooldowns)))));
+	}
+
+	/** Every ability of the player is ready again (for testing, and for an operator undoing a mistake). */
+	private static int cooldowns(CommandContext<CommandSourceStack> c) {
+		CommandSourceStack src = c.getSource();
+		ServerPlayer target = target(c);
+		if (target == null) {
+			return 0;
+		}
+		PlayerProgress p = PlayerStore.get(target.getUUID());
+		for (Skill s : Skill.values()) {
+			p.get(s).cooldowns.clear();
+		}
+		changed(src, target, Component.translatable("message.extremeprogression.admin_cooldowns"), "all ability cooldowns reset");
+		src.sendSuccess(() -> Component.translatable("commands.extremeprogression.admin.cooldowns", target.getName()), true);
+		return 1;
 	}
 
 	/** A free respec: the skill's choices and points are reset, without the XP cost or the waiting time. */

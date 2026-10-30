@@ -39,6 +39,19 @@ public class CommandTests {
 	}
 
 	@GameTest
+	public void operatorsMakeEveryAbilityReadyAgain(GameTestHelper helper) throws Exception {
+		Config.reset();
+		ServerPlayer p = TestPlayers.survivor(helper, "cool");
+		MinecraftServer server = helper.getLevel().getServer();
+		PlayerStore.get(p.getUUID()).get(Skill.MELEE).cooldowns.put("blade", Long.MAX_VALUE);
+		PlayerStore.get(p.getUUID()).get(Skill.MINING).cooldowns.put("prospector", Long.MAX_VALUE);
+		check(helper, run(helper, "skills admin cooldowns " + p.getName().getString(), server.createCommandSourceStack()) == 1, "cooldowns did not succeed");
+		check(helper, PlayerStore.get(p.getUUID()).get(Skill.MELEE).cooldowns.isEmpty() && PlayerStore.get(p.getUUID()).get(Skill.MINING).cooldowns.isEmpty(),
+				"a cooldown was left");
+		helper.succeed();
+	}
+
+	@GameTest
 	public void playersSeeTheirOverviewButNotTheAdminTools(GameTestHelper helper) throws Exception {
 		Config.reset();
 		ServerPlayer p = TestPlayers.survivor(helper, "plain");

@@ -19,12 +19,16 @@ import net.minecraft.world.level.Level;
 public abstract class PotionContentsMixin {
 	@Inject(method = "onConsume", at = @At("HEAD"), require = 1)
 	private void extremeprogression$drinking(Level level, LivingEntity drinker, ItemStack stack, Consumable consumable, CallbackInfo ci) {
-		PotentPotions.drinking(stack, drinker);
+		if (!level.isClientSide()) {
+			PotentPotions.drinking(stack, drinker);
+		}
 	}
 
 	@Inject(method = "onConsume", at = @At("RETURN"), require = 1)
 	private void extremeprogression$drunk(Level level, LivingEntity drinker, ItemStack stack, Consumable consumable, CallbackInfo ci) {
-		PotentPotions.drinking(ItemStack.EMPTY, drinker);
+		if (!level.isClientSide()) {
+			PotentPotions.drinking(ItemStack.EMPTY, drinker);
+		}
 	}
 
 	@ModifyVariable(method = "forEachEffect", at = @At("HEAD"), ordinal = 0, argsOnly = true, require = 1)

@@ -751,6 +751,8 @@
 	"message.extremeprogression.admin_respec": "An operator gave you a free respec of %s.",
 	"commands.extremeprogression.admin.respec": "Gave %s a free respec of %s",
 	"commands.extremeprogression.admin.respec_nothing": "%s has nothing to respec in %s",
+	"commands.extremeprogression.admin.cooldowns": "Every ability of %s is ready again",
+	"message.extremeprogression.admin_cooldowns": "An operator made all your abilities ready again.",
 	"key.extremeprogression.ability": "Use ability (Shift: second specialization)",
 	"gui.extremeprogression.skill.points": "%s points free · %s earned",
 	"gui.extremeprogression.skill.choose": "Choose %s",

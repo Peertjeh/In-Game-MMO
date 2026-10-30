@@ -127,3 +127,4 @@ BrewingRecipe
 BrewingInput
 PotionBrewing
 net.minecraft.world.item.crafting.RecipeType
+net.minecraft.client.gui.screens.inventory.AnvilScreen

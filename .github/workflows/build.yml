@@ -41,6 +41,22 @@ jobs:
         with:
           name: Artifacts
           path: build/libs/
+      # For trying the mod from where artifacts cannot be downloaded: the jar of the latest green push, as the only commit
+      # of the ci-jar branch (force-pushed, so it never grows)
+      - name: publish the jar to the ci-jar branch
+        if: success() && github.event_name == 'push'
+        shell: bash
+        run: |
+          tmp=$(mktemp -d)
+          for jar in build/libs/*.jar; do case "$jar" in *-sources.jar) ;; *) cp "$jar" "$tmp"/ ;; esac; done
+          cd "$tmp"
+          git init -q -b ci-jar
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Jar of ${GITHUB_SHA::7} on ${GITHUB_REF_NAME}"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" ci-jar
+          echo "::notice title=Jar branch::$(ls *.jar) of ${GITHUB_SHA::7} on the ci-jar branch"
       # For checking vanilla signatures from where the Minecraft jar cannot be downloaded: a commit message with [javap]
       # publishes the members of the classes in .github/javap-classes.txt as the only commit of the ci-javap branch
       - name: publish vanilla signatures to the ci-javap branch
