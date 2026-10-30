@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION — Ontwerpdocument
 
 > Werktitel. De definitieve naam is nog niet gekozen.
-> Status: **Interview ronde 16 (fase 5: skill 8/10, Exploration). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
+> Status: **Interview ronde 17 (fase 5: skill 9/10, Smithing). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
 
 Legenda per mechaniek:
 - ✅ **Bevestigd**: door de eigenaar goedgekeurd
@@ -29,7 +29,8 @@ Legenda per mechaniek:
 | 13 | Skill 5/10: Foraging | ✅ akkoord |
 | 14 | Skill 6/10: Farming | ✅ akkoord, bonemeal geeft geen XP |
 | 15 | Skill 7/10: Fishing | ✅ akkoord, kleine put geeft geen XP |
-| 16 | Skill 8/10: Exploration | ❓ wacht op antwoorden |
+| 16 | Skill 8/10: Exploration | ✅ akkoord |
+| 17 | Skill 9/10: Smithing | ❓ wacht op antwoorden |
 
 ---
 
@@ -403,7 +404,7 @@ Keuzes in dit voorstel:
 
 - ✅ Treasure Hunter mag met een kleine kans een Heart of the Sea of een trident opvissen.
 
-### Skill 8/10: Exploration (💡 voorstel, ronde 16)
+### Skill 8/10: Exploration (✅ goedgekeurd in ronde 16)
 **Identiteit:** reizen, ontdekken en bewegen. Acrobatics uit mcMMO zit hierin.
 
 **XP:**
@@ -413,6 +414,8 @@ Keuzes in dit voorstel:
 - **Overleefde vallen:** XP naar de valschade die je kreeg. Dezelfde plek blijft een tijd geblokkeerd, net als de anti-farmregel van mcMMO.
 - **Met elytra** geven nieuwe chunks **25% XP**, omdat je dan heel snel heel veel ziet.
 - **Geen XP voor afstand lopen of zwemmen.** Dat kun je te makkelijk AFK farmen in een waterstroom.
+- ✅ **Chunks opnieuw bezoeken:** een chunk die je lang niet hebt bezocht, geeft opnieuw XP. Dat helpt op servers met een world border (ronde 16).
+  - 💡 Getallen: na **30 echte dagen**, voor **25%** van de XP van het eerste bezoek. Biomen en structuren geven alleen de eerste keer XP.
 
 **Stam** (gratis, vanzelf vrij). Deze bonussen werken niet in zware armor (3 of meer stukken van ijzer of zwaarder; zie §2):
 | Level | Bonus |
@@ -436,12 +439,49 @@ Keuzes in dit voorstel:
 - Tegenpool: **Defense**.
 - Uitrustingsconflict: in zware armor werken de bewegingsbonussen niet.
 
-**Technische noot (fase 8):** bezochte chunks worden compact opgeslagen per regio (1 bit per chunk), zodat ook een speler die heel veel verkent maar een klein bestand heeft.
+**Technische noot (fase 8):** bezochte chunks worden compact opgeslagen per regio (1 bit per chunk), zodat ook een speler die heel veel verkent maar een klein bestand heeft. Voor het opnieuw-bezoeken komt er per regio een datum van het laatste bezoek bij.
 
 **Geen nieuwe items nodig.**
 
+### Skill 9/10: Smithing (💡 voorstel, ronde 17)
+**Identiteit:** metaal en uitrusting: smelten, repareren en verbeteren aan de oven, het aambeeld en de smithing table.
+
+**XP:**
+- **Metaal smelten** in een oven of blast furnace: ruwe ertsen, ertsblokken en Ancient Debris.
+  - Je krijgt de XP als je de opbrengst **zelf uit de oven haalt** (shift-klik telt ook). Een trechter die de oven leegt, geeft niets.
+  - Steen, zand, glas en voedsel bakken geven **geen** Smithing-XP. Dat zou een automatische steenfabriek een XP-bron maken.
+- **Repareren aan een aambeeld:** XP naar het materiaal, zoals de reparatietabel van mcMMO. Netherite en diamant geven het meest.
+- **Smithing table:** een netherite-upgrade geeft veel XP, een armor trim gemiddeld.
+
+**Stam** (gratis, vanzelf vrij):
+| Level | Bonus |
+|---|---|
+| 5 | Vuurmeester: ovens die jij vult, smelten 5% sneller |
+| 10 | Zuinig aambeeld: reparaties kosten 5% minder XP-levels |
+| 15 | Gehard staal: een reparatie herstelt 5% extra duurzaamheid |
+| 20 | Brandstofbesparing: 10% kans dat een brandstof niet wordt verbruikt |
+
+**Specialisaties:**
+| | **Forgemaster** | **Armorer** | **Tinkerer** |
+|---|---|---|---|
+| Werkplek | Oven en blast furnace | Aambeeld | Smithing table |
+| Speelstijl | Meer metaal uit dezelfde erts | Uitrusting in leven houden | Uitrusting verbeteren |
+| Actieve ability | **Flash Forge**: 30 seconden lang smelten ovens die jij opent 4× sneller. Cooldown 5 min. | **Masterwork**: je volgende reparatie binnen 30 seconden herstelt het item volledig en kost geen XP-levels. Cooldown 5 min. | **Reforge**: het volgende item dat je upgradet of repareert, krijgt blijvend +10% maximale duurzaamheid. Cooldown 5 min. |
+| Trade-off | Reparaties herstellen 15% minder | Smelten geeft geen bonusopbrengst en −25% XP | Reparaties aan het aambeeld herstellen 20% minder |
+| Voorbeeld keuzeknoop | Tweede smelt (kans op dubbele opbrengst) **of** Zuinige gloed (brandstof gaat 50% langer mee) | Behoud (reparaties worden nooit "too expensive" en verliezen geen enchants) **of** Snelle hamer (reparaties herstellen +25%) | Sjabloonbehoud (20% kans dat je een smithing template houdt; **vereist Mining 30**) **of** Trimkracht (elke armor trim geeft een klein effect, afhankelijk van het materiaal) |
+
+**Mastery-perks** (voorbeeld, 1 van 2 per rank): +1% kans op dubbele opbrengst bij smelten **of** +1% extra herstel bij reparaties.
+
+**Abilities aan een werkplek:** Smithing heeft geen gereedschap in je hand. De ability activeer je met `R` terwijl je naar de werkplek kijkt: oven, aambeeld of smithing table.
+
+**Tegenwerking:**
+- Tegenpool: **Arcana** (staal tegenover magie).
+- Eerste voorbeeld van een **harde vereiste (D)**: Sjabloonbehoud van Tinkerer vereist Mining 30.
+
+**Geen nieuwe items nodig.** Maximale duurzaamheid en trim-effecten werken met vanilla item-components.
+
 ### Voorbeelden van harde vereisten (D) (💡)
-- Smithing: de netherite-upgrade-specialisatie vereist Mining 30.
+- Smithing: Sjabloonbehoud (Tinkerer) vereist Mining 30 (zie skill 9).
 - Arcana: enchants van het hoogste niveau vereisen ... (nog te bepalen)
 
 ### Tegenwerkende skills: de vier mechanismen (a, b, c licht en d gekozen, zie boven)
