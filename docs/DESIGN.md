@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION — Ontwerpdocument
 
 > Werktitel. De definitieve naam is nog niet gekozen.
-> Status: **Interview ronde 14 (fase 5: skill 6/10, Farming). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
+> Status: **Interview ronde 15 (fase 5: skill 7/10, Fishing). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
 
 Legenda per mechaniek:
 - ✅ **Bevestigd**: door de eigenaar goedgekeurd
@@ -27,7 +27,8 @@ Legenda per mechaniek:
 | 11 | Skill 3/10: Defense | ✅ akkoord |
 | 12 | Skill 4/10: Mining | ✅ akkoord |
 | 13 | Skill 5/10: Foraging | ✅ akkoord |
-| 14 | Skill 6/10: Farming | ❓ wacht op antwoorden |
+| 14 | Skill 6/10: Farming | ✅ akkoord, bonemeal geeft geen XP |
+| 15 | Skill 7/10: Fishing | ❓ wacht op antwoorden |
 
 ---
 
@@ -320,7 +321,7 @@ Keuzes in dit voorstel:
 
 - ✅ Herbalist is de derde specialisatie. Zelf geplante bomen geven 25% XP. Tree Feller mag hele bomen kappen.
 
-### Skill 6/10: Farming (💡 voorstel, ronde 14)
+### Skill 6/10: Farming (✅ goedgekeurd in ronde 14)
 **Identiteit:** verbouwen en verzorgen: gewassen, vee en getemde dieren.
 
 **XP:**
@@ -328,7 +329,7 @@ Keuzes in dit voorstel:
   - Zeldzame gewassen (torchflower, pitcher plant) geven meer.
   - Suikerriet: alleen de bovenste blokken, niet de onderste.
   - Een onrijp gewas geeft niets.
-- Gewassen die met **bonemeal** zijn gegroeid, geven **50% XP**. Instelbaar.
+- ✅ Gewassen die met **bonemeal** zijn gegroeid, geven **geen XP** (ronde 14; het voorstel van 50% is afgewezen). Hetzelfde geldt voor bomen en planten bij Foraging. Instelbaar.
 - **Automatisch geoogst** (zuigers, water, villagers) geeft niets. Alleen wat een speler zelf oogst telt.
 - **Dieren:**
   - **fokken**: XP per jong;
@@ -361,6 +362,42 @@ Keuzes in dit voorstel:
 - Beastmaster ruilt eigen melee-kracht in voor die van zijn roedel.
 
 **Geen nieuwe items nodig.**
+
+### Skill 7/10: Fishing (💡 voorstel, ronde 15)
+**Identiteit:** op en aan het water: vis, schatten, en de hengel als gereedschap.
+
+**XP:**
+- **Vangsten:**
+  - vis: kabeljauw, zalm, tropische vis, kogelvis;
+  - schatten: enchanted books, bogen, hengels, name tags, zadels, nautilusschelpen;
+  - rommel geeft weinig.
+- **Tegen AFK-vissen:**
+  - je krijgt alleen XP als je de afgelopen minuten hebt bewogen of rondgekeken;
+  - na 10 vangsten binnen 3 blokken van dezelfde plek neemt de XP sterk af ("overbevist"), en hij herstelt pas als je verderop vist. Zo werkt mcMMO ook;
+  - details in fase 7.
+- Vissen in open water (zoals vanilla dat voor schatten al vraagt) geeft volle XP. In een kleine put wordt het minder.
+
+**Stam** (gratis, vanzelf vrij):
+| Level | Bonus |
+|---|---|
+| 5 | Geduld: vissen bijten 5% sneller |
+| 10 | Vaste lijn: 10% kans dat een vangst je hengel geen duurzaamheid kost |
+| 15 | Visserskost: gebakken vis vult +1 honger |
+| 20 | Zeegeluk: +5% kans op een schat |
+
+**Specialisaties:**
+| | **Angler** | **Treasure Hunter** | **Hookmaster** |
+|---|---|---|---|
+| Speelstijl | Veel vis, snel vangen | Schatten opvissen | De hengel als gereedschap tegen mobs en spelers |
+| Actieve ability | **Feeding Frenzy**: 20 seconden lang bijten vissen bijna meteen (−80% wachttijd). Cooldown 4 min. | **Lucky Cast**: je volgende vangst binnen 30 seconden is gegarandeerd een schat. Cooldown 5 min. | **Reel In**: de volgende mob die je haakt, wordt naar je toe gerukt en staat 2 seconden stil. Cooldown 4 min. |
+| Trade-off | −50% kans op schatten | Vissen bijten 25% trager | Vangsten (vis en schatten) geven −30% XP |
+| Voorbeeld keuzeknoop | IJsvissen (je hengel breekt door ijs heen) **of** Grote vangst (vis vult +2 honger) | Diepzee (kleine kans op een Heart of the Sea of een trident) **of** Boekenwurm (opgeviste enchanted books hebben hogere levels) | Afschudden (een gehaakte mob laat één van zijn normale drops vallen, één keer per mob) **of** Sleurhaak (je trekt mobs en spelers twee keer zo hard) |
+
+**Mastery-perks** (voorbeeld, 1 van 2 per rank): +1% kans op een schat **of** vissen bijten 1% sneller.
+
+**Tegenwerking:** geen tegenpool.
+
+**Geen nieuwe items nodig.** Heart of the Sea en trident zijn vanilla-items die je normaal niet kunt opvissen.
 
 ### Voorbeelden van harde vereisten (D) (💡)
 - Smithing: de netherite-upgrade-specialisatie vereist Mining 30.
