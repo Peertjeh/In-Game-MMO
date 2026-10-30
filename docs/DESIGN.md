@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION — Ontwerpdocument
 
 > Werktitel. De definitieve naam is nog niet gekozen.
-> Status: **Interview ronde 4 (fase 3: XP en levels). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
+> Status: **Interview ronde 5 (fase 3 afronden: getallen). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
 
 Legenda per mechaniek:
 - ✅ **Bevestigd**: door de eigenaar goedgekeurd
@@ -17,7 +17,8 @@ Legenda per mechaniek:
 | 1 | Platform & architectuur + opzet skillsysteem | ✅ beantwoord |
 | 2 | Samenwerking met Extreme Dimensions, skilllijst, synergieën, trade-offs | ✅ beantwoord |
 | 3 | Skill-sjabloon: tegenwerking, actieve abilities, specialisaties, ontdekken | ✅ beantwoord |
-| 4 | Fase 3: schaal, totaalbudget, tempo, specialisatiemomenten, tegenpolen | ❓ wacht op antwoorden |
+| 4 | Fase 3: schaal, totaalbudget, tempo, specialisatiemomenten, tegenpolen | ✅ beantwoord |
+| 5 | Fase 3 afronden: getallen voor tempo, plafond, Mastery, respec, tegenpolen | ❓ wacht op antwoorden |
 
 ---
 
@@ -83,7 +84,7 @@ Zwaktes die we bewust oplossen:
 - ✅ **De 10 skills hieronder zijn goedgekeurd.** De specialisaties in de tabel zijn nog **voorbeelden** (💡); die worden per skill uitgewerkt.
 - ✅ **Onontdekte synergieën** zijn zichtbaar als **runen met een vage hint** (optie B), zoals de onbekende curses in ED.
 - ✅ **Ontdekken is server-breed én persoonlijk** (eigenaar: "server-breed is lache, maar ik wil ook iets persoonlijks").
-  - 💡 Uitwerking:
+  - ✅ Uitwerking (goedgekeurd in ronde 4):
     - **Persoonlijk:** elke speler moet een synergie zelf ontdekken voordat hij voor hem werkt. Je eigen codex toont wanneer en waar je hem vond.
     - **Server-breed:** de eerste ontdekker komt in de **kroniek** van de server (een GUI-pagina), eventueel met een aankondiging in de chat (instelbaar). Na die eerste ontdekking wordt de rune-hint voor de anderen duidelijker (een deel wordt leesbaar).
     - **Eerste ontdekker:** krijgt een blijvende, puur cosmetische vermelding ("Eerste ontdekker") bij die synergie. Geen extra kracht.
@@ -91,11 +92,15 @@ Zwaktes die we bewust oplossen:
 - ✅ **Skills mogen elkaar tegenwerken**, via:
   - ✅ **a) Uitrustingsconflicten** (wat je draagt of vasthoudt bepaalt welke bonussen werken)
   - ✅ **b) Specialisatieconflicten** (sommige specialisaties sluiten elkaar uit over skills heen)
-  - ✅ **c) Tegenpolen, maar licht**
-    - 💡 Voorstel: alleen de paren Melee ↔ Ranged en Smithing ↔ Arcana. Maximaal −20% XP in de tegenpool, en alleen als die skill boven level 50 zit en hoger is. Altijd zichtbaar in de GUI.
-    - ❓ Welke paren en hoe sterk?
-  - ✅ **d) Totaalbudget: verplicht**
-    - ❓ Zacht, hard of hybride (§4)?
+  - ✅ **c) Tegenpolen**, en die moeten **harder straffen** dan het eerste voorstel (−20%, pas vanaf level 50). Dat voorstel is afgewezen.
+    - 💡 Nieuw voorstel (ronde 5):
+      - Paren: Melee ↔ Ranged, Smithing ↔ Arcana, Defense ↔ Exploration.
+      - De straf begint zodra de tegenpool boven level 25 zit en hoger is dan deze skill.
+      - Hij groeit met het verschil in levels, tot **−60% XP** bij 50 levels verschil.
+      - Daarnaast werken de passieve bonussen van de zwakkere skill maar voor **75%**.
+      - Altijd zichtbaar in de GUI.
+    - ❓ Akkoord, of harder of zachter?
+  - ✅ **d) Totaalbudget: verplicht, in de hybride vorm** (zie §4).
 
 ### De 10 skills (✅ lijst goedgekeurd; specialisaties nog 💡)
 
@@ -134,21 +139,39 @@ Keuzes in dit voorstel:
 _Nog niet besproken._
 
 ## 4. Levelprogressie & formules
-- ✅ Er komt een **totaalbudget** (d).
+### Bevestigd
+- ✅ **Schaal: 0–100 per skill**, met een **Mastery-laag** na het voltooien (na level 100).
+- ✅ **Totaalbudget: hybride.** Elk level wordt zacht duurder naarmate je totaal stijgt, en aan het eind ligt een hard plafond.
+- ✅ **Tempo: VEEL langzamer** dan het eerste voorbeeld (100 uur tot level 100). Dat voorbeeld is afgewezen.
+- ✅ **Respec: optie B.** Wisselen kan, maar het kost een flink deel van je voortgang in die skill plus een wachttijd.
 
-### Voorstellen (💡, ronde 4)
-- **Schaal:** 0–100 per skill (10 skills, dus 1000 in totaal), eventueel met een Mastery-laag na 100.
-- **Zacht budget:** XP nodig = `basis(level) × budgetfactor(totaal)`. Voorbeeld: `budgetfactor = 1 + (totaal / 300)²`.
-  - Met 3 skills op 100 kost elk nieuw level ~2×, met 5 skills ~3,8×, met (bijna) alles ~10×.
-- **Hard budget:** een totaalplafond, bijvoorbeeld 400 levels.
-- **Hybride:** de kosten stijgen zacht, met een hard plafond aan het eind.
-- **Tempo (voorbeeld, voor de eerste skill, zonder budgetfactor):** level 25 ≈ 3 uur, level 50 ≈ 15 uur, level 75 ≈ 40 uur, level 100 ≈ 100 uur actief spelen.
+### Voorstellen met getallen (💡, ronde 5)
+**Tempo (de eerste skill, zonder budgetfactor):** `uren(L) = 400 × (L/100)^2.66`. De eerste levels gaan snel, zodat je het systeem meteen voelt. Daarna wordt de curve steil.
+
+| Level | 1 | 5 | 10 | 25 | 50 | 75 | 100 |
+|---|---|---|---|---|---|---|---|
+| Cumulatieve speeltijd | seconden | ~8 min | ~1 uur | ~10 uur | ~63 uur | ~186 uur | ~400 uur |
+
+De uren worden later omgerekend naar XP per actie (fase 7), op basis van hoe snel een gemiddelde speler die actie uitvoert.
+
+**Hybride budget:** XP nodig = `basis(level) × (1 + (totaal/300)²)`, met een **hard plafond van 400 totale levels**. Mastery telt niet mee voor het plafond.
+
+| Meesters na elkaar (elk 0 → 100) | 1e | 2e | 3e | 4e (plafond) |
+|---|---|---|---|---|
+| Uren voor die skill | ~425 | ~534 | ~731 | ~1017 |
+| Cumulatief | ~425 | ~959 | ~1690 | ~2707 |
+
+**Mastery:** 10 Mastery-ranks per skill, elk ≈ 40 uur. Bij elke rank kies je 1 van 2 kleine perks. Mastery is het eerste dat je verliest bij een dood (fase 4).
+
+**Specialisaties:** de eerste kies je op **level 25** (≈ 10 uur), de tweede op **level 75** (≈ 186 uur).
+
+**Respec (B):** wisselen kost **20% van de totale XP in die skill** (op level 100 zak je naar ~92, op level 75 naar ~69). Daarna moet je **7 echte dagen** wachten voordat je weer kunt wisselen. De nieuwe specialisatie begint op rank 1.
 
 ### Open vragen
-- ❓ Schaal en maximum; wel of geen Mastery na het maximum?
-- ❓ Vorm van het budget: zacht, hard of hybride?
-- ❓ Tempo: hoeveel speeluren tot level 50 en 100?
-- ❓ Op welk level kies je de eerste en de tweede specialisatie? Wat kost wisselen (respec)?
+- ❓ Tempo: is 400 uur tot level 100 goed?
+- ❓ Plafond: 400 totale levels? En kun je een skill bewust laten zakken ("afleren") om ruimte vrij te maken?
+- ❓ Mastery: 10 ranks van ~40 uur, met een keuze per rank?
+- ❓ Specialisaties op 25 en 75, en respec voor 20% XP plus 7 dagen?
 
 ## 5. Skill-unlocks
 _Nog niet besproken._
@@ -159,12 +182,14 @@ _Nog niet besproken._
 - ✅ **Eén actieve ability per specialisatie** (niet per skill).
 - ✅ **Volledig passieve skills mogen**, maar ze mogen niet te sterk worden. Bij zo'n skill krijgt een specialisatie een sterkere passieve bonus met trade-off, in plaats van een actieve ability.
 - ✅ **Specialisaties: optie B.** Eén hoofdspecialisatie, later een tweede.
-  - ❓ Op welke levels, en wat kost wisselen (zie §4)?
-- 💡 Actieve abilities activeer je met een **ability-toets** (standaard `R`, aan te passen) terwijl je het juiste gereedschap vasthoudt. Niet met rechtsklik, want dat botst met blokken plaatsen en blokkeren met een schild.
+  - ✅ Wisselen kan, tegen een prijs (respec B).
+  - 💡 Levels en prijs: zie §4.
+- ✅ Actieve abilities activeer je met een **ability-toets** (standaard `R`, aan te passen) terwijl je het juiste gereedschap vasthoudt. Niet met rechtsklik.
 - _Rest nog niet besproken._
 
 ## 7. Doodsstraffen
 - ❓ Hoe verhoudt dit zich tot de curses van Extreme Dimensions als beide mods draaien? (fase 4)
+- 💡 Ontwerpgevolg van het trage tempo: als level 100 ~400 uur kost, is hele levels verliezen bij een dood erg zwaar. De straf moet daarom eerst Mastery en de XP binnen een level raken, en pas daarna hele levels.
 
 ## 8. Herstelmechanieken
 _Nog niet besproken._
