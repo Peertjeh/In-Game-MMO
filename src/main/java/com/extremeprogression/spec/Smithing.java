@@ -117,7 +117,9 @@ public final class Smithing {
 		}
 		int max = result.getMaxDamage();
 		double less = (Specs.has(p, FORGEMASTER) ? 0.15 : 0) + (Specs.has(p, TINKERER) ? 0.20 : 0);
-		double more = max * (0.03 * rank(p, ARMORER, P1) + 0.05 * rank(p, ARMORER, C2));
+		// (Fine Mend, a Mastery perk, on top)
+		double more = max * (0.03 * rank(p, ARMORER, P1) + 0.05 * rank(p, ARMORER, C2)
+				+ com.extremeprogression.mastery.Mastery.bonus(p, com.extremeprogression.mastery.MasteryPerk.FINE_MEND));
 		int damage = result.getDamageValue() + (int) Math.round(restored * less) - (int) Math.round(more);
 		if (Active.on(p, ARMORER)) {
 			damage = 0;

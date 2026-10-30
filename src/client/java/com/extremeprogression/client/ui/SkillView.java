@@ -32,12 +32,30 @@ public final class SkillView {
 	/** The skill's entry, or an empty one at level 0 before the server has sent anything. */
 	public static ProgressPayload.Entry entry(Skill skill) {
 		ProgressPayload.Entry e = ClientProgress.skill(skill.id);
-		return e != null ? e : new ProgressPayload.Entry(skill.id, 0, 0, 0, 0, 0, List.of(), List.of(), List.of(), 0, Map.of());
+		return e != null ? e : new ProgressPayload.Entry(skill.id, 0, 0, 0, 0, 0, List.of(), List.of(), List.of(), 0, Map.of(), List.of());
 	}
 
 	public static boolean mastered(ProgressPayload.Entry e) {
 		ProgressPayload p = ClientProgress.current();
 		return p != null && e.level() >= p.maxLevel();
+	}
+
+	/** The share of XP this skill loses to its opposing skill now (0 when none presses on it, design §2). */
+	public static double opposingPenalty(Skill skill) {
+		if (skill.opposite() == null) {
+			return 0;
+		}
+		return com.extremeprogression.progression.Opposing.penalty(entry(skill).level(), entry(skill.opposite()).level());
+	}
+
+	/** "Melee 47: −30% XP, passive bonuses at 75%", or null when no opposing skill presses on this one. */
+	public static String opposingWarning(Skill skill) {
+		double penalty = opposingPenalty(skill);
+		if (penalty <= 0) {
+			return null;
+		}
+		return Ui.tr("gui.extremeprogression.skill.opposing_penalty", Ui.tr(skill.opposite().translationKey()), entry(skill.opposite()).level(),
+				Ui.percent(penalty), Ui.percent(com.extremeprogression.config.Config.OPPOSING_PASSIVE_POWER));
 	}
 
 	/** How full the skill's bar is: the level's XP, or past the maximum level the Mastery rank's. */

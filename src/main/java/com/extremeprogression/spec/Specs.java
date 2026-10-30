@@ -73,6 +73,11 @@ public final class Specs {
 
 	// --- Who has what ----------------------------------------------------------------------------
 
+	/** A player's skill: on the server from the store, on the client its own player's; null for anyone else. */
+	public static SkillData skillData(Entity e, Skill skill) {
+		return data(e, skill);
+	}
+
 	private static SkillData data(Entity e, Skill skill) {
 		if (e instanceof ServerPlayer p) {
 			return PlayerStore.get(p.getUUID()).get(skill);
@@ -108,15 +113,20 @@ public final class Specs {
 	public static java.util.function.BooleanSupplier localFatigued = () -> false;
 
 	/**
-	 * How strongly a skill's passive bonuses (its trunk, its passives and choice nodes) work for this player: 1, or
-	 * during death fatigue its power (50%, design §7).
+	 * How strongly a skill's passive bonuses (its trunk, its passives and choice nodes, its Mastery perks) work for this
+	 * player: 1, during death fatigue its power (50%, design §7), and while an opposing skill presses on it 75% (§2);
+	 * both together multiply.
 	 */
 	public static double power(Entity e, Skill skill) {
 		if (e instanceof ServerPlayer p) {
-			return com.extremeprogression.death.DeathService.fatigued(p) ? com.extremeprogression.config.Config.DEATH_FATIGUE_POWER : 1;
+			double fatigue = com.extremeprogression.death.DeathService.fatigued(p) ? com.extremeprogression.config.Config.DEATH_FATIGUE_POWER : 1;
+			return fatigue * com.extremeprogression.progression.Opposing.passivePower(com.extremeprogression.data.PlayerStore.get(p.getUUID()), skill);
 		}
 		if (e instanceof Player p && p.level().isClientSide() && p.isLocalPlayer()) {
-			return localFatigued.getAsBoolean() ? com.extremeprogression.config.Config.DEATH_FATIGUE_POWER : 1;
+			double fatigue = localFatigued.getAsBoolean() ? com.extremeprogression.config.Config.DEATH_FATIGUE_POWER : 1;
+			SkillData mine = localSkills.apply(skill);
+			SkillData other = skill.opposite() == null ? null : localSkills.apply(skill.opposite());
+			return mine == null || other == null ? fatigue : fatigue * com.extremeprogression.progression.Opposing.passivePower(mine.level, other.level);
 		}
 		return 1;
 	}
@@ -206,6 +216,7 @@ public final class Specs {
 		out = Farming.damage(target, source, out);
 		out = Defense.incoming(target, source, out);
 		out = Exploration.incoming(target, source, out);
+		out = com.extremeprogression.mastery.MasteryEffects.damage(target, source, out);
 		return out;
 	}
 
@@ -244,6 +255,7 @@ public final class Specs {
 			Farming.tick(p);
 			Fishing.tick(p);
 			Smithing.tick(p);
+			com.extremeprogression.mastery.MasteryEffects.tick(p);
 		}
 		Farming.endOfTick();
 	}

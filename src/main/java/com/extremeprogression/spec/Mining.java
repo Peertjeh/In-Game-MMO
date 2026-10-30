@@ -259,6 +259,10 @@ public final class Mining {
 		if (tool.is(ItemTags.SHOVELS)) {
 			out *= 1 + 0.03f * rank(p, EXCAVATOR, P1);
 		}
+		// Swift Pick (Mastery): with a pickaxe or shovel
+		if (pickaxe || tool.is(ItemTags.SHOVELS)) {
+			out *= 1 + com.extremeprogression.mastery.Mastery.bonus(p, com.extremeprogression.mastery.MasteryPerk.SWIFT_PICK);
+		}
 		if (pickaxe) {
 			out *= 1 + 0.02f * rank(p, TUNNELER, P1);
 			if (BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath().contains("deepslate")) {
@@ -294,7 +298,8 @@ public final class Mining {
 
 	/** Rich Vein: +1% a rank on the chance of a double ore. */
 	public static double doubleOreChance(ServerPlayer p) {
-		return 0.01 * rank(p, PROSPECTOR, P1);
+		// (with Mother Lode, a Mastery perk)
+		return 0.01 * rank(p, PROSPECTOR, P1) + com.extremeprogression.mastery.Mastery.bonus(p, com.extremeprogression.mastery.MasteryPerk.MOTHER_LODE);
 	}
 
 	/** Tunneler's price: no double drops at all. */

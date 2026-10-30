@@ -145,7 +145,8 @@ public final class Foraging {
 
 	/** Timber: +1% a rank on the chance of a double log. */
 	public static double doubleLogChance(ServerPlayer p) {
-		return 0.01 * rank(p, LUMBERJACK, P2);
+		// (with Heartwood, a Mastery perk)
+		return 0.01 * rank(p, LUMBERJACK, P2) + com.extremeprogression.mastery.Mastery.bonus(p, com.extremeprogression.mastery.MasteryPerk.HEARTWOOD);
 	}
 
 	// --- Gatherer --------------------------------------------------------------------------------
@@ -166,6 +167,10 @@ public final class Foraging {
 			extra++;
 		}
 		if (honey && Specs.roll(p, 0.20 * rank(p, GATHERER, C2))) {
+			extra++;
+		}
+		// Wild Bounty (Mastery)
+		if (Specs.roll(p, com.extremeprogression.mastery.Mastery.bonus(p, com.extremeprogression.mastery.MasteryPerk.WILD_BOUNTY))) {
 			extra++;
 		}
 		return extra;

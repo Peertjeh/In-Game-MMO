@@ -114,6 +114,18 @@ public final class Config {
 	/** How many deaths the Death Register keeps per player. */
 	public static int DEATH_HISTORY = 50;
 
+	/**
+	 * Opposing skills (design §2, mechanism c): once the opposing skill is above this level and higher than this skill,
+	 * this skill earns less XP, more for a larger gap: this share less at a gap of OPPOSING_FULL_GAP levels or more.
+	 */
+	public static int OPPOSING_START_LEVEL = 25;
+	public static double OPPOSING_MAX_PENALTY = 0.6;
+	public static int OPPOSING_FULL_GAP = 50;
+	/** Meanwhile the weaker skill's passive bonuses work at this power. */
+	public static double OPPOSING_PASSIVE_POWER = 0.75;
+	/** What one Mastery rank put in a perk adds: 1%. */
+	public static double MASTERY_PERK_STEP = 0.01;
+
 	private static final Map<String, Object> DEFAULTS = snapshot();
 
 	/**
@@ -209,6 +221,11 @@ public final class Config {
 		DEATH_FATIGUE_POWER = share(DEATH_FATIGUE_POWER, "DEATH_FATIGUE_POWER");
 		DEATH_PRESSURE_DECAY_MINUTES = nonNegative(DEATH_PRESSURE_DECAY_MINUTES, "DEATH_PRESSURE_DECAY_MINUTES");
 		DEATH_HISTORY = Math.max(0, DEATH_HISTORY);
+		OPPOSING_START_LEVEL = Math.max(0, OPPOSING_START_LEVEL);
+		OPPOSING_MAX_PENALTY = share(OPPOSING_MAX_PENALTY, "OPPOSING_MAX_PENALTY");
+		OPPOSING_FULL_GAP = Math.max(1, OPPOSING_FULL_GAP);
+		OPPOSING_PASSIVE_POWER = share(OPPOSING_PASSIVE_POWER, "OPPOSING_PASSIVE_POWER");
+		MASTERY_PERK_STEP = nonNegative(MASTERY_PERK_STEP, "MASTERY_PERK_STEP");
 		RESPEC_DAYS = nonNegative(RESPEC_DAYS, "RESPEC_DAYS");
 		XP_MULTIPLIER = nonNegative(XP_MULTIPLIER, "XP_MULTIPLIER");
 		PLANTED_TREE_FACTOR = share(PLANTED_TREE_FACTOR, "PLANTED_TREE_FACTOR");

@@ -168,6 +168,7 @@ public final class ClientProgress {
 			d.specs = new ArrayList<>(e.specs());
 			d.bought = new ArrayList<>(e.bought());
 			d.suspended = new ArrayList<>(e.suspended());
+			d.perks = new ArrayList<>(e.perks());
 			p.skills.put(e.id(), d);
 		}
 		return p;

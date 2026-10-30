@@ -129,6 +129,8 @@ public final class Progression {
 		if (levels > 0) {
 			TreeRules.settle(p, skill);
 		}
+		// (a lost Mastery rank takes its perk with it)
+		com.extremeprogression.mastery.Mastery.trim(d);
 		return new Change(applied, 0, levels, 0, ranks, false);
 	}
 
@@ -142,6 +144,7 @@ public final class Progression {
 			d.masteryRanks = 0;
 			d.masteryXp = 0;
 		}
+		com.extremeprogression.mastery.Mastery.trim(d);
 		TreeRules.settle(p, skill);
 		return old;
 	}

@@ -51,7 +51,15 @@ final class SkillTile extends AbstractButton {
 		String level = mastered ? "M" + e.masteryRanks() : "Lv " + e.level();
 		int levelColor = mastered ? Ui.GOLD : Ui.TEXT;
 		Ui.right(g, font, level, x + W - 4, y + 3, levelColor);
-		String name = Ui.ellipsize(font, Ui.tr(skill.translationKey()), W - 26 - font.width(level) - 6);
+		// An opposing skill that costs this one XP: its share, in red, before the level (design §9)
+		double penalty = SkillView.opposingPenalty(skill);
+		int levelW = font.width(level);
+		if (penalty > 0) {
+			String cut = "−" + Ui.percent(penalty);
+			Ui.right(g, font, cut, x + W - 4 - levelW - 4, y + 3, Ui.DANGER);
+			levelW += font.width(cut) + 4;
+		}
+		String name = Ui.ellipsize(font, Ui.tr(skill.translationKey()), W - 26 - levelW - 6);
 		Ui.text(g, font, name, x + 22, y + 3, Ui.TEXT);
 		Ui.meter(g, x + 22, y + 14, W - 26, 4, SkillView.fill(e), mastered ? Ui.GOLD : skill.category.accent);
 		updateTooltip(e, mastered);
@@ -59,7 +67,8 @@ final class SkillTile extends AbstractButton {
 
 	private void updateTooltip(ProgressPayload.Entry e, boolean mastered) {
 		ProgressPayload p = ClientProgress.current();
-		String key = e + "|" + (p == null ? "" : p.total() + "," + p.cap());
+		String warning = SkillView.opposingWarning(skill);
+		String key = e + "|" + (p == null ? "" : p.total() + "," + p.cap()) + "|" + warning;
 		if (key.equals(tooltipFor)) {
 			return;
 		}
@@ -83,6 +92,9 @@ final class SkillTile extends AbstractButton {
 			if (p.total() >= p.cap()) {
 				tip.append("\n").append(Component.translatable("gui.extremeprogression.tile.capped", p.cap()).withStyle(ChatFormatting.YELLOW));
 			}
+		}
+		if (warning != null) {
+			tip.append("\n").append(Component.literal(warning).withStyle(ChatFormatting.RED));
 		}
 		tip.append("\n").append(Component.translatable("gui.extremeprogression.tile.open").withStyle(ChatFormatting.DARK_GRAY));
 		setTooltip(Tooltip.create(tip));

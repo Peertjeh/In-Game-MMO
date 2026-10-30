@@ -35,7 +35,7 @@ public record ProgressPayload(int total, int cap, double budgetFactor, int maxLe
 	}
 
 	public record Entry(String id, int level, double xp, double need, int masteryRanks, double masteryXp, List<String> specs,
-						List<String> bought, List<String> suspended, long respecWait, Map<String, Integer> cooldowns) {}
+						List<String> bought, List<String> suspended, long respecWait, Map<String, Integer> cooldowns, List<String> perks) {}
 
 	private void write(FriendlyByteBuf buf) {
 		buf.writeVarInt(total);
@@ -61,6 +61,7 @@ public record ProgressPayload(int total, int cap, double budgetFactor, int maxLe
 				buf.writeUtf(c.getKey());
 				buf.writeVarInt(c.getValue());
 			}
+			strings(buf, e.perks());
 		}
 		buf.writeVarInt(death.deaths());
 		buf.writeVarInt(death.pressure());
@@ -96,7 +97,8 @@ public record ProgressPayload(int total, int cap, double budgetFactor, int maxLe
 			for (int j = 0; j < c; j++) {
 				cooldowns.put(buf.readUtf(), buf.readVarInt());
 			}
-			skills.add(new Entry(id, level, xp, need, ranks, masteryXp, specs, bought, suspended, respecWait, cooldowns));
+			List<String> perks = strings(buf);
+			skills.add(new Entry(id, level, xp, need, ranks, masteryXp, specs, bought, suspended, respecWait, cooldowns, perks));
 		}
 		Death death = new Death(buf.readVarInt(), buf.readVarInt(), buf.readVarLong(), buf.readVarLong(), buf.readDouble(), buf.readDouble(), buf.readBoolean());
 		return new ProgressPayload(total, cap, factor, maxLevel, ranksMax, perRank, skills, death);

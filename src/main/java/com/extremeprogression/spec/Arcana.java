@@ -136,7 +136,9 @@ public final class Arcana {
 		if (p == null || Specs.has(p, ENCHANTER)) {
 			return;
 		}
-		double factor = (Trunks.potentBrews(stand) ? 1 + 0.05 * Specs.power(p, Skill.ARCANA) : 1) * (1 + 0.05 * rank(p, ALCHEMIST, C1));
+		// (Long Brew, a Mastery perk, on top)
+		double factor = (Trunks.potentBrews(stand) ? 1 + 0.05 * Specs.power(p, Skill.ARCANA) : 1) * (1 + 0.05 * rank(p, ALCHEMIST, C1))
+				* (1 + com.extremeprogression.mastery.Mastery.bonus(p, com.extremeprogression.mastery.MasteryPerk.LONG_BREW));
 		double potent = rank(p, ALCHEMIST, C2);
 		for (int slot = 0; slot < 3; slot++) {
 			ItemStack potion = stand.getItem(slot);
@@ -197,7 +199,19 @@ public final class Arcana {
 	/** Rich Choice: an offer is rolled as if 1 level higher a rank (the price stays). */
 	public static int richChoice(EnchantmentMenu menu, int cost) {
 		ServerPlayer p = viewer(menu);
-		return p == null || cost <= 0 ? cost : cost + (int) Math.round(rank(p, ENCHANTER, C2));
+		if (p == null || cost <= 0) {
+			return cost;
+		}
+		int out = cost + (int) Math.round(rank(p, ENCHANTER, C2));
+		// Bright Offer (Mastery): a chance the offer rolls 1 level higher, the same chance every time this offer is worked out
+		double bright = com.extremeprogression.mastery.Mastery.bonus(p, com.extremeprogression.mastery.MasteryPerk.BRIGHT_OFFER);
+		if (bright > 0) {
+			int seed = ((com.extremeprogression.mixin.EnchantmentMenuAccess) menu).extremeprogression$seed().get();
+			if (new java.util.Random(seed * 31L + cost).nextDouble() < bright) {
+				out++;
+			}
+		}
+		return out;
 	}
 
 	/** Book Smart: combining enchanted books at an anvil costs 4% fewer levels a rank (at least 1). */

@@ -416,7 +416,7 @@ public final class Trunks {
 		}
 		ItemStack out = furnace.getItem(2);
 		if (out.getCount() > outputBefore.getCount() && out.getCount() < out.getMaxStackSize() && com.extremeprogression.xp.XpTables.smelted(out) > 0
-				&& p.getRandom().nextDouble() < com.extremeprogression.spec.Smithing.secondSmelt(p)) {
+				&& p.getRandom().nextDouble() < com.extremeprogression.spec.Smithing.secondSmelt(p) + com.extremeprogression.mastery.Mastery.bonus(p, com.extremeprogression.mastery.MasteryPerk.RICH_SMELT)) {
 			out.grow(1);
 		}
 	}

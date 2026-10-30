@@ -7,11 +7,12 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 /**
- * A request from the Skill Screen, client to server: choose a specialization, buy a point in a node, or respec a skill.
+ * A request from the Skill Screen, client to server: choose a specialization, buy a point in a node, respec a skill, or
+ * choose the Mastery perk of the next rank waiting for one ("a" or "b").
  * The server checks everything again; the client only asks.
  */
 public record TreePayload(Action action, String skill, String arg) implements CustomPacketPayload {
-	public enum Action { CHOOSE, BUY, RESPEC }
+	public enum Action { CHOOSE, BUY, RESPEC, PERK }
 
 	public static final Type<TreePayload> TYPE = new Type<>(ExtremeProgression.id("tree"));
 	public static final StreamCodec<FriendlyByteBuf, TreePayload> CODEC = StreamCodec.ofMember(TreePayload::write, TreePayload::read);

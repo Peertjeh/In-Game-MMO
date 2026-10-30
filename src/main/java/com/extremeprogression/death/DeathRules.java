@@ -107,6 +107,7 @@ public final class DeathRules {
 		SkillData d = p.get(s);
 		if (d.masteryRanks > 0) {
 			d.masteryRanks--;
+			com.extremeprogression.mastery.Mastery.trim(d);
 			return;
 		}
 		if (d.level <= 0) {

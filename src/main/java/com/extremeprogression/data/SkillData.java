@@ -23,6 +23,8 @@ public class SkillData {
 	public long respecReadyAt = 0;
 	/** When each specialization's ability is ready again (the overworld's game time). */
 	public Map<String, Long> cooldowns = new LinkedHashMap<>();
+	/** The Mastery perk chosen at each rank, rank I first: "a" or "b" (schema 5). Ranks without one wait for a choice. */
+	public List<String> perks = new ArrayList<>();
 
 	public SkillData copy() {
 		SkillData d = new SkillData();
@@ -35,6 +37,7 @@ public class SkillData {
 		d.suspended = new ArrayList<>(suspended);
 		d.respecReadyAt = respecReadyAt;
 		d.cooldowns = new LinkedHashMap<>(cooldowns);
+		d.perks = new ArrayList<>(perks);
 		return d;
 	}
 
@@ -51,6 +54,10 @@ public class SkillData {
 		if (cooldowns == null) {
 			cooldowns = new LinkedHashMap<>();
 		}
+		if (perks == null) {
+			perks = new ArrayList<>();
+		}
+		perks.removeIf(s -> !"a".equals(s) && !"b".equals(s));
 		specs.removeIf(s -> s == null);
 		bought.removeIf(s -> s == null);
 		suspended.removeIf(s -> s == null);

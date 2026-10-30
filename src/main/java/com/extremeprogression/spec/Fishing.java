@@ -141,7 +141,7 @@ public final class Fishing {
 				if (--lucky.value <= 0) {
 					Active.end(p, TREASURE_HUNTER);
 				}
-			} else if (kind == Kind.FISH && Specs.roll(p, 0.01 * rank(p, TREASURE_HUNTER, P1))) {
+			} else if (kind == Kind.FISH && Specs.roll(p, 0.01 * rank(p, TREASURE_HUNTER, P1) + com.extremeprogression.mastery.Mastery.bonus(p, com.extremeprogression.mastery.MasteryPerk.SEAS_FAVOR))) {
 				replace(items, roll(p, hook, rod, BuiltInLootTables.FISHING_TREASURE));
 			} else if (kind == Kind.TREASURE && Specs.has(p, ANGLER) && p.getRandom().nextBoolean()) {
 				replace(items, roll(p, hook, rod, BuiltInLootTables.FISHING_FISH));
@@ -217,6 +217,8 @@ public final class Fishing {
 	public static double waitFactor(ServerPlayer p) {
 		double m = Active.on(p, ANGLER) ? 0.2 : 1;
 		m *= 1 - 0.03 * rank(p, ANGLER, P1);
+		// Eager Fish (Mastery)
+		m *= 1 - com.extremeprogression.mastery.Mastery.bonus(p, com.extremeprogression.mastery.MasteryPerk.EAGER_FISH);
 		m *= 1 - 0.04 * rank(p, TREASURE_HUNTER, P4);
 		if (Specs.has(p, TREASURE_HUNTER)) {
 			m *= 1.25;

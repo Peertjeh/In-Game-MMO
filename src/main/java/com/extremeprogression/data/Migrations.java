@@ -34,6 +34,10 @@ public final class Migrations {
 			// 3 → 4: deaths were added (pressure, fatigue, history); a file without them has died under none of these rules
 			json.addProperty("schema", 4);
 		}
+		if (from < 5) {
+			// 4 → 5: Mastery perks and discovered synergies; a file without them has chosen and found none
+			json.addProperty("schema", 5);
+		}
 		return json;
 	}
 }

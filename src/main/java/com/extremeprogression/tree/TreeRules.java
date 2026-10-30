@@ -29,7 +29,7 @@ public final class TreeRules {
 
 	/** Why something cannot be done; {@link #OK} when it can. */
 	public enum Result {
-		OK, LEVEL, ALREADY_CHOSEN, BOTH_CHOSEN, CONFLICT, NOT_CHOSEN, DORMANT, MAX_RANK, REQUIRES, OTHER_CHOICE, POINTS, WAITING, NOTHING_TO_RESET
+		OK, LEVEL, ALREADY_CHOSEN, BOTH_CHOSEN, CONFLICT, NOT_CHOSEN, DORMANT, MAX_RANK, REQUIRES, OTHER_CHOICE, POINTS, WAITING, NOTHING_TO_RESET, NO_PERK_WAITING
 	}
 
 	public static String key(Specialization spec, NodeSlot slot) {

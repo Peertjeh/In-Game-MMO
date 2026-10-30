@@ -11,7 +11,7 @@ import com.extremeprogression.skill.Skill;
  */
 public class PlayerProgress {
 	/** The schema this version writes. */
-	public static final int SCHEMA = 4;
+	public static final int SCHEMA = 5;
 
 	public int schema = SCHEMA;
 	/** The player's name when last seen (for leaderboards and admins while they are offline). */
@@ -25,6 +25,17 @@ public class PlayerProgress {
 	public ExplorationData exploration = new ExplorationData();
 	/** Death pressure, fatigue and the deaths so far (schema 4). */
 	public DeathData death = new DeathData();
+	/** The synergies this player discovered, by id: when and where (schema 5). */
+	public Map<String, Discovery> synergies = new LinkedHashMap<>();
+
+	/** Where and when something was discovered. */
+	public static class Discovery {
+		public long time;
+		public String dimension = "";
+		public int x;
+		public int y;
+		public int z;
+	}
 
 	public SkillData get(Skill skill) {
 		return skills.computeIfAbsent(skill.id, k -> new SkillData());
@@ -75,6 +86,15 @@ public class PlayerProgress {
 		}
 		exploration = (exploration == null ? new ExplorationData() : exploration).repaired();
 		death = (death == null ? new DeathData() : death).repaired();
+		if (synergies == null) {
+			synergies = new LinkedHashMap<>();
+		}
+		synergies.entrySet().removeIf(e -> e.getKey() == null || e.getValue() == null);
+		for (Discovery d : synergies.values()) {
+			if (d.dimension == null) {
+				d.dimension = "";
+			}
+		}
 		return this;
 	}
 

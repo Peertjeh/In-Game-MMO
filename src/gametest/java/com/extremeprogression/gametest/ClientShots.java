@@ -128,6 +128,31 @@ public class ClientShots implements FabricClientGameTest {
 			ctx.waitTicks(10);
 			ctx.takeScreenshot("05_skill_arcana_mastery");
 
+			// Mastery (milestone 8): Arcana's two ranks wait for their perks; the first is chosen from the screen
+			int masteries = ctx.computeOnClient(mc -> com.extremeprogression.client.screen.MasteryScreen.opened());
+			ctx.runOnClient(mc -> mc.gui.setScreen(new com.extremeprogression.client.screen.MasteryScreen(Skill.ARCANA, null)));
+			ctx.waitTicks(5);
+			check(ctx.computeOnClient(mc -> com.extremeprogression.client.screen.MasteryScreen.opened()) > masteries, "the Mastery screen did not open");
+			ctx.runOnClient(mc -> com.extremeprogression.client.screen.SkillScreen.send(
+					new com.extremeprogression.network.TreePayload(com.extremeprogression.network.TreePayload.Action.PERK, "arcana", "a")));
+			ctx.waitTicks(10);
+			ctx.runOnClient(mc -> {
+				ProgressPayload.Entry arcana = ClientProgress.skill("arcana");
+				check(arcana.perks().equals(List.of("a")), "the client shows the perks " + arcana.perks() + ", not [a]");
+			});
+			ctx.getInput().setCursorPos(1, 1);
+			ctx.waitTicks(2);
+			ctx.takeScreenshot("05_mastery_arcana");
+			// The opposing skills press: Melee 47 on Ranged 22, Defense 38 on Exploration 18, Arcana 100 on Smithing 2
+			ctx.runOnClient(mc -> {
+				check(Math.abs(com.extremeprogression.client.ui.SkillView.opposingPenalty(Skill.RANGED) - 0.6 * 25 / 50) < 1e-9, "Ranged does not show its penalty");
+				check(Math.abs(com.extremeprogression.client.ui.SkillView.opposingPenalty(Skill.SMITHING) - 0.6) < 1e-9, "Smithing does not show its full penalty");
+				check(com.extremeprogression.client.ui.SkillView.opposingPenalty(Skill.MELEE) == 0, "Melee shows a penalty");
+			});
+			ctx.runOnClient(mc -> mc.gui.setScreen(new SkillScreen(Skill.SMITHING, null)));
+			ctx.waitTicks(10);
+			ctx.takeScreenshot("05_skill_smithing_opposed");
+
 			// The inventory has the Character Sheet's button
 			InventoryScreen[] inventory = new InventoryScreen[1];
 			ctx.runOnClient(mc -> {
@@ -358,7 +383,15 @@ public class ClientShots implements FabricClientGameTest {
 		// (the messages the server sends)
 		keys.addAll(List.of("message.extremeprogression.admin_set", "message.extremeprogression.admin_xp", "message.extremeprogression.level_up",
 				"message.extremeprogression.mastery_up", "message.extremeprogression.fishing.not_open_water", "message.extremeprogression.fishing.overfished",
-				"message.extremeprogression.death.lost"));
+				"message.extremeprogression.death.lost", "message.extremeprogression.mastery.chosen", "gui.extremeprogression.skill.opposing_penalty"));
+		for (com.extremeprogression.mastery.MasteryPerk perk : com.extremeprogression.mastery.MasteryPerk.values()) {
+			keys.add(perk.translationKey());
+			keys.add(perk.translationKey() + ".desc");
+		}
+		for (String k : new String[] {"title", "button", "button_waiting", "button.tip", "locked_short", "locked", "rank", "next", "maxed", "row", "choose", "later",
+				"weaker", "final"}) {
+			keys.add("gui.extremeprogression.mastery." + k);
+		}
 		// The Death Register and the summary (milestone 7)
 		for (String k : new String[] {"title", "deaths", "pressure", "step0", "step1", "step2", "no_pressure", "drops_in", "fatigue", "none", "fatigue_effect",
 				"per_dimension", "dimension.minecraft.overworld", "dimension.minecraft.the_nether", "dimension.minecraft.the_end",

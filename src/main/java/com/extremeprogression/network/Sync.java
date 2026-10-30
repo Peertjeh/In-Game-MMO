@@ -57,7 +57,8 @@ public final class Sync {
 				}
 			}
 			skills.add(new ProgressPayload.Entry(s.id, d.level, d.xp, Progression.xpToNext(p, s), d.masteryRanks, d.masteryXp, List.copyOf(d.specs),
-					List.copyOf(d.bought), List.copyOf(d.suspended), Math.max(0, d.respecReadyAt - now), cooldowns));
+					List.copyOf(d.bought), List.copyOf(d.suspended), Math.max(0, d.respecReadyAt - now), cooldowns,
+					List.copyOf(com.extremeprogression.mastery.Mastery.held(d))));
 		}
 		int total = p.totalLevel();
 		int pressure = p.death.pressure;

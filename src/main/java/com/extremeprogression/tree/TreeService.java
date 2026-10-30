@@ -53,6 +53,12 @@ public final class TreeService {
 					ExtremeProgression.LOGGER.info("{} respecced {}: level {} -> {}", player.getName().getString(), skill.id, before, after);
 				}
 			}
+			case PERK -> {
+				result = com.extremeprogression.mastery.Mastery.choose(p, skill, request.arg());
+				com.extremeprogression.mastery.MasteryPerk perk = com.extremeprogression.mastery.MasteryPerk.of(skill, request.arg());
+				done = perk == null ? null : Component.translatable("message.extremeprogression.mastery.chosen", Component.translatable(perk.translationKey()),
+						p.get(skill).perks.size());
+			}
 			default -> {
 				result = TreeRules.Result.NOT_CHOSEN;
 				done = null;

@@ -99,7 +99,8 @@ public final class Farming {
 
 	/** Bumper Crop: +1% a rank on the chance of an extra crop. */
 	public static double extraCropChance(ServerPlayer p) {
-		return 0.01 * rank(p, GROWER, P1);
+		// (with Golden Harvest, a Mastery perk)
+		return 0.01 * rank(p, GROWER, P1) + com.extremeprogression.mastery.Mastery.bonus(p, com.extremeprogression.mastery.MasteryPerk.GOLDEN_HARVEST);
 	}
 
 	/** Herder's price: no extra crops at all. */

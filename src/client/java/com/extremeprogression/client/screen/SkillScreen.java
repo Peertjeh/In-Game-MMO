@@ -42,6 +42,7 @@ public class SkillScreen extends Screen {
 	private String selectedKey = null;
 	private Button action;
 	private Button respec;
+	private Button mastery;
 	/** The tree rules' view of the progression, rebuilt whenever the server sends a new one. */
 	private PlayerProgress view;
 	private int viewOf = -1;
@@ -104,11 +105,13 @@ public class SkillScreen extends Screen {
 		int th = treeHeight();
 		action = this.addRenderableWidget(Button.builder(Component.empty(), b -> act()).pos(dx + 5, ty + th - 21).size(dw - 10, 16).build());
 		this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.skill.back"), b -> this.onClose())
-				.pos(this.width / 2 - 128, y0 + H - 20).size(110, 20).build());
+				.pos(this.width / 2 - 166, y0 + H - 20).size(110, 20).build());
+		mastery = this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.mastery.button"),
+				b -> Minecraft.getInstance().gui.setScreen(new MasteryScreen(skill, this))).pos(this.width / 2 - 52, y0 + H - 20).size(70, 20).build());
 		respec = this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.skill.respec"),
-				b -> Minecraft.getInstance().gui.setScreen(new RespecScreen(skill, this))).pos(this.width / 2 - 14, y0 + H - 20).size(70, 20).build());
+				b -> Minecraft.getInstance().gui.setScreen(new RespecScreen(skill, this))).pos(this.width / 2 + 22, y0 + H - 20).size(70, 20).build());
 		this.addRenderableWidget(Button.builder(Component.translatable("gui.done"), b -> closeAll())
-				.pos(this.width / 2 + 60, y0 + H - 20).size(70, 20).build());
+				.pos(this.width / 2 + 96, y0 + H - 20).size(70, 20).build());
 		refreshButtons();
 	}
 
@@ -143,6 +146,15 @@ public class SkillScreen extends Screen {
 			action.setMessage(Component.translatable("gui.extremeprogression.skill.buy", slot.cost));
 		}
 		respec.active = TreeRules.canRespec(view(), skill, 0) != TreeRules.Result.NOTHING_TO_RESET;
+		// Mastery opens from level 100; a rank waiting for its perk shows on the button
+		ProgressPayload.Entry entry = SkillView.entry(skill);
+		mastery.active = SkillView.mastered(entry);
+		int waiting = com.extremeprogression.mastery.Mastery.waiting(data());
+		mastery.setMessage(waiting > 0 ? Component.translatable("gui.extremeprogression.mastery.button_waiting")
+				: Component.translatable("gui.extremeprogression.mastery.button"));
+		mastery.setTooltip(net.minecraft.client.gui.components.Tooltip.create(mastery.active
+				? Component.translatable("gui.extremeprogression.mastery.button.tip")
+				: Component.translatable("gui.extremeprogression.mastery.locked_short", ClientProgress.current() == null ? 100 : ClientProgress.current().maxLevel())));
 	}
 
 	private void act() {
@@ -350,7 +362,12 @@ public class SkillScreen extends Screen {
 		if (skill.opposite() != null) {
 			sub = Ui.tr("gui.extremeprogression.skill.opposite", sub, Ui.tr(skill.opposite().translationKey()));
 		}
-		Ui.text(g, this.font, Ui.ellipsize(this.font, sub, 170), x0 + 24, y0 + 14, Ui.MUTED);
+		// While the opposing skill presses on this one, the header says what it costs (design §2: always visible)
+		String warning = SkillView.opposingWarning(skill);
+		Ui.text(g, this.font, Ui.ellipsize(this.font, warning != null ? warning : sub, 170), x0 + 24, y0 + 14, warning != null ? Ui.DANGER : Ui.MUTED);
+		if (warning != null && mouseX >= x0 + 24 && mouseX < x0 + 194 && mouseY >= y0 + 13 && mouseY < y0 + 23) {
+			g.setComponentTooltipForNextFrame(this.font, List.of(Component.literal(sub), Component.literal(warning).withStyle(s -> s.withColor(Ui.DANGER))), mouseX, mouseY);
+		}
 		int bx = x0 + 202, bw = W - 202 - 6;
 		if (mastered && p != null) {
 			Ui.text(g, this.font, Ui.tr("gui.extremeprogression.skill.mastery", e.masteryRanks(), p.masteryRanksMax()), bx, y0 + 4, Ui.GOLD);
