@@ -1,7 +1,7 @@
 # EXTREME PROGRESSION — Ontwerpdocument
 
 > Werktitel. De definitieve naam is nog niet gekozen.
-> Status: **Interview ronde 10 (fase 5: skill 2/10, Ranged). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
+> Status: **Interview ronde 11 (fase 5: skill 3/10, Defense). Er is nog geen gameplaycode; het ontwerp is nog niet goedgekeurd.**
 
 Legenda per mechaniek:
 - ✅ **Bevestigd**: door de eigenaar goedgekeurd
@@ -23,7 +23,8 @@ Legenda per mechaniek:
 | 7 | Fase 4 deel 2: herhaalde doden, dimensies, vermoeidheid, Mastery, PvP | ✅ beantwoord |
 | 8 | Fase 5: opbouw van de trees, punten, ranks, cooldowns, afleren | ✅ beantwoord |
 | 9 | Skill 1/10: Melee | ✅ alles akkoord |
-| 10 | Skill 2/10: Ranged (+ drie specialisaties per skill) | ❓ wacht op antwoorden |
+| 10 | Skill 2/10: Ranged (+ drie specialisaties per skill) | ✅ alles akkoord |
+| 11 | Skill 3/10: Defense | ❓ wacht op antwoorden |
 
 ---
 
@@ -166,7 +167,7 @@ Keuzes in dit voorstel:
 
 **Geen nieuwe items nodig.**
 
-### Skill 2/10: Ranged (💡 voorstel, ronde 10)
+### Skill 2/10: Ranged (✅ goedgekeurd in ronde 10)
 **Identiteit:** vechten op afstand. Ranged beloont geduld, positie en goed mikken.
 
 **XP:**
@@ -200,6 +201,45 @@ Keuzes in dit voorstel:
 **Tegenwerking:**
 - Tegenpool: **Melee**.
 - Harpooner: een trident van dichtbij valt onder Melee (Blade); een geworpen trident onder Ranged.
+
+**Geen nieuwe items nodig.**
+
+### Skill 3/10: Defense (💡 voorstel, ronde 11)
+**Identiteit:** klappen opvangen en overleven. Defense is de skill van wie vooraan staat.
+
+**XP:**
+- XP = schade die je **schild blokt** of die je **armor opvangt**, × de gevarenfactor van de aanvaller.
+  - Bij armor telt het verschil tussen de ruwe schade en de schade die je echt krijgt.
+- Alleen schade van **vijandige mobs en spelers** telt.
+  - Omgevingsschade (vallen, vuur, lava, verdrinken, cactus) geeft geen Defense-XP.
+  - Valschade hoort bij Exploration (zie skill 8).
+- Tegen AFK-farmen (stilstaan voor een spawner in volle armor):
+  - Je krijgt alleen XP als je de afgelopen seconden zelf hebt aangevallen of bewogen.
+  - Eén aanvaller geeft maximaal 6 keer XP, en daarna weer na 60 seconden zonder klappen van die aanvaller. Dat werkt zoals de dodge-regel van mcMMO; details in fase 7.
+
+**Stam** (gratis, vanzelf vrij):
+| Level | Bonus |
+|---|---|
+| 5 | Schildreflex: je schild staat 1 tick sneller klaar (vanilla wacht 5 ticks) |
+| 10 | Gehard: 3% minder schade van vijandige mobs |
+| 15 | Op adem komen: natuurlijke regeneratie begint 2 seconden eerder na een gevecht |
+| 20 | Standvastig: 5% knockback-weerstand |
+
+**Specialisaties:**
+| | **Bulwark** | **Juggernaut** | **Resilience** |
+|---|---|---|---|
+| Uitrusting | Schild | Zware armor (ijzer en zwaarder) | Alles: herstel in plaats van pantser |
+| Speelstijl | Blokken, terugkaatsen, anderen beschermen | Klappen incasseren, niet wijken | Effecten afschudden, snel herstellen |
+| Actieve ability | **Bastion**: 6 seconden lang blokt je schild uit **alle** richtingen, en bondgenoten tot 3 blokken achter je krijgen 30% minder schade. Cooldown 4 min. | **Unbreakable**: 8 seconden lang geen knockback en 40% minder schade, maar je kunt niet sprinten. Cooldown 5 min. | **Second Wind**: in één keer alle negatieve effecten weg, plus 6 harten herstel over 5 seconden. Cooldown 5 min. |
+| Trade-off | **Zonder schild** in je hand krijg je +10% schade | −10% loopsnelheid met 3 of meer stukken armor van ijzer of zwaarder | Je armor beschermt 10% minder |
+| Voorbeeld keuzeknoop | Spiegelschild (25% van een geblokt projectiel kaatst terug) **of** Schildslag (blok je op het moment van de klap, dan staat de aanvaller 1 seconde stil) | Stekels (10% van de melee-schade gaat terug naar de aanvaller) **of** Anker (volledig knockback-vrij terwijl je sluipt) | Tegengif (immuun voor vergiftiging) **of** Koel bloed (je brandt 50% korter) |
+
+**Mastery-perks** (voorbeeld, 1 van 2 per rank): +1% schadereductie tegen bazen **of** tegen spelers.
+
+**Tegenwerking:**
+- Tegenpool: **Exploration** (zwaar tegenover licht).
+- Uitrustingsconflict: in zware armor (Juggernaut-stijl) werken de bewegingsbonussen van Exploration niet.
+- Brawler (Melee) mag geen borstplaat van ijzer of zwaarder dragen en botst dus vanzelf met Juggernaut.
 
 **Geen nieuwe items nodig.**
 
@@ -283,7 +323,7 @@ Ter referentie, de speeltijd van één level (zonder budgetfactor):
 - ✅ **Lange cooldowns:** 3–5 minuten, met een sterk en beslissend effect.
 - ✅ **Twee actieve abilities** in één skill (na level 75): `R` voor de eerste specialisatie, `Shift + R` voor de tweede.
 - ✅ **Punten bij levelverlies:** zak je onder een level, dan valt het laatst gekochte punt eerst weg. Wordt het level teruggewonnen, dan komt dat punt automatisch terug op dezelfde plek.
-- 💡 **Drie specialisaties per skill.** Met maar twee is de tweede keuze op level 75 geen keuze meer, want dan krijg je automatisch de andere. Met drie kies je op 75 echt (ronde 10).
+- ✅ **Drie specialisaties per skill.** Met maar twee is de tweede keuze op level 75 geen keuze meer. Met drie kies je op 75 echt (ronde 10).
 
 ## 7. Doodsstraffen
 ### Vaste principes (uit de opdracht, geen keuze)
