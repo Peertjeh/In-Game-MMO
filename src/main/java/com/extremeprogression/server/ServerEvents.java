@@ -64,6 +64,7 @@ public final class ServerEvents {
 			Harvests.forget(id);
 			CombatXp.forget(id);
 			ExplorationXp.forget(id);
+			com.extremeprogression.spec.Specs.forget(id);
 		}));
 
 		// XP sources (design §2) and the rules against exploits (design §12)
@@ -78,6 +79,7 @@ public final class ServerEvents {
 		TreeService.register();
 		AbilityService.register();
 		Trunks.register();
+		com.extremeprogression.spec.Specs.register();
 		UseItemCallback.EVENT.register((player, level, hand) -> {
 			if (!level.isClientSide()) {
 				AfkTracker.interacted(player.getUUID(), level.getServer().getTickCount());
@@ -92,6 +94,7 @@ public final class ServerEvents {
 			Harvests.tick(s);
 			ExplorationXp.tick(s);
 			Trunks.tick(s);
+			com.extremeprogression.spec.Specs.tick(s);
 			XpService.tick(s);
 		});
 

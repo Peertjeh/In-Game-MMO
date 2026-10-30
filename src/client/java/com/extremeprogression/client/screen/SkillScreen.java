@@ -21,6 +21,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 
 /**
@@ -177,6 +178,10 @@ public class SkillScreen extends Screen {
 	}
 
 	private String nodeName(Specialization spec, NodeSlot slot) {
+		String own = spec.translationKey() + "." + slot.id;
+		if (slot.kind != NodeSlot.Kind.ABILITY && Language.getInstance().has(own)) {
+			return Ui.tr(own);
+		}
 		return switch (slot.kind) {
 			case ABILITY -> "◆ " + Ui.tr(spec.translationKey() + ".ability") + " " + ROMAN[slot.abilityRank()];
 			case PASSIVE -> Ui.tr("gui.extremeprogression.node.passive", slot.ordinal() < 2 ? slot.column + 1 : slot.column + 3);
@@ -275,13 +280,29 @@ public class SkillScreen extends Screen {
 		};
 		List<String> lines = new ArrayList<>();
 		String keyName = TreeRules.indexOf(d, spec) == 1 ? "Shift + R" : "R";
+		String ranks = spec.translationKey() + ".ability.ranks";
+		String own = spec.translationKey() + "." + slot.id + ".desc";
 		switch (slot.kind) {
 			case ABILITY -> {
 				lines.addAll(wrap(Ui.tr(spec.translationKey() + ".ability.desc")));
-				lines.addAll(wrap(Ui.tr("gui.extremeprogression.node.desc.ability", keyName, spec.cooldownMinutes)));
+				lines.addAll(wrap(Language.getInstance().has(ranks) ? Ui.tr("gui.extremeprogression.node.desc.ability_key", keyName) + " " + Ui.tr(ranks)
+						: Ui.tr("gui.extremeprogression.node.desc.ability", keyName, spec.cooldownMinutes)));
 			}
-			case PASSIVE -> lines.addAll(wrap(Ui.tr("gui.extremeprogression.node.desc.passive", Ui.tr(spec.translationKey()))));
-			case CHOICE -> lines.addAll(wrap(Ui.tr("gui.extremeprogression.node.desc.choice")));
+			case PASSIVE, CHOICE -> {
+				if (Language.getInstance().has(own)) {
+					lines.addAll(wrap(Ui.tr(own)));
+					if (slot.kind == NodeSlot.Kind.CHOICE) {
+						lines.addAll(wrap(Ui.tr("gui.extremeprogression.node.desc.choice_rule")));
+					}
+					if (spec.skill == Skill.EXPLORATION) {
+						lines.addAll(wrap(Ui.tr("gui.extremeprogression.node.light_only")));
+					}
+				} else if (slot.kind == NodeSlot.Kind.PASSIVE) {
+					lines.addAll(wrap(Ui.tr("gui.extremeprogression.node.desc.passive", Ui.tr(spec.translationKey()))));
+				} else {
+					lines.addAll(wrap(Ui.tr("gui.extremeprogression.node.desc.choice")));
+				}
+			}
 		}
 		List<String> needs = new ArrayList<>();
 		for (NodeSlot r : slot.requires()) {

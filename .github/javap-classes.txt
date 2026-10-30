@@ -73,3 +73,5 @@ net.minecraft.world.entity.OwnableEntity
 net.minecraft.client.renderer.GameRenderer
 net.minecraft.world.level.Level
 net.minecraft.server.level.ServerLevel
+net.minecraft.world.phys.AABB
+net.minecraft.world.phys.Vec2

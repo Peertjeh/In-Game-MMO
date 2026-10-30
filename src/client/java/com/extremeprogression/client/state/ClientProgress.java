@@ -21,11 +21,33 @@ public final class ClientProgress {
 	private static long receivedAt = 0;
 	private static long ticks = 0;
 
+	/** The progression as the tree rules read it, rebuilt whenever it arrives. */
+	private static PlayerProgress cached = new PlayerProgress();
+	/** The abilities in effect: each specialization's id and the client tick it ends. */
+	private static final java.util.Map<String, Long> ACTIVE = new java.util.HashMap<>();
+
 	public static void apply(ProgressPayload payload) {
 		current = payload;
 		updates++;
 		receivedTick = ticks;
 		receivedAt = System.currentTimeMillis();
+		cached = asProgress();
+	}
+
+	public static void applyActive(com.extremeprogression.network.ActivePayload payload) {
+		ACTIVE.clear();
+		payload.ticks().forEach((spec, left) -> ACTIVE.put(spec, ticks + left));
+	}
+
+	/** Ticks an ability still lasts (0 when it is not in effect). */
+	public static int activeTicks(String spec) {
+		Long end = ACTIVE.get(spec);
+		return end == null ? 0 : (int) Math.max(0, end - ticks);
+	}
+
+	/** The skill as the tree rules read it, for the effects felt on the client (never null for a known skill). */
+	public static SkillData skillData(Skill skill) {
+		return cached.get(skill);
 	}
 
 	/** Every client tick. */
@@ -35,6 +57,8 @@ public final class ClientProgress {
 
 	public static void clear() {
 		current = null;
+		cached = new PlayerProgress();
+		ACTIVE.clear();
 	}
 
 	/** Null until the server has sent the progression. */

@@ -24,6 +24,7 @@ public final class Sync {
 	public static void register() {
 		PayloadTypeRegistry.clientboundPlay().register(ProgressPayload.TYPE, ProgressPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(OpenSheetPayload.TYPE, OpenSheetPayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(ActivePayload.TYPE, ActivePayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(TreePayload.TYPE, TreePayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(AbilityPayload.TYPE, AbilityPayload.CODEC);
 	}

@@ -11,11 +11,12 @@ import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-/** Steady Hand (Ranged 5): the draw counts as 5% longer, so a bow is fully drawn sooner. */
+/** Steady Hand (Ranged 5) and Quick Draw: the draw counts as longer, so a bow is fully drawn sooner; Patient Aim sees the raw draw. */
 @Mixin(BowItem.class)
 public abstract class BowItemMixin {
 	@ModifyVariable(method = "releaseUsing", at = @At("HEAD"), ordinal = 0, argsOnly = true, require = 1)
 	private int extremeprogression$steadyHand(int timeLeft, ItemStack bow, Level level, LivingEntity user) {
+		com.extremeprogression.spec.Ranged.released(bow, user, timeLeft);
 		return Trunks.bowTimeLeft(bow, user, timeLeft);
 	}
 }

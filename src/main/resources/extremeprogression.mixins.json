@@ -4,15 +4,18 @@
 	"package": "com.extremeprogression.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
+		"AbstractArrowAccess",
 		"AnvilMenuMixin",
 		"BaseContainerBlockEntityMixin",
 		"BlockItemMixin",
+		"BlocksAttacksMixin",
 		"BoneMealItemMixin",
 		"BowItemMixin",
 		"BredAnimalsTriggerMixin",
 		"BrewingStandAccess",
 		"BrewingStandBlockEntityMixin",
 		"BrushableBlockEntityMixin",
+		"CrossbowItemMixin",
 		"EnchantmentHelperMixin",
 		"EnchantmentMenuMixin",
 		"EntityTypeMixin",
@@ -26,15 +29,18 @@
 		"ItemMixin",
 		"ItemStackMixin",
 		"LevelChunkMixin",
+		"LivingEntityAccess",
 		"LivingEntityMixin",
 		"MobMixin",
 		"PlayerMixin",
 		"PotionContentsMixin",
 		"PotionSlotMixin",
+		"ProjectileWeaponItemMixin",
 		"SaplingBlockMixin",
 		"SmithingMenuMixin",
 		"SpreadingPlantMixin",
-		"TameAnimalTriggerMixin"
+		"TameAnimalTriggerMixin",
+		"ThrownTridentMixin"
 	],
 	"injectors": {
 		"defaultRequire": 0

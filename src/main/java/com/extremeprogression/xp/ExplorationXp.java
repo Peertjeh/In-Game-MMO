@@ -75,14 +75,14 @@ public final class ExplorationXp {
 		if (p.isFallFlying()) {
 			xp *= XpTables.NEW_CHUNK_ELYTRA / XpTables.NEW_CHUNK;
 		}
-		XpService.award(p, Skill.EXPLORATION, xp);
+		XpService.award(p, Skill.EXPLORATION, xp * com.extremeprogression.spec.Exploration.chunkXp(p));
 	}
 
 	private static void biome(ServerPlayer p, ServerLevel level, BlockPos pos) {
 		String biome = level.getBiome(pos).getRegisteredName();
 		if (PlayerStore.get(p.getUUID()).exploration.biomes.add(biome)) {
 			PlayerStore.markDirty(p.getUUID());
-			XpService.award(p, Skill.EXPLORATION, XpTables.NEW_BIOME);
+			XpService.award(p, Skill.EXPLORATION, XpTables.NEW_BIOME * com.extremeprogression.spec.Exploration.landmarkXp(p));
 		}
 	}
 
@@ -117,7 +117,7 @@ public final class ExplorationXp {
 		}
 		boolean firstOfType = data.structureTypes.add(type.name());
 		PlayerStore.markDirty(p.getUUID());
-		XpService.award(p, Skill.EXPLORATION, type.xp() * (firstOfType ? XpTables.FIRST_OF_TYPE : 1));
+		XpService.award(p, Skill.EXPLORATION, type.xp() * (firstOfType ? XpTables.FIRST_OF_TYPE : 1) * com.extremeprogression.spec.Exploration.landmarkXp(p));
 	}
 
 	/** A fall the player survived: XP for the damage, unless they fell near the same spot a short while ago. */

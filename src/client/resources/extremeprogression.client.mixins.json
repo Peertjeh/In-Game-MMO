@@ -1,0 +1,13 @@
+{
+	"required": false,
+	"minVersion": "0.8",
+	"package": "com.extremeprogression.client.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"AbstractClientPlayerMixin",
+		"LocalPlayerMixin"
+	],
+	"injectors": {
+		"defaultRequire": 0
+	}
+}

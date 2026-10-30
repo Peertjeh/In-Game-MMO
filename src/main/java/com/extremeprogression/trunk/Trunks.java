@@ -160,7 +160,8 @@ public final class Trunks {
 		}
 	}
 
-	private static void modifier(ServerPlayer p, Holder<Attribute> attribute, Identifier id, double amount, AttributeModifier.Operation op) {
+	/** Sets a transient attribute modifier to this amount, or removes it at 0 (only touching it when it changes). */
+	public static void modifier(LivingEntity p, Holder<Attribute> attribute, Identifier id, double amount, AttributeModifier.Operation op) {
 		AttributeInstance instance = p.getAttribute(attribute);
 		if (instance == null) {
 			return;
@@ -214,7 +215,7 @@ public final class Trunks {
 				if (has(v, Skill.EXPLORATION, 5)) {
 					out *= 0.95f;
 				}
-				if (has(v, Skill.EXPLORATION, 20) && v.getRandom().nextDouble() < (v.isShiftKeyDown() ? 0.20 : 0.10)) {
+				if (has(v, Skill.EXPLORATION, 20) && v.getRandom().nextDouble() < (0.10 + com.extremeprogression.spec.Exploration.tumble(v)) * (v.isShiftKeyDown() ? 2 : 1)) {
 					out *= 0.5f;
 				}
 			}
@@ -223,7 +224,7 @@ public final class Trunks {
 	}
 
 	/** Vanilla's critical hit: falling, not on the ground, a ladder or in water, not riding, not sprinting. */
-	private static boolean critical(ServerPlayer p) {
+	public static boolean critical(ServerPlayer p) {
 		return p.fallDistance > 0 && !p.onGround() && !p.onClimbable() && !p.isInWater() && !p.isPassenger() && !p.isSprinting();
 	}
 
@@ -270,7 +271,7 @@ public final class Trunks {
 			return timeLeft;
 		}
 		int drawn = bow.getUseDuration(user) - timeLeft;
-		return timeLeft - (int) Math.round(drawn * 0.05);
+		return timeLeft - (int) Math.round(drawn * (0.05 + com.extremeprogression.spec.Ranged.quickDraw(user)));
 	}
 
 	/** Patience (Fishing 5): fish bite 5% sooner (vanilla's wait averages 17.5 seconds; this takes 0.875 off). */
@@ -342,6 +343,7 @@ public final class Trunks {
 		if (CROP_FOOD.contains(id) && has(p, Skill.FARMING, 20) || FISH_FOOD.contains(id) && has(p, Skill.FISHING, 15)) {
 			p.getFoodData().eat(1, 0f);
 		}
+		com.extremeprogression.spec.Exploration.ate(p, food);
 	}
 
 	/** Stamina (Exploration 10): sprinting costs 5% less hunger. */

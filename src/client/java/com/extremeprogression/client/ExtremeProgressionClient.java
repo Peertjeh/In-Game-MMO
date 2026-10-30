@@ -34,6 +34,11 @@ public class ExtremeProgressionClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		ClientPlayNetworking.registerGlobalReceiver(ProgressPayload.TYPE, (payload, context) ->
 				context.client().execute(() -> ClientProgress.apply(payload)));
+		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.ActivePayload.TYPE, (payload, context) ->
+				context.client().execute(() -> ClientProgress.applyActive(payload)));
+		// The few specialization effects felt on the client (movement, the view) read its own player's tree from here
+		com.extremeprogression.spec.Specs.localSkills = ClientProgress::skillData;
+		com.extremeprogression.spec.Specs.localActive = spec -> ClientProgress.activeTicks(spec.id) > 0;
 		ClientPlayNetworking.registerGlobalReceiver(OpenSheetPayload.TYPE, (payload, context) ->
 				context.client().execute(() -> context.client().gui.setScreen(new CharacterSheetScreen(null))));
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> client.execute(ClientProgress::clear));
