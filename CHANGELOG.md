@@ -1,6 +1,20 @@
 # Changelog
 
-## 0.6.0: Trees and abilities (in development)
+## 0.7.0: Specializations (in development)
+
+Part 1 of 3: the twelve specializations of Melee, Ranged, Defense and Exploration now do what they say.
+
+- **Abilities**: Riposte, Shatter, Flurry, Deadeye, Volley, Harpoon, Bastion, Unbreakable, Second Wind, Stride,
+  Endure and Daredevil. Every rank after I makes one number stronger. An ability in effect shows above the ready icon
+  with the seconds it still lasts.
+- **Passives and choice nodes**: four passives and one choice of two per specialization, with real names and effects
+  on the Skill Screen, from Keen Edge and Long Shot to Shield Bash and Climber.
+- **Prices**: every specialization's trade-off now counts, such as Blade's −15% against heavy armor, Crusher's −10%
+  attack speed and the Acrobat's extra knockback.
+- Damage an effect deals itself (bleeding, a shockwave, spikes) gives no XP; area effects never hit other players.
+- The other 18 specializations can be chosen and bought as before; their effects follow in parts 2 and 3.
+
+## 0.6.0: Trees and abilities
 
 - **Specializations**: choose the first at level 25 and the second at 75 on the Skill Screen. Specializations of
   different skills that exclude each other (such as Brawler and Bulwark) cannot be combined.

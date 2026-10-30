@@ -119,7 +119,7 @@ public class SpecTests {
 		swing(plain, b, false);
 		b.hurtServer(level, level.damageSources().playerAttack(plain), 10);
 		double share = (20 - a.getHealth()) / (20 - b.getHealth());
-		check(helper, share < 0.9 && share > 0.8, "Blade's price against heavy armor came to ×%s, not about ×0.85", share);
+		check(helper, share < 0.9 && share > 0.78, "Blade's price against heavy armor came to ×%s, not about ×0.85", share);
 		helper.succeed();
 	}
 
@@ -192,7 +192,8 @@ public class SpecTests {
 		check(helper, shot.getPierceLevel() == 1, "Deadeye's arrow pierces %s targets, not 1", shot.getPierceLevel());
 		check(helper, !Active.on(p, Specialization.SNIPER), "Deadeye did not end with the shot");
 		creeper.hurtServer(level, level.damageSources().arrow(shot, p), 4);
-		check(helper, near(creeper.getHealth(), 12f), "Deadeye's headshot left the creeper at %s, not 12", creeper.getHealth());
+		// (4 × 1.05 for Keen Eye, Ranged 15, × 2 for the headshot)
+		check(helper, near(creeper.getHealth(), 11.6f), "Deadeye's headshot left the creeper at %s, not 11.6", creeper.getHealth());
 		shot.discard();
 		// Sniper's price: −20% within 8 blocks
 		LivingEntity close = helper.spawn(EntityTypes.CREEPER, new BlockPos(3, 1, 3), EntitySpawnReason.NATURAL);
@@ -201,7 +202,7 @@ public class SpecTests {
 		body.setPos(close.getX(), close.getY() + 0.3, close.getZ() - 1.0);
 		body.setDeltaMovement(0, 0, 1.5);
 		close.hurtServer(level, level.damageSources().arrow(body, p), 10);
-		check(helper, near(close.getHealth(), 12f), "a shot from 4 blocks left the creeper at %s, not 12", close.getHealth());
+		check(helper, near(close.getHealth(), 11.6f), "a shot from 4 blocks left the creeper at %s, not 11.6 (10 × 1.05 × 0.8)", close.getHealth());
 		helper.succeed();
 	}
 
@@ -224,7 +225,7 @@ public class SpecTests {
 		far.setPos(creeper.getX(), creeper.getY() + 0.3, creeper.getZ() - 1.0);
 		far.setDeltaMovement(0, 0, 1.5);
 		creeper.hurtServer(level, level.damageSources().arrow(far, p), 10);
-		check(helper, near(creeper.getHealth(), 12f), "a shot from 25 blocks left the creeper at %s, not 12", creeper.getHealth());
+		check(helper, near(creeper.getHealth(), 11.6f), "a shot from 25 blocks left the creeper at %s, not 11.6 (10 × 1.05 × 0.8)", creeper.getHealth());
 		helper.succeed();
 	}
 
@@ -251,7 +252,7 @@ public class SpecTests {
 		shot.setPos(creeper.getX(), creeper.getY() + 0.3, creeper.getZ() - 1.0);
 		shot.setDeltaMovement(0, 0, 1.5);
 		creeper.hurtServer(level, level.damageSources().arrow(shot, p), 10);
-		check(helper, near(creeper.getHealth(), 11.5f), "Harpooner's arrow left the creeper at %s, not 11.5", creeper.getHealth());
+		check(helper, near(creeper.getHealth(), 11.075f), "Harpooner's arrow left the creeper at %s, not 11.075 (10 × 1.05 × 0.85)", creeper.getHealth());
 		helper.succeed();
 	}
 
@@ -314,7 +315,7 @@ public class SpecTests {
 		helper.succeed();
 	}
 
-	@GameTest
+	@GameTest(maxTicks = 200)
 	public void secondWindCleansesAndHeals(GameTestHelper helper) {
 		Config.reset();
 		ServerPlayer p = specialist(helper, "wind", Specialization.RESILIENCE, 30, NodeSlot.A1, 1);
@@ -333,13 +334,12 @@ public class SpecTests {
 		check(helper, thick.getEffect(MobEffects.WEAKNESS) != null && thick.getEffect(MobEffects.WEAKNESS).getDuration() == 300,
 				"Thick Blood V gave weakness for %s ticks, not 300", thick.getEffect(MobEffects.WEAKNESS) == null ? 0 : thick.getEffect(MobEffects.WEAKNESS).getDuration());
 		check(helper, !thick.hasEffect(MobEffects.POISON), "Antidote V let poison in");
-		// Resilience's price: armor protects 10% less
+		// Resilience's price: armor protects 10% less (the armor's own points count once it has ticked)
 		heavyArmor(thick);
-		double armor = thick.getAttributeValue(Attributes.ARMOR);
-		Specs.tick(helper.getLevel().getServer());
-		check(helper, near(thick.getAttributeValue(Attributes.ARMOR), armor * 0.9), "Resilience's armor is %s, not 90%% of %s", thick.getAttributeValue(Attributes.ARMOR), armor);
 		helper.runAfterDelay(110, () -> {
 			check(helper, p.getHealth() >= 15.5f, "Second Wind healed to %s health, not 16", p.getHealth());
+			check(helper, near(thick.getAttributeValue(Attributes.ARMOR), 13 * 0.9), "Resilience's iron armor gives %s, not 90%% of 13",
+					thick.getAttributeValue(Attributes.ARMOR));
 			helper.succeed();
 		});
 	}

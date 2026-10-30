@@ -680,6 +680,51 @@ For reference, the play time of a single level (without the budget factor):
   - Potent Brews (Arcana 15) works on potions you drink; splash and lingering potions follow with Hexer in milestone 6.
   - The Skill Screen fits GUI scale 3 at 1280 × 720 (426 × 240), the scale Minecraft picks there by itself.
 
+### How milestone 6 implements it (version 0.7.0)
+Milestone 6 gives the 30 specializations their content, in three parts. **Part 1: Combat and Survival** (Melee,
+Ranged, Defense, Exploration). The abilities, prices and example choice nodes are those of §2; everything else is 💡,
+worked out while building, as §9 foresaw ("the real content of every tree is worked out per skill during
+implementation").
+
+- 💡 **Rules for every specialization:**
+  - **Ability ranks:** rank I is the ability of §2; every rank after it makes one number stronger (below); the
+    cooldown stays.
+  - **Passives and choice nodes** have five ranks; the effect grows by the same step each rank.
+  - **The price** counts from the moment the specialization is chosen, as long as it is in use (not dormant).
+  - **Damage an effect deals itself** (bleeding, a shockwave, Spikes, Mirror Shield, Riposte's counter) gives no XP and
+    no bonuses, and leaves the target's invulnerability frames as they were.
+  - **Area effects** (Shatter, Earthquake) hit hostile mobs and mobs after you, never other players.
+  - **Exploration** keeps its gear conflict: its passives and choice nodes do not work in heavy armor (like its
+    trunk); its abilities do.
+  - **Allies** are other players and tamed animals.
+  - An ability in effect shows above the ready icon beside the hotbar, with the seconds it still lasts.
+
+| Specialization | Ability ranks (after I) | P1 · P2 (2 points a rank) | P3 · P4 (3 points a rank) | Choice (3 points a rank) |
+|---|---|---|---|---|
+| **Blade** | parry window +0.5 s, bleeding +1 s (rank I: 3 s, 4 s; bleeding = 1 damage a second) | Keen Edge: +2% damage with blade weapons · Lacerate: full blade hits 4% chance of 3 s bleeding | Parry: holding a blade, 3% chance to halve a hit up close · Precision: critical blade hits +4% | Deep Cut: bleeding +1 s **or** Quick Cut: +2% attack speed with blades |
+| **Crusher** | shockwave +0.5 block, armor gone +1 s (I: 3 blocks, 8 s; others take half the hit) | Heavy Blows: +2% with axe or mace · Stagger: full hits 4% chance of Slowness II for 2 s | Sunder: full hits on armored targets +3% · Crater: mace smashes +4% | Earthquake: a mace smash hits enemies within 3 blocks for 6% of its damage **or** Cleave: your axe disables shields +1 s |
+| **Brawler** | +1 s (I: 6 s); every hit in a Flurry +4% to the next (up to +40%) | Hardened Knuckles: +0.3 fist damage · Quick Hands: +4% fist attack speed | Combo: +2% per step of hits within 2 s (up to 5 steps) · Knockout: full punches 3% chance to stun 1 s | Iron Fist: +0.3 fist damage **or** Disarm: 3% chance a punched player drops their weapon |
+| **Sniper** | headshot +20% (I: ×2) | Marksman: full shots +2% · Long Shot: +3% from 25 blocks | Hunter's Mark: a full hit makes the target glow 1 s · Patient Aim: a bow held 1 s past full draw +3% | Piercing: 20% chance to pierce 1 more target (always at V) **or** Headshot: headshots +6% |
+| **Skirmisher** | +1 s (I: 5 s; the extra arrows cannot be picked up) | Quick Draw: bows draw 3% faster · Hit and Run: after a hit +3% speed for 3 s | Close Range: +2% within 15 blocks · Scavenger: 4% chance a shot costs no arrow | Quick Reload: crossbows load 5% faster **or** Running Shot: drawing slows you 20% less (not at all at V) |
+| **Harpooner** | the pulled target is slowed (Slowness II) 1 s a rank; the harpoon waits 10 s for the throw | Trident Arm: thrown tridents +2% · Strong Throw: tridents fly 4% faster | Barbed: a trident slows its target 0.5 s · Hunter of the Deep: +4% on targets in water | Return: 20% chance a trident without Loyalty comes back (always at V) **or** Tidal Power: +4% in water or rain |
+| **Bulwark** | +1 s (I: 6 s) | Sturdy Shield: 10% chance a block costs no durability · Brace: +10% knockback resistance while blocking | Guardian: shield raised, allies within 4 blocks take 2% less from mobs · Recovery: a disabled shield is ready 10% sooner | Mirror Shield: 5% of a blocked shot back to the shooter **or** Shield Bash: a block within 0.5 s of raising stuns the attacker 0.2 s |
+| **Juggernaut** | +1 s (I: 8 s) | *In heavy armor:* Plating: +0.5 armor toughness · Iron Skin: 2% less from hits up close | Unyielding: +4% knockback resistance · Last Stand: below 30% health, 3% less damage | Spikes: 2% of a hit up close back to the attacker **or** Anchor: +20% knockback resistance while sneaking (immune at V) |
+| **Resilience** | +1 heart (I: 6 hearts over 5 s) | Thick Blood: negative effects 5% shorter · Quick Recovery: natural regeneration 5% faster | Steady Heart: healing 3% stronger · Shake It Off: 4% chance to shake off a negative effect | Antidote: poison 20% shorter (immune at V) **or** Cool Blood: you burn 10% shorter |
+| **Wanderer** | +2 s (I: 10 s) | Fleet: +1% speed · Explorer's Eye: +5% XP from new and revisited chunks | Rough Terrain: soul sand, mud, honey slow you 10% less · Landmark Hunter: +5% XP from new biomes and structures | Step Up: +0.08 step height (a full block at V) **or** Tireless: sprinting costs 20% less hunger (none extra at V) |
+| **Survivalist** | +4 s (I: 20 s) | Slow Metabolism: 3% less hunger · Weatherproof: 4% less from fire, lava, freezing, drowning, cactus, magma | Hearty Eater: food gives 5% more saturation · Hunger Pangs: starving hurts 10% less | Fireproof: 10% less from fire and lava **or** Gills: 20% longer underwater (twice as long at V) |
+| **Acrobat** | +3 s (I: 15 s) | Featherfall: falls hurt from 0.5 block higher · Spring: +2% jump strength | Tumble: Roll (Exploration 20) +3% chance · Evasive: 2% chance a projectile misses you | Dodge: sprinting, 2% chance to dodge a hit up close **or** Climber: ladders and vines 10% faster |
+
+All numbers are **per rank**. A few readings of §2 that needed a choice (💡):
+- **Riposte** parries a hit from any living attacker; it strikes back (your attack damage × 1.5, plus bleeding) only
+  when the attacker is within your reach + 1 block.
+- **Shatter** sets armor to 0 for this hit too: the shockwave comes before the armor is counted.
+- **Flurry** makes every hit count as fully charged, so every hit also gives Melee XP while it lasts.
+- **Deadeye** zooms the view to 30% while drawing; a headshot is a hit at the eyes or higher.
+- **Bastion**: "behind you" is the half-plane at your back, up to 3 blocks away; with your shield raised it blocks
+  from every direction.
+- **Unbreakable** stops sprinting on the server and on your client.
+- **Heavy armor** for Blade's price is the same as for Exploration: 3 or more pieces of iron or heavier.
+
 ## 7. Death penalties
 
 ### Fixed principles (from the brief, not a choice)
@@ -935,7 +980,7 @@ For reference, the play time of a single level (without the budget factor):
 
 Work starts only after the owner's final approval (§15). Each milestone ends with: compiling, running the tests, checking for regressions, a report of what was built and what is still open, and the owner's approval before the next major system.
 
-Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 ✅ done (0.4.0) · milestone 4 ✅ done (0.5.0) · milestone 5 ✅ done (0.6.0) · milestone 6 next.
+Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) · milestone 2 ✅ done (0.3.0) · milestone 3 ✅ done (0.4.0) · milestone 4 ✅ done (0.5.0) · milestone 5 ✅ done (0.6.0) · milestone 6 in progress (0.7.0): part 1 of 3 built, being verified.
 
 | # | Milestone | Contents | Tests |
 |---|---|---|---|
@@ -945,7 +990,7 @@ Progress: milestone 0 ✅ done (version 0.1.0) · milestone 1 ✅ done (0.2.0) �
 | 3 | XP: gathering | Mining, Foraging, Farming, Fishing; placed-block tracking, bonemeal and automation rules, open water and "overfished", diminishing returns, the AFK rule | Game tests per exploit rule |
 | 4 | XP: the rest | Melee, Ranged, Defense, Exploration, Smithing, Arcana; mob origin flags, PvP limits, chunk, biome and structure tracking | Game tests |
 | 5 | Trees and abilities | Points, buying nodes, choice nodes, the `R` / `Shift + R` keys, cooldowns, respec; all 10 trunks | Unit and game tests |
-| 6 | Specializations | All 30 specializations: abilities, nodes and trade-offs, in three parts (Combat; Gathering; Survival and Crafting) | Game tests per ability |
+| 6 | Specializations | All 30 specializations: abilities, nodes and trade-offs, in three parts (Combat and Survival; Gathering; Crafting) | Game tests per ability |
 | 7 | Death system | Loss layers, distribution, death pressure, dimension multipliers, death fatigue, points on level loss, the Death Register, the summary after death, "At Stake" | Edge-case tests (see below) |
 | 8 | Connections | Mastery, synergies (discovery, Codex & Chronicle), opposing skills, specialization conflicts, hard requirements, gear conflicts | Unit and game tests |
 | 9 | Administration | Presets, data files, the settings screen, leaderboard, XP events, `inspect`, `reload` | Game tests |
