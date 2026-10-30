@@ -174,3 +174,162 @@ jobs:
               for i in range(0, len(s), 3000):
                   print(f"IMG|{os.path.basename(f)}|{i//3000}|{s[i:i+3000]}")
           PY
+
+  # The compatibility run: the server game tests and the client test with Extreme Dimensions (its latest release, or
+  # built from its source when it has none) and the newest Sodium, Iris and Mod Menu for this game version from Modrinth
+  compat:
+    name: compatibility run with Extreme Dimensions, Sodium, Iris and Mod Menu
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v6
+      - name: setup jdk
+        uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'microsoft'
+          cache: 'gradle'
+      - name: make gradle wrapper executable
+        run: chmod +x ./gradlew
+      # Sodium and Iris draw with OpenGL (the game alone falls back to Vulkan): the display needs GLX, in software
+      - name: virtual display with OpenGL
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq xvfb libgl1-mesa-dri libglx-mesa0 libgl1 libegl1 mesa-utils mesa-vulkan-drivers
+      - name: fetch Extreme Dimensions
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p build/compat-mods
+          if gh release download --repo Peertjeh/extremedimensions --pattern 'extremedimensions-*.jar' --dir build/compat-mods; then
+            rm -f build/compat-mods/*-sources.jar
+            echo "::notice title=Compat::$(ls build/compat-mods | tr '\n' ' ')from Extreme Dimensions' latest release"
+          else
+            git clone -q --depth 1 https://github.com/Peertjeh/extremedimensions "$RUNNER_TEMP/ed"
+            (cd "$RUNNER_TEMP/ed" && chmod +x gradlew && ./gradlew -q assemble)
+            cp $(ls "$RUNNER_TEMP"/ed/build/libs/extremedimensions-*.jar | grep -v sources) build/compat-mods/
+            echo "::notice title=Compat::$(ls build/compat-mods | tr '\n' ' ')built from Extreme Dimensions' source"
+          fi
+      - name: fetch Sodium, Iris and Mod Menu
+        shell: bash
+        run: |
+          set +e
+          python3 tools/compat/fetch.py build/compat-mods | tee fetch.txt
+          grep '^COMPAT|' fetch.txt | while IFS='|' read -r _ slug ver what; do echo "::notice title=Compat::$slug $ver $what"; done
+          exit 0
+      - name: server game tests with them
+        shell: bash
+        run: |
+          set -o pipefail
+          ./gradlew runGameTest -Pcompat --no-configuration-cache 2>&1 | tee compat-server.txt
+        timeout-minutes: 20
+      - name: client game test with them
+        shell: bash
+        run: |
+          set -o pipefail
+          xvfb-run -a -s "-screen 0 1280x720x24 +extension GLX +render -noreset" ./gradlew runClientGameTest --no-configuration-cache -Pcompat 2>&1 | tee compat-client.txt
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+          GALLIUM_DRIVER: llvmpipe
+          MESA_GL_VERSION_OVERRIDE: '4.6'
+          # (the virtual display has no GLX visual of the kind the game asks for; through EGL Mesa makes one)
+          SDL_VIDEO_FORCE_EGL: '1'
+          SDL_VIDEO_X11_FORCE_EGL: '1'
+        timeout-minutes: 25
+      - name: report the compatibility run
+        if: always()
+        shell: bash
+        run: |
+          for f in compat-server.txt compat-client.txt; do
+            [ -f "$f" ] || continue
+            grep -E "GAME TESTS COMPLETE|required tests? passed|tests? failed" "$f" | sed 's/^.*\]: //' | tail -3 | while read -r line; do echo "::notice title=Compat $f::$line"; done
+            { grep -E "failed at|AssertionError|Caused by|Incompatible mod|Mixin apply failed" "$f" || true; } | head -8 | cut -c1-900 | while read -r line; do echo "::warning title=Compat $f::$line"; done
+          done
+      - name: publish the screenshots to the ci-compat-screenshots branch
+        if: always() && github.event_name == 'push'
+        shell: bash
+        run: |
+          dir="$PWD/build/run/clientGameTest/screenshots"
+          ls "$dir"/*.png >/dev/null 2>&1 || { echo "no screenshots"; exit 0; }
+          tmp=$(mktemp -d)
+          cp "$dir"/*.png "$tmp"/
+          cd "$tmp"
+          git init -q -b ci-compat-screenshots
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Compatibility screenshots of ${GITHUB_SHA::7} on ${GITHUB_REF_NAME}"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" ci-compat-screenshots
+
+  # A version not released yet goes out by itself (as Extreme Dimensions does): once the build, the client test and the
+  # compatibility run pass on a push to the default branch or develop, the jar is released as v<version> (the version in
+  # gradle.properties), with that version's part of CHANGELOG.md as its notes. With a MODRINTH_TOKEN secret and a
+  # MODRINTH_PROJECT variable in the repository's settings, the same jar goes to Modrinth. A version already released is
+  # left alone.
+  release:
+    name: release a new version
+    needs: [build, client, compat]
+    if: github.event_name == 'push' && (github.ref_name == github.event.repository.default_branch || github.ref_name == 'develop')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      actions: read
+    env:
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      MODRINTH_PROJECT: ${{ vars.MODRINTH_PROJECT }}
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v6
+      - name: release this version if it is new
+        id: release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(sed -n 's/^version=//p' gradle.properties)
+          mc=$(sed -n 's/^minecraft_version=//p' gradle.properties)
+          if gh release view "v$version" >/dev/null 2>&1 || git ls-remote --exit-code --tags origin "refs/tags/v$version" >/dev/null 2>&1; then
+            echo "v$version is already released"
+            echo "new=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          gh run download "$GITHUB_RUN_ID" -n Artifacts -D dist
+          jar="dist/extremeprogression-$version.jar"
+          [ -f "$jar" ] || { echo "no $jar among the build's artifacts:"; ls dist; exit 1; }
+          name=$(sed -n "s/^## $version: //p" CHANGELOG.md | head -1)
+          { echo "Minecraft $mc · Fabric · Java 25"; echo; awk -v v="## $version:" 'index($0, v) == 1 {on = 1; next} on && /^## / {exit} on' CHANGELOG.md; } > notes.md
+          gh release create "v$version" "$jar" --target "$GITHUB_SHA" --title "Extreme Progression $version${name:+ — $name}" --notes-file notes.md
+          echo "::notice title=Release::v$version released on GitHub"
+          { echo "new=true"; echo "version=$version"; echo "mc=$mc"; echo "jar=$jar"; echo "name=$name"; } >> "$GITHUB_OUTPUT"
+      - name: publish it to Modrinth
+        if: steps.release.outputs.new == 'true' && env.MODRINTH_TOKEN != '' && env.MODRINTH_PROJECT != ''
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          data = {
+              "name": "Extreme Progression " + os.environ["VERSION"] + (" — " + os.environ["NAME"] if os.environ["NAME"] else ""),
+              "version_number": os.environ["VERSION"],
+              "changelog": open("notes.md", encoding="utf-8").read(),
+              "dependencies": [{"project_id": "P7dR8mSH", "dependency_type": "required"}],
+              "game_versions": [os.environ["MC"]],
+              "version_type": "release",
+              "loaders": ["fabric"],
+              "featured": True,
+              "project_id": os.environ["MODRINTH_PROJECT"],
+              "file_parts": ["file"],
+              "primary_file": "file",
+          }
+          open("modrinth.json", "w", encoding="utf-8").write(json.dumps(data))
+          PY
+          code=$(curl -s -o modrinth-answer.txt -w '%{http_code}' -X POST https://api.modrinth.com/v2/version \
+            -H "Authorization: $MODRINTH_TOKEN" -H "User-Agent: Peertjeh/In-Game-MMO release" \
+            -F "data=@modrinth.json;type=application/json" -F "file=@$JAR")
+          echo "::notice title=Modrinth::HTTP $code $(head -c 300 modrinth-answer.txt)"
+          [ "$code" = 200 ]
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+          MC: ${{ steps.release.outputs.mc }}
+          JAR: ${{ steps.release.outputs.jar }}
+          NAME: ${{ steps.release.outputs.name }}

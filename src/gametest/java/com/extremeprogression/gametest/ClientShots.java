@@ -225,8 +225,21 @@ public class ClientShots implements FabricClientGameTest {
 				mc.gui.setScreen(inventory[0]);
 			});
 			ctx.waitTicks(10);
-			ctx.runOnClient(mc -> check(Screens.getWidgets(inventory[0]).stream().anyMatch(w -> w instanceof SheetButton),
-					"the inventory has no Character Sheet button"));
+			ctx.runOnClient(mc -> {
+				var widgets = Screens.getWidgets(inventory[0]);
+				var sheet = widgets.stream().filter(w -> w instanceof SheetButton).findFirst().orElse(null);
+				check(sheet != null, "the inventory has no Character Sheet button");
+				// Beside the recipe book, and beside Extreme Dimensions' buttons when that mod is there: never over another
+				for (var w : widgets) {
+					if (w != sheet && w.visible && w.getX() < sheet.getX() + sheet.getWidth() && sheet.getX() < w.getX() + w.getWidth()
+							&& w.getY() < sheet.getY() + sheet.getHeight() && sheet.getY() < w.getY() + w.getHeight()) {
+						throw new AssertionError("the Character Sheet button lies over " + w.getClass().getSimpleName() + " at " + w.getX() + ", " + w.getY());
+					}
+				}
+				if (Boolean.getBoolean("extremeprogression.compat")) {
+					check(FabricLoader.getInstance().isModLoaded("extremedimensions"), "the compatibility run did not load Extreme Dimensions");
+				}
+			});
 			ctx.takeScreenshot("06_inventory_button");
 
 			// The respec costs are shown before anything happens

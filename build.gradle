@@ -75,3 +75,13 @@ fabricApi {
 		eula = true
 	}
 }
+
+// The compatibility run (CI, -Pcompat): the server game tests and the client test run with Extreme Dimensions and the
+// newest Sodium, Iris and Mod Menu for this game version, all fetched into build/compat-mods beforehand.
+if (project.hasProperty("compat")) {
+	def compatMods = layout.buildDirectory.dir("compat-mods").get().asFile
+	loom.runs.matching { it.name.toLowerCase().contains("gametest") }.configureEach {
+		vmArg "-Dextremeprogression.compat=true"
+		vmArg "-Dfabric.addMods=${compatMods}"
+	}
+}

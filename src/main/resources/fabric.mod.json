@@ -9,8 +9,11 @@
 	],
 	"contact": {
 		"sources": "https://github.com/Peertjeh/In-Game-MMO",
-		"issues": "https://github.com/Peertjeh/In-Game-MMO/issues"
+		"issues": "https://github.com/Peertjeh/In-Game-MMO/issues",
+		"homepage": "https://github.com/Peertjeh/In-Game-MMO"
 	},
+	"license": "MIT",
+	"icon": "assets/extremeprogression/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [

@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.0: First release
+
+The first release of Extreme Progression, for Minecraft 26.3 on Fabric. Everything of 0.1.0 to 0.10.0 below, and:
+
+- **Extreme Dimensions**: deaths in the Seam cost ×2.5, both mods' death penalties count in full, and the inventory
+  buttons sit side by side. CI runs every test with Extreme Dimensions, Sodium, Iris and Mod Menu.
+- **The balance** checked against the design: the pace (~400 hours to master a first skill, ~2,700 for four), Mastery,
+  respecs and deaths, guarded by tests.
+- An icon, the Modrinth page, and the MIT license.
+
 ## 0.10.0: Administration (in development)
 
 Server owners can now shape the mod without touching code.
