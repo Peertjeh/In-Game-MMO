@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.4.0: XP from gathering (in development)
+
+- **Mining**: XP per block with a pickaxe that can mine it (rare ores much more than stone; deepslate more than its
+  normal version), with a shovel for dirt, sand, gravel, clay, mud and snow, and for brushing suspicious sand or gravel.
+- **Foraging**: logs of natural trees per wood type, and wild plants: berries, mushrooms, flowers, cocoa, melons and
+  pumpkins, and honey from wild bee nests.
+- **Farming**: fully grown crops (sugar cane and cactus above the bottom block), melons and pumpkins from a stem, planted
+  cocoa and berry bushes; breeding, shearing and taming.
+- **Fishing**: every catch, by kind: fish, treasure and junk.
+- Against exploits:
+  - **placed blocks never give XP**, and neither do blocks a piston moved or that lava and water formed. The marks are
+    saved with the chunk, follow a block that falls, and stay when dirt turns into grass or a log is stripped;
+  - **bonemeal**: crops, plants and trees it grew give nothing; a tree grown from a planted sapling gives 25%;
+  - only what a **player** harvests by hand counts: no XP from explosions, pistons, water, dispensers or villagers;
+  - **fishing** only gives XP in open water, and after ten catches in one spot that spot is "overfished";
+  - **AFK**: no XP after 5 minutes without looking around, moving or interacting (for fishing: without looking around
+    or moving);
+  - **diminishing returns** above 5,000 XP per skill in 10 minutes, down to 5%;
+  - no XP in Creative or Spectator.
+- A short notice on the action bar on a level-up. Every value is in `config/extremeprogression.json`.
+
 ## 0.3.0: The GUI (in development)
 
 - The **Character Sheet**: your figure, your total against the cap of 400, the budget factor and your Mastery ranks, and

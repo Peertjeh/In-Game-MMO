@@ -130,6 +130,9 @@ public class ClientShots implements FabricClientGameTest {
 				keys.add(spec.translationKey() + part);
 			}
 		}
+		// (the messages the server sends)
+		keys.addAll(List.of("message.extremeprogression.admin_set", "message.extremeprogression.admin_xp", "message.extremeprogression.level_up",
+				"message.extremeprogression.mastery_up", "message.extremeprogression.fishing.not_open_water", "message.extremeprogression.fishing.overfished"));
 		List<String> missing = new ArrayList<>();
 		for (String k : keys) {
 			if (!Language.getInstance().has(k)) {

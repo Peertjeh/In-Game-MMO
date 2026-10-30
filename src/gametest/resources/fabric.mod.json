@@ -9,7 +9,9 @@
 			"com.extremeprogression.gametest.SkeletonTests",
 			"com.extremeprogression.gametest.ProgressionTests",
 			"com.extremeprogression.gametest.StoreTests",
-			"com.extremeprogression.gametest.CommandTests"
+			"com.extremeprogression.gametest.CommandTests",
+			"com.extremeprogression.gametest.GatheringTests",
+			"com.extremeprogression.gametest.AntiExploitTests"
 		],
 		"fabric-client-gametest": [
 			"com.extremeprogression.gametest.ClientShots"

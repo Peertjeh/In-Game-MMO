@@ -28,6 +28,10 @@
 
 	"message.extremeprogression.admin_set": "An operator set your %s from level %s to %s.",
 	"message.extremeprogression.admin_xp": "An operator changed your XP by %s in %s (level %s → %s).",
+	"message.extremeprogression.level_up": "%s reached level %s",
+	"message.extremeprogression.mastery_up": "%s: Mastery rank %s",
+	"message.extremeprogression.fishing.not_open_water": "No Fishing XP here: fish in open water",
+	"message.extremeprogression.fishing.overfished": "This spot is overfished: fish somewhere else for full XP",
 
 	"gui.extremeprogression.sheet.title": "Character Sheet",
 	"gui.extremeprogression.sheet.button": "Character Sheet (K)",

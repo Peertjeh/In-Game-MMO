@@ -56,3 +56,9 @@ net.minecraft.gametest.framework.GameTestHelper
 net.minecraft.sounds.SoundEvents
 net.minecraft.core.BlockPos
 net.minecraft.world.InteractionResult
+net.minecraft.world.level.block.MushroomBlock
+net.minecraft.world.level.block.GrowingPlantHeadBlock
+net.minecraft.world.level.block.VegetationBlock
+net.minecraft.network.chat.MutableComponent
+net.minecraft.world.item.ItemInstance
+net.minecraft.core.TypedInstance

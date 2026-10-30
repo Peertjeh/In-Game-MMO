@@ -37,6 +37,33 @@ public final class Config {
 	public static int FIRST_SPECIALIZATION_LEVEL = 25;
 	public static int SECOND_SPECIALIZATION_LEVEL = 75;
 
+	// --- Earning XP (design §3, Appendix A) ------------------------------------------------------
+
+	/** Multiplies every XP gain, after all other rules. */
+	public static double XP_MULTIPLIER = 1.0;
+	/** The share of a log's XP that a tree a player planted gives (design §2, Foraging). */
+	public static double PLANTED_TREE_FACTOR = 0.25;
+	/** The share of the XP that crops, plants and trees grown with bonemeal give (design §2, Farming: none). */
+	public static double BONEMEAL_FACTOR = 0.0;
+
+	// --- Anti-exploit (design §12) ---------------------------------------------------------------
+
+	/** No XP after this many minutes without looking around, moving by yourself or interacting. */
+	public static double AFK_MINUTES = 5.0;
+	/** Above this much XP in one skill within the window, XP shrinks step by step (3× the normal pace). */
+	public static double DIMINISHING_THRESHOLD = 5000.0;
+	public static double DIMINISHING_WINDOW_MINUTES = 10.0;
+	/** The least share of its XP a gain keeps under diminishing returns. */
+	public static double DIMINISHING_FLOOR = 0.05;
+	/** Catches within this many blocks of each other count as the same spot. */
+	public static double OVERFISHED_RADIUS = 3.0;
+	/** After this many catches in one spot the spot is overfished, and its catches give OVERFISHED_FACTOR. */
+	public static int OVERFISHED_CATCHES = 10;
+	public static double OVERFISHED_FACTOR = 0.25;
+	/** After this many catches in one spot, catches give OVERFISHED_LATE_FACTOR (never zero). */
+	public static int OVERFISHED_LATE_CATCHES = 20;
+	public static double OVERFISHED_LATE_FACTOR = 0.10;
+
 	// --- Saving (design §10) ---------------------------------------------------------------------
 
 	/** Earlier versions of every player file kept beside it. */
@@ -126,6 +153,33 @@ public final class Config {
 			MASTERY_XP_PER_RANK = (double) DEFAULTS.get("MASTERY_XP_PER_RANK");
 		}
 		PLAYER_BACKUPS = Math.max(0, PLAYER_BACKUPS);
+		XP_MULTIPLIER = nonNegative(XP_MULTIPLIER, "XP_MULTIPLIER");
+		PLANTED_TREE_FACTOR = share(PLANTED_TREE_FACTOR, "PLANTED_TREE_FACTOR");
+		BONEMEAL_FACTOR = share(BONEMEAL_FACTOR, "BONEMEAL_FACTOR");
+		if (!(AFK_MINUTES > 0)) {
+			AFK_MINUTES = (double) DEFAULTS.get("AFK_MINUTES");
+		}
+		if (!(DIMINISHING_THRESHOLD > 0)) {
+			DIMINISHING_THRESHOLD = (double) DEFAULTS.get("DIMINISHING_THRESHOLD");
+		}
+		if (!(DIMINISHING_WINDOW_MINUTES > 0)) {
+			DIMINISHING_WINDOW_MINUTES = (double) DEFAULTS.get("DIMINISHING_WINDOW_MINUTES");
+		}
+		DIMINISHING_FLOOR = share(DIMINISHING_FLOOR, "DIMINISHING_FLOOR");
+		OVERFISHED_RADIUS = nonNegative(OVERFISHED_RADIUS, "OVERFISHED_RADIUS");
+		OVERFISHED_CATCHES = Math.max(1, OVERFISHED_CATCHES);
+		OVERFISHED_LATE_CATCHES = Math.max(OVERFISHED_CATCHES, OVERFISHED_LATE_CATCHES);
+		OVERFISHED_FACTOR = share(OVERFISHED_FACTOR, "OVERFISHED_FACTOR");
+		OVERFISHED_LATE_FACTOR = share(OVERFISHED_LATE_FACTOR, "OVERFISHED_LATE_FACTOR");
+	}
+
+	/** A share from 0 to 1; anything else falls back to the default. */
+	private static double share(double value, String field) {
+		return value >= 0 && value <= 1 ? value : (double) DEFAULTS.get(field);
+	}
+
+	private static double nonNegative(double value, String field) {
+		return value >= 0 && Double.isFinite(value) ? value : (double) DEFAULTS.get(field);
 	}
 
 	private static void set(Field f, JsonElement value) throws RuntimeException {

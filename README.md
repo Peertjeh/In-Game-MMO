@@ -5,8 +5,9 @@
 Ten playstyle skills, each with its own skill tree, three specializations and a Mastery layer. Synergies between skills
 that you discover yourself. Slow, meaningful progression, and deaths that cost you for real, always shown up front.
 
-> **Status:** in development. The design is approved; the code is being built milestone by milestone. Nothing is
-> playable yet.
+> **Status:** in development. The design is approved; the code is being built milestone by milestone. So far the
+> four gathering skills (Mining, Foraging, Farming, Fishing) earn XP; the other skills, the trees and the abilities
+> follow.
 
 - The full design: [docs/DESIGN.md](docs/DESIGN.md)
 - Works on its own, and optionally together with [Extreme Dimensions](https://github.com/Peertjeh/extremedimensions).
