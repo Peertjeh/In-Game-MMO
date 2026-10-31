@@ -267,6 +267,20 @@ public class ClientShots implements FabricClientGameTest {
 			ctx.takeScreenshot("07_respec_confirmation");
 			ctx.runOnClient(mc -> mc.gui.setScreen(null));
 
+			// Tracking: Melee from its Skill Screen's Track button, Mining and Arcana too; they show right of the hotbar
+			ctx.runOnClient(mc -> {
+				SkillScreen screen = new SkillScreen(Skill.MELEE, null);
+				mc.gui.setScreen(screen);
+				screen.toggleTrack();
+				com.extremeprogression.client.state.ClientOptions.toggle(Skill.MINING);
+				com.extremeprogression.client.state.ClientOptions.toggle(Skill.ARCANA);
+				check(com.extremeprogression.client.state.ClientOptions.tracked().equals(List.of(Skill.MELEE, Skill.MINING, Skill.ARCANA)),
+						"tracked are " + com.extremeprogression.client.state.ClientOptions.tracked());
+				mc.gui.setScreen(null);
+			});
+			check(java.nio.file.Files.exists(FabricLoader.getInstance().getConfigDir().resolve("extremeprogression-client.json")), "the tracked skills were not saved");
+			check(ctx.computeOnClient(mc -> com.extremeprogression.client.hud.TrackedHud.shown()) == 3, "the HUD does not show the three tracked skills");
+
 			// With a sword in hand the ability key reaches Riposte: its icon shows beside the hotbar, and R uses it
 			sp.getServer().runOnServer(s -> s.getPlayerList().getPlayers().get(0).setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIAMOND_SWORD)));
 			// Long enough for the operator messages in the chat to fade, so the action bar shows in the screenshots

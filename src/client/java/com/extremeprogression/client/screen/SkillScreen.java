@@ -50,6 +50,7 @@ public class SkillScreen extends Screen {
 	private Button action;
 	private Button respec;
 	private Button mastery;
+	private Button track;
 	/** The tree rules' view of the progression, rebuilt whenever the server sends a new one. */
 	private PlayerProgress view;
 	private int viewOf = -1;
@@ -141,14 +142,28 @@ public class SkillScreen extends Screen {
 		int th = treeHeight();
 		action = this.addRenderableWidget(Button.builder(Component.empty(), b -> act()).pos(dx + 5, ty + th - 21).size(dw - 10, 16).build());
 		this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.skill.back"), b -> this.onClose())
-				.pos(this.width / 2 - 166, y0 + H - 20).size(110, 20).build());
+				.pos(this.width / 2 - 189, y0 + H - 20).size(110, 20).build());
+		// Track: the skill's level and progress beside the hotbar
+		track = this.addRenderableWidget(Button.builder(trackLabel(), b -> toggleTrack()).pos(this.width / 2 - 75, y0 + H - 20).size(70, 20).build());
+		track.setTooltip(net.minecraft.client.gui.components.Tooltip.create(Component.translatable("gui.extremeprogression.skill.track.tip")));
 		mastery = this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.mastery.button"),
-				b -> Minecraft.getInstance().gui.setScreen(new MasteryScreen(skill, this))).pos(this.width / 2 - 52, y0 + H - 20).size(70, 20).build());
+				b -> Minecraft.getInstance().gui.setScreen(new MasteryScreen(skill, this))).pos(this.width / 2 - 1, y0 + H - 20).size(64, 20).build());
 		respec = this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.skill.respec"),
-				b -> Minecraft.getInstance().gui.setScreen(new RespecScreen(skill, this))).pos(this.width / 2 + 22, y0 + H - 20).size(70, 20).build());
+				b -> Minecraft.getInstance().gui.setScreen(new RespecScreen(skill, this))).pos(this.width / 2 + 67, y0 + H - 20).size(64, 20).build());
 		this.addRenderableWidget(Button.builder(Component.translatable("gui.done"), b -> closeAll())
-				.pos(this.width / 2 + 96, y0 + H - 20).size(70, 20).build());
+				.pos(this.width / 2 + 135, y0 + H - 20).size(54, 20).build());
 		refreshButtons();
+	}
+
+	private Component trackLabel() {
+		return Component.translatable(com.extremeprogression.client.state.ClientOptions.tracked(skill)
+				? "gui.extremeprogression.skill.tracked" : "gui.extremeprogression.skill.track");
+	}
+
+	/** Tracks this skill beside the hotbar, or stops tracking it. */
+	public void toggleTrack() {
+		com.extremeprogression.client.state.ClientOptions.toggle(skill);
+		track.setMessage(trackLabel());
 	}
 
 	/** The top of the trunk's two rows, under the branch and its label. */

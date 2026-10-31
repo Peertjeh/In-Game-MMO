@@ -76,6 +76,10 @@ public class ExtremeProgressionClient implements ClientModInitializer {
 		KeyMappingHelper.registerKeyMapping(OPEN_SHEET);
 		KeyMappingHelper.registerKeyMapping(ABILITY);
 		HudElementRegistry.attachElementAfter(VanillaHudElements.HOTBAR, ExtremeProgression.id("ability"), (g, delta) -> AbilityHud.extract(g));
+		// The skills tracked beside the hotbar (the Track button on a Skill Screen)
+		com.extremeprogression.client.state.ClientOptions.load();
+		HudElementRegistry.attachElementAfter(VanillaHudElements.HOTBAR, ExtremeProgression.id("tracked"),
+				(g, delta) -> com.extremeprogression.client.hud.TrackedHud.extract(g));
 		// Key mappings only register presses while no screen is open, so this never opens over another screen
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			ClientProgress.tick();

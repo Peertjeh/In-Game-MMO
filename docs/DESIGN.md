@@ -1099,6 +1099,10 @@ The confirmed rules above, as built. Everything marked 💡 was decided while bu
   - A short notice on a level-up or a discovered synergy.
   - A small icon when an ability is ready.
   - No XP bar on screen.
+    - 1.3.0, the owner's choice: a player may **track** skills (a Track button on every Skill Screen). Each tracked
+      skill shows right of the hotbar as a small block with its icon, level (Mastery rank past 100) and progress bar.
+      Nothing shows until a player tracks something, and the choice is kept per client in
+      `config/extremeprogression-client.json`.
 - **After a death:** after respawning a screen shows exactly what you lost (a fixed principle from §7).
 
 ### Mockup (round 21, ✅ approved)

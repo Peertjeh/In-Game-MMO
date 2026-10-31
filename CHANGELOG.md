@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.3.0: Tracked skills
+
+- **Track** on every Skill Screen: the skills you track show right of your hotbar, each with its icon, level (or Mastery
+  rank) and a bar of the progress to the next. Track as many as you like; nothing shows until you track one. Your
+  choice is kept on your own client.
+- The Skill Screen's buttons make room for it.
+
 ## 1.2.0: Power levels and a clearer Skill Screen
 
 - **The power level above heads**: beside every player's name in multiplayer, their total level as in the tablist

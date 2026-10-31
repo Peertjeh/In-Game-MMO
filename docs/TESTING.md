@@ -1,6 +1,6 @@
 # Testing Extreme Progression
 
-This is for trying the mod in a real game (version 1.2.0, milestones 0–10, the TAB integration and the power levels of the
+This is for trying the mod in a real game (version 1.3.0, milestones 0–10 and the updates since, of the
 [roadmap](DESIGN.md#13-implementation-roadmap--proposal)). What is not built yet is listed at the end.
 
 ## What you need
@@ -9,7 +9,7 @@ This is for trying the mod in a real game (version 1.2.0, milestones 0–10, the
 - **Fabric Loader 0.19.5** or newer for 26.3 (the [Fabric installer](https://fabricmc.net/use/installer/))
 - **Fabric API 0.162.0+26.3** or newer ([Modrinth](https://modrinth.com/mod/fabric-api))
 - **Java 25** (the Minecraft launcher brings its own)
-- The mod's jar: `extremeprogression-1.2.0.jar`
+- The mod's jar: `extremeprogression-1.3.0.jar`
   - the release: [v1.0.0 on GitHub](https://github.com/Peertjeh/In-Game-MMO/releases/tag/v1.0.0);
   - the latest green build is always on the
     [`ci-jar` branch](https://github.com/Peertjeh/In-Game-MMO/tree/ci-jar) (click the jar, then "Download raw file");
@@ -18,7 +18,7 @@ This is for trying the mod in a real game (version 1.2.0, milestones 0–10, the
 ## Installing
 
 1. Install Fabric Loader for 26.3 with the installer, and start that profile once.
-2. Put the Fabric API jar and `extremeprogression-1.2.0.jar` in the `mods` folder of that game directory.
+2. Put the Fabric API jar and `extremeprogression-1.3.0.jar` in the `mods` folder of that game directory.
 3. Start the game. The title screen's mod list (Mods) should show Extreme Progression.
 
 On a **server**, the same two jars go in the server's `mods` folder; every player needs the mod too (it has a GUI and a
@@ -35,6 +35,7 @@ key of its own). Extreme Dimensions is optional; the two work side by side.
 | Your second specialization's ability | `Shift + R` |
 | Ability ready / in effect | the small icons right of the hotbar (in effect: with the seconds left) |
 | Death Register | the button at the foot of the Character Sheet |
+| Track a skill beside the hotbar | the Track button on its Skill Screen |
 | Codex & Chronicle | the Codex button at the foot of the Character Sheet |
 | Mastery perks | the Mastery button on a Skill Screen (from level 100) |
 
