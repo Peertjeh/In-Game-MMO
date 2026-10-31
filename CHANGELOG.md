@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.3.1: The tracked skills as a second hotbar
+
+- The skills you track now sit in a **second hotbar** right of your own, in the hotbar's own frame: one slot per
+  skill with its icon, the level as the slot's number (as an item count; the Mastery rank in gold past 100) and a
+  green bar of the progress to the next level, where a tool shows its durability.
+
 ## 1.3.0: Tracked skills
 
 - **Track** on every Skill Screen: the skills you track show right of your hotbar, each with its icon, level (or Mastery

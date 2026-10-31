@@ -10,20 +10,29 @@ import com.extremeprogression.network.ProgressPayload;
 import com.extremeprogression.skill.Skill;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
 
 /**
- * The skills the player chose to track (the Track button on a Skill Screen), right of the hotbar beyond the ability
- * icon: each as a small block with its icon, its level (its Mastery rank past the maximum, in gold) and a bar of the
- * progress to the next. Blocks run to the right and, when the screen ends, go on in a row above. Nothing is shown
- * while nothing is tracked (design §9: no XP bar on screen unless the player asks for one).
+ * The skills the player chose to track (the Track button on a Skill Screen), as a second hotbar right of the vanilla
+ * one, beyond the ability icon. One slot per skill in the hotbar's own frame (resource packs restyle both alike), and in
+ * it what a slot shows for an item: the skill's icon, its level as the item count (its Mastery rank past the maximum,
+ * "M3" in gold) and a green bar of the progress to the next level where a tool shows its durability. When the screen
+ * ends, the bar goes on in a row above. Nothing is shown while nothing is tracked (design §9: no XP bar on screen
+ * unless the player asks for one).
  */
 public final class TrackedHud {
 	private TrackedHud() {}
 
-	static final int BLOCK_W = 58, BLOCK_H = 20, GAP = 2;
-	/** Room left for the ability icon beside the hotbar (its icon and "⇧R"), so the blocks never jump. */
+	/** The vanilla hotbar: nine slots of 20 between an edge of 1 on each side, 22 high. */
+	private static final Identifier HOTBAR = Identifier.fromNamespaceAndPath("minecraft", "hud/hotbar");
+	private static final int HOTBAR_W = 182, HOTBAR_H = 22, SLOT = 20;
+	/** Room left for the ability icon beside the hotbar (its icon and "⇧R"), so the bar never jumps. */
 	private static final int ABILITY_ROOM = 40;
+	/** The colour of a full durability bar. */
+	private static final int GREEN = 0x00FF00;
 
 	public static void extract(GuiGraphicsExtractor g) {
 		Minecraft mc = Minecraft.getInstance();
@@ -31,31 +40,48 @@ public final class TrackedHud {
 		if (mc.player == null || mc.player.isSpectator() || tracked.isEmpty() || ClientProgress.current() == null) {
 			return;
 		}
-		int startX = g.guiWidth() / 2 + 91 + 8 + ABILITY_ROOM;
-		int x = startX, y = g.guiHeight() - BLOCK_H - 1;
-		for (Skill s : tracked) {
-			if (x + BLOCK_W > g.guiWidth() - 2 && x > startX) {
-				x = startX;
-				y -= BLOCK_H + GAP;
+		int x = g.guiWidth() / 2 + 91 + 8 + ABILITY_ROOM;
+		int perRow = perRow(g.guiWidth());
+		for (int first = 0, row = 0; first < tracked.size(); first += perRow, row++) {
+			List<Skill> skills = tracked.subList(first, Math.min(tracked.size(), first + perRow));
+			int y = g.guiHeight() - HOTBAR_H - row * HOTBAR_H;
+			frame(g, x, y, skills.size());
+			for (int i = 0; i < skills.size(); i++) {
+				slot(g, mc.font, skills.get(i), x + 1 + i * SLOT + 2, y + 3);
 			}
-			block(g, s, x, y);
-			x += BLOCK_W + GAP;
 		}
 	}
 
-	private static void block(GuiGraphicsExtractor g, Skill s, int x, int y) {
-		Minecraft mc = Minecraft.getInstance();
-		ProgressPayload.Entry e = SkillView.entry(s);
-		boolean mastered = SkillView.mastered(e);
-		g.fill(x, y, x + BLOCK_W, y + BLOCK_H, Ui.argb(0.55, Ui.SHADOW));
-		g.fill(x, y, x + 1, y + BLOCK_H, Ui.argb(0.9, s.category.accent));
-		g.fakeItem(SkillView.icon(s), x + 2, y + 2);
-		String level = mastered ? "M" + e.masteryRanks() : "Lv " + e.level();
-		Ui.text(g, mc.font, level, x + 20, y + 2, mastered ? Ui.GOLD : Ui.TEXT);
-		Ui.meter(g, x + 20, y + 13, BLOCK_W - 23, 3, SkillView.fill(e), mastered ? Ui.GOLD : s.category.accent);
+	/** How many slots fit in a row right of the ability icon, at least one. */
+	static int perRow(int guiWidth) {
+		int x = guiWidth / 2 + 91 + 8 + ABILITY_ROOM;
+		return Math.max(1, (guiWidth - 2 - x - 2) / SLOT);
 	}
 
-	/** How many blocks the HUD shows now (for tests). */
+	/** The hotbar's frame for a number of slots: its left edge, as many of its slots, its right edge. */
+	private static void frame(GuiGraphicsExtractor g, int x, int y, int slots) {
+		g.blitSprite(RenderPipelines.GUI_TEXTURED, HOTBAR, HOTBAR_W, HOTBAR_H, 0, 0, x, y, 1, HOTBAR_H);
+		for (int i = 0; i < slots; i++) {
+			g.blitSprite(RenderPipelines.GUI_TEXTURED, HOTBAR, HOTBAR_W, HOTBAR_H, 1 + (i % 9) * SLOT, 0, x + 1 + i * SLOT, y, SLOT, HOTBAR_H);
+		}
+		g.blitSprite(RenderPipelines.GUI_TEXTURED, HOTBAR, HOTBAR_W, HOTBAR_H, HOTBAR_W - 1, 0, x + 1 + slots * SLOT, y, 1, HOTBAR_H);
+	}
+
+	/** One skill where an item's 16×16 would be, decorated as the game decorates a stack and a worn tool. */
+	private static void slot(GuiGraphicsExtractor g, Font font, Skill s, int x, int y) {
+		ProgressPayload.Entry e = SkillView.entry(s);
+		boolean mastered = SkillView.mastered(e);
+		g.fakeItem(SkillView.icon(s), x, y);
+		int filled = (int) Math.round(13 * Ui.clamp01(SkillView.fill(e)));
+		g.fill(x + 2, y + 13, x + 15, y + 15, Ui.argb(255, 0));
+		if (filled > 0) {
+			g.fill(x + 2, y + 13, x + 2 + filled, y + 14, Ui.argb(255, GREEN));
+		}
+		String count = mastered && e.masteryRanks() > 0 ? "M" + e.masteryRanks() : String.valueOf(e.level());
+		g.text(font, count, x + 19 - 2 - font.width(count), y + 6 + 3, Ui.argb(255, mastered ? Ui.GOLD : Ui.TEXT), true);
+	}
+
+	/** How many skills the HUD shows now (for tests). */
 	public static int shown() {
 		Minecraft mc = Minecraft.getInstance();
 		return mc.player == null || ClientProgress.current() == null ? 0 : ClientOptions.tracked().size();

@@ -35,6 +35,7 @@ It works on its own, and goes hand in hand with [Extreme Dimensions](https://git
   and always **a price**.
 - From level 25 every level gives a point. A full branch costs more than you will ever have.
 - Some specializations of different skills **exclude each other**; some nodes need **another skill's level**.
+- **Track** the skills you care about: a second hotbar beside yours shows their level and a green bar of their progress.
 
 ## 👑 Mastery
 
