@@ -27,7 +27,7 @@ import net.minecraft.server.level.ServerPlayer;
  * <li>Creative and Spectator mode earn nothing;</li>
  * <li>an AFK player earns nothing;</li>
  * <li>diminishing returns shrink gains above the threshold;</li>
- * <li>the XP multiplier;</li>
+ * <li>the XP multiplier, and the party bonus for party members near who earn XP of their own (design §16);</li>
  * <li>the XP goes into the skill, with a short notice on a level-up.</li>
  * </ol>
  * Changed players are marked dirty for the next save and synced once at the end of the tick.
@@ -57,6 +57,11 @@ public final class XpService {
 		// an XP event on top)
 		double xp = base * share * Config.XP_MULTIPLIER * com.extremeprogression.config.SkillSettings.multiplier(skill) * XpEvents.multiplier(skill)
 				* (1 - com.extremeprogression.progression.Opposing.penalty(p, skill));
+		if (xp > 0) {
+			// (what counts for the others' bonus is earning at all; the bonus itself counts only the others)
+			com.extremeprogression.party.Parties.earned(player);
+			xp *= 1 + com.extremeprogression.party.Parties.bonus(player);
+		}
 		Progression.Change c = Progression.add(p, skill, xp);
 		if (c.applied() > 0 || c.levelsGained() > 0 || c.ranksGained() > 0) {
 			PlayerStore.markDirty(player.getUUID());

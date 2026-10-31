@@ -150,6 +150,21 @@ public final class Config {
 	public static boolean NAMETAG_POWER = true;
 	public static String NAMETAG_HIDDEN_DIMENSIONS = "battlehub:hub,battlehub:arenas";
 
+	/** Parties (/party, design §16): playing together. A party holds at most this many players. */
+	public static boolean PARTIES = true;
+	public static int PARTY_MAX_SIZE = 5;
+	/**
+	 * The XP bonus for playing together: this share more for every other party member within PARTY_RANGE blocks who
+	 * earned XP of their own within PARTY_ACTIVE_SECONDS (so never for one standing idle), up to PARTY_BONUS_MAX. The
+	 * presets govern the bonus: Hardcore 5% a member up to 15%, Normal 10% up to 30%.
+	 */
+	public static double PARTY_BONUS_PER_MEMBER = 0.05;
+	public static double PARTY_BONUS_MAX = 0.15;
+	public static double PARTY_RANGE = 48;
+	public static double PARTY_ACTIVE_SECONDS = 60;
+	/** How long an invitation stands. */
+	public static double PARTY_INVITE_SECONDS = 120;
+
 	private static final Map<String, Object> DEFAULTS = snapshot();
 
 	/**
@@ -270,6 +285,14 @@ public final class Config {
 		MASTERY_PERK_STEP = nonNegative(MASTERY_PERK_STEP, "MASTERY_PERK_STEP");
 		SYNERGY_LEVEL = Math.max(0, SYNERGY_LEVEL);
 		PLACEHOLDER_REFRESH_TICKS = Math.max(1, PLACEHOLDER_REFRESH_TICKS);
+		PARTY_MAX_SIZE = Math.max(2, PARTY_MAX_SIZE);
+		PARTY_BONUS_PER_MEMBER = nonNegative(PARTY_BONUS_PER_MEMBER, "PARTY_BONUS_PER_MEMBER");
+		PARTY_BONUS_MAX = nonNegative(PARTY_BONUS_MAX, "PARTY_BONUS_MAX");
+		PARTY_RANGE = nonNegative(PARTY_RANGE, "PARTY_RANGE");
+		PARTY_ACTIVE_SECONDS = nonNegative(PARTY_ACTIVE_SECONDS, "PARTY_ACTIVE_SECONDS");
+		if (!(PARTY_INVITE_SECONDS > 0)) {
+			PARTY_INVITE_SECONDS = (double) DEFAULTS.get("PARTY_INVITE_SECONDS");
+		}
 		RESPEC_DAYS = nonNegative(RESPEC_DAYS, "RESPEC_DAYS");
 		XP_MULTIPLIER = nonNegative(XP_MULTIPLIER, "XP_MULTIPLIER");
 		PLANTED_TREE_FACTOR = share(PLANTED_TREE_FACTOR, "PLANTED_TREE_FACTOR");

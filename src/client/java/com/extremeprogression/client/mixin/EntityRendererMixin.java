@@ -15,7 +15,8 @@ import net.minecraft.world.entity.player.Player;
 
 /**
  * The power level beside a player's name above their head: once the game has worked out the name tag (only when one is
- * shown at all, so never through walls for a sneaking player, never for an invisible one), the badge goes behind it.
+ * shown at all, so never through walls for a sneaking player, never for an invisible one), the badge goes behind it,
+ * and before it a green mark for a member of the player's party.
  */
 @Mixin(EntityRenderer.class)
 public abstract class EntityRendererMixin {
@@ -26,6 +27,11 @@ public abstract class EntityRendererMixin {
 			Component badge = ClientPower.badge(p.getUUID());
 			if (badge != null) {
 				state.nameTag = state.nameTag.copy().append(" ").append(badge);
+			}
+			// (a party member: a green mark before the name)
+			Component mark = com.extremeprogression.client.state.ClientParty.mark(p.getUUID());
+			if (mark != null) {
+				state.nameTag = mark.copy().append(" ").append(state.nameTag);
 			}
 		}
 	}

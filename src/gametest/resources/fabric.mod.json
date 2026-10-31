@@ -24,6 +24,7 @@
 			"com.extremeprogression.gametest.DeathTests",
 			"com.extremeprogression.gametest.ConnectionTests",
 			"com.extremeprogression.gametest.SynergyTests",
+			"com.extremeprogression.gametest.PartyTests",
 			"com.extremeprogression.gametest.AdminTests",
 			"com.extremeprogression.gametest.CompatTests",
 			"com.extremeprogression.gametest.BalanceTests",

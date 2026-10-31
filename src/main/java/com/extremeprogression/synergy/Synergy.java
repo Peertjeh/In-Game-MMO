@@ -8,6 +8,9 @@ import com.extremeprogression.skill.Skill;
  * The hidden synergies (design §2, ✅ round 19): twelve pairs of skills, never two opposing ones. A synergy needs both
  * skills at level 30, and works for a player only once they discovered it themselves, the first time its situation
  * happens in their play.
+ *
+ * <p>The six <b>duo synergies</b> (design §16, 1.4.0) are between two party members near each other: the one who acts
+ * needs the first skill at 30, the party member the second. They discover it together, and the Chronicle keeps both.
  */
 public enum Synergy {
 	/** After a successful shield block, your next melee hit within 2 seconds deals +20%. */
@@ -33,7 +36,21 @@ public enum Synergy {
 	/** Water Breathing potions last 50% longer. */
 	TIDAL_MAGIC(Skill.FISHING, Skill.ARCANA, 0.50),
 	/** Glow berries give 10 seconds of Night Vision. */
-	HERB_LORE(Skill.FORAGING, Skill.ARCANA, 10);
+	HERB_LORE(Skill.FORAGING, Skill.ARCANA, 10),
+
+	// --- Duo synergies: your first skill, a party member's second ---
+	/** While you block with a shield, a party member within 4 blocks (Melee) takes 15% less damage. */
+	SHIELD_WALL(Skill.DEFENSE, Skill.MELEE, 0.15, true),
+	/** Your arrows deal +15% to a mob that is after a party member (Defense). */
+	SPOTTER(Skill.RANGED, Skill.DEFENSE, 0.15, true),
+	/** Your melee hits deal +10% to a mob a party member (Melee) hit within the last 3 seconds. */
+	PINCER(Skill.MELEE, Skill.MELEE, 0.10, true),
+	/** Good effects you splash on a party member (Defense) last 25% longer. */
+	FIELD_MEDIC(Skill.ARCANA, Skill.DEFENSE, 0.25, true),
+	/** Your tools and weapons wear 15% slower within 16 blocks of a party member (Smithing). */
+	WHETSTONE(Skill.MINING, Skill.SMITHING, 0.15, true),
+	/** Food you eat within 8 blocks of a party member (Farming) fills 25% more. */
+	HEARTY_MEAL(Skill.EXPLORATION, Skill.FARMING, 0.25, true);
 
 	public final Skill first;
 	public final Skill second;
@@ -45,12 +62,24 @@ public enum Synergy {
 	public double strength;
 	public boolean enabled = true;
 	public final double defaultStrength;
+	/** A duo synergy: the first skill is the acting player's, the second a party member's near them. */
+	public final boolean duo;
 
 	Synergy(Skill first, Skill second, double strength) {
+		this(first, second, strength, false);
+	}
+
+	Synergy(Skill first, Skill second, double strength, boolean duo) {
 		this.first = first;
 		this.second = second;
 		this.id = name().toLowerCase(Locale.ROOT);
 		this.strength = this.defaultStrength = strength;
+		this.duo = duo;
+	}
+
+	/** The synergies of one kind, in order: alone (false) or together (true). */
+	public static java.util.List<Synergy> of(boolean duo) {
+		return java.util.Arrays.stream(values()).filter(s -> s.duo == duo).toList();
 	}
 
 	public static void reset() {

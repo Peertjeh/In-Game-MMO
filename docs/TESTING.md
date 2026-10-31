@@ -36,7 +36,8 @@ key of its own). Extreme Dimensions is optional; the two work side by side.
 | Ability ready / in effect | the small icons right of the hotbar (in effect: with the seconds left) |
 | Death Register | the button at the foot of the Character Sheet |
 | Track a skill beside the hotbar | the Track button on its Skill Screen |
-| Codex & Chronicle | the Codex button at the foot of the Character Sheet |
+| Codex & Chronicle | the Codex button at the foot of the Character Sheet (duo synergies under Together) |
+| Party | the Party button at the foot of the Character Sheet, or `/party` |
 | Mastery perks | the Mastery button on a Skill Screen (from level 100) |
 
 ## Commands for testing (operators, or cheats on in singleplayer)
@@ -53,6 +54,8 @@ key of its own). Extreme Dimensions is optional; the two work side by side.
 | `/skills inspect <player>` | a read-only look at a player, offline ones too |
 | `/skills settings` | the settings screen (admins) |
 | `/skills preset <hardcore\|normal\|custom>`, `/skills reload` | a preset; reread the config and data files |
+| `/party invite <player>`, `/party accept`, `/party leave` | play together (any player): a party, its bonus and duo synergies |
+| `/party kick <player>`, `/party leader <player>` | the leader removes a member, or hands the lead on |
 
 Skill ids: `melee`, `ranged`, `defense`, `mining`, `foraging`, `farming`, `fishing`, `exploration`, `smithing`,
 `arcana`. Points: from level 25 one point a level (75 at level 100), shared by both specializations of a skill. XP

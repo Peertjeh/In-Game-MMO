@@ -38,6 +38,8 @@ public final class Sync {
 		PayloadTypeRegistry.serverboundPlay().register(LeaderboardPayload.TYPE, LeaderboardPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(InspectPayload.TYPE, InspectPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(PowerPayload.TYPE, PowerPayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(PartyPayload.TYPE, PartyPayload.CODEC);
+		PayloadTypeRegistry.serverboundPlay().register(PartyActionPayload.TYPE, PartyActionPayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(TreePayload.TYPE, TreePayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(AbilityPayload.TYPE, AbilityPayload.CODEC);
 	}

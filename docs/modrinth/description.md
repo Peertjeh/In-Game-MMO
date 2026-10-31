@@ -55,6 +55,13 @@ Herb Lore and more.
 - Until then it is runes and a vague hint in your **Codex**.
 - The server's **Chronicle** remembers who found each one first, and that makes the hint clearer for everyone else.
 
+## 🤝 Playing together
+
+- **Parties** (`/party`, or the Party button): up to five players, invited with a click.
+- **The party bonus**: a little more XP for every party member near you who plays too, never for one standing idle.
+- **Six duo synergies** between two party members, one skill each: Shield Wall, Spotter, Pincer, Field Medic,
+  Whetstone and Hearty Meal. Discovered together, with both names in the Chronicle.
+
 ## ☠ Deaths that cost you
 
 ![The Death Register](https://raw.githubusercontent.com/Peertjeh/In-Game-MMO/develop/docs/images/death-register.png)

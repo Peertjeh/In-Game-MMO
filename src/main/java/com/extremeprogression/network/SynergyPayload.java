@@ -21,10 +21,11 @@ public record SynergyPayload(List<Entry> entries) implements CustomPacketPayload
 	public static final StreamCodec<FriendlyByteBuf, SynergyPayload> CODEC = StreamCodec.ofMember(SynergyPayload::write, SynergyPayload::read);
 
 	/**
-	 * One synergy: {@code time} 0 when the player has not discovered it, else when and where; {@code firstName} empty
-	 * when nobody on the server has yet, {@code firstMine} when the player was the first.
+	 * One synergy: {@code time} 0 when the player has not discovered it, else when and where (and for a duo synergy
+	 * {@code with} whom); {@code firstName} empty when nobody on the server has yet ("Steve & Alex" for a duo synergy),
+	 * {@code firstMine} when the player was among the first.
 	 */
-	public record Entry(String id, long time, String dimension, int x, int y, int z, String firstName, long firstTime, boolean firstMine) {
+	public record Entry(String id, long time, String dimension, int x, int y, int z, String with, String firstName, long firstTime, boolean firstMine) {
 		public boolean known() {
 			return time > 0;
 		}
@@ -40,7 +41,7 @@ public record SynergyPayload(List<Entry> entries) implements CustomPacketPayload
 			PlayerProgress.Discovery d = p.synergies.get(s.id);
 			Chronicle.First f = Chronicle.first(s);
 			out.add(new Entry(s.id, d == null ? 0 : Math.max(1, d.time), d == null ? "" : d.dimension, d == null ? 0 : d.x, d == null ? 0 : d.y,
-					d == null ? 0 : d.z, f == null ? "" : f.name, f == null ? 0 : f.time, f != null && uuid.equals(f.uuid)));
+					d == null ? 0 : d.z, d == null || d.with == null ? "" : d.with, f == null ? "" : f.names(), f == null ? 0 : f.time, f != null && f.by(uuid)));
 		}
 		return new SynergyPayload(out);
 	}
@@ -54,6 +55,7 @@ public record SynergyPayload(List<Entry> entries) implements CustomPacketPayload
 			buf.writeVarInt(e.x());
 			buf.writeVarInt(e.y());
 			buf.writeVarInt(e.z());
+			buf.writeUtf(e.with());
 			buf.writeUtf(e.firstName());
 			buf.writeLong(e.firstTime());
 			buf.writeBoolean(e.firstMine());
@@ -64,8 +66,8 @@ public record SynergyPayload(List<Entry> entries) implements CustomPacketPayload
 		int n = buf.readVarInt();
 		List<Entry> out = new ArrayList<>(n);
 		for (int i = 0; i < n; i++) {
-			out.add(new Entry(buf.readUtf(), buf.readLong(), buf.readUtf(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readUtf(), buf.readLong(),
-					buf.readBoolean()));
+			out.add(new Entry(buf.readUtf(), buf.readLong(), buf.readUtf(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readUtf(), buf.readUtf(),
+					buf.readLong(), buf.readBoolean()));
 		}
 		return new SynergyPayload(out);
 	}

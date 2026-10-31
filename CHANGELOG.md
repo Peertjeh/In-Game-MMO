@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.4.0: Playing together
+
+- **Parties**: `/party invite <player>` (or the new **Party** button on the Character Sheet), accept with a click in
+  the chat. Up to 5 players; the leader can remove members and hand the lead on.
+- **The party bonus**: +5% XP for every party member within 48 blocks who earns XP of their own (so never for one
+  standing idle), up to +15% under Hardcore; +10% up to +30% under Normal. All configurable (`party_*`).
+- **A fight is shared**: every hit already earns its own Melee or Ranged XP and every block its Defense XP, so a tank
+  and the ones who strike each earn their part of every mob.
+- **Six duo synergies** between two party members near each other, one skill each: Shield Wall, Spotter, Pincer,
+  Field Medic, Whetstone and Hearty Meal. You discover them together; the Codex has a **Together** tab, and the
+  Chronicle names both first discoverers.
+- Party members carry a green **◆** before their name above their head; TAB placeholders `party_size`,
+  `party_bonus`, `party_leader`, `party_members`, `party` and `parties`, and the party in the shared TAB footer.
+
 ## 1.3.2
 
 - The level in a tracked skill's slot stands a little higher, clear of its progress bar, so both read at a glance.

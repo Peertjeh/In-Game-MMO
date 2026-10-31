@@ -44,11 +44,11 @@ public final class TabPlaceholders {
 	/** The placeholders about one player. */
 	public static final List<String> PLAYER = player();
 	/** The placeholders about the server. */
-	public static final List<String> WORLD = List.of("preset", "cap", "xp_event", "discoveries", "top");
+	public static final List<String> WORLD = List.of("preset", "cap", "xp_event", "discoveries", "top", "parties");
 
 	private static List<String> player() {
 		List<String> out = new ArrayList<>(List.of("total", "mastery", "highest", "highest_skill", "highest_level", "specs", "pressure", "fatigue",
-				"deaths", "synergies", "badge"));
+				"deaths", "synergies", "badge", "party", "party_size", "party_bonus", "party_leader", "party_members"));
 		for (Skill s : Skill.values()) {
 			out.add("level_" + s.id);
 			out.add("mastery_" + s.id);
@@ -153,6 +153,14 @@ public final class TabPlaceholders {
 		m.put("deaths", text(progress.death.deaths));
 		m.put("synergies", text(progress.synergies.size() + "/" + Synergy.values().length));
 		m.put("badge", badge(total, mastery));
+		com.extremeprogression.party.Party party = com.extremeprogression.party.Parties.of(p.getUUID());
+		boolean inParty = party != null && Config.PARTIES;
+		double bonus = inParty ? com.extremeprogression.party.Parties.bonus(p) : 0;
+		m.put("party", inParty ? Component.literal("◆" + party.size()).withColor(0x55FF55) : Component.empty());
+		m.put("party_size", text(inParty ? Integer.toString(party.size()) : ""));
+		m.put("party_bonus", text(bonus > 0 ? com.extremeprogression.command.PartyCommand.percent(bonus) : ""));
+		m.put("party_leader", text(inParty ? party.name(party.leader) : ""));
+		m.put("party_members", text(inParty ? String.join(", ", party.members.stream().map(party::name).toList()) : ""));
 		for (Skill s : Skill.values()) {
 			SkillData d = progress.get(s);
 			m.put("level_" + s.id, text(d.level));
@@ -169,6 +177,7 @@ public final class TabPlaceholders {
 		m.put("xp_event", text(xpEvent()));
 		m.put("discoveries", text(Chronicle.all().size() + "/" + Synergy.values().length));
 		m.put("top", top);
+		m.put("parties", text(com.extremeprogression.party.Parties.all().size()));
 		return m;
 	}
 

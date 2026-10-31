@@ -35,6 +35,8 @@ public class PlayerProgress {
 		public int x;
 		public int y;
 		public int z;
+		/** A duo synergy: the party member it was discovered with (empty for the others). */
+		public String with = "";
 	}
 
 	public SkillData get(Skill skill) {

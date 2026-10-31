@@ -23,6 +23,8 @@ public enum Preset {
 		NORMAL_VALUES.put("DEATH_BASE_PRESSURED", 0.5);
 		NORMAL_VALUES.put("DEATH_WHOLE_LOSS", false);
 		NORMAL_VALUES.put("XP_MULTIPLIER", 1.5);
+		NORMAL_VALUES.put("PARTY_BONUS_PER_MEMBER", 0.10);
+		NORMAL_VALUES.put("PARTY_BONUS_MAX", 0.30);
 	}
 
 	public static Preset of(String id) {

@@ -13,6 +13,8 @@ that you discover yourself. Slow, meaningful progression, and deaths that cost y
   price each.
 - **Mastery** past level 100, ten ranks with a perk each.
 - **Twelve hidden synergies**, a personal Codex and the server's Chronicle.
+- **Playing together**: parties with an XP bonus for members near who play too, and six duo synergies you discover
+  with a party member.
 - **Deaths that cost you**: death pressure, the dimensions' factors, death fatigue, the Death Register and At Stake.
 - **For server owners**: presets, data files for every number, an in-game settings screen, XP events, a leaderboard and
   admin commands, and placeholders for TAB and Styled Chat ([server/README.md](server/README.md)).

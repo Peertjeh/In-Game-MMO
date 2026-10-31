@@ -14,7 +14,7 @@ Both need **Text Placeholder API** (`placeholder-api`) on the server: every `%ex
   gold `★` once the player has Mastery.
 - **The header (survival)**: the preset, the synergies the server has found, and a running XP event.
 - **The footer (survival)**: the player's level out of the cap, their best skill, their death pressure (green, yellow,
-  red from 2), and their death fatigue while it lasts.
+  red from 2), their death fatigue while it lasts, and their party with the XP bonus it gives them now.
 - **Chat (Styled Chat)**: the level badge behind the name. Hovering over the name shows the level, the best skill, the
   death pressure and the specializations.
 
@@ -30,13 +30,18 @@ Both need **Text Placeholder API** (`placeholder-api`) on the server: every `%ex
 | `%extremeprogression:specs%` | the specializations in use (`Blade, Prospector`) |
 | `%extremeprogression:pressure%`, `%extremeprogression:deaths%` | the death pressure, the deaths |
 | `%extremeprogression:fatigue%` | death fatigue left (`9:57`); empty when none |
-| `%extremeprogression:synergies%` | the synergies the player discovered (`3/12`) |
+| `%extremeprogression:synergies%` | the synergies the player discovered (`3/18`) |
 | `%extremeprogression:badge%` | the level badge |
+| `%extremeprogression:party_size%` | how many are in the player's party (`3`); empty outside a party |
+| `%extremeprogression:party_bonus%` | the XP bonus the party gives the player now (`+10%`); empty when none |
+| `%extremeprogression:party_leader%`, `%extremeprogression:party_members%` | the party's leader, and all its members (`Steve, Alex`) |
+| `%extremeprogression:party%` | a green tag with the party's size (`◆3`); empty outside a party |
 | `%extremeprogression:preset%` | Hardcore, Normal or Custom |
 | `%extremeprogression:cap%` | the total level cap (`400`) |
 | `%extremeprogression:xp_event%` | a running XP event (`×2 Mining · 30 min`); empty when none |
-| `%extremeprogression:discoveries%` | the synergies anyone on the server found first (`5/12`) |
+| `%extremeprogression:discoveries%` | the synergies anyone on the server found first (`5/18`) |
 | `%extremeprogression:top%` | the best player and their total (`Steve 312`), checked once a minute |
+| `%extremeprogression:parties%` | how many parties the server has |
 
 The level badge also shows beside every player's name above their head (Extreme Progression draws it on each client,
 no TAB needed), except in BattleHub's lobby and matches: `nametag_hidden_dimensions` and `nametag_power` in

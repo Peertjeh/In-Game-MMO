@@ -52,9 +52,11 @@ public class CharacterSheetScreen extends Screen {
 		List<Button> buttons = new java.util.ArrayList<>();
 		buttons.add(Button.builder(Component.translatable("gui.extremeprogression.leaderboard.button"),
 				b -> Minecraft.getInstance().gui.setScreen(new LeaderboardScreen(this))).build());
+		buttons.add(Button.builder(Component.translatable("gui.extremeprogression.party.button"),
+				b -> Minecraft.getInstance().gui.setScreen(new PartyScreen(this))).build());
 		buttons.add(Button.builder(Component.translatable("gui.extremeprogression.codex.button"),
 				b -> Minecraft.getInstance().gui.setScreen(new CodexScreen(this))).build());
-		buttons.add(Button.builder(Component.translatable("gui.extremeprogression.death.title"),
+		buttons.add(Button.builder(Component.translatable("gui.extremeprogression.death.button"),
 				b -> Minecraft.getInstance().gui.setScreen(new DeathRegisterScreen(this))).build());
 		if (com.extremeprogression.client.state.ClientAdmin.editor()) {
 			buttons.add(Button.builder(Component.translatable("gui.extremeprogression.settings.button"),

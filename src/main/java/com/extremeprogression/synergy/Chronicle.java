@@ -29,6 +29,19 @@ public final class Chronicle {
 		public int x;
 		public int y;
 		public int z;
+		/** A duo synergy: the party member who discovered it with them (empty for the others). */
+		public String partnerUuid = "";
+		public String partnerName = "";
+
+		/** Whether this player was among the first discoverers. */
+		public boolean by(String uuid) {
+			return uuid.equals(this.uuid) || uuid.equals(partnerUuid);
+		}
+
+		/** "Steve", or "Steve & Alex" for a duo synergy. */
+		public String names() {
+			return partnerName == null || partnerName.isEmpty() ? name : name + " & " + partnerName;
+		}
 	}
 
 	/** What world.json holds. */

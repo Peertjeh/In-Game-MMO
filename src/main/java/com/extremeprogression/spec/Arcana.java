@@ -298,6 +298,12 @@ public final class Arcana {
 		}
 	}
 
+	/** The player whose thrown potion (or Hexed cloud) gives its effects right now, or null. */
+	public static ServerPlayer thrower() {
+		Throw t = current;
+		return t == null ? null : t.owner;
+	}
+
 	/** A thrown potion hits (before vanilla's splash or cloud). */
 	public static void hitting(AbstractThrownPotion potion) {
 		ServerPlayer owner = potion.getOwner() instanceof ServerPlayer p ? p : null;

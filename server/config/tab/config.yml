@@ -43,7 +43,7 @@ header-footer:
         - ""
         - "%extremedimensions:realm%   &8|   %extremedimensions:status% &f%extremedimensions:time_left%"
         - "&7Curses: %extremedimensions:curses%   &8|   &7Scars: &f%extremedimensions:scars%&7/5"
-        - "&7Level &f%extremeprogression:total%&7/%extremeprogression:cap%   &8|   %condition:ep-highest%&7Death pressure %extremeprogression:pressure%%condition:ep-fatigue%"
+        - "&7Level &f%extremeprogression:total%&7/%extremeprogression:cap%   &8|   %condition:ep-highest%&7Death pressure %extremeprogression:pressure%%condition:ep-fatigue%%condition:ep-party%"
         - "&7Online: &f%online%   &8|   &7Ping: &f%ping% ms"
         - ""
 
@@ -202,6 +202,13 @@ conditions:
       - "%extremeprogression:xp_event%!="
     true: "   &8|   &6XP %extremeprogression:xp_event%"
     false: ""
+  # In the survival footer: the party you are in and the XP bonus it gives you
+  # now (party members near who earn XP of their own).
+  ep-party:
+    conditions:
+      - "%extremeprogression:party_size%!="
+    true: "   &8|   &aParty %extremeprogression:party_size% &2%extremeprogression:party_bonus%"
+    false: ""
   # In BattleHub a dot before the name (tabprefix in groups.yml) says what the
   # player is doing: green in the lobby, yellow in a queue, red in a match,
   # gray watching. \u25cf is the dot.
@@ -316,6 +323,8 @@ placeholder-refresh-intervals:
   "%extremeprogression:highest%": 1000
   "%extremeprogression:pressure%": 1000
   "%extremeprogression:fatigue%": 1000
+  "%extremeprogression:party_size%": 1000
+  "%extremeprogression:party_bonus%": 1000
   "%player:displayname_visual%": 1000
   "%battlehub:activity%": 1000
   "%battlehub:level%": 1000

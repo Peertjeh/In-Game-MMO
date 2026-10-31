@@ -1180,7 +1180,7 @@ Everything marked 💡 was decided while building.
 
 **Presets**
 - The option `preset` is "hardcore" (the default), "normal" or "custom".
-- 💡 Hardcore and Normal set only the four options they govern:
+- 💡 Hardcore and Normal set only the options they govern (four, and the party bonus's two since 1.4.0):
 
   | Option | Hardcore | Normal |
   |---|---|---|
@@ -1188,9 +1188,10 @@ Everything marked 💡 was decided while building.
   | `death_base_pressured` | 1.0 | 0.5 |
   | `death_whole_loss` (layer 3 at all, new) | true | false |
   | `xp_multiplier` | 1.0 | 1.5 |
+  | `party_bonus_per_member`, `party_bonus_max` (1.4.0, §16) | 0.05, 0.15 | 0.10, 0.30 |
 
 - Every other option stays as the file says.
-- 💡 To change one of the four by hand, choose "custom". With Hardcore or Normal, the file is written back with the
+- 💡 To change one of them by hand, choose "custom". With Hardcore or Normal, the file is written back with the
   preset's values.
   - The settings screen switches to "custom" by itself when you edit one of them.
 - 💡 An unknown preset counts as "custom", with a warning in the log.
@@ -1385,6 +1386,55 @@ Approving this document approves:
 Still open:
 1. ❓ Does a **Collapse** in Extreme Dimensions count as a death for this mod?
 2. ❓ The owner answered round 25 with a single "approved". It was read as: name Extreme Progression, yes to the settings screen, yes to XP events, yes to the leaderboard page (players see each other's levels), yes to the Normal preset. Correct?
+
+---
+
+## 16. Playing together (1.4.0, the owner's choice)
+
+The owner asked for a reason to play together. Approved: a party with an XP bonus, and duo synergies. Not done, on
+purpose: giving XP lost in a death back through a teammate, which would break §7's fixed principle "nothing comes back
+but new XP".
+
+### Parties
+- `/party invite <player>` invites a player who is in no party; the invitation stands for 2 minutes
+  (`party_invite_seconds`) and is accepted with a click in the chat, `/party accept` or the Party screen.
+- Accepting makes a party of the two (the inviter leads) or joins the inviter's party. At most 5 players
+  (`party_max_size`).
+- Any member invites. The leader removes members (`/party kick`) and hands the lead on (`/party leader`). When the leader
+  leaves, the longest member leads; a party of one is no party.
+- Parties are kept in `<world>/extremeprogression/parties.json`, written at once on every change, with backups.
+- The **Party screen** (a button on the Character Sheet): the members with a crown for the leader and a dot for who is
+  near and earning, buttons for the leader, the invitations waiting, and the players online who are in no party.
+- Party members carry a green ◆ before their name above their head (not where name-tag additions are hidden).
+
+### The party bonus
+- +X% XP for every other party member who is within 48 blocks in the same dimension (`party_range`) and earned XP of
+  their own in the last 60 seconds (`party_active_seconds`), up to a maximum. AFK, Creative and Spectator never count.
+- The presets govern it: Hardcore +5% a member up to +15%, Normal +10% up to +30% (`party_bonus_per_member`,
+  `party_bonus_max`).
+- It multiplies every gain after the other rules (diminishing returns, the XP multiplier, an XP event, an opposing skill).
+- A fight needed no new rule: every hit earns its own Melee or Ranged XP (counted up to the target's remaining health),
+  and every block or armor hit its Defense XP, so everyone in a fight earns their own share.
+
+### Duo synergies
+- Six synergies between two party members near each other: the one who acts needs the first skill at level 30, the
+  party member the second. They count as synergies everywhere (the strength and on/off in `synergies.json`, the
+  power of the weaker part).
+- The first time the situation happens, both discover it, whoever of them had not yet. The Codex shows them under
+  **Together**, with whom each was found; the Chronicle shows the first pair ("Steve & Alex") beside the others.
+
+| Duo synergy | Yours + the party member's | Effect |
+|---|---|---|
+| Shield Wall | Defense + Melee | While you block with a shield, a party member within 4 blocks takes 15% less damage. |
+| Spotter | Ranged + Defense | Your arrows deal 15% more to a mob that is after a party member. |
+| Pincer | Melee + Melee | Your melee hits deal 10% more to a mob a party member hit within the last 3 seconds. |
+| Field Medic | Arcana + Defense | Good effects you splash on a party member last 25% longer. |
+| Whetstone | Mining + Smithing | Your tools and weapons wear 15% slower within 16 blocks of a party member. |
+| Hearty Meal | Exploration + Farming | Food you eat within 8 blocks of a party member fills 25% more. |
+
+### TAB
+- Per player: `party_size`, `party_bonus`, `party_leader`, `party_members`, and `party` (a green ◆ with the size).
+  Per server: `parties`. The shared TAB footer shows the party and its bonus.
 
 ---
 

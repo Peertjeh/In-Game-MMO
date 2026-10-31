@@ -56,8 +56,9 @@ public class SynergyTests {
 
 	@GameTest
 	public void everySynergyHasTwoSkillsThatDoNotOppose(GameTestHelper helper) {
-		check(helper, Synergy.values().length == 12, "there are %s synergies, not 12", Synergy.values().length);
-		for (Synergy s : Synergy.values()) {
+		check(helper, Synergy.of(false).size() == 12 && Synergy.of(true).size() == 6, "there are %s synergies and %s duo synergies, not 12 and 6",
+				Synergy.of(false).size(), Synergy.of(true).size());
+		for (Synergy s : Synergy.of(false)) {
 			check(helper, s.first != s.second && s.first.opposite() != s.second, "%s pairs opposing skills", s.id);
 		}
 		helper.succeed();
@@ -150,7 +151,7 @@ public class SynergyTests {
 		ServerPlayer p = with(helper, "Scribe", Skill.FISHING, 30, Skill.EXPLORATION, 30);
 		Synergies.discover(p, Synergy.SEAFARER);
 		SynergyPayload payload = SynergyPayload.of(PlayerStore.get(p.getUUID()), p.getUUID().toString());
-		check(helper, payload.entries().size() == 12, "the payload holds %s synergies", payload.entries().size());
+		check(helper, payload.entries().size() == 18, "the payload holds %s synergies", payload.entries().size());
 		SynergyPayload.Entry e = payload.entries().stream().filter(x -> x.id().equals("seafarer")).findFirst().orElseThrow();
 		check(helper, e.known() && e.foundOnServer(), "the payload does not show Seafarer as found");
 		Chronicle.First first = Chronicle.first(Synergy.SEAFARER);

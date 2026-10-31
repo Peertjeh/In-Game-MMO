@@ -179,6 +179,32 @@ public class ClientShots implements FabricClientGameTest {
 			ctx.runOnClient(mc -> ((com.extremeprogression.client.screen.CodexScreen) mc.gui.screen()).show(true));
 			ctx.waitTicks(5);
 			ctx.takeScreenshot("05_chronicle");
+			ctx.runOnClient(mc -> ((com.extremeprogression.client.screen.CodexScreen) mc.gui.screen()).tab(1));
+			ctx.waitTicks(5);
+			ctx.takeScreenshot("05_codex_together");
+
+			// The Party screen (design §16), with a party as the server sends one: you leading, Alex near and earning,
+			// Steve offline, and two players to invite
+			java.util.UUID alex = java.util.UUID.randomUUID();
+			ctx.runOnClient(mc -> {
+				com.extremeprogression.client.state.ClientParty.apply(new com.extremeprogression.network.PartyPayload(true, 5, 0.05, 0.15, List.of(
+						new com.extremeprogression.network.PartyPayload.Member(mc.player.getUUID(), mc.player.getName().getString(), true, true, false, false, 312, 2),
+						new com.extremeprogression.network.PartyPayload.Member(alex, "Alex", false, true, true, true, 187, 0),
+						new com.extremeprogression.network.PartyPayload.Member(java.util.UUID.randomUUID(), "Steve", false, false, false, false, 95, 0)),
+						List.of(), List.of("Notch", "Jeb")));
+				mc.gui.setScreen(new com.extremeprogression.client.screen.PartyScreen(null));
+			});
+			ctx.waitTicks(10);
+			ctx.takeScreenshot("05_party");
+			ctx.runOnClient(mc -> {
+				check(com.extremeprogression.client.screen.PartyScreen.opened() > 0, "the Party screen did not open");
+				check(com.extremeprogression.client.state.ClientParty.member(alex) && !com.extremeprogression.client.state.ClientParty.member(mc.player.getUUID()),
+						"the client does not know who is in its party");
+				Component mark = com.extremeprogression.client.state.ClientParty.mark(alex);
+				check(mark != null && mark.getString().equals("◆"), "a party member's name tag has no mark");
+				com.extremeprogression.client.state.ClientParty.clear();
+				mc.gui.setScreen(null);
+			});
 
 			// The power level beside the name above a player's head: the client knows everyone's, and hides it where told
 			ctx.runOnClient(mc -> {
@@ -510,9 +536,28 @@ public class ClientShots implements FabricClientGameTest {
 		}
 		for (String k : new String[] {"codex.button", "codex.title", "codex.tab", "chronicle.tab", "codex.count", "codex.out_of_reach", "codex.out_of_reach_tip",
 				"codex.unknown_skills", "codex.found", "codex.first_discoverer", "codex.first_by", "codex.dormant", "codex.found_by_someone", "codex.needs",
-				"codex.footer", "chronicle.nobody", "chronicle.first", "chronicle.footer"}) {
+				"codex.footer", "chronicle.nobody", "chronicle.first", "chronicle.footer", "codex.together_tab", "codex.together_footer", "codex.roles",
+				"codex.found_with", "chronicle.count", "chronicle.alone", "chronicle.together", "death.button"}) {
 			keys.add("gui.extremeprogression." + k);
 		}
+		// Parties (1.4.0)
+		for (String k : new String[] {"title", "button", "summary", "alone", "off", "members", "legend", "invitations", "no_invitations", "invites_you",
+				"invite_header", "invite", "invite_tip", "full", "nobody", "leave", "lead_tip", "remove_tip", "accept_tip", "decline_tip", "level",
+				"state.you", "state.active", "state.near", "state.far", "state.offline"}) {
+			keys.add("gui.extremeprogression.party." + k);
+		}
+		for (com.extremeprogression.party.Parties.Result r : com.extremeprogression.party.Parties.Result.values()) {
+			if (r != com.extremeprogression.party.Parties.Result.OK) {
+				keys.add(r.key());
+			}
+		}
+		for (String k : new String[] {"invited_you", "accept_button", "decline_button", "invited", "joined", "declined", "you_declined", "left", "you_left",
+				"removed", "you_were_removed", "new_leader", "disbanded", "none", "waiting", "header", "state.you", "state.active", "state.near", "state.far",
+				"state.offline"}) {
+			keys.add("message.extremeprogression.party." + k);
+		}
+		keys.add("message.extremeprogression.synergy.discovered_together");
+		keys.add("message.extremeprogression.synergy.first_together");
 		for (String k : new String[] {"leaderboard.title", "leaderboard.button", "leaderboard.total", "leaderboard.waiting", "leaderboard.players",
 				"leaderboard.level", "inspect.title", "inspect.online", "inspect.offline", "inspect.synergies", "inspect.read_only", "inspect.no_spec",
 				"inspect.points", "settings.title", "settings.button", "settings.preset.hardcore", "settings.preset.normal", "settings.preset.custom",

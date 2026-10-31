@@ -39,8 +39,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 
 /**
- * What the twelve synergies do, and where their situations happen (the first time with both levels met, that is
- * where they are discovered). Every effect follows {@link Synergies#power}.
+ * What the twelve synergies and the six duo synergies do, and where their situations happen (the first time with both
+ * levels met, that is where they are discovered). Every effect follows {@link Synergies#power}.
  */
 public final class SynergyEffects {
 	private SynergyEffects() {}
@@ -49,6 +49,10 @@ public final class SynergyEffects {
 	private static final Map<UUID, Long> BLOCKED = new HashMap<>();
 	/** The owner of the tipped arrow whose effects are being given now (Venom Tip), or null. */
 	public static Entity arrowOwner = null;
+	/** Every mob's last melee hit by a player, and when (Pincer). */
+	private record Hit(UUID player, long tick) {}
+
+	private static final Map<Entity, Hit> LAST_MELEE = new java.util.WeakHashMap<>();
 	/** Who planted the saplings of a chunk, by packed position (Green Thumb). */
 	private static AttachmentType<Map<String, String>> PLANTERS;
 
@@ -96,15 +100,60 @@ public final class SynergyEffects {
 				&& trigger(owner, Synergy.LOYAL_GUARD)) {
 			out *= 1 - Math.min(1, Synergy.LOYAL_GUARD.strength * power(owner, Synergy.LOYAL_GUARD));
 		}
-		return (float) out;
+		return (float) duo(target, source, out);
+	}
+
+	/** The duo synergies on a hit: Pincer, Spotter and Shield Wall. */
+	private static double duo(LivingEntity target, DamageSource source, double out) {
+		Entity attacker = source.getEntity();
+		Entity direct = source.getDirectEntity();
+		if (attacker instanceof ServerPlayer p && p != target) {
+			if (direct == p) {
+				// Pincer: a melee hit on a mob a party member hit within 3 seconds, +10%
+				Hit last = LAST_MELEE.get(target);
+				if (last != null && !last.player().equals(p.getUUID()) && tick(p) - last.tick() <= 60) {
+					ServerPlayer other = p.level().getServer().getPlayerList().getPlayer(last.player());
+					if (other != null && Synergies.trigger(p, other, Synergy.PINCER)) {
+						out *= 1 + Synergy.PINCER.strength * Synergies.power(p, other, Synergy.PINCER);
+					}
+				}
+				LAST_MELEE.put(target, new Hit(p.getUUID(), tick(p)));
+			} else if (direct instanceof Projectile && !(direct instanceof FishingHook)) {
+				// Spotter: an arrow into a mob that is after a party member, +15%
+				if (target instanceof net.minecraft.world.entity.Mob mob && mob.getTarget() instanceof ServerPlayer ally && ally != p
+						&& Synergies.trigger(p, ally, Synergy.SPOTTER)) {
+					out *= 1 + Synergy.SPOTTER.strength * Synergies.power(p, ally, Synergy.SPOTTER);
+				}
+			}
+		}
+		// Shield Wall: a party member within 4 blocks blocks with a shield, -15%
+		if (target instanceof ServerPlayer ally && attacker instanceof LivingEntity && attacker != ally) {
+			for (ServerPlayer guard : com.extremeprogression.party.Parties.near(ally, 4)) {
+				if (guard.isBlocking() && Synergies.trigger(guard, ally, Synergy.SHIELD_WALL)) {
+					out *= 1 - Math.min(1, Synergy.SHIELD_WALL.strength * Synergies.power(guard, ally, Synergy.SHIELD_WALL));
+					break;
+				}
+			}
+		}
+		return out;
 	}
 
 	// --- Effects and potions ---------------------------------------------------------------------
 
-	/** An effect about to be given: Venom Tip makes a tipped arrow's last 50% longer. */
+	/**
+	 * An effect about to be given: Venom Tip makes a tipped arrow's last 50% longer, Field Medic the good effects a
+	 * party member's splash potion gives 25% longer.
+	 */
 	public static MobEffectInstance effect(LivingEntity target, MobEffectInstance effect) {
 		if (arrowOwner instanceof ServerPlayer p && p != target && !effect.getEffect().value().isInstantaneous() && trigger(p, Synergy.VENOM_TIP)) {
 			int longer = (int) Math.round(effect.getDuration() * (1 + Synergy.VENOM_TIP.strength * power(p, Synergy.VENOM_TIP)));
+			return new MobEffectInstance(effect.getEffect(), longer, effect.getAmplifier(), effect.isAmbient(), effect.isVisible(), effect.showIcon());
+		}
+		ServerPlayer thrower = com.extremeprogression.spec.Arcana.thrower();
+		if (thrower != null && target instanceof ServerPlayer ally && ally != thrower && effect.getDuration() > 0 && !effect.getEffect().value().isInstantaneous()
+				&& effect.getEffect().value().getCategory() == net.minecraft.world.effect.MobEffectCategory.BENEFICIAL
+				&& Synergies.trigger(thrower, ally, Synergy.FIELD_MEDIC)) {
+			int longer = (int) Math.round(effect.getDuration() * (1 + Synergy.FIELD_MEDIC.strength * Synergies.power(thrower, ally, Synergy.FIELD_MEDIC)));
 			return new MobEffectInstance(effect.getEffect(), longer, effect.getAmplifier(), effect.isAmbient(), effect.isVisible(), effect.showIcon());
 		}
 		return effect;
@@ -123,10 +172,25 @@ public final class SynergyEffects {
 		return breathing && trigger(p, Synergy.TIDAL_MAGIC) ? 1 + Synergy.TIDAL_MAGIC.strength * power(p, Synergy.TIDAL_MAGIC) : 1;
 	}
 
-	/** Herb Lore: glow berries give 10 seconds of Night Vision. */
+	/** Herb Lore: glow berries give 10 seconds of Night Vision. Hearty Meal: food near a party member fills 25% more. */
 	public static void ate(ServerPlayer p, ItemStack food) {
 		if (food.is(Items.GLOW_BERRIES) && trigger(p, Synergy.HERB_LORE)) {
 			p.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, (int) Math.round(20 * Synergy.HERB_LORE.strength * power(p, Synergy.HERB_LORE)), 0), p);
+		}
+		net.minecraft.world.food.FoodProperties props = food.get(net.minecraft.core.component.DataComponents.FOOD);
+		if (props == null) {
+			return;
+		}
+		for (ServerPlayer cook : com.extremeprogression.party.Parties.near(p, 8)) {
+			if (Synergies.trigger(p, cook, Synergy.HEARTY_MEAL)) {
+				double share = Synergy.HEARTY_MEAL.strength * Synergies.power(p, cook, Synergy.HEARTY_MEAL);
+				int nutrition = (int) Math.round(props.nutrition() * share);
+				float saturation = (float) (props.saturation() * share);
+				if (nutrition > 0 || saturation > 0) {
+					p.getFoodData().eat(new net.minecraft.world.food.FoodProperties(nutrition, saturation, true));
+				}
+				return;
+			}
 		}
 	}
 
@@ -141,12 +205,30 @@ public final class SynergyEffects {
 		return slot == EquipmentSlot.HEAD || slot == EquipmentSlot.CHEST || slot == EquipmentSlot.LEGS || slot == EquipmentSlot.FEET;
 	}
 
-	/** Tailored: armor wears 10% slower (each point of wear a 10% chance to be spared). */
+	/**
+	 * Tailored: armor wears 10% slower (each point of wear a 10% chance to be spared). Whetstone: tools and weapons wear
+	 * 15% slower within 16 blocks of a party member.
+	 */
 	public static int durability(ItemStack stack, ServerPlayer p, int amount) {
-		if (amount <= 0 || !armor(stack) || !trigger(p, Synergy.TAILORED)) {
+		if (amount <= 0) {
 			return amount;
 		}
-		double chance = Synergy.TAILORED.strength * power(p, Synergy.TAILORED);
+		double chance = 0;
+		if (armor(stack)) {
+			if (trigger(p, Synergy.TAILORED)) {
+				chance = Synergy.TAILORED.strength * power(p, Synergy.TAILORED);
+			}
+		} else {
+			for (ServerPlayer smith : com.extremeprogression.party.Parties.near(p, 16)) {
+				if (Synergies.trigger(p, smith, Synergy.WHETSTONE)) {
+					chance = Synergy.WHETSTONE.strength * Synergies.power(p, smith, Synergy.WHETSTONE);
+					break;
+				}
+			}
+		}
+		if (chance <= 0) {
+			return amount;
+		}
 		int out = amount;
 		for (int i = 0; i < amount; i++) {
 			if (p.getRandom().nextDouble() < chance) {

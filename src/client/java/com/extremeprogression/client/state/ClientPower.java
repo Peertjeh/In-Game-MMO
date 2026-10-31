@@ -45,7 +45,8 @@ public final class ClientPower {
 		return TabPlaceholders.badge(p[0], p[1]);
 	}
 
-	private static boolean hiddenHere() {
+	/** Whether name-tag additions are hidden in this dimension (BattleHub draws its own). */
+	public static boolean hiddenHere() {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.level == null || Config.NAMETAG_HIDDEN_DIMENSIONS == null || Config.NAMETAG_HIDDEN_DIMENSIONS.isBlank()) {
 			return false;

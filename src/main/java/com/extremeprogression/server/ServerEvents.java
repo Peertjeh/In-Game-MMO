@@ -37,6 +37,7 @@ public final class ServerEvents {
 		ServerLifecycleEvents.SERVER_STARTED.register(s -> {
 			PlayerStore.open(s.getWorldPath(LevelResource.ROOT));
 			com.extremeprogression.synergy.Chronicle.open(s.getWorldPath(LevelResource.ROOT));
+			com.extremeprogression.party.Parties.open(s.getWorldPath(LevelResource.ROOT));
 		});
 		// The progression is written with the world's own saves (autosave, /save-all, stop), never ahead of them
 		ServerLifecycleEvents.AFTER_SAVE.register((s, flush, force) -> PlayerStore.flush());
@@ -44,6 +45,7 @@ public final class ServerEvents {
 		ServerLifecycleEvents.SERVER_STOPPED.register(s -> {
 			PlayerStore.close();
 			com.extremeprogression.synergy.Chronicle.close();
+			com.extremeprogression.party.Parties.close();
 			com.extremeprogression.xp.XpEvents.clear();
 			com.extremeprogression.compat.TabPlaceholders.clear();
 			com.extremeprogression.compat.PowerTags.clear();
@@ -66,6 +68,7 @@ public final class ServerEvents {
 			com.extremeprogression.config.Settings.send(player, false);
 			com.extremeprogression.xp.XpEvents.send(player);
 			com.extremeprogression.compat.PowerTags.joined(player);
+			com.extremeprogression.party.Parties.joined(player);
 		});
 		// (on the server's thread: a player in a single-player world leaves from the connection's own)
 		ServerPlayConnectionEvents.DISCONNECT.register((handler, s) -> s.executeIfPossible(() -> {
@@ -80,6 +83,7 @@ public final class ServerEvents {
 			com.extremeprogression.spec.Specs.forget(id);
 			com.extremeprogression.death.DeathService.forget(id);
 			com.extremeprogression.synergy.SynergyEffects.forget(id);
+			com.extremeprogression.party.Parties.forget(id);
 		}));
 
 		// XP sources (design §2) and the rules against exploits (design §12)
@@ -102,6 +106,9 @@ public final class ServerEvents {
 				(payload, context) -> com.extremeprogression.command.AdminCommands.settingsSaved(context.player(), payload.json()));
 		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.LeaderboardPayload.TYPE,
 				(payload, context) -> com.extremeprogression.command.AdminCommands.sendLeaderboard(context.player()));
+		// A button on the Party screen
+		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.PartyActionPayload.TYPE,
+				(payload, context) -> com.extremeprogression.command.PartyCommand.act(context.player(), payload.action(), payload.name()));
 		UseItemCallback.EVENT.register((player, level, hand) -> {
 			if (!level.isClientSide()) {
 				AfkTracker.interacted(player.getUUID(), level.getServer().getTickCount());
@@ -122,9 +129,13 @@ public final class ServerEvents {
 			com.extremeprogression.xp.XpEvents.tick(s);
 			com.extremeprogression.compat.TabPlaceholders.tick(s);
 			com.extremeprogression.compat.PowerTags.tick(s);
+			com.extremeprogression.party.Parties.tick(s);
 			XpService.tick(s);
 		});
 
-		CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> SkillsCommand.register(dispatcher));
+		CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> {
+			SkillsCommand.register(dispatcher);
+			com.extremeprogression.command.PartyCommand.register(dispatcher);
+		});
 	}
 }
