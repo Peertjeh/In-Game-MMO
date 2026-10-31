@@ -206,7 +206,7 @@ public final class Parties {
 
 	/** The player earned XP of their own just now (counted before any bonus). */
 	public static void earned(ServerPlayer p) {
-		EARNED.put(p.getUUID(), p.level().getServer().getTickCount());
+		EARNED.put(p.getUUID(), (long) p.level().getServer().getTickCount());
 	}
 
 	/** Whether a party member counts for the others' bonus now: earning XP of their own, not idle, not in Creative. */
