@@ -55,7 +55,7 @@ public class PlaceholderTests {
 		check(helper, "Blade".equals(text(m, "specs")), "the specializations read '%s'", text(m, "specs"));
 		check(helper, "1".equals(text(m, "pressure")) && "1".equals(text(m, "deaths")) && text(m, "fatigue").matches("\\d+:\\d\\d"),
 				"pressure %s, deaths %s, fatigue '%s'", text(m, "pressure"), text(m, "deaths"), text(m, "fatigue"));
-		check(helper, "0/12".equals(text(m, "synergies")), "synergies read %s", text(m, "synergies"));
+		check(helper, "0/18".equals(text(m, "synergies")), "synergies read %s", text(m, "synergies"));
 		Component badge = m.get("badge");
 		check(helper, "✦108".equals(badge.getString()) && badge.getStyle().getColor() != null
 				&& badge.getStyle().getColor().equals(Component.empty().withStyle(ChatFormatting.GREEN).getStyle().getColor()),
@@ -77,7 +77,7 @@ public class PlaceholderTests {
 			check(helper, m.keySet().containsAll(TabPlaceholders.WORLD) && TabPlaceholders.WORLD.containsAll(m.keySet()), "the server's placeholders are %s", m.keySet());
 			check(helper, "Hardcore".equals(text(m, "preset")) && "400".equals(text(m, "cap")) && text(m, "xp_event").isEmpty(),
 					"preset %s, cap %s, XP event '%s'", text(m, "preset"), text(m, "cap"), text(m, "xp_event"));
-			check(helper, text(m, "discoveries").matches("\\d+/12"), "the discoveries read %s", text(m, "discoveries"));
+			check(helper, text(m, "discoveries").matches("\\d+/18"), "the discoveries read %s", text(m, "discoveries"));
 			XpEvents.start(server, Skill.MINING, 2, 30, "test");
 			check(helper, "×2 Mining · 30 min".equals(text(TabPlaceholders.values(server), "xp_event")), "the XP event reads '%s'",
 					text(TabPlaceholders.values(server), "xp_event"));

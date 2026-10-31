@@ -182,7 +182,7 @@ public class PartyTests {
 		helper.succeed();
 	}
 
-	@GameTest
+	@GameTest(maxTicks = 60)
 	public void everyoneInAFightEarnsTheirOwnShare(GameTestHelper helper) {
 		Config.reset();
 		ServerLevel level = helper.getLevel();
