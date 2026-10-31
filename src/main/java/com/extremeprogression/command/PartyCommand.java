@@ -101,7 +101,10 @@ public final class PartyCommand {
 		p.sendSystemMessage(Component.translatable("message.extremeprogression.party.header", view.members().size(), view.maxSize(), percent(view.bonus()),
 				percent(view.bonusMax())).withColor(0xFFAA00), false);
 		for (PartyPayload.Member m : view.members()) {
-			MutableComponent line = Component.literal((m.leader() ? "♔ " : "  ") + m.name() + " ✦" + m.total()).withColor(m.online() ? 0xFFFFFF : 0x555555);
+			MutableComponent line = Component.literal(m.name() + " ✦" + m.total()).withColor(m.online() ? 0xFFFFFF : 0x555555);
+			if (m.leader()) {
+				line.append(Component.literal(" · ").withColor(0x555555)).append(Component.translatable("message.extremeprogression.party.state.leader").withColor(0xFFAA00));
+			}
 			String state = !m.online() ? "offline" : m.id().equals(p.getUUID()) ? "you" : m.active() ? "active" : m.near() ? "near" : "far";
 			line.append(Component.literal(" · ").withColor(0x555555)).append(Component.translatable("message.extremeprogression.party.state." + state)
 					.withColor(m.active() ? 0x55FF55 : 0xAAAAAA));

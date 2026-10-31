@@ -18,13 +18,13 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 /**
- * The Party screen (design §16): on the left the party's members (the leader with a crown, a dot for who is near and
+ * The Party screen (design §16): on the left the party's members (the leader marked, a dot for who is near and
  * earning, so giving the bonus) or the invitations waiting for the player; on the right the players online who are in
  * no party, to invite. Its buttons do what {@code /party} does; the screen follows every change the server sends.
  */
 public class PartyScreen extends Screen {
-	static final int W = 340, H = 214;
-	private static final int ROW = 16, LW = 168;
+	static final int W = 360, H = 214;
+	private static final int ROW = 16, LW = 200;
 
 	private static int opened = 0;
 
@@ -72,15 +72,16 @@ public class PartyScreen extends Screen {
 		if (v.inParty()) {
 			for (PartyPayload.Member m : v.members().subList(0, Math.min(v.members().size(), rows()))) {
 				if (leader && !me(m)) {
-					button("♔", "gui.extremeprogression.party.lead_tip", m.name(), PartyActionPayload.Action.LEADER, m.name(), x0 + LW - 36, y, 15);
-					button("✕", "gui.extremeprogression.party.remove_tip", m.name(), PartyActionPayload.Action.KICK, m.name(), x0 + LW - 19, y, 15);
+					button(Component.translatable("gui.extremeprogression.party.lead"), "gui.extremeprogression.party.lead_tip", m.name(), PartyActionPayload.Action.LEADER,
+							m.name(), x0 + LW - 52, y, 31);
+					button(Component.literal("✕"), "gui.extremeprogression.party.remove_tip", m.name(), PartyActionPayload.Action.KICK, m.name(), x0 + LW - 19, y, 15);
 				}
 				y += ROW;
 			}
 		} else {
 			for (String from : v.invites().subList(0, Math.min(v.invites().size(), rows()))) {
-				button("✓", "gui.extremeprogression.party.accept_tip", from, PartyActionPayload.Action.ACCEPT, from, x0 + LW - 36, y, 15);
-				button("✕", "gui.extremeprogression.party.decline_tip", from, PartyActionPayload.Action.DECLINE, from, x0 + LW - 19, y, 15);
+				button(Component.literal("✓"), "gui.extremeprogression.party.accept_tip", from, PartyActionPayload.Action.ACCEPT, from, x0 + LW - 36, y, 15);
+				button(Component.literal("✕"), "gui.extremeprogression.party.decline_tip", from, PartyActionPayload.Action.DECLINE, from, x0 + LW - 19, y, 15);
 				y += ROW;
 			}
 		}
@@ -110,8 +111,8 @@ public class PartyScreen extends Screen {
 				.pos(v.inParty() ? this.width / 2 + 4 : this.width / 2 - 50, foot).size(100, 20).build());
 	}
 
-	private void button(String label, String tipKey, String tipArg, PartyActionPayload.Action action, String name, int x, int y, int w) {
-		Button b = Button.builder(Component.literal(label), x2 -> act(action, name)).pos(x, y).size(w, 15).build();
+	private void button(Component label, String tipKey, String tipArg, PartyActionPayload.Action action, String name, int x, int y, int w) {
+		Button b = Button.builder(label, x2 -> act(action, name)).pos(x, y).size(w, 15).build();
 		b.setTooltip(Tooltip.create(Component.translatable(tipKey, tipArg)));
 		this.addRenderableWidget(b);
 	}
@@ -167,10 +168,16 @@ public class PartyScreen extends Screen {
 			for (PartyPayload.Member m : v.members().subList(0, Math.min(v.members().size(), rows()))) {
 				int dot = !m.online() ? Ui.DIM : me(m) ? Ui.TEXT : m.active() ? Ui.OK : m.near() ? Ui.WARN : Ui.MUTED;
 				Ui.text(g, this.font, "●", ix, y + 4, dot);
-				String name = (m.leader() ? "♔ " : "") + m.name();
-				Ui.text(g, this.font, Ui.ellipsize(this.font, name, 84), ix + 9, y + 4, m.online() ? (me(m) ? Ui.WARN : Ui.TEXT) : Ui.DIM);
-				Ui.right(g, this.font, "✦" + m.total(), x0 + LW - 40, y + 4, m.online() ? Ui.GOLD : Ui.DIM);
-				if (mouseX >= ix && mouseX < x0 + LW - 38 && mouseY >= y && mouseY < y + ROW - 1) {
+				String power = "✦" + m.total();
+				int nameW = x0 + LW - 56 - this.font.width(power) - 4 - (ix + 9);
+				String name = Ui.ellipsize(this.font, m.name(), nameW);
+				Ui.text(g, this.font, name, ix + 9, y + 4, m.online() ? (me(m) ? Ui.WARN : Ui.TEXT) : Ui.DIM);
+				String lead = " · " + Ui.tr("gui.extremeprogression.party.leader");
+				if (m.leader() && this.font.width(name + lead) <= nameW) {
+					Ui.text(g, this.font, lead, ix + 9 + this.font.width(name), y + 4, Ui.GOLD);
+				}
+				Ui.right(g, this.font, power, x0 + LW - 56, y + 4, m.online() ? Ui.GOLD : Ui.DIM);
+				if (mouseX >= ix && mouseX < x0 + LW - 54 && mouseY >= y && mouseY < y + ROW - 1) {
 					tip = memberTip(m);
 				}
 				y += ROW;
@@ -208,7 +215,7 @@ public class PartyScreen extends Screen {
 
 	private static List<Component> memberTip(PartyPayload.Member m) {
 		List<Component> out = new ArrayList<>();
-		out.add(Component.literal((m.leader() ? "♔ " : "") + m.name()).withStyle(s -> s.withColor(Ui.GOLD)));
+		out.add(Component.literal(m.name() + (m.leader() ? " · " + Ui.tr("gui.extremeprogression.party.leader") : "")).withStyle(s -> s.withColor(Ui.GOLD)));
 		out.add(Component.literal(Ui.tr("gui.extremeprogression.party.level", m.total(), m.mastery())));
 		String state = !m.online() ? "offline" : me(m) ? "you" : m.active() ? "active" : m.near() ? "near" : "far";
 		out.add(Component.literal(Ui.tr("gui.extremeprogression.party.state." + state)).withStyle(s -> s.withColor(m.active() ? Ui.OK : Ui.MUTED)));

@@ -542,7 +542,7 @@ public class ClientShots implements FabricClientGameTest {
 		}
 		// Parties (1.4.0)
 		for (String k : new String[] {"title", "button", "summary", "alone", "off", "members", "legend", "invitations", "no_invitations", "invites_you",
-				"invite_header", "invite", "invite_tip", "full", "nobody", "leave", "lead_tip", "remove_tip", "accept_tip", "decline_tip", "level",
+				"invite_header", "invite", "invite_tip", "full", "nobody", "leave", "lead", "leader", "lead_tip", "remove_tip", "accept_tip", "decline_tip", "level",
 				"state.you", "state.active", "state.near", "state.far", "state.offline"}) {
 			keys.add("gui.extremeprogression.party." + k);
 		}
@@ -553,7 +553,7 @@ public class ClientShots implements FabricClientGameTest {
 		}
 		for (String k : new String[] {"invited_you", "accept_button", "decline_button", "invited", "joined", "declined", "you_declined", "left", "you_left",
 				"removed", "you_were_removed", "new_leader", "disbanded", "none", "waiting", "header", "state.you", "state.active", "state.near", "state.far",
-				"state.offline"}) {
+				"state.offline", "state.leader"}) {
 			keys.add("message.extremeprogression.party." + k);
 		}
 		keys.add("message.extremeprogression.synergy.discovered_together");

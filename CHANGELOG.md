@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.1
+
+- The Party screen names the leader in words, with a **Lead** button to hand the lead on (the crown was too small to
+  read), and its list of members is wider, so names fit.
+- The Codex's and the Chronicle's foot lines are short enough to read whole.
+
 ## 1.4.0: Playing together
 
 - **Parties**: `/party invite <player>` (or the new **Party** button on the Character Sheet), accept with a click in
