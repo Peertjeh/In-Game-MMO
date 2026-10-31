@@ -19,9 +19,9 @@ import net.minecraft.resources.Identifier;
  * The skills the player chose to track (the Track button on a Skill Screen), as a second hotbar right of the vanilla
  * one, beyond the ability icon. One slot per skill in the hotbar's own frame (resource packs restyle both alike), and in
  * it what a slot shows for an item: the skill's icon, its level as the item count (its Mastery rank past the maximum,
- * "M3" in gold) and a green bar of the progress to the next level where a tool shows its durability. When the screen
- * ends, the bar goes on in a row above. Nothing is shown while nothing is tracked (design §9: no XP bar on screen
- * unless the player asks for one).
+ * "M3" in gold; a little higher than a count, clear of the bar) and a green bar of the progress to the next level where
+ * a tool shows its durability. When the screen ends, the bar goes on in a row above. Nothing is shown while nothing is
+ * tracked (design §9: no XP bar on screen unless the player asks for one).
  */
 public final class TrackedHud {
 	private TrackedHud() {}
@@ -78,7 +78,8 @@ public final class TrackedHud {
 			g.fill(x + 2, y + 13, x + 2 + filled, y + 14, Ui.argb(255, GREEN));
 		}
 		String count = mastered && e.masteryRanks() > 0 ? "M" + e.masteryRanks() : String.valueOf(e.level());
-		g.text(font, count, x + 19 - 2 - font.width(count), y + 6 + 3, Ui.argb(255, mastered ? Ui.GOLD : Ui.TEXT), true);
+		// Where a stack's count stands, raised by five so that the bar below it stays in view (a stack has no bar)
+		g.text(font, count, x + 19 - 2 - font.width(count), y + 6 + 3 - 5, Ui.argb(255, mastered ? Ui.GOLD : Ui.TEXT), true);
 	}
 
 	/** How many skills the HUD shows now (for tests). */

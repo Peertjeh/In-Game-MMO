@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.2
+
+- The level in a tracked skill's slot stands a little higher, clear of its progress bar, so both read at a glance.
+
 ## 1.3.1: The tracked skills as a second hotbar
 
 - The skills you track now sit in a **second hotbar** right of your own, in the hotbar's own frame: one slot per
