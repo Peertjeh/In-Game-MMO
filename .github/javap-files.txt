@@ -3,3 +3,4 @@ data/minecraft/recipe/*awkward*.json
 data/minecraft/recipe/*swiftness*.json
 data/minecraft/recipe/*long_swiftness*.json
 data/minecraft/recipe/*splash*.json
+assets/minecraft/textures/gui/sprites/hud/hotbar*
