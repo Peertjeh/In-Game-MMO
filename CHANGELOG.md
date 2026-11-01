@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.5.0: Trading
+
+- **A new skill, Trading**, the first of a new category **Other** (on the Character Sheet under Survival, beside
+  Arcana). XP for trading with villagers (more for higher offers and for every emerald), wandering traders, a villager
+  reaching a new level through your trade, piglins bartering your gold, and a won raid. The same offer of one villager
+  counts fully for 4 trades after each restock; villagers and piglins from spawn eggs, spawners or commands give
+  nothing.
+- **Its trunk**: Fair Price (5% lower prices), Good Word (villagers learn 10% faster from you), Barterer (a 10% chance
+  of a second barter roll), Well Stocked (a 5% chance a trade does not use up the offer).
+- **Three specializations**: **Merchant** (Haggle: 30 s of 20% lower prices), **Quartermaster** (Restock: the villager
+  you look at restocks at once) and **Gold Tongue** (Gilded Offer: piglins barter at once and roll twice), each with a
+  price, four passives and a choice.
+- **Mastery perks** Patron and Golden Touch, and two **duo synergies**: Caravan (Trading + Exploration) and Market Day
+  (Trading + Farming).
+- The total cap stays 400: one more skill means more choice, not more levels.
+
 ## 1.4.3
 
 - The Character Sheet's columns are in line: Survival starts beside Crafting, Exploration beside Smithing.

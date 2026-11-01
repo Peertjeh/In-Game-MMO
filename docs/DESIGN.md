@@ -40,7 +40,7 @@ Legend for every mechanic:
 | 24 | Appendix A: XP tables; Dutch translation | ✅ approved; English only, no translation |
 | 25 | Phases 8 and 9: name, storage, configuration, commands, leaderboard | ✅ approved |
 | 26 | Phase 10: the complete design | ✅ approved |
-| 27 | Skill 11: Trading, in a new category Other (after 1.4) | 💡 proposal |
+| 27 | Skill 11: Trading, in a new category Other (after 1.4) | ✅ approved ("Akkoord"), read as yes to the two duo synergies too |
 
 ---
 
@@ -576,7 +576,7 @@ How the mcMMO skills were folded in:
 
 **No new items needed.**
 
-### Skill 11: Trading (💡 proposal, round 27)
+### Skill 11: Trading (✅ approved in round 27, version 1.5.0)
 The owner asked for an "Other" section on the Character Sheet, with trading with villagers as the example. Trading is
 its first skill: nothing in the mod rewards trading yet. Category **Other** (light purple); icon: an emerald.
 
@@ -629,12 +629,12 @@ a wandering trader's trade gives its result twice).
 **Counteraction:** no opposing skill (like Mining or Fishing); the prices of the specializations are its
 counterweight. No specialization conflicts.
 
-**Optional (💡): two duo synergies** (§16), with a party member near:
+**Two duo synergies** (§16), with a party member within 32 blocks:
 - **Caravan** (Trading + Exploration): wandering traders cost 10% less.
 - **Market Day** (Trading + Farming): farmers and butchers cost 10% less.
 
-**On the Character Sheet:** Other goes in the left column under Survival, Trading beside Arcana; the sheet grows a
-few pixels for it. Everything else that lists skills (the leaderboard, TAB, settings, data files) takes it as it
+**On the Character Sheet:** Other goes in the left column under Survival, Trading beside Arcana, both under one
+heading ("SURVIVAL · OTHER"), so every tile stays in line with the column beside it. Everything else that lists skills (the leaderboard, TAB, settings, data files) takes it as it
 takes the others. The total cap stays 400: one more skill means more choice, not more levels.
 
 **No new items needed.**
@@ -1483,7 +1483,7 @@ but new XP".
   and every block or armor hit its Defense XP, so everyone in a fight earns their own share.
 
 ### Duo synergies
-- Six synergies between two party members near each other: the one who acts needs the first skill at level 30, the
+- Six synergies (eight since 1.5.0) between two party members near each other: the one who acts needs the first skill at level 30, the
   party member the second. They count as synergies everywhere (the strength and on/off in `synergies.json`, the
   power of the weaker part).
 - The first time the situation happens, both discover it, whoever of them had not yet. The Codex shows them under
@@ -1497,6 +1497,8 @@ but new XP".
 | Field Medic | Arcana + Defense | Good effects you splash on a party member last 25% longer. |
 | Whetstone | Mining + Smithing | Your tools and weapons wear 15% slower within 16 blocks of a party member. |
 | Hearty Meal | Exploration + Farming | Food you eat within 8 blocks of a party member fills 25% more. |
+| Caravan (1.5.0) | Trading + Exploration | Wandering traders cost 10% less with a party member within 32 blocks. |
+| Market Day (1.5.0) | Trading + Farming | Farmers and butchers cost 10% less with a party member within 32 blocks. |
 
 ### TAB
 - Per player: `party_size`, `party_bonus`, `party_leader`, `party_members`, and `party` (a green ◆ with the size).
@@ -1675,3 +1677,19 @@ Calibration: ≈ 200 potions per hour for an active brewer.
 - **Enchanting table:** `15 × the level the offer requires` (a level-30 offer = 450).
 - **Combining enchantments at the anvil:** `25 × the level cost`.
 - The grindstone gives 0.
+
+### A.11 Trading (1.5.0, round 27)
+Calibration: ≈ 120 trades an hour for an active trader. Every value is in `config/extremeprogression/xp/trading.json`.
+
+| Source | XP |
+|---|---:|
+| A villager's trade, by the offer's tier: novice · apprentice · journeyman · expert · master | 30 · 45 · 65 · 90 · 120 |
+| Every emerald paid or received in a trade | +1.5 |
+| A wandering trader's trade | the journeyman's × 1.5 |
+| One villager's offer after its 4th trade since the last restock | × 0.25 |
+| A villager reaching apprentice · journeyman · expert · master through your trade | 150 · 300 · 500 · 800 |
+| A gold ingot of yours a piglin barters | 20 |
+| A raid won, × its omen level | 1,000 |
+
+- An offer's tier is the villager's level when the offer came; offers from before 1.5.0 count two a level from novice.
+- Villagers, wandering traders and piglins from spawn eggs, spawners, dispensers or commands give nothing.

@@ -60,6 +60,7 @@ public final class Specs {
 		Fishing.register();
 		Smithing.register();
 		Arcana.register();
+		Trading.register();
 		ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) -> secondary() || allow(entity, source, amount));
 		ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> {
 			if (entity instanceof Projectile projectile && entity.tickCount == 0 && projectile.getOwner() instanceof ServerPlayer p) {
@@ -250,6 +251,7 @@ public final class Specs {
 		Active.tick(server);
 		Wounds.tick(server);
 		Foraging.tick(server);
+		Trading.tick(server);
 		for (ServerPlayer p : server.getPlayerList().getPlayers()) {
 			Melee.tick(p);
 			Ranged.tick(p);
@@ -274,7 +276,11 @@ public final class Specs {
 		MobEffectInstance out = Defense.effect(target, effect);
 		out = out == null ? null : Arcana.effect(target, out);
 		out = out == null ? null : Foraging.effect(target, out);
-		return out == null ? null : com.extremeprogression.synergy.SynergyEffects.effect(target, out);
+		out = out == null ? null : com.extremeprogression.synergy.SynergyEffects.effect(target, out);
+		if (out != null) {
+			Trading.effect(target, out);
+		}
+		return out;
 	}
 
 	/** A player's breaking speed on a block (on the client too). */
@@ -306,5 +312,6 @@ public final class Specs {
 		Mining.forget(id);
 		Farming.forget(id);
 		Fishing.forget(id);
+		Trading.forget(id);
 	}
 }

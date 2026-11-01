@@ -108,7 +108,8 @@ public class ClientShots implements FabricClientGameTest {
 					}
 				}
 				check(top.size() == Skill.values().length && top.get(Skill.EXPLORATION).equals(top.get(Skill.SMITHING))
-						&& top.get(Skill.MELEE).equals(top.get(Skill.MINING)), "the sheet's columns are not in line: " + top);
+						&& top.get(Skill.TRADING).equals(top.get(Skill.ARCANA)) && top.get(Skill.MELEE).equals(top.get(Skill.MINING)),
+						"the sheet's columns are not in line: " + top);
 			});
 
 			// A tree in use: Blade chosen in Melee with a few points bought, and Bulwark in Defense, which shuts Brawler out

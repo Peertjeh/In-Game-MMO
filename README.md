@@ -2,18 +2,18 @@
 
 *A hardcore RPG progression overhaul for Minecraft 26.3 on Fabric.*
 
-Ten playstyle skills, each with its own skill tree, three specializations and a Mastery layer. Synergies between skills
+Eleven playstyle skills, each with its own skill tree, three specializations and a Mastery layer. Synergies between skills
 that you discover yourself. Slow, meaningful progression, and deaths that cost you for real, always shown up front.
 
 ![The Character Sheet](docs/images/character-sheet.png)
 
-- **Ten skills**: Melee, Ranged, Defense, Mining, Foraging, Farming, Fishing, Exploration, Smithing and Arcana, earned by
-  playing, with rules against farms and AFK.
-- **Trees**: a trunk of four bonuses per skill, and thirty specializations with an ability, passives, a choice and a
-  price each.
+- **Eleven skills**: Melee, Ranged, Defense, Mining, Foraging, Farming, Fishing, Exploration, Smithing, Arcana and
+  Trading, earned by playing, with rules against farms and AFK.
+- **Trees**: a trunk of four bonuses per skill, and thirty-three specializations with an ability, passives, a choice and
+  a price each.
 - **Mastery** past level 100, ten ranks with a perk each.
 - **Twelve hidden synergies**, a personal Codex and the server's Chronicle.
-- **Playing together**: parties with an XP bonus for members near who play too, and six duo synergies you discover
+- **Playing together**: parties with an XP bonus for members near who play too, and eight duo synergies you discover
   with a party member.
 - **Deaths that cost you**: death pressure, the dimensions' factors, death fatigue, the Death Register and At Stake.
 - **For server owners**: presets, data files for every number, an in-game settings screen, XP events, a leaderboard and

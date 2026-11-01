@@ -5,9 +5,12 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"AbstractArrowAccess",
+		"AbstractBoatMixin",
 		"AbstractThrownPotionMixin",
+		"AbstractVillagerMixin",
 		"AnvilMenuMixin",
 		"AreaEffectCloudMixin",
+		"ArrowMixin",
 		"BaseContainerBlockEntityMixin",
 		"BeehiveBlockMixin",
 		"BlockItemMixin",
@@ -38,7 +41,10 @@
 		"LevelChunkMixin",
 		"LivingEntityAccess",
 		"LivingEntityMixin",
+		"MerchantOfferAccess",
 		"MobMixin",
+		"PiglinAiAccess",
+		"PiglinAiMixin",
 		"PlayerMixin",
 		"PotionContentsMixin",
 		"PotionSlotMixin",
@@ -48,9 +54,9 @@
 		"SpreadingPlantMixin",
 		"TameAnimalTriggerMixin",
 		"ThrownTridentMixin",
-		"ArrowMixin",
 		"VibrationListenerMixin",
-		"AbstractBoatMixin"
+		"VillagerAccess",
+		"VillagerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 0
