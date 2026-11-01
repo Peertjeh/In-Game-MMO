@@ -2,6 +2,7 @@ package com.extremeprogression.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 
 import com.extremeprogression.config.Config;
 import com.extremeprogression.network.PartyActionPayload;
@@ -20,12 +21,36 @@ import net.minecraft.server.level.ServerPlayer;
  * {@code /party} (design §16): without anything, the party and its bonus in the chat; {@code invite}, {@code accept},
  * {@code decline}, {@code leave}, and for the leader {@code kick} and {@code leader}. The Party screen's buttons do the
  * same through {@link #act}.
+ *
+ * <p>Always under {@code /skills party} too. {@code /party} itself is registered only when no other mod has one
+ * (BattleHub has its own parties): two mods' {@code /party} would merge into one command, half of each. So this
+ * registers after everyone else, and the chat buttons and hints use whichever {@link #root} it got.
  */
 public final class PartyCommand {
 	private PartyCommand() {}
 
+	/** "party", or "skills party" when another mod has /party. */
+	private static String root = "party";
+
+	/** The command the party's chat buttons and hints use: "party", or "skills party" when another mod has /party. */
+	public static String root() {
+		return root;
+	}
+
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-		dispatcher.register(Commands.literal("party")
+		dispatcher.register(Commands.literal("skills").then(tree(Commands.literal("party"))));
+		if (dispatcher.getRoot().getChild("party") == null) {
+			dispatcher.register(tree(Commands.literal("party")));
+			root = "party";
+		} else {
+			root = "skills party";
+			com.extremeprogression.ExtremeProgression.LOGGER.info("Another mod has /party: Extreme Progression's parties are under /skills party");
+		}
+	}
+
+	/** The party's subcommands under a literal. */
+	static LiteralArgumentBuilder<CommandSourceStack> tree(LiteralArgumentBuilder<CommandSourceStack> party) {
+		return party
 				.executes(c -> info(c.getSource().getPlayerOrException()))
 				.then(Commands.literal("invite")
 						.then(Commands.argument("player", StringArgumentType.word())
@@ -50,7 +75,7 @@ public final class PartyCommand {
 				.then(Commands.literal("leader")
 						.then(Commands.argument("player", StringArgumentType.word())
 								.suggests((c, b) -> SharedSuggestionProvider.suggest(members(c.getSource()), b))
-								.executes(c -> run(c.getSource(), PartyActionPayload.Action.LEADER, StringArgumentType.getString(c, "player"))))));
+								.executes(c -> run(c.getSource(), PartyActionPayload.Action.LEADER, StringArgumentType.getString(c, "player")))));
 	}
 
 	private static java.util.List<String> members(CommandSourceStack src) {
@@ -79,7 +104,7 @@ public final class PartyCommand {
 			case LEADER -> Parties.promote(p, name == null ? "" : name);
 		};
 		if (r != Parties.Result.OK) {
-			p.sendSystemMessage(Component.translatable(r.key(), name == null ? "" : name, Config.PARTY_MAX_SIZE).withColor(0xFF5555), false);
+			p.sendSystemMessage(Component.translatable(r.key(), name == null ? "" : name, Config.PARTY_MAX_SIZE, root).withColor(0xFF5555), false);
 		}
 		return r;
 	}
@@ -92,9 +117,9 @@ public final class PartyCommand {
 			return 0;
 		}
 		if (!view.inParty()) {
-			p.sendSystemMessage(Component.translatable("message.extremeprogression.party.none").withColor(0xFFFF55), false);
+			p.sendSystemMessage(Component.translatable("message.extremeprogression.party.none", root).withColor(0xFFFF55), false);
 			for (String from : view.invites()) {
-				p.sendSystemMessage(Component.translatable("message.extremeprogression.party.waiting", from).withColor(0xAAAAAA), false);
+				p.sendSystemMessage(Component.translatable("message.extremeprogression.party.waiting", from, root).withColor(0xAAAAAA), false);
 			}
 			return 1;
 		}

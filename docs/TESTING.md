@@ -56,6 +56,7 @@ key of its own). Extreme Dimensions is optional; the two work side by side.
 | `/skills preset <hardcore\|normal\|custom>`, `/skills reload` | a preset; reread the config and data files |
 | `/party invite <player>`, `/party accept`, `/party leave` | play together (any player): a party, its bonus and duo synergies |
 | `/party kick <player>`, `/party leader <player>` | the leader removes a member, or hands the lead on |
+| `/skills party ...` | the same, always; with BattleHub (which has its own `/party`) this is where they are |
 
 Skill ids: `melee`, `ranged`, `defense`, `mining`, `foraging`, `farming`, `fishing`, `exploration`, `smithing`,
 `arcana`. Points: from level 25 one point a level (75 at level 100), shared by both specializations of a skill. XP

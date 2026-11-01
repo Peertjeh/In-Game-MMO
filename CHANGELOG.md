@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.2
+
+- **Fixed**: on a server with another mod's `/party` (BattleHub's), the two merged into one command, and accepting an
+  invitation answered "No (valid) party invite from that player.". This mod's parties now stay out of the way: they
+  are always under `/skills party`, and `/party` is theirs only when no other mod has one. The chat's Accept and
+  Decline buttons use whichever it got; the Party screen never needed a command.
+
 ## 1.4.1
 
 - The Party screen names the leader in words, with a **Lead** button to hand the lead on (the crown was too small to

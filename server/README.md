@@ -49,3 +49,9 @@ no TAB needed), except in BattleHub's lobby and matches: `nametag_hidden_dimensi
 
 The values are in English (a tablist is the same for everyone) and are worked out once a second (`placeholder_refresh_ticks`);
 `placeholders: false` in `config/extremeprogression.json` empties them all.
+
+## Parties and BattleHub
+
+BattleHub has its own `/party`. Extreme Progression's parties then stay under `/skills party` (and the Party button on
+the Character Sheet), so the two never mix; the chat buttons of an invitation use the right one. Without BattleHub,
+`/party` works too.

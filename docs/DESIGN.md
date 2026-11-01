@@ -1396,6 +1396,8 @@ purpose: giving XP lost in a death back through a teammate, which would break §
 but new XP".
 
 ### Parties
+- The commands are always under `/skills party`, and also `/party` when no other mod has a `/party` (BattleHub has
+  its own parties; two mods' `/party` would merge into one command). They register after every other mod's to know.
 - `/party invite <player>` invites a player who is in no party; the invitation stands for 2 minutes
   (`party_invite_seconds`) and is accepted with a click in the chat, `/party accept` or the Party screen.
 - Accepting makes a party of the two (the inviter leads) or joins the inviter's party. At most 5 players

@@ -172,3 +172,4 @@ net.minecraft.network.chat.HoverEvent$ShowText
 net.minecraft.network.chat.Style
 net.minecraft.world.food.FoodData
 net.minecraft.world.food.FoodProperties
+net.fabricmc.fabric.api.event.Event

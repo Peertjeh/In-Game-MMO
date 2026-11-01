@@ -261,8 +261,10 @@ public final class Parties {
 		theirs.remove(from.getUUID());
 		theirs.put(from.getUUID(), new Invite(from.getUUID(), name(from), expires));
 		String fromName = name(from);
-		MutableComponent accept = button("message.extremeprogression.party.accept_button", "/party accept " + fromName, GOOD);
-		MutableComponent decline = button("message.extremeprogression.party.decline_button", "/party decline " + fromName, BAD);
+		// (the command this mod's parties got: /party, or /skills party where another mod has /party)
+		String command = "/" + com.extremeprogression.command.PartyCommand.root();
+		MutableComponent accept = button("message.extremeprogression.party.accept_button", command + " accept " + fromName, GOOD);
+		MutableComponent decline = button("message.extremeprogression.party.decline_button", command + " decline " + fromName, BAD);
 		to.sendSystemMessage(Component.translatable("message.extremeprogression.party.invited_you", from.getDisplayName(),
 				Math.round(Config.PARTY_INVITE_SECONDS)).withColor(INFO).append(" ").append(accept).append(" ").append(decline), false);
 		from.sendSystemMessage(Component.translatable("message.extremeprogression.party.invited", to.getDisplayName()).withColor(GOOD), false);

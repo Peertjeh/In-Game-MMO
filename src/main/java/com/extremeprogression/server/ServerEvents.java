@@ -133,9 +133,10 @@ public final class ServerEvents {
 			XpService.tick(s);
 		});
 
-		CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> {
-			SkillsCommand.register(dispatcher);
-			com.extremeprogression.command.PartyCommand.register(dispatcher);
-		});
+		CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> SkillsCommand.register(dispatcher));
+		// /party after every other mod's commands: it stays out of the way of another mod's /party (BattleHub's)
+		net.minecraft.resources.Identifier late = com.extremeprogression.ExtremeProgression.id("after_others");
+		CommandRegistrationCallback.EVENT.addPhaseOrdering(net.fabricmc.fabric.api.event.Event.DEFAULT_PHASE, late);
+		CommandRegistrationCallback.EVENT.register(late, (dispatcher, context, selection) -> com.extremeprogression.command.PartyCommand.register(dispatcher));
 	}
 }

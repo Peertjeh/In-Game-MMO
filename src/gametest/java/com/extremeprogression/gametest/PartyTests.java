@@ -97,6 +97,31 @@ public class PartyTests {
 	}
 
 	@GameTest
+	public void partyStaysOutOfTheWayOfAnotherModsParty(GameTestHelper helper) throws Exception {
+		Config.reset();
+		// Another mod (BattleHub) has /party: ours goes under /skills party only, theirs stays whole
+		com.mojang.brigadier.CommandDispatcher<net.minecraft.commands.CommandSourceStack> taken = new com.mojang.brigadier.CommandDispatcher<>();
+		taken.register(net.minecraft.commands.Commands.literal("party").then(net.minecraft.commands.Commands.literal("accept").executes(c -> 7)));
+		com.extremeprogression.command.PartyCommand.register(taken);
+		var theirs = taken.getRoot().getChild("party");
+		check(helper, theirs.getChild("invite") == null && theirs.getChild("accept").getChildren().isEmpty(), "this mod's /party merged into another mod's");
+		check(helper, taken.getRoot().getChild("skills").getChild("party").getChild("invite") != null && "skills party".equals(com.extremeprogression.command.PartyCommand.root()),
+				"with another /party, this mod's parties are not under /skills party");
+		// Without one, /party is ours (as on this test server; registering on a free dispatcher sets it back)
+		com.mojang.brigadier.CommandDispatcher<net.minecraft.commands.CommandSourceStack> free = new com.mojang.brigadier.CommandDispatcher<>();
+		com.extremeprogression.command.PartyCommand.register(free);
+		check(helper, free.getRoot().getChild("party").getChild("invite") != null && "party".equals(com.extremeprogression.command.PartyCommand.root()),
+				"without another /party, /party is not this mod's");
+		// Both commands work on the real server, an invitation by one accepted by the other
+		ServerPlayer a = player(helper, "Cmd"), b = player(helper, "Line");
+		var commands = helper.getLevel().getServer().getCommands().getDispatcher();
+		check(helper, commands.execute("skills party invite " + name(b), a.createCommandSourceStack()) == 1, "/skills party invite did not succeed");
+		check(helper, commands.execute("party accept " + name(a), b.createCommandSourceStack()) == 1 && Parties.together(a, b), "/party accept did not join the party");
+		Parties.leave(a);
+		helper.succeed();
+	}
+
+	@GameTest
 	public void theLeaderManagesThePartyAndOneAloneIsNoParty(GameTestHelper helper) {
 		Config.reset();
 		try {
