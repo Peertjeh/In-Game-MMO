@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.1
+
+- **Inspect** fits eleven skills: each tile is one line shorter (the specializations and the points share a line), so
+  Trading no longer hides behind the Done button. The synergy count counts all of them.
+- **Ranking** shows all eleven levels beside the name.
+
 ## 1.5.0: Trading
 
 - **A new skill, Trading**, the first of a new category **Other** (on the Character Sheet under Survival, beside

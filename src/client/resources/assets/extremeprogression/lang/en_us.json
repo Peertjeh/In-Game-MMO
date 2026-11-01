@@ -1015,6 +1015,7 @@
 	"gui.extremeprogression.inspect.read_only": "Read only: nothing changes here.",
 	"gui.extremeprogression.inspect.no_spec": "no specialization",
 	"gui.extremeprogression.inspect.points": "%s points bought",
+	"gui.extremeprogression.inspect.points_short": "%s pts",
 	"gui.extremeprogression.settings.title": "Settings",
 	"gui.extremeprogression.settings.button": "Settings",
 	"gui.extremeprogression.settings.preset.hardcore": "Hardcore",

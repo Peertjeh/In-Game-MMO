@@ -23,7 +23,7 @@ import net.minecraft.network.chat.Component;
  */
 public class InspectScreen extends Screen {
 	static final int W = 404, H = 222;
-	private static final int LEFT_W = 112, TILE_H = 32;
+	private static final int LEFT_W = 112, TILE_H = 22;
 
 	private static int opened = 0;
 
@@ -77,7 +77,7 @@ public class InspectScreen extends Screen {
 		y = row(g, y, Ui.tr("gui.extremeprogression.sheet.mastery"), String.valueOf(ranks), ranks > 0 ? Ui.GOLD : Ui.TEXT);
 		y = row(g, y, Ui.tr("gui.extremeprogression.death.deaths"), String.valueOf(p.death().deaths()), Ui.TEXT);
 		y = row(g, y, Ui.tr("gui.extremeprogression.death.pressure"), String.valueOf(p.death().pressure()), p.death().pressure() > 0 ? Ui.WARN : Ui.TEXT);
-		y = row(g, y, Ui.tr("gui.extremeprogression.inspect.synergies"), data.synergies() + " / 12", Ui.TEXT);
+		y = row(g, y, Ui.tr("gui.extremeprogression.inspect.synergies"), data.synergies() + " / " + com.extremeprogression.synergy.Synergy.values().length, Ui.TEXT);
 		Ui.text(g, this.font, Ui.ellipsize(this.font, Ui.tr("gui.extremeprogression.inspect.read_only"), LEFT_W - 12), ix, ly + lh - 12, Ui.DIM);
 
 		// Every skill: level, specializations, points, perks
@@ -102,10 +102,12 @@ public class InspectScreen extends Screen {
 					specs.add(spec == null ? id : Ui.tr(spec.translationKey()));
 				}
 			}
-			String second = specs.isEmpty() ? Ui.tr("gui.extremeprogression.inspect.no_spec") : String.join(" · ", specs);
-			Ui.text(g, this.font, Ui.ellipsize(this.font, second, tw - 26), tx + 22, ty + 13, specs.isEmpty() ? Ui.DIM : Ui.MUTED);
+			// (one line: the specializations, and the points bought at the right; eleven skills fit in six rows)
 			int bought = e == null ? 0 : e.bought().size();
-			Ui.text(g, this.font, Ui.ellipsize(this.font, Ui.tr("gui.extremeprogression.inspect.points", bought), tw - 26), tx + 22, ty + 22, Ui.DIM);
+			String points = Ui.tr("gui.extremeprogression.inspect.points_short", bought);
+			Ui.right(g, this.font, points, tx + tw - 4, ty + 12, Ui.DIM);
+			String second = specs.isEmpty() ? Ui.tr("gui.extremeprogression.inspect.no_spec") : String.join(" · ", specs);
+			Ui.text(g, this.font, Ui.ellipsize(this.font, second, tw - 26 - this.font.width(points) - 6), tx + 22, ty + 12, specs.isEmpty() ? Ui.DIM : Ui.MUTED);
 			if (mouseX >= tx && mouseX < tx + tw && mouseY >= ty && mouseY < ty + TILE_H && e != null) {
 				tip = tip(s, e);
 			}

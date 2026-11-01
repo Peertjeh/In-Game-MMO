@@ -111,7 +111,7 @@ public class LeaderboardScreen extends Screen {
 			boolean mine = r.name().equals(me);
 			int color = place == 1 ? Ui.GOLD : mine ? Ui.WARN : Ui.TEXT;
 			Ui.right(g, this.font, place + ".", ix + 22, y, Ui.MUTED);
-			Ui.text(g, this.font, Ui.ellipsize(this.font, r.name(), 150), ix + 28, y, color);
+			Ui.text(g, this.font, Ui.ellipsize(this.font, r.name(), 112), ix + 28, y, color);
 			String value;
 			if (view < 0) {
 				value = r.total() + (r.mastery() > 0 ? "  M" + r.mastery() : "");
@@ -120,7 +120,8 @@ public class LeaderboardScreen extends Screen {
 				for (int s = 0; s < r.levels().length; s++) {
 					levels.append(s == 0 ? "" : " ").append(r.levels()[s]);
 				}
-				Ui.text(g, this.font, Ui.ellipsize(this.font, levels.toString(), iw - 250), ix + 186, y, Ui.DIM);
+				// (eleven skills' levels: from the name's end to the total's start)
+				Ui.text(g, this.font, Ui.ellipsize(this.font, levels.toString(), iw - 146 - 60), ix + 146, y, Ui.DIM);
 			} else {
 				value = Ui.tr("gui.extremeprogression.leaderboard.level", r.levels()[view]) + (r.ranks()[view] > 0 ? "  M" + r.ranks()[view] : "");
 			}

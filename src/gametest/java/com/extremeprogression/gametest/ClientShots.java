@@ -572,7 +572,7 @@ public class ClientShots implements FabricClientGameTest {
 		keys.add("message.extremeprogression.synergy.first_together");
 		for (String k : new String[] {"leaderboard.title", "leaderboard.button", "leaderboard.total", "leaderboard.waiting", "leaderboard.players",
 				"leaderboard.level", "inspect.title", "inspect.online", "inspect.offline", "inspect.synergies", "inspect.read_only", "inspect.no_spec",
-				"inspect.points", "settings.title", "settings.button", "settings.preset.hardcore", "settings.preset.normal", "settings.preset.custom",
+				"inspect.points", "inspect.points_short", "settings.title", "settings.button", "settings.preset.hardcore", "settings.preset.normal", "settings.preset.custom",
 				"settings.search", "settings.save", "settings.revert", "settings.invalid", "settings.sent", "settings.waiting", "settings.preset", "settings.page",
 				"settings.read_only", "sheet.xp_event", "sheet.xp_event_all", "death.step2_off"}) {
 			keys.add("gui.extremeprogression." + k);
