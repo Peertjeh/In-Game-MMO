@@ -49,9 +49,19 @@ public class TradingTests {
 		return Math.abs(a - b) < 1e-3;
 	}
 
-	/** A novice offer: this many emeralds for a loaf of bread, 1000 uses, 10 villager experience. */
+	/** A novice offer: this many emeralds for a loaf of bread, 1000 uses, 1 villager experience (no level-up). */
 	private static MerchantOffer offer(int emeralds) {
-		return new MerchantOffer(new ItemCost(Items.EMERALD, emeralds), new ItemStack(Items.BREAD), 1000, 10, 0.05f);
+		return offer(emeralds, 1);
+	}
+
+	private static MerchantOffer offer(int emeralds, int villagerXp) {
+		return new MerchantOffer(new ItemCost(Items.EMERALD, emeralds), new ItemStack(Items.BREAD), 1000, villagerXp, 0.05f);
+	}
+
+	/** A wandering trader's offers are its own: the test's offer replaces them in its list. */
+	private static void sells(WanderingTrader trader, MerchantOffer offer) {
+		trader.getOffers().clear();
+		trader.getOffers().add(offer);
 	}
 
 	private static MerchantOffers offers(MerchantOffer... offers) {
@@ -96,7 +106,7 @@ public class TradingTests {
 		ServerPlayer p = TestPlayers.survivor(helper, "Wanderer");
 		WanderingTrader trader = (WanderingTrader) helper.spawn(EntityTypes.WANDERING_TRADER, new BlockPos(1, 2, 1), EntitySpawnReason.NATURAL);
 		MerchantOffer deal = offer(5);
-		trader.overrideOffers(offers(deal));
+		sells(trader, deal);
 		trader.setTradingPlayer(p);
 		trader.notifyTrade(deal);
 		check(helper, near(xp(p), 65 * 1.5 + 1.5 * 5), "a wandering trader's trade of 5 emeralds gave %s, expected 105", xp(p));
@@ -154,7 +164,7 @@ public class TradingTests {
 	@GameTest
 	public void villagersGainExperienceAsTheSkillSays(GameTestHelper helper) {
 		Config.reset();
-		MerchantOffer trade = offer(1);
+		MerchantOffer trade = offer(1, 10);
 		Villager v = villager(helper, EntitySpawnReason.NATURAL, trade);
 		ServerPlayer friend = TestPlayers.survivor(helper, "Friend");
 		Progression.setLevel(PlayerStore.get(friend.getUUID()), Skill.TRADING, 10);
@@ -220,7 +230,7 @@ public class TradingTests {
 		Parties.accept(scout, null);
 		WanderingTrader trader = (WanderingTrader) helper.spawn(EntityTypes.WANDERING_TRADER, new BlockPos(1, 2, 2), EntitySpawnReason.NATURAL);
 		MerchantOffer deal = offer(20);
-		trader.overrideOffers(offers(deal));
+		sells(trader, deal);
 		trader.setTradingPlayer(buyer);
 		check(helper, deal.getCostA().getCount() == 18, "Caravan made 20 emeralds %s, expected 18", deal.getCostA().getCount());
 		check(helper, Synergies.known(buyer, Synergy.CARAVAN) && Synergies.known(scout, Synergy.CARAVAN), "the two did not discover Caravan");
