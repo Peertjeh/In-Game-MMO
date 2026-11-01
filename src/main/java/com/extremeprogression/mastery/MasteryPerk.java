@@ -46,7 +46,11 @@ public enum MasteryPerk {
 	/** Potions you brew last 1% longer. */
 	LONG_BREW(Skill.ARCANA, "a"),
 	/** +1% chance an enchanting offer is rolled as if 1 level higher. */
-	BRIGHT_OFFER(Skill.ARCANA, "b");
+	BRIGHT_OFFER(Skill.ARCANA, "b"),
+	/** Villagers' prices 1% lower. */
+	PATRON(Skill.TRADING, "a"),
+	/** +1% chance a barter or a wandering trader's trade gives its result twice. */
+	GOLDEN_TOUCH(Skill.TRADING, "b");
 
 	public final Skill skill;
 	public final String track;

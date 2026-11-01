@@ -64,7 +64,7 @@ public class ClientShots implements FabricClientGameTest {
 			ctx.runOnClient(mc -> {
 				ProgressPayload now = ClientProgress.current();
 				check(now != null, "the client got no progression on joining");
-				check(now.skills().size() == 10, "the client got " + now.skills().size() + " skills, not 10");
+				check(now.skills().size() == Skill.values().length, "the client got " + now.skills().size() + " skills, not " + Skill.values().length);
 				check(now.total() == 0 && now.cap() == 400, "a new player's total is " + now.total() + " of " + now.cap());
 			});
 			int before = ctx.computeOnClient(mc -> ClientProgress.updates());

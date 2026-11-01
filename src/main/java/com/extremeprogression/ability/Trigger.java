@@ -25,13 +25,17 @@ public enum Trigger {
 	LOOK_SMITHING_TABLE,
 	LOOK_BREWING_STAND,
 	LOOK_ENCHANTING_TABLE,
+	/** A villager or wandering trader in view (Trading). */
+	LOOK_VILLAGER,
+	/** A gold ingot in either hand, or a piglin in view (Gold Tongue). */
+	GOLD_OR_PIGLIN,
 	/** Whatever is in hand, when no other ability claims it. */
 	ANY;
 
 	/** 0 for workstations (and the axe at a log), 1 for tools, 2 for anything. */
 	public int priority() {
 		return switch (this) {
-			case LOOK_FURNACE, LOOK_ANVIL, LOOK_SMITHING_TABLE, LOOK_BREWING_STAND, LOOK_ENCHANTING_TABLE, AXE_AT_LOG -> 0;
+			case LOOK_FURNACE, LOOK_ANVIL, LOOK_SMITHING_TABLE, LOOK_BREWING_STAND, LOOK_ENCHANTING_TABLE, AXE_AT_LOG, LOOK_VILLAGER -> 0;
 			case ANY -> 2;
 			default -> 1;
 		};

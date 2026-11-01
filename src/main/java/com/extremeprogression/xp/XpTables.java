@@ -242,6 +242,53 @@ public final class XpTables {
 		return MATERIAL_OTHER;
 	}
 
+	// --- A.11 Trading (1.5.0, design round 27) ---------------------------------------------------
+
+	/** A trade with a villager, by the offer's tier (novice to master). */
+	public static double TRADE_NOVICE = 30;
+	public static double TRADE_APPRENTICE = 45;
+	public static double TRADE_JOURNEYMAN = 65;
+	public static double TRADE_EXPERT = 90;
+	public static double TRADE_MASTER = 120;
+	/** For every emerald paid or received in a trade. */
+	public static double TRADE_PER_EMERALD = 1.5;
+	/** A wandering trader's trade: the journeyman's XP times this. */
+	public static double WANDERING_FACTOR = 1.5;
+	/** Of one villager's offer, this many trades after each restock count fully, the rest at the share below. */
+	public static double SAME_OFFER_FULL = 4;
+	public static double SAME_OFFER_FACTOR = 0.25;
+	/** A villager reaching a level through your trade: apprentice, journeyman, expert, master. */
+	public static double LEVEL_APPRENTICE = 150;
+	public static double LEVEL_JOURNEYMAN = 300;
+	public static double LEVEL_EXPERT = 500;
+	public static double LEVEL_MASTER = 800;
+	/** A gold ingot of yours a piglin barters. */
+	public static double BARTER_PER_INGOT = 20;
+	/** A raid won (Hero of the Village), times the raid's omen level. */
+	public static double RAID_PER_OMEN_LEVEL = 1000;
+
+	/** A villager trade's XP by the tier of its offer (1 novice to 5 master). */
+	public static double trade(int tier) {
+		return switch (Math.max(1, Math.min(5, tier))) {
+			case 1 -> TRADE_NOVICE;
+			case 2 -> TRADE_APPRENTICE;
+			case 3 -> TRADE_JOURNEYMAN;
+			case 4 -> TRADE_EXPERT;
+			default -> TRADE_MASTER;
+		};
+	}
+
+	/** The XP for a villager reaching this level (2 apprentice to 5 master); 0 otherwise. */
+	public static double levelUp(int level) {
+		return switch (level) {
+			case 2 -> LEVEL_APPRENTICE;
+			case 3 -> LEVEL_JOURNEYMAN;
+			case 4 -> LEVEL_EXPERT;
+			case 5 -> LEVEL_MASTER;
+			default -> 0;
+		};
+	}
+
 	// --- A.10 Arcana -----------------------------------------------------------------------------
 
 	public static double POTION_BASE = 5;

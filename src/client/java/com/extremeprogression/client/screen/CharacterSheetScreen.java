@@ -74,13 +74,17 @@ public class CharacterSheetScreen extends Screen {
 		}
 	}
 
-	/** The categories of the two columns: the n-th of each starts on the same line (Survival beside Crafting). */
-	private static final List<Category> LEFT = List.of(Category.COMBAT, Category.SURVIVAL), RIGHT = List.of(Category.GATHERING, Category.CRAFTING);
+	/**
+	 * The two columns, as rows of categories: the n-th row of each starts on the same line (Survival beside Crafting).
+	 * A row may hold more than one category under one heading (Survival · Other), so its tiles stay on the grid.
+	 */
+	private static final List<List<Category>> LEFT = List.of(List.of(Category.COMBAT), List.of(Category.SURVIVAL, Category.OTHER)),
+			RIGHT = List.of(List.of(Category.GATHERING), List.of(Category.CRAFTING));
 
-	private static int skills(Category c) {
+	private static int skills(List<Category> row) {
 		int n = 0;
 		for (Skill s : Skill.values()) {
-			n += s.category == c ? 1 : 0;
+			n += row.contains(s.category) ? 1 : 0;
 		}
 		return n;
 	}
@@ -94,14 +98,15 @@ public class CharacterSheetScreen extends Screen {
 		return y;
 	}
 
-	private void column(int x, int top, List<Category> categories) {
-		for (int row = 0; row < categories.size(); row++) {
-			Category c = categories.get(row);
+	private void column(int x, int top, List<List<Category>> rows) {
+		for (int row = 0; row < rows.size(); row++) {
 			int y = rowTop(top, row) + 10;
-			for (Skill s : Skill.values()) {
-				if (s.category == c) {
-					this.addRenderableWidget(new SkillTile(x, y, s, this::open));
-					y += SkillTile.H + 2;
+			for (Category c : rows.get(row)) {
+				for (Skill s : Skill.values()) {
+					if (s.category == c) {
+						this.addRenderableWidget(new SkillTile(x, y, s, this::open));
+						y += SkillTile.H + 2;
+					}
 				}
 			}
 		}
@@ -169,11 +174,20 @@ public class CharacterSheetScreen extends Screen {
 		heading(g, rx + 6 + SkillTile.W + 4, y0 + 20, RIGHT);
 	}
 
-	/** The category names above their tiles (the tiles themselves are widgets, see {@link #column}). */
-	private void heading(GuiGraphicsExtractor g, int x, int top, List<Category> categories) {
-		for (int row = 0; row < categories.size(); row++) {
-			Category c = categories.get(row);
-			Ui.text(g, this.font, Ui.tr(c.translationKey()).toUpperCase(java.util.Locale.ROOT), x, rowTop(top, row) + 1, c.accent);
+	/** The category names above their tiles, each in its colour (the tiles themselves are widgets, see {@link #column}). */
+	private void heading(GuiGraphicsExtractor g, int x, int top, List<List<Category>> rows) {
+		for (int row = 0; row < rows.size(); row++) {
+			int hx = x, y = rowTop(top, row) + 1;
+			List<Category> categories = rows.get(row);
+			for (int i = 0; i < categories.size(); i++) {
+				if (i > 0) {
+					Ui.text(g, this.font, " · ", hx, y, Ui.DIM);
+					hx += this.font.width(" · ");
+				}
+				String name = Ui.tr(categories.get(i).translationKey()).toUpperCase(java.util.Locale.ROOT);
+				Ui.text(g, this.font, name, hx, y, categories.get(i).accent);
+				hx += this.font.width(name);
+			}
 		}
 	}
 

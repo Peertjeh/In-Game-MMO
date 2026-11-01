@@ -7,7 +7,7 @@ import java.util.Locale;
 import com.extremeprogression.ability.Trigger;
 
 /**
- * The thirty specializations, three per skill (design §2), each with one active ability. Their trees follow the
+ * The thirty-three specializations, three per skill (design §2; Trading's since 1.5.0), each with one active ability. Their trees follow the
  * shared {@link com.extremeprogression.tree.NodeSlot} layout.
  */
 public enum Specialization {
@@ -21,7 +21,9 @@ public enum Specialization {
 	WANDERER(Skill.EXPLORATION, 4, Trigger.ANY), SURVIVALIST(Skill.EXPLORATION, 5, Trigger.ANY), ACROBAT(Skill.EXPLORATION, 4, Trigger.ANY),
 	FORGEMASTER(Skill.SMITHING, 5, Trigger.LOOK_FURNACE), ARMORER(Skill.SMITHING, 5, Trigger.LOOK_ANVIL), TINKERER(Skill.SMITHING, 5, Trigger.LOOK_SMITHING_TABLE),
 	ALCHEMIST(Skill.ARCANA, 5, Trigger.LOOK_BREWING_STAND), ENCHANTER(Skill.ARCANA, 5, Trigger.LOOK_ENCHANTING_TABLE),
-	HEXER(Skill.ARCANA, 4, Trigger.SPLASH_OR_LINGERING_POTION);
+	HEXER(Skill.ARCANA, 4, Trigger.SPLASH_OR_LINGERING_POTION),
+	MERCHANT(Skill.TRADING, 5, Trigger.LOOK_VILLAGER), QUARTERMASTER(Skill.TRADING, 5, Trigger.LOOK_VILLAGER),
+	GOLD_TONGUE(Skill.TRADING, 5, Trigger.GOLD_OR_PIGLIN);
 
 	public final Skill skill;
 	/** The id in saves and translation keys: lower case, never changed once released. */

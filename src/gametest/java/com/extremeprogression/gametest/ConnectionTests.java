@@ -103,7 +103,7 @@ public class ConnectionTests {
 			MasteryPerk a = MasteryPerk.of(s, "a"), b = MasteryPerk.of(s, "b");
 			check(helper, a != null && b != null && a != b, "%s does not have two perks", s.id);
 		}
-		check(helper, MasteryPerk.values().length == 20, "there are %s perks, not 20", MasteryPerk.values().length);
+		check(helper, MasteryPerk.values().length == 2 * com.extremeprogression.skill.Skill.values().length, "there are %s perks, not two a skill", MasteryPerk.values().length);
 		helper.succeed();
 	}
 

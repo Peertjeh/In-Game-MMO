@@ -9,7 +9,7 @@ import com.extremeprogression.skill.Skill;
  * skills at level 30, and works for a player only once they discovered it themselves, the first time its situation
  * happens in their play.
  *
- * <p>The six <b>duo synergies</b> (design §16, 1.4.0) are between two party members near each other: the one who acts
+ * <p>The eight <b>duo synergies</b> (design §16, 1.4.0; Caravan and Market Day with Trading, 1.5.0) are between two party members near each other: the one who acts
  * needs the first skill at 30, the party member the second. They discover it together, and the Chronicle keeps both.
  */
 public enum Synergy {
@@ -50,7 +50,11 @@ public enum Synergy {
 	/** Your tools and weapons wear 15% slower within 16 blocks of a party member (Smithing). */
 	WHETSTONE(Skill.MINING, Skill.SMITHING, 0.15, true),
 	/** Food you eat within 8 blocks of a party member (Farming) fills 25% more. */
-	HEARTY_MEAL(Skill.EXPLORATION, Skill.FARMING, 0.25, true);
+	HEARTY_MEAL(Skill.EXPLORATION, Skill.FARMING, 0.25, true),
+	/** Wandering traders cost 10% less with a party member (Exploration) within 32 blocks (1.5.0). */
+	CARAVAN(Skill.TRADING, Skill.EXPLORATION, 0.10, true),
+	/** Farmers and butchers cost 10% less with a party member (Farming) within 32 blocks (1.5.0). */
+	MARKET_DAY(Skill.TRADING, Skill.FARMING, 0.10, true);
 
 	public final Skill first;
 	public final Skill second;

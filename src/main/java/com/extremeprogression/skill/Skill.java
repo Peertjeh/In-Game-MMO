@@ -3,8 +3,8 @@ package com.extremeprogression.skill;
 import java.util.Locale;
 
 /**
- * The ten skills, in the order of the Character Sheet. A skill's id is used in saves, commands and translation keys,
- * so it never changes once released.
+ * The eleven skills, in the order of the Character Sheet (Trading, 1.5.0, last). A skill's id is used in saves,
+ * commands and translation keys, so it never changes once released.
  */
 public enum Skill {
 	MELEE(Category.COMBAT),
@@ -16,7 +16,8 @@ public enum Skill {
 	FISHING(Category.GATHERING),
 	EXPLORATION(Category.SURVIVAL),
 	SMITHING(Category.CRAFTING),
-	ARCANA(Category.CRAFTING);
+	ARCANA(Category.CRAFTING),
+	TRADING(Category.OTHER);
 
 	public final Category category;
 	public final String id;

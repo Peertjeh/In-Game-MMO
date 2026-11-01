@@ -26,6 +26,7 @@ public final class SkillView {
 			case EXPLORATION -> Items.COMPASS;
 			case SMITHING -> Items.ANVIL;
 			case ARCANA -> Items.ENCHANTED_BOOK;
+			case TRADING -> Items.EMERALD;
 		});
 	}
 
