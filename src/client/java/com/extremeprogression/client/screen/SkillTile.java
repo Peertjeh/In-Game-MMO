@@ -21,10 +21,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 /** One skill on the Character Sheet: icon, name, level and bar. Clicking it opens the skill's screen. */
-final class SkillTile extends AbstractButton {
+public final class SkillTile extends AbstractButton {
 	static final int W = 135, H = 22;
 
 	private final Skill skill;
+
+	/** The skill this tile shows. */
+	public Skill skill() {
+		return skill;
+	}
 	private final Consumer<Skill> open;
 	/** The tooltip's text as last built, so it is only rebuilt when the numbers change. */
 	private String tooltipFor = "";

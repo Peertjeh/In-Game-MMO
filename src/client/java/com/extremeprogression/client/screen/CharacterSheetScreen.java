@@ -46,8 +46,8 @@ public class CharacterSheetScreen extends Screen {
 		y0 = Math.max(2, (this.height - H) / 2);
 		// The tiles: Combat and Survival on the left, Gathering and Crafting on the right
 		int rx = x0 + LEFT_W + 6;
-		column(rx + 6, y0 + 20, List.of(Category.COMBAT, Category.SURVIVAL));
-		column(rx + 6 + SkillTile.W + 4, y0 + 20, List.of(Category.GATHERING, Category.CRAFTING));
+		column(rx + 6, y0 + 20, LEFT);
+		column(rx + 6 + SkillTile.W + 4, y0 + 20, RIGHT);
 		// The other screens, along the foot: the settings only for those who may change them
 		List<Button> buttons = new java.util.ArrayList<>();
 		buttons.add(Button.builder(Component.translatable("gui.extremeprogression.leaderboard.button"),
@@ -74,16 +74,36 @@ public class CharacterSheetScreen extends Screen {
 		}
 	}
 
-	private void column(int x, int y, List<Category> categories) {
-		for (Category c : categories) {
-			y += 10;
+	/** The categories of the two columns: the n-th of each starts on the same line (Survival beside Crafting). */
+	private static final List<Category> LEFT = List.of(Category.COMBAT, Category.SURVIVAL), RIGHT = List.of(Category.GATHERING, Category.CRAFTING);
+
+	private static int skills(Category c) {
+		int n = 0;
+		for (Skill s : Skill.values()) {
+			n += s.category == c ? 1 : 0;
+		}
+		return n;
+	}
+
+	/** Where each row of categories starts: below the taller of the two above it, so both columns stay in line. */
+	static int rowTop(int y, int row) {
+		for (int i = 0; i < row; i++) {
+			int tallest = Math.max(i < LEFT.size() ? skills(LEFT.get(i)) : 0, i < RIGHT.size() ? skills(RIGHT.get(i)) : 0);
+			y += 10 + tallest * (SkillTile.H + 2) + 4;
+		}
+		return y;
+	}
+
+	private void column(int x, int top, List<Category> categories) {
+		for (int row = 0; row < categories.size(); row++) {
+			Category c = categories.get(row);
+			int y = rowTop(top, row) + 10;
 			for (Skill s : Skill.values()) {
 				if (s.category == c) {
 					this.addRenderableWidget(new SkillTile(x, y, s, this::open));
 					y += SkillTile.H + 2;
 				}
 			}
-			y += 4;
 		}
 	}
 
@@ -145,21 +165,15 @@ public class CharacterSheetScreen extends Screen {
 		// The skills, grouped by category
 		int rx = x0 + LEFT_W + 6, rw = W - LEFT_W - 6;
 		Ui.panel(g, rx, ly, rw, lh);
-		heading(g, rx + 6, y0 + 20, List.of(Category.COMBAT, Category.SURVIVAL));
-		heading(g, rx + 6 + SkillTile.W + 4, y0 + 20, List.of(Category.GATHERING, Category.CRAFTING));
+		heading(g, rx + 6, y0 + 20, LEFT);
+		heading(g, rx + 6 + SkillTile.W + 4, y0 + 20, RIGHT);
 	}
 
 	/** The category names above their tiles (the tiles themselves are widgets, see {@link #column}). */
-	private void heading(GuiGraphicsExtractor g, int x, int y, List<Category> categories) {
-		for (Category c : categories) {
-			Ui.text(g, this.font, Ui.tr(c.translationKey()).toUpperCase(java.util.Locale.ROOT), x, y + 1, c.accent);
-			y += 10;
-			for (Skill s : Skill.values()) {
-				if (s.category == c) {
-					y += SkillTile.H + 2;
-				}
-			}
-			y += 4;
+	private void heading(GuiGraphicsExtractor g, int x, int top, List<Category> categories) {
+		for (int row = 0; row < categories.size(); row++) {
+			Category c = categories.get(row);
+			Ui.text(g, this.font, Ui.tr(c.translationKey()).toUpperCase(java.util.Locale.ROOT), x, rowTop(top, row) + 1, c.accent);
 		}
 	}
 

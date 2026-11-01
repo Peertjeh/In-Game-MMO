@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.3
+
+- The Character Sheet's columns are in line: Survival starts beside Crafting, Exploration beside Smithing.
+- The Leaderboard's button on the Character Sheet reads **Ranking**, so it fits beside Settings.
+
 ## 1.4.2
 
 - **Fixed**: on a server with another mod's `/party` (BattleHub's), the two merged into one command, and accepting an

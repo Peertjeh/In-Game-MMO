@@ -1003,7 +1003,7 @@
 	"message.extremeprogression.settings.invalid": "The settings could not be read.",
 	"message.extremeprogression.settings.saved": "Settings saved (preset %s) and sent to everyone.",
 	"gui.extremeprogression.leaderboard.title": "Leaderboard",
-	"gui.extremeprogression.leaderboard.button": "Leaderboard",
+	"gui.extremeprogression.leaderboard.button": "Ranking",
 	"gui.extremeprogression.leaderboard.total": "Total level",
 	"gui.extremeprogression.leaderboard.waiting": "Asking the server...",
 	"gui.extremeprogression.leaderboard.players": "%s players",

@@ -99,6 +99,17 @@ public class ClientShots implements FabricClientGameTest {
 			ctx.waitTicks(10);
 			check(ctx.computeOnClient(mc -> CharacterSheetScreen.opened()) > sheets, "K did not open the Character Sheet");
 			ctx.takeScreenshot("03_character_sheet");
+			// Both columns in line: Survival's Exploration beside Crafting's Smithing
+			ctx.runOnClient(mc -> {
+				java.util.Map<Skill, Integer> top = new java.util.EnumMap<>(Skill.class);
+				for (var child : mc.gui.screen().children()) {
+					if (child instanceof com.extremeprogression.client.screen.SkillTile t) {
+						top.put(t.skill(), t.getY());
+					}
+				}
+				check(top.size() == Skill.values().length && top.get(Skill.EXPLORATION).equals(top.get(Skill.SMITHING))
+						&& top.get(Skill.MELEE).equals(top.get(Skill.MINING)), "the sheet's columns are not in line: " + top);
+			});
 
 			// A tree in use: Blade chosen in Melee with a few points bought, and Bulwark in Defense, which shuts Brawler out
 			sp.getServer().runOnServer(s -> {
