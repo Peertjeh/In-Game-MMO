@@ -40,6 +40,7 @@ Legend for every mechanic:
 | 24 | Appendix A: XP tables; Dutch translation | ✅ approved; English only, no translation |
 | 25 | Phases 8 and 9: name, storage, configuration, commands, leaderboard | ✅ approved |
 | 26 | Phase 10: the complete design | ✅ approved |
+| 27 | Skill 11: Trading, in a new category Other (after 1.4) | 💡 proposal |
 
 ---
 
@@ -572,6 +573,69 @@ How the mcMMO skills were folded in:
 **Abilities:** `R` while looking at the brewing stand or enchanting table. For Hexer: `R` with a splash or lingering potion in hand.
 
 **Counteraction:** opposing skill **Smithing** (magic against steel).
+
+**No new items needed.**
+
+### Skill 11: Trading (💡 proposal, round 27)
+The owner asked for an "Other" section on the Character Sheet, with trading with villagers as the example. Trading is
+its first skill: nothing in the mod rewards trading yet. Category **Other** (light purple); icon: an emerald.
+
+**Identity:** dealing with villagers, wandering traders and piglins, and defending villages.
+
+**XP** (calibration: an active trader makes ≈ 120 trades an hour, ≈ 10,000 XP):
+
+| Source | XP |
+|---|---:|
+| A trade with a villager, by the offer's tier: novice · apprentice · journeyman · expert · master | 30 · 45 · 65 · 90 · 120 |
+| … plus for every emerald paid or received in it | +1.5 |
+| A trade with a wandering trader | ×1.5 (counted as journeyman) |
+| A villager reaching apprentice · journeyman · expert · master through your trade | 150 · 300 · 500 · 800 |
+| A gold ingot a piglin barters that you gave it (thrown or handed over) | 20 |
+| A raid won (Hero of the Village), × the raid's omen level (1–5) | 1,000 |
+
+- **The same offer**: of one villager's offer, the first 4 trades after each restock count fully, the rest 25%. A
+  trading hall is fine; buying and selling the same goods in a loop is not the fast way.
+- **Nothing** for villagers, wandering traders and piglins from spawn eggs, spawners or commands (as for mobs, §12),
+  in Creative, or while AFK. Diminishing returns (§12) as for every skill.
+- Prices count what you really paid (after a cured villager's discount, Hero of the Village, this skill's own).
+
+**Trunk:**
+| Level | Bonus |
+|---|---|
+| 5 | Fair Price: villagers' prices 5% lower (rounded to the nearest item) |
+| 10 | Good Word: villagers gain 10% more experience from your trades (they level up sooner) |
+| 15 | Barterer: a piglin's barter for your gold has a 10% chance of one more roll |
+| 20 | Well Stocked: a 5% chance a trade does not use up the offer |
+
+**Specializations** (cooldowns 5 min; the ability is used looking at a villager, or for Gold Tongue holding gold or
+looking at a piglin):
+| | **Merchant** | **Quartermaster** | **Gold Tongue** |
+|---|---|---|---|
+| Playstyle | The best prices | Stock and villager careers | Piglins and wandering traders |
+| Active ability | **Haggle**: for 30 seconds the trades you open with villagers cost 20% less | **Restock**: the villager you look at restocks all its offers | **Gilded Offer**: for 20 seconds piglins barter your gold at once and roll twice |
+| Trade-off | Villagers gain 20% less experience from your trades | Wandering traders and piglins give you 25% less XP | Villagers' prices 10% higher |
+
+| Specialization | Ability ranks (after I) | P1 · P2 (2 points a rank) | P3 · P4 (3 points a rank) | Choice (3 points a rank) |
+|---|---|---|---|---|
+| **Merchant** | +5% off (V: 40%) | Thrifty: villagers' prices −2% · Bulk Buyer: offers costing 16 or more items −3% | Regular: a villager you traded with today −2% · Cashback: 3% chance a trade gives 1 emerald back | Bookworm: librarians −4% **or** Armorer's Friend: armorers, toolsmiths and weaponsmiths −4% |
+| **Quartermaster** | +1 more villager within 8 blocks (V: 5) | Stockpile: 4% chance a trade does not use up the offer · Mentor: villagers +5% experience from your trades | Extra Crate: 3% chance a trade gives one more of its (stackable) result · Fresh Start: 20% chance a restock also undoes the prices' rise from demand (always at V) | Career Boost: a villager's level-up XP +10% **or** Second Shift: Restock's cooldown −20 s |
+| **Gold Tongue** | +4 s (V: 36 s) | Gold Fever: piglins admire your gold 10% shorter · Wanderer's Deal: wandering traders −4% | Treasure Taste: 3% chance a barter rolls once more · Long Stay: wandering traders within 32 blocks stay 10% longer | Golden Calm: after a barter, piglins leave you alone 10 s without gold armor **or** Fool's Gold: 4% chance a barter gives the ingot back |
+
+All numbers are per rank, as for every specialization (§6).
+
+**Mastery perks:** Patron (villagers' prices 1% lower a rank) **or** Golden Touch (a 1% chance a rank that a barter or
+a wandering trader's trade gives its result twice).
+
+**Counteraction:** no opposing skill (like Mining or Fishing); the prices of the specializations are its
+counterweight. No specialization conflicts.
+
+**Optional (💡): two duo synergies** (§16), with a party member near:
+- **Caravan** (Trading + Exploration): wandering traders cost 10% less.
+- **Market Day** (Trading + Farming): farmers and butchers cost 10% less.
+
+**On the Character Sheet:** Other goes in the left column under Survival, Trading beside Arcana; the sheet grows a
+few pixels for it. Everything else that lists skills (the leaderboard, TAB, settings, data files) takes it as it
+takes the others. The total cap stays 400: one more skill means more choice, not more levels.
 
 **No new items needed.**
 
