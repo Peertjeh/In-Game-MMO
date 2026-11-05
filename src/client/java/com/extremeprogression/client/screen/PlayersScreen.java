@@ -144,7 +144,7 @@ public class PlayersScreen extends Screen {
 			confirm = what;
 			confirmUntil = System.currentTimeMillis() + 5000;
 			if (!"all".equals(what)) {
-				Minecraft.getInstance().gui.setOverlayMessage(Component.translatable("gui.extremeprogression.players.reset_skill_sure",
+				Minecraft.getInstance().gui.hud.setOverlayMessage(Component.translatable("gui.extremeprogression.players.reset_skill_sure",
 						Component.translatable("skill.extremeprogression." + what)), false);
 			}
 			rebuild();
