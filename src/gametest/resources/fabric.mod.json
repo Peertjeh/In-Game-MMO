@@ -26,6 +26,7 @@
 			"com.extremeprogression.gametest.SynergyTests",
 			"com.extremeprogression.gametest.PartyTests",
 			"com.extremeprogression.gametest.TradingTests",
+			"com.extremeprogression.gametest.PermissionTests",
 			"com.extremeprogression.gametest.AdminTests",
 			"com.extremeprogression.gametest.CompatTests",
 			"com.extremeprogression.gametest.BalanceTests",

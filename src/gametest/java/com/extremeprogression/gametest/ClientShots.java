@@ -254,6 +254,18 @@ public class ClientShots implements FabricClientGameTest {
 			ctx.getInput().setCursorPos(1, 1);
 			ctx.waitTicks(2);
 			ctx.takeScreenshot("05_inspect");
+			// The Players screen (1.6.0): in a world of your own you hold every permission
+			ctx.runOnClient(mc -> mc.gui.setScreen(null));
+			sp.getServer().runOnServer(s -> com.extremeprogression.admin.AdminService.send(s.getPlayerList().getPlayers().get(0), null, true));
+			ctx.waitTicks(10);
+			check(ctx.computeOnClient(mc -> mc.gui.screen() instanceof com.extremeprogression.client.screen.PlayersScreen), "the Players screen did not open");
+			ctx.runOnClient(mc -> ((com.extremeprogression.client.screen.PlayersScreen) mc.gui.screen()).select(mc.player.getStringUUID()));
+			ctx.waitTicks(10);
+			check(ctx.computeOnClient(mc -> com.extremeprogression.client.state.ClientAdmin.admin() != null
+					&& com.extremeprogression.client.state.ClientAdmin.admin().has("selected")), "the Players screen got no player's data");
+			ctx.getInput().setCursorPos(1, 1);
+			ctx.waitTicks(2);
+			ctx.takeScreenshot("05_players");
 			ctx.runOnClient(mc -> {
 				check(com.extremeprogression.client.state.ClientAdmin.events().size() == 1, "the client does not know the XP event");
 				mc.gui.setScreen(new CharacterSheetScreen(null));
@@ -572,7 +584,10 @@ public class ClientShots implements FabricClientGameTest {
 		keys.add("message.extremeprogression.synergy.first_together");
 		for (String k : new String[] {"leaderboard.title", "leaderboard.button", "leaderboard.total", "leaderboard.waiting", "leaderboard.players",
 				"leaderboard.level", "inspect.title", "inspect.online", "inspect.offline", "inspect.synergies", "inspect.read_only", "inspect.no_spec",
-				"inspect.points", "inspect.points_short", "settings.title", "settings.button", "settings.preset.hardcore", "settings.preset.normal", "settings.preset.custom",
+				"inspect.points", "inspect.points_short", "players.title", "players.button", "players.search", "players.count", "players.waiting", "players.pick",
+				"players.summary", "players.fatigue", "players.more", "players.party", "players.minus_tip", "players.plus_tip", "players.respec_tip",
+				"players.cooldowns", "players.clear_deaths", "players.reset_all", "players.reset_sure", "players.reset_tip", "players.reset_skill_sure",
+				"players.points", "players.skill_help", "settings.title", "settings.button", "settings.preset.hardcore", "settings.preset.normal", "settings.preset.custom",
 				"settings.search", "settings.save", "settings.revert", "settings.invalid", "settings.sent", "settings.waiting", "settings.preset", "settings.page",
 				"settings.read_only", "sheet.xp_event", "sheet.xp_event_all", "death.step2_off"}) {
 			keys.add("gui.extremeprogression." + k);

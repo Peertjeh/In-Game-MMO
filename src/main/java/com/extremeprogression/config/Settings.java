@@ -9,7 +9,6 @@ import com.extremeprogression.network.SettingsPayload;
 import com.extremeprogression.synergy.Synergy;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.commands.Commands;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -72,14 +71,14 @@ public final class Settings {
 	}
 
 	/** Whether a player may change the settings: an admin (op level 3), as for {@code /skills reload}. */
+	/** Whether this player may change the settings: {@code extremeprogression.admin.settings} (1.6.0). */
 	public static boolean mayEdit(ServerPlayer p) {
-		java.util.function.Predicate<net.minecraft.commands.CommandSourceStack> admins = Commands.hasPermission(Commands.LEVEL_ADMINS);
-		return admins.test(p.createCommandSourceStack());
+		return com.extremeprogression.server.Perms.has(p, com.extremeprogression.server.Perms.Node.SETTINGS);
 	}
 
 	public static void send(ServerPlayer p, boolean open) {
 		if (ServerPlayNetworking.canSend(p, SettingsPayload.TYPE)) {
-			ServerPlayNetworking.send(p, new SettingsPayload(shared(), mayEdit(p), open));
+			ServerPlayNetworking.send(p, new SettingsPayload(shared(), mayEdit(p), com.extremeprogression.admin.AdminService.allowed(p), open));
 		}
 	}
 

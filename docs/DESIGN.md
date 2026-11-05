@@ -1309,6 +1309,13 @@ Everything marked 💡 was decided while building.
 - **The leaderboard page** (a button on the Character Sheet): every player with a file, by total level or by one skill,
   with Mastery ranks. The first 100 come from the server.
 
+### The Players screen and permissions (1.6.0, the owner's choice, as in Extreme Dimensions)
+- `/skills players` and a Players button on the Character Sheet: every player online and offline; for the one picked,
+  the overview and every skill with a level (or Mastery rank) down or up, a free respec, every ability ready, death
+  pressure and fatigue cleared, and resets. Offline players' files are written at once; every change is logged.
+- Permissions through Fabric API's permission API: `extremeprogression.admin.players` (operator level 2 without a
+  permission mod), `.reset`, `.settings` and `.events` (level 3). The levels are fixed, not settings.
+
 ## 12. Anti-exploit
 - 💡 All XP is computed on the server; the client only displays it (follows from option A).
 - Rules already approved per skill (§2):

@@ -189,3 +189,7 @@ ItemEntity
 net.minecraft.world.effect.MobEffects
 net.minecraft.world.item.trading.ItemCost
 InventoryCarrier
+net.minecraft.client.input.InputWithModifiers
+net.minecraft.client.input.MouseButtonEvent
+net.minecraft.server.permissions.PermissionLevel
+net.fabricmc.fabric.api.permission.v1.PermissionContextOwner

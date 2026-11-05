@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.6.0: The Players Screen and permissions
+
+- **A Players screen for admins** (as in Extreme Dimensions): `/skills players`, or the **Players** button at the top of
+  the Character Sheet (shown only to who may). On the left every player the world knows, online first and then offline,
+  with a search box; on the right the one picked: total, Mastery, deaths, death pressure, fatigue, party and synergies,
+  and every skill with **−** and **+** (Shift: ten levels; at the maximum level a Mastery rank, and a minus takes ranks
+  first), **↺** a free respec, **Abilities ready**, **Clear deaths**, and **Reset all** (press twice). Shift-click on
+  ↺ (twice) resets one skill. It works for players offline too; the server checks every request, logs every change
+  with who made it, and tells a player online.
+- **Permissions for every admin command and screen**, through Fabric API's permission API, for LuckPerms and the like:
+  `extremeprogression.admin.players` (the Players screen, `inspect`, `admin set|add|respec|cooldowns`),
+  `extremeprogression.admin.reset` (resets), `extremeprogression.admin.settings` (the settings screen, `settings`,
+  `preset`, `reload`) and `extremeprogression.admin.events` (`xprate`). Without a permission mod each falls back to
+  the operator level it always needed (2 for players, 3 for the rest), and in a world of your own you hold them all.
+
 ## 1.5.1
 
 - **Inspect** fits eleven skills: each tile is one line shorter (the specializations and the points share a line), so

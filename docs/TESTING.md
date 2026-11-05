@@ -52,6 +52,7 @@ key of its own). Extreme Dimensions is optional; the two work side by side.
 | `/skills xprate <multiplier> [all\|skill] [minutes]` | an XP event (`/skills xprate reset` ends it) |
 | `/skills top [skill]` | the leaderboard in the chat |
 | `/skills inspect <player>` | a read-only look at a player, offline ones too |
+| `/skills players` | the Players screen: change a player's levels, Mastery, deaths, respec or reset (offline ones too) |
 | `/skills settings` | the settings screen (admins) |
 | `/skills preset <hardcore\|normal\|custom>`, `/skills reload` | a preset; reread the config and data files |
 | `/party invite <player>`, `/party accept`, `/party leave` | play together (any player): a party, its bonus and duo synergies |

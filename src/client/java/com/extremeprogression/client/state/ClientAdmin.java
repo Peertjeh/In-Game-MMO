@@ -30,6 +30,7 @@ public final class ClientAdmin {
 	public static void apply(SettingsPayload payload) {
 		settings = payload.json();
 		editor = payload.editor();
+		players = payload.players();
 		// (in a world of this client's own, the server's settings are these already: the same game)
 		if (!Minecraft.getInstance().hasSingleplayerServer()) {
 			Settings.applyShared(payload.json());
@@ -56,6 +57,8 @@ public final class ClientAdmin {
 		}
 		settings = null;
 		editor = false;
+		players = false;
+		admin = null;
 		events = List.of();
 		leaderboard = null;
 	}
@@ -67,6 +70,33 @@ public final class ClientAdmin {
 
 	public static boolean editor() {
 		return editor;
+	}
+
+	private static boolean players = false;
+	private static com.google.gson.JsonObject admin = null;
+	private static int adminUpdates = 0;
+
+	/** Whether this player may open the Players screen (1.6.0). */
+	public static boolean players() {
+		return players;
+	}
+
+	public static void apply(com.extremeprogression.network.AdminPayload payload) {
+		try {
+			admin = com.google.gson.JsonParser.parseString(payload.json()).getAsJsonObject();
+		} catch (RuntimeException e) {
+			admin = null;
+		}
+		adminUpdates++;
+	}
+
+	/** The Players screen's data as the server last sent it, or null. */
+	public static com.google.gson.JsonObject admin() {
+		return admin;
+	}
+
+	public static int adminUpdates() {
+		return adminUpdates;
 	}
 
 	public static List<XpEventPayload.Entry> events() {

@@ -52,6 +52,12 @@ public class ExtremeProgressionClient implements ClientModInitializer {
 		}));
 		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.PowerPayload.TYPE, (payload, context) ->
 				context.client().execute(() -> com.extremeprogression.client.state.ClientPower.apply(payload)));
+		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.AdminPayload.TYPE, (payload, context) -> context.client().execute(() -> {
+			com.extremeprogression.client.state.ClientAdmin.apply(payload);
+			if (payload.open()) {
+				context.client().gui.setScreen(new com.extremeprogression.client.screen.PlayersScreen(null));
+			}
+		}));
 		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.PartyPayload.TYPE, (payload, context) ->
 				context.client().execute(() -> com.extremeprogression.client.state.ClientParty.apply(payload)));
 		ClientPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.XpEventPayload.TYPE, (payload, context) ->

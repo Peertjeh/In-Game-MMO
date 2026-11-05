@@ -258,7 +258,7 @@ public class SettingsScreen extends Screen {
 					: was.isNumber() ? new JsonPrimitive(Double.parseDouble(text)) : new JsonPrimitive(text));
 		}
 		if (ClientPlayNetworking.canSend(SettingsPayload.TYPE)) {
-			ClientPlayNetworking.send(new SettingsPayload(out.toString(), false, false));
+			ClientPlayNetworking.send(new SettingsPayload(out.toString(), false, false, false));
 			message = Ui.tr("gui.extremeprogression.settings.sent", edits.size());
 		}
 	}

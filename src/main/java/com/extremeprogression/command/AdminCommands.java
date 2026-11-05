@@ -60,8 +60,13 @@ public final class AdminCommands {
 
 	/** The subcommands, added to {@code /skills}. */
 	static void register(LiteralArgumentBuilder<CommandSourceStack> skills) {
-		java.util.function.Predicate<CommandSourceStack> ops = Commands.hasPermission(Commands.LEVEL_GAMEMASTERS);
-		java.util.function.Predicate<CommandSourceStack> admins = Commands.hasPermission(Commands.LEVEL_ADMINS);
+		java.util.function.Predicate<CommandSourceStack> ops = com.extremeprogression.server.Perms.require(com.extremeprogression.server.Perms.Node.PLAYERS);
+		java.util.function.Predicate<CommandSourceStack> admins = com.extremeprogression.server.Perms.require(com.extremeprogression.server.Perms.Node.SETTINGS);
+		java.util.function.Predicate<CommandSourceStack> events = com.extremeprogression.server.Perms.require(com.extremeprogression.server.Perms.Node.EVENTS);
+		skills.then(Commands.literal("players").requires(ops).executes(c -> {
+			com.extremeprogression.admin.AdminService.send(c.getSource().getPlayerOrException(), null, true);
+			return 1;
+		}));
 		skills.then(Commands.literal("top")
 				.executes(c -> top(c.getSource(), null))
 				.then(Commands.argument("skill", StringArgumentType.word()).suggests((c, b) -> SharedSuggestionProvider.suggest(skillIds(), b))
@@ -89,7 +94,7 @@ public final class AdminCommands {
 				.then(Commands.argument("preset", StringArgumentType.word())
 						.suggests((c, b) -> SharedSuggestionProvider.suggest(Arrays.stream(Preset.values()).map(p -> p.id), b))
 						.executes(AdminCommands::preset)));
-		skills.then(Commands.literal("xprate").requires(admins)
+		skills.then(Commands.literal("xprate").requires(events)
 				.then(Commands.literal("reset").executes(c -> {
 					if (!XpEvents.reset(c.getSource().getServer(), c.getSource().getTextName())) {
 						c.getSource().sendFailure(Component.translatable("commands.extremeprogression.xprate.none"));
@@ -109,8 +114,7 @@ public final class AdminCommands {
 
 	/** {@code /skills admin reset}, added to the admin branch (admins only). */
 	static LiteralArgumentBuilder<CommandSourceStack> reset() {
-		java.util.function.Predicate<CommandSourceStack> admins = Commands.hasPermission(Commands.LEVEL_ADMINS);
-		return Commands.literal("reset").requires(admins)
+		return Commands.literal("reset").requires(com.extremeprogression.server.Perms.require(com.extremeprogression.server.Perms.Node.RESET))
 				.then(Commands.literal("confirm").executes(AdminCommands::confirm))
 				.then(Commands.argument("player", StringArgumentType.word()).suggests((c, b) -> SharedSuggestionProvider.suggest(knownNames(c.getSource().getServer()), b))
 						.executes(c -> askReset(c, null))

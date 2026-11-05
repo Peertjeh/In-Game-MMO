@@ -24,6 +24,33 @@ More: the page text in [docs/modrinth/description.md](docs/modrinth/description.
 [docs/TESTING.md](docs/TESTING.md). Works on its own, and together with
 [Extreme Dimensions](https://github.com/Peertjeh/extremedimensions).
 
+## For admins: the Players screen and permissions
+
+`/skills players` (or the **Players** button at the top of the Character Sheet) opens the Players screen: every player
+the world knows, online first and then offline, with a search box. For the one picked: their total, Mastery, deaths,
+death pressure and fatigue, party and synergies, and every skill with a level taken off or put on (Shift: ten; at the
+maximum level a Mastery rank), a free respec, **Abilities ready**, **Clear deaths**, and for who may reset, a reset of a
+skill or of everything (press twice). It works for players offline too (their file is written at once); the server
+checks every request, writes every change to its log, and tells a player online what changed.
+
+### Permissions (LuckPerms)
+
+Every admin command and screen asks a permission of its own, through Fabric API's permission API, so a permission mod
+such as LuckPerms can hand one out without making someone an operator (a moderator who may change levels but not
+reset anyone, say). Without a permission mod each falls back to the operator level it always needed, so nothing
+changes on a server that has none; in a world of your own you hold them all.
+
+| Permission | Opens | Without a permission mod |
+|---|---|---|
+| `extremeprogression.admin.players` | The Players screen, `/skills players`, `/skills inspect`, `/skills admin set\|add\|respec\|cooldowns` | Operator level 2 |
+| `extremeprogression.admin.reset` | Reset in the Players screen, `/skills admin reset` | Operator level 3 |
+| `extremeprogression.admin.settings` | Changing the settings (the settings screen), `/skills settings`, `/skills preset`, `/skills reload` | Operator level 3 |
+| `extremeprogression.admin.events` | XP events: `/skills xprate` | Operator level 3 |
+
+In LuckPerms: `/lp group moderator permission set extremeprogression.admin.players true`. (Under the hood each is an id
+such as `extremeprogression:admin/players`; LuckPerms writes it with dots.) The fallback levels are fixed on purpose:
+who may change the settings cannot lower the bar for a permission they lack. Extreme Dimensions works the same way.
+
 ## Requirements
 
 - Minecraft **26.3**, Fabric Loader **0.19.5+**, Fabric API **0.162.0+**, Java **25**.

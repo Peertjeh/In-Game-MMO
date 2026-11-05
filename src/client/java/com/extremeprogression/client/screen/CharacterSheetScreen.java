@@ -63,6 +63,11 @@ public class CharacterSheetScreen extends Screen {
 					b -> Minecraft.getInstance().gui.setScreen(new SettingsScreen(this))).build());
 		}
 		buttons.add(Button.builder(Component.translatable("gui.done"), b -> this.onClose()).build());
+		// The Players screen, for who may (1.6.0): a small button at the top right
+		if (com.extremeprogression.client.state.ClientAdmin.players()) {
+			this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.players.button"),
+					b -> Minecraft.getInstance().gui.setScreen(new PlayersScreen(this))).pos(x0 + W - 64, y0).size(64, 12).build());
+		}
 		int bw = (W - 3 * (buttons.size() - 1)) / buttons.size();
 		int bx = x0;
 		for (Button b : buttons) {

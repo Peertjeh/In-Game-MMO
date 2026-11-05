@@ -50,6 +50,12 @@ no TAB needed), except in BattleHub's lobby and matches: `nametag_hidden_dimensi
 The values are in English (a tablist is the same for everyone) and are worked out once a second (`placeholder_refresh_ticks`);
 `placeholders: false` in `config/extremeprogression.json` empties them all.
 
+## Permissions
+
+Every admin command and screen asks a permission of its own (`extremeprogression.admin.players`, `.reset`, `.settings`,
+`.events`), so LuckPerms can hand one out without making someone an operator; without a permission mod they fall back
+to the operator levels as before. The main README has the table.
+
 ## Parties and BattleHub
 
 BattleHub has its own `/party`. Extreme Progression's parties then stay under `/skills party` (and the Party button on

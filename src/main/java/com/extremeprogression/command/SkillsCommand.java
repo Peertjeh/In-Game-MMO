@@ -38,32 +38,34 @@ public final class SkillsCommand {
 	private SkillsCommand() {}
 
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-		Predicate<CommandSourceStack> op = Commands.hasPermission(Commands.LEVEL_GAMEMASTERS);
+		// (1.6.0: each part asks a permission of its own; without a permission mod, the operator level it always needed)
+		Predicate<CommandSourceStack> op = com.extremeprogression.server.Perms.require(com.extremeprogression.server.Perms.Node.PLAYERS);
+		Predicate<CommandSourceStack> adminAny = op.or(com.extremeprogression.server.Perms.require(com.extremeprogression.server.Perms.Node.RESET));
 		var skills = Commands.literal("skills")
 				.executes(c -> overview(c.getSource()))
-				.then(Commands.literal("admin").requires(op)
+				.then(Commands.literal("admin").requires(adminAny)
 						.then(AdminCommands.reset())
-						.then(Commands.literal("set")
+						.then(Commands.literal("set").requires(op)
 								.then(Commands.argument("player", StringArgumentType.word())
 										.suggests((c, b) -> SharedSuggestionProvider.suggest(c.getSource().getOnlinePlayerNames(), b))
 										.then(Commands.argument("skill", StringArgumentType.word())
 												.suggests((c, b) -> SharedSuggestionProvider.suggest(Arrays.stream(Skill.values()).map(s -> s.id), b))
 												.then(Commands.argument("level", IntegerArgumentType.integer(0))
 														.executes(c -> set(c, IntegerArgumentType.getInteger(c, "level")))))))
-						.then(Commands.literal("add")
+						.then(Commands.literal("add").requires(op)
 								.then(Commands.argument("player", StringArgumentType.word())
 										.suggests((c, b) -> SharedSuggestionProvider.suggest(c.getSource().getOnlinePlayerNames(), b))
 										.then(Commands.argument("skill", StringArgumentType.word())
 												.suggests((c, b) -> SharedSuggestionProvider.suggest(Arrays.stream(Skill.values()).map(s -> s.id), b))
 												.then(Commands.argument("xp", DoubleArgumentType.doubleArg())
 														.executes(c -> add(c, DoubleArgumentType.getDouble(c, "xp")))))))
-						.then(Commands.literal("respec")
+						.then(Commands.literal("respec").requires(op)
 								.then(Commands.argument("player", StringArgumentType.word())
 										.suggests((c, b) -> SharedSuggestionProvider.suggest(c.getSource().getOnlinePlayerNames(), b))
 										.then(Commands.argument("skill", StringArgumentType.word())
 												.suggests((c, b) -> SharedSuggestionProvider.suggest(Arrays.stream(Skill.values()).map(s -> s.id), b))
 												.executes(SkillsCommand::respec))))
-						.then(Commands.literal("cooldowns")
+						.then(Commands.literal("cooldowns").requires(op)
 								.then(Commands.argument("player", StringArgumentType.word())
 										.suggests((c, b) -> SharedSuggestionProvider.suggest(c.getSource().getOnlinePlayerNames(), b))
 										.executes(SkillsCommand::cooldowns))));

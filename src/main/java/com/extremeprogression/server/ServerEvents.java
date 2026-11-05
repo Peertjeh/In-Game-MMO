@@ -106,6 +106,9 @@ public final class ServerEvents {
 				(payload, context) -> com.extremeprogression.command.AdminCommands.settingsSaved(context.player(), payload.json()));
 		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.LeaderboardPayload.TYPE,
 				(payload, context) -> com.extremeprogression.command.AdminCommands.sendLeaderboard(context.player()));
+		// A button on the Players screen (admins, 1.6.0)
+		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.AdminActionPayload.TYPE,
+				(payload, context) -> com.extremeprogression.admin.AdminService.act(context.player(), payload.target(), payload.action(), payload.skill(), payload.amount()));
 		// A button on the Party screen
 		net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(com.extremeprogression.network.PartyActionPayload.TYPE,
 				(payload, context) -> com.extremeprogression.command.PartyCommand.act(context.player(), payload.action(), payload.name()));
