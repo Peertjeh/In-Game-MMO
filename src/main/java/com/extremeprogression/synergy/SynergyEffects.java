@@ -194,6 +194,38 @@ public final class SynergyEffects {
 		}
 	}
 
+	// --- Elytra flight ----------------------------------------------------------------------------
+
+	/** The firework rocket in hand just before its use, while flying with an elytra (Tailwind); empty otherwise. */
+	private static ItemStack fireworkBefore = ItemStack.EMPTY;
+
+	/** A firework rocket is about to be used: remembered when it will boost an elytra flight. */
+	public static void fireworkBefore(Player player, net.minecraft.world.InteractionHand hand) {
+		fireworkBefore = player instanceof ServerPlayer && player.isFallFlying() && !player.isCreative() ? player.getItemInHand(hand).copyWithCount(1) : ItemStack.EMPTY;
+	}
+
+	/** After the rocket boosted the flight (vanilla used it up): Tailwind gives it back half the time. */
+	public static void fireworkAfter(Player player, net.minecraft.world.InteractionHand hand) {
+		ItemStack one = fireworkBefore;
+		fireworkBefore = ItemStack.EMPTY;
+		if (one.isEmpty() || !(player instanceof ServerPlayer p) || !fireworkSaved(p)) {
+			return;
+		}
+		ItemStack now = p.getItemInHand(hand);
+		if (now.isEmpty()) {
+			p.setItemInHand(hand, one);
+		} else if (ItemStack.isSameItemSameComponents(now, one) && now.getCount() < now.getMaxStackSize()) {
+			now.grow(1);
+		} else if (p.level() instanceof ServerLevel level) {
+			p.spawnAtLocation(level, one);
+		}
+	}
+
+	/** Tailwind: whether a rocket that boosts an elytra flight is spared (50%); the first time, discovered. */
+	public static boolean fireworkSaved(ServerPlayer p) {
+		return trigger(p, Synergy.TAILWIND) && p.getRandom().nextDouble() < Synergy.TAILWIND.strength * power(p, Synergy.TAILWIND);
+	}
+
 	// --- Gear and workstations -------------------------------------------------------------------
 
 	private static boolean armor(ItemStack stack) {

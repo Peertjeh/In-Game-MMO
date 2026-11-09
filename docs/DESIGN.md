@@ -677,6 +677,7 @@ Mechanism b: these specializations of **different** skills exclude each other. W
 | Smithing + Defense | Tailored | Your armor wears 10% slower |
 | Fishing + Arcana | Tidal Magic | Water Breathing potions last 50% longer |
 | Foraging + Arcana | Herb Lore | Glow berries give 10 seconds of Night Vision |
+| Exploration + Smithing | Tailwind (1.7.0, the owner's wish) | A firework rocket that boosts your elytra flight has a 50% chance not to be used up |
 
 General rules:
 - The rune hint appears in the GUI once one of the two skills reaches the required level.
@@ -748,6 +749,7 @@ The connections between skills, as built. Everything marked 💡 was decided whi
   | Tailored | Every point of wear on your armor has a 10% chance to be spared. |
   | Tidal Magic | A Water Breathing potion you drink lasts 50% longer. |
   | Herb Lore | Eating glow berries gives 10 seconds of Night Vision. |
+  | Tailwind (1.7.0) | A firework rocket used while flying with an elytra comes back to the hand half the time (into the stack, or dropped at your feet when the hand holds something else). Creative never uses one up. |
 
 - **The Chronicle:** `<world>/extremeprogression/world.json` holds every synergy's first discoverer, with the time and
   the place. It is written at once on every first discovery.

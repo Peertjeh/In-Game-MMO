@@ -28,6 +28,7 @@
 		"EntityAccess",
 		"EntityTypeMixin",
 		"FarmlandBlockMixin",
+		"FireworkRocketItemMixin",
 		"FishingHookAccess",
 		"FishingHookMixin",
 		"FishingRodHookedTriggerMixin",

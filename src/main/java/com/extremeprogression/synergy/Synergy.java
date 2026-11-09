@@ -5,7 +5,8 @@ import java.util.Locale;
 import com.extremeprogression.skill.Skill;
 
 /**
- * The hidden synergies (design §2, ✅ round 19): twelve pairs of skills, never two opposing ones. A synergy needs both
+ * The hidden synergies (design §2, ✅ round 19): twelve pairs of skills (thirteen with Tailwind, 1.7.0), never two
+ * opposing ones. A synergy needs both
  * skills at level 30, and works for a player only once they discovered it themselves, the first time its situation
  * happens in their play.
  *
@@ -37,6 +38,8 @@ public enum Synergy {
 	TIDAL_MAGIC(Skill.FISHING, Skill.ARCANA, 0.50),
 	/** Glow berries give 10 seconds of Night Vision. */
 	HERB_LORE(Skill.FORAGING, Skill.ARCANA, 10),
+	/** A firework rocket that boosts your elytra flight has a 50% chance not to be used up (1.7.0, the owner's wish). */
+	TAILWIND(Skill.EXPLORATION, Skill.SMITHING, 0.50),
 
 	// --- Duo synergies: your first skill, a party member's second ---
 	/** While you block with a shield, a party member within 4 blocks (Melee) takes 15% less damage. */

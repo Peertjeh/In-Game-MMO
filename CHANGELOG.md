@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.7.0: Tailwind
+
+- **A new synergy, Tailwind** (Exploration + Smithing, both at level 30): a firework rocket that boosts your elytra
+  flight has a 50% chance not to be used up; it comes back to your hand. Discovered the first time you boost a flight
+  with both levels met, like every synergy; its strength is in `synergies.json`.
+- The Codex and the Chronicle fit thirteen synergies.
+
 ## 1.6.0: The Players Screen and permissions
 
 - **A Players screen for admins** (as in Extreme Dimensions): `/skills players`, or the **Players** button at the top of

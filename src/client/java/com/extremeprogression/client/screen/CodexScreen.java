@@ -137,6 +137,8 @@ public class CodexScreen extends Screen {
 		if (tab == 2) {
 			// The Chronicle: alone on the left, together on the right
 			int cw = (iw - 8) / 2;
+			// (rows a little closer when a column holds more than fits at the usual height)
+			int crow = Math.min(CHRONICLE_ROW, (ph - 30) / Math.max(1, Math.max(Synergy.of(false).size(), Synergy.of(true).size())));
 			for (int column = 0; column < 2; column++) {
 				int cx = ix + column * (cw + 8);
 				Ui.text(g, this.font, Ui.tr(column == 0 ? "gui.extremeprogression.chronicle.alone" : "gui.extremeprogression.chronicle.together"), cx, py + 4, Ui.DIM);
@@ -144,31 +146,32 @@ public class CodexScreen extends Screen {
 				for (Synergy s : Synergy.of(column == 1)) {
 					int stage = stage(s);
 					SynergyPayload.Entry e = ClientSynergies.entry(s);
-					boolean hover = mouseX >= cx && mouseX < cx + cw && mouseY >= y - 1 && mouseY < y + CHRONICLE_ROW - 2;
+					boolean hover = mouseX >= cx && mouseX < cx + cw && mouseY >= y - 1 && mouseY < y + crow - 2;
 					if (hover) {
-						g.fill(cx - 2, y - 2, cx + cw + 2, y + CHRONICLE_ROW - 3, Ui.argb(0.12, Ui.TEXT));
+						g.fill(cx - 2, y - 2, cx + cw + 2, y + crow - 3, Ui.argb(0.12, Ui.TEXT));
 					}
 					SynergyPayload.Entry first = chronicleRow(g, s, e, stage, cx, cw, y);
 					if (hover && first != null) {
 						tip = chronicleTip(s, first, stage);
 					}
-					y += CHRONICLE_ROW;
+					y += crow;
 				}
 			}
 		} else {
 			int y = py + 5;
+			int row = Math.min(ROW, (ph - 22) / Math.max(1, shown.size()));
 			for (Synergy s : shown) {
 				int stage = stage(s);
 				SynergyPayload.Entry e = ClientSynergies.entry(s);
-				boolean hover = mouseX >= ix && mouseX < ix + iw && mouseY >= y - 1 && mouseY < y + ROW - 2;
+				boolean hover = mouseX >= ix && mouseX < ix + iw && mouseY >= y - 1 && mouseY < y + row - 2;
 				if (hover) {
-					g.fill(ix - 2, y - 2, ix + iw + 2, y + ROW - 3, Ui.argb(0.12, Ui.TEXT));
+					g.fill(ix - 2, y - 2, ix + iw + 2, y + row - 3, Ui.argb(0.12, Ui.TEXT));
 				}
 				codexRow(g, s, e, stage, ix, iw, y);
 				if (hover) {
 					tip = codexTip(s, e, stage);
 				}
-				y += ROW;
+				y += row;
 			}
 		}
 		String footer = tab == 2 ? "gui.extremeprogression.chronicle.footer" : tab == 1 ? "gui.extremeprogression.codex.together_footer" : "gui.extremeprogression.codex.footer";

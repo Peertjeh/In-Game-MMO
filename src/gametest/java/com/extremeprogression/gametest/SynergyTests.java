@@ -56,11 +56,30 @@ public class SynergyTests {
 
 	@GameTest
 	public void everySynergyHasTwoSkillsThatDoNotOppose(GameTestHelper helper) {
-		check(helper, Synergy.of(false).size() == 12 && Synergy.of(true).size() == 8, "there are %s synergies and %s duo synergies, not 12 and 8",
+		check(helper, Synergy.of(false).size() == 13 && Synergy.of(true).size() == 8, "there are %s synergies and %s duo synergies, not 13 and 8",
 				Synergy.of(false).size(), Synergy.of(true).size());
 		for (Synergy s : Synergy.of(false)) {
 			check(helper, s.first != s.second && s.first.opposite() != s.second, "%s pairs opposing skills", s.id);
 		}
+		helper.succeed();
+	}
+
+	@GameTest
+	public void tailwindSparesHalfTheElytraRockets(GameTestHelper helper) {
+		Config.reset();
+		ServerPlayer low = with(helper, "Glider", Skill.EXPLORATION, 30, Skill.SMITHING, 29);
+		boolean any = false;
+		for (int i = 0; i < 50; i++) {
+			any |= SynergyEffects.fireworkSaved(low);
+		}
+		check(helper, !any && !Synergies.known(low, Synergy.TAILWIND), "Tailwind spared a rocket with Smithing at 29");
+		ServerPlayer flier = with(helper, "Flier", Skill.EXPLORATION, 30, Skill.SMITHING, 30);
+		int spared = 0;
+		for (int i = 0; i < 400; i++) {
+			spared += SynergyEffects.fireworkSaved(flier) ? 1 : 0;
+		}
+		check(helper, spared > 150 && spared < 250, "Tailwind spared %s of 400 rockets, expected about 200", spared);
+		check(helper, Synergies.known(flier, Synergy.TAILWIND), "Tailwind was not discovered by its first rocket");
 		helper.succeed();
 	}
 

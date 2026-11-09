@@ -1238,5 +1238,9 @@
 	"message.extremeprogression.admin.unknown": "That cannot be done.",
 	"message.extremeprogression.admin.nothing": "Nothing to respec in that skill.",
 	"message.extremeprogression.admin_level": "An operator changed your %s level.",
-	"message.extremeprogression.admin_deaths": "An operator cleared your death pressure and fatigue."
+	"message.extremeprogression.admin_deaths": "An operator cleared your death pressure and fatigue.",
+	"synergy.extremeprogression.tailwind": "Tailwind",
+	"synergy.extremeprogression.tailwind.desc": "A firework rocket that boosts your elytra flight has a 50% chance not to be used up.",
+	"synergy.extremeprogression.tailwind.hint1": "A well-kept wing asks less of the wind.",
+	"synergy.extremeprogression.tailwind.hint2": "Boost an elytra flight with a firework rocket."
 }
