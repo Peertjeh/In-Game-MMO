@@ -119,9 +119,12 @@ jobs:
       - name: virtual display
         run: |
           # (an apt mirror or a third-party list that fails to update must not stop the run: retried, then the
-          # packages from whatever lists did load, and once more after a fresh update)
-          for i in 1 2 3; do sudo apt-get update -qq && break; sleep 20; done || true
-          sudo apt-get install -y -qq --fix-missing xvfb libgl1-mesa-dri mesa-vulkan-drivers libegl1 || { sleep 30; sudo apt-get update -qq || true; sudo apt-get install -y -qq --fix-missing xvfb libgl1-mesa-dri mesa-vulkan-drivers libegl1; }
+          # packages from whatever lists did load; apt's last words go to the annotations, as logs cannot be read)
+          for i in 1 2 3; do sudo apt-get update -qq 2>apt-update.txt && break; sleep 20; done || true
+          if ! sudo apt-get install -y -qq --fix-missing xvfb libgl1-mesa-dri mesa-vulkan-drivers libegl1 > apt.txt 2>&1; then
+            tail -n 8 apt-update.txt apt.txt | while read -r line; do echo "::warning title=apt::${line}"; done
+            exit 1
+          fi
       - name: client game test
         shell: bash
         run: |
@@ -201,9 +204,12 @@ jobs:
       - name: virtual display with OpenGL
         run: |
           # (an apt mirror or a third-party list that fails to update must not stop the run: retried, then the
-          # packages from whatever lists did load, and once more after a fresh update)
-          for i in 1 2 3; do sudo apt-get update -qq && break; sleep 20; done || true
-          sudo apt-get install -y -qq --fix-missing xvfb libgl1-mesa-dri libglx-mesa0 libgl1 libegl1 mesa-utils mesa-vulkan-drivers || { sleep 30; sudo apt-get update -qq || true; sudo apt-get install -y -qq --fix-missing xvfb libgl1-mesa-dri libglx-mesa0 libgl1 libegl1 mesa-utils mesa-vulkan-drivers; }
+          # packages from whatever lists did load; apt's last words go to the annotations, as logs cannot be read)
+          for i in 1 2 3; do sudo apt-get update -qq 2>apt-update.txt && break; sleep 20; done || true
+          if ! sudo apt-get install -y -qq --fix-missing xvfb libgl1-mesa-dri libglx-mesa0 libgl1 libegl1 mesa-utils mesa-vulkan-drivers > apt.txt 2>&1; then
+            tail -n 8 apt-update.txt apt.txt | while read -r line; do echo "::warning title=apt::${line}"; done
+            exit 1
+          fi
       - name: fetch Extreme Dimensions
         shell: bash
         env:
