@@ -1,0 +1,3193 @@
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_phantom_membrane.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:slow_falling"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:phantom_membrane"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_golden_carrot.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:night_vision"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:golden_carrot"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_awkward_rabbit_foot.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:leaping"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:rabbit_foot"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_cobweb.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:weaving"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:cobweb"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_glistering_melon_slice.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:healing"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glistering_melon_slice"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_awkward_slime_block.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:oozing"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:slime_block"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_blaze_powder.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strength"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:blaze_powder"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_glistering_melon_slice.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:healing"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glistering_melon_slice"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_blaze_powder.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strength"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:blaze_powder"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_breeze_rod.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:wind_charged"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:breeze_rod"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_cobweb.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:weaving"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:cobweb"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_ghast_tear.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:regeneration"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:ghast_tear"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_glistering_melon_slice.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:healing"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glistering_melon_slice"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_golden_carrot.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:night_vision"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:golden_carrot"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_magma_cream.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:fire_resistance"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:magma_cream"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_phantom_membrane.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:slow_falling"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:phantom_membrane"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_phantom_membrane.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:slow_falling"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:phantom_membrane"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_golden_carrot.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:night_vision"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:golden_carrot"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_awkward_rabbit_foot.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:leaping"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:rabbit_foot"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_cobweb.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:weaving"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:cobweb"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_glistering_melon_slice.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:healing"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glistering_melon_slice"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_awkward_slime_block.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:oozing"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:slime_block"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_blaze_powder.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strength"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:blaze_powder"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_glistering_melon_slice.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:healing"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glistering_melon_slice"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_blaze_powder.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strength"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:blaze_powder"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_breeze_rod.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:wind_charged"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:breeze_rod"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_cobweb.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:weaving"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:cobweb"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_ghast_tear.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:regeneration"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:ghast_tear"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_glistering_melon_slice.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:healing"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glistering_melon_slice"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_golden_carrot.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:night_vision"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:golden_carrot"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_magma_cream.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:fire_resistance"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:magma_cream"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_phantom_membrane.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:slow_falling"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:phantom_membrane"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_phantom_membrane.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:slow_falling"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:phantom_membrane"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_golden_carrot.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:night_vision"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:golden_carrot"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_awkward_rabbit_foot.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:leaping"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:rabbit_foot"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_cobweb.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:weaving"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:cobweb"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_awkward_glistering_melon_slice.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:healing"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glistering_melon_slice"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_awkward_slime_block.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:oozing"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:slime_block"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_blaze_powder.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strength"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:blaze_powder"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_glistering_melon_slice.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:healing"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glistering_melon_slice"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_swiftness_redstone.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_swiftness"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:redstone"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_swiftness_redstone.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_swiftness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:redstone"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_strong_swiftness_dragon_breath.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:strong_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_swiftness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:dragon_breath"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_swiftness_gunpowder.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:swiftness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:gunpowder"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_swiftness_glowstone_dust.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_swiftness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glowstone_dust"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_swiftness_glowstone_dust.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_swiftness"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:glowstone_dust"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_swiftness_glowstone_dust.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_swiftness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glowstone_dust"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:slowness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_swiftness_glowstone_dust.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_swiftness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glowstone_dust"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_swiftness_redstone.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_swiftness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:redstone"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_long_swiftness_gunpowder.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_swiftness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:gunpowder"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_strong_swiftness_gunpowder.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:strong_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_swiftness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:gunpowder"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:slowness"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_swiftness_redstone.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_swiftness"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:redstone"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_swiftness_redstone.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_swiftness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:redstone"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_strong_swiftness_dragon_breath.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:strong_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_swiftness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:dragon_breath"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_swiftness_gunpowder.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:swiftness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:gunpowder"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_swiftness_glowstone_dust.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_swiftness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glowstone_dust"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_swiftness_glowstone_dust.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_swiftness"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:glowstone_dust"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_swiftness_glowstone_dust.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_swiftness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glowstone_dust"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:slowness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_swiftness_glowstone_dust.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_swiftness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glowstone_dust"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_swiftness_redstone.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_swiftness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:redstone"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_long_swiftness_gunpowder.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_swiftness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:gunpowder"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_strong_swiftness_gunpowder.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:strong_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_swiftness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:gunpowder"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:slowness"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_swiftness_redstone.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_swiftness"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:redstone"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_swiftness_redstone.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_swiftness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:redstone"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_strong_swiftness_dragon_breath.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:strong_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_swiftness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:dragon_breath"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_swiftness_gunpowder.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:swiftness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:gunpowder"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_swiftness_glowstone_dust.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_swiftness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glowstone_dust"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_swiftness_glowstone_dust.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_swiftness"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:glowstone_dust"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_swiftness_glowstone_dust.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_swiftness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glowstone_dust"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_long_swiftness_dragon_breath.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_swiftness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:dragon_breath"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_long_swiftness_gunpowder.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_swiftness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:gunpowder"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_long_swiftness_gunpowder.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_swiftness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:gunpowder"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_long_swiftness_dragon_breath.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_swiftness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:dragon_breath"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_long_swiftness_dragon_breath.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_swiftness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:dragon_breath"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_long_swiftness_gunpowder.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_swiftness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:gunpowder"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_long_swiftness_gunpowder.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_swiftness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:gunpowder"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_long_swiftness_dragon_breath.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_swiftness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:dragon_breath"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_long_swiftness_dragon_breath.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_swiftness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:dragon_breath"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/lingering_potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:lingering_potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/potion_long_swiftness_gunpowder.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_swiftness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:gunpowder"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_long_swiftness_fermented_spider_eye.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:long_swiftness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_slowness"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:fermented_spider_eye"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_leaping_redstone.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:leaping"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_leaping"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:redstone"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_turtle_master_redstone.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:turtle_master"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_turtle_master"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:redstone"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_golden_carrot.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:night_vision"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:golden_carrot"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_long_regeneration_dragon_breath.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:long_regeneration"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_regeneration"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:dragon_breath"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_strong_slowness_dragon_breath.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:strong_slowness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_slowness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:dragon_breath"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_strong_harming_dragon_breath.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:strong_harming"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_harming"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:dragon_breath"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_water_nether_wart.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:water"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:awkward"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:nether_wart"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_healing_glowstone_dust.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:healing"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_healing"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glowstone_dust"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_blaze_powder.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strength"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:blaze_powder"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_breeze_rod.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:wind_charged"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:breeze_rod"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_cobweb.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:weaving"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:cobweb"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_dragon_breath.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:awkward"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:dragon_breath"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_ghast_tear.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:regeneration"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:ghast_tear"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_glistering_melon_slice.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:healing"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glistering_melon_slice"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_golden_carrot.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:night_vision"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:golden_carrot"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_magma_cream.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:fire_resistance"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:magma_cream"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_leaping_redstone.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:leaping"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_leaping"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:redstone"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_turtle_master_redstone.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:turtle_master"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_turtle_master"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:redstone"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_golden_carrot.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:night_vision"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:golden_carrot"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_long_regeneration_dragon_breath.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:long_regeneration"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_regeneration"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:dragon_breath"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_strong_slowness_dragon_breath.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:strong_slowness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_slowness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:dragon_breath"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_strong_harming_dragon_breath.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:strong_harming"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_harming"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:dragon_breath"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_water_nether_wart.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:water"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:awkward"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:nether_wart"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_healing_glowstone_dust.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:healing"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_healing"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glowstone_dust"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_blaze_powder.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strength"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:blaze_powder"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_breeze_rod.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:wind_charged"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:breeze_rod"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_cobweb.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:weaving"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:cobweb"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_dragon_breath.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:awkward"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:dragon_breath"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_ghast_tear.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:regeneration"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:ghast_tear"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_glistering_melon_slice.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:healing"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glistering_melon_slice"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_golden_carrot.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:night_vision"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:golden_carrot"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_magma_cream.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:fire_resistance"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:magma_cream"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_leaping_redstone.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:leaping"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_leaping"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:redstone"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_turtle_master_redstone.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:turtle_master"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_turtle_master"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:redstone"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_awkward_golden_carrot.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:awkward"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:night_vision"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:golden_carrot"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_long_regeneration_dragon_breath.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:long_regeneration"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:long_regeneration"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:dragon_breath"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_strong_slowness_dragon_breath.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:strong_slowness"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_slowness"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:dragon_breath"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_strong_harming_dragon_breath.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:strong_harming"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_harming"
+      }
+    },
+    "id": "minecraft:lingering_potion"
+  },
+  "reagent": {
+    "item": "minecraft:dragon_breath"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_water_nether_wart.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:water"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:awkward"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:nether_wart"
+  }
+}
+=== FILE data/minecraft/recipe/brewing/splash_potion_healing_glowstone_dust.json
+{
+  "type": "minecraft:brewing",
+  "input": {
+    "item": "minecraft:splash_potion",
+    "potion_contents": {
+      "potions": "minecraft:healing"
+    }
+  },
+  "output": {
+    "components": {
+      "minecraft:potion_contents": {
+        "potion": "minecraft:strong_healing"
+      }
+    },
+    "id": "minecraft:splash_potion"
+  },
+  "reagent": {
+    "item": "minecraft:glowstone_dust"
+  }
+}
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar_selection.png
+‰PNG
+
+   IHDR         &ÿ   ÒPLTE   _m\¡²ÕèĞ`n]ftcš«–Ÿ°›^l[ØëÓÚíÕ÷ù÷[iX\jYUcR®™ÓæÎVdS ±œXfU¢³©º¥«¼§ÏâÊÑäÌYgVao^draZhWgudÿÿÿÖéÑesb¯šm{j£´Ÿ¤µ ¥¶¡¨¹¤n|kª»¦¡Œ•¦‘®¿ªÊİÅÍàÈÎáÉ™ª•ĞãË   ÒåÍ›¬—ÔçÏœ­˜Üï××êÒhve¬½¨]kZİğØŞñÙâõİöööTbQøúøüüüüşüıııbp_Ü?@   tRNS ®GıC×   ÓIDATx^uÏE²Ä@ĞDr†™ç333İÿJß=³ëNäå+•ÊŞuM<ñû‘¿şˆ\ÜI&’Ê¹hè{ş7É[’ÓˆÇ½ˆyÄD!ç]Œ 
+¼ ûPX•È³ï¸áª pV	5¾eß”íêÆŸ2îÆLAvÕãœWƒpÇû®i4'0Ø<øiÃpo¥Ğ:™Ùğ¸İˆK¾â†Â’W-‘t8’Ù$ËómƒD=òrÀ&Éµ^Ü1@`:—@8‡&	qˆvàÿ8‚n\ò    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar_attack_indicator_background.png
+‰PNG
+
+   IHDR         üÇFÜ   CIDATxÚc üBBJ $%„ıG°ˆ1å?%W6å?1ıÇ¡•‡GAÃÆ‚Ë•ÿ4]á‹ )H5 'ê5Ëkå)ö    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar.png
+‰PNG
+
+   IHDR   ¶      Z2–Ø   ¥PLTE'% """%$'$*&.+
+*% ,(.*0,3.0-	3/3.]]]~~~```bbbzzzZZZ€€€ssswwwfff|||ggg„„„ppp………VVVkkkmmm‰‰‰“““«««‹‹‹MMM   ÎÎÎGGGTTTBæå   tRNSººººººººººººººººººººººººººº»!t×  ?IDATx^ÕWvã:d!3I²=áïLÊ¶'ı´÷?Úv×ƒı|…i[¤P¬Îğ©ùû·”æïşùùóÇùÿ}ä›„ı3ç|Íy^³ş]å~Ï%¯‚³ “|yÍù4áäó<çù:åYPò2™d½*Ø¶z]ë³¹ò&U ¦r=_„À%m½Û{gœEsÎy9œ®dõû¯†}nªüÑ<ñ~œÊÚ|!DxÜÄd36ÊàM>c¹
+&B¨JÉe®Øg‚Ê{-Ô?WkÊ[‰‰ÏJ¢.í•CnÉíğ‰·¢aÿ˜š ğ;¿‡Hy×;Pàú`âMMháÖlù"˜CB°P€×«bÖùöh]ÉËÜ "”fj¯Å÷ÆG”©äp¸s	'åY8«ÚÂyÄ…Õf8päÅêšáÃ¡õHA±Q3P¡Ó¬!=áDüYx_Üğ ¶;%´‹ê)Ët›ô‘u@§L†İàÙÒá9ße¹Vû*ê4ÉØ3màS­<(l*¼‚-"ÂÎk8#¢KÇ°%?ÏóIĞ@P{Ç³è¨ĞêÀ2?‹=Ëu‡Á·Şà’+o×’RK(‘ŒA€ñmaØ¹éhÕì :5L·ek 8Î¬®ÁÚÍ›Ut{$Ï.„º#``,¹ÁtöÎ#|õ€i[ƒ›¦ìàiö“ìømÄc¤d(eİö«İŞjØˆØá]:ºyŸ‡˜€†¨æ]í½(”³¸æ*¹ïm<1=z µ»iµ•ç¸–ü‹slT×Á#!2D>Æ&ßRÆ0Ğc•·j+™­h”iÉ£B‡ tË'5x“èåğ68=Z}ì£æ¡üUÖ±n]š…Á2é@PŒl@+)ß‰9ï{Z¹¤’s`ğè\°;,yËOúp`ãXğS=Iƒ„Üy2•”èJ&fºN­„qÖPZnçmj:º5à.y[ÿ¨Èú`ÿ©hh^*K&Ö™Šy—Xš¾uQóiûÕî¼ ÎÑ
+~åc=]Ğ9õ;èlÏMğÊ‰J,·‹_"PGb¹^şÒæRzg`ÚÛ‡-Ù­·èK¾äÑãÓC€¬nçE·½óèâ•(¹¼0–ç1¼‡İ2àDGé(êŸ9Ú;ñ\+ûª®ÁîP´sõ-”íÌMOx8]Â¶ÎZáİr“â<;¤ÎÄ´½Êà˜ÀÔêyjŠ”klY¹,ö0ìÀÊ”Ü€³}Ğ¢öu€çÌ‚ ¼ï;ck‡h`Ø,ë…sÌ7NêÂ¸z-µd^¦2=!YTA¨Æ¨A1 88ğD"?´7\ÙçÎ55ìë¨LQÀ¬ÁDşëáÛ=îXÄ ŠS“<U5vt]ß’š½îÃø_¯~9eÎñõõEoêa‡›Nïhë×`ŒıÛ$tì:LtÁ`Y9Û>
+Xlt=¼ Cïµ+ı°ƒZ¸:³MÏJUšóK–`ƒ{ä8Õ7g
+„)xVİÖé4x_Ãf÷<àˆ8÷6¢‚”r•ùô\†8pKŞ®½Lç‚·Œ‡ÖÂ;ç™Ş©nçˆ%[ò¦aûçÃNüISÜ'kxÎ¼¿/D·n”ySŒÒó>œÛU4Iu˜Pß`ØòóU+–juRì,+Æ¤ ß¸L÷õËWvÓuÆm y€eıÁ/-»‚®g4ŒğÃ¼[KıĞÜà-Bï.}{p<AùeGÚ‡‰ÕäCb«jWÍ¦CbC"0 <X'°L°­§ş‰j°Ğr·°.&_¦{`€Á mwY9ã=Ó—¼œ¹MCR·Ñ´0…aßË›|¿•rÿ¾éaW–r[är)å¹”m+s¹y|“¥`å¸=_$œ×Ë©ênåvÛ¶‹è¹Z–"ªJ]ˆ-$‰âIŒm·²î…–ÊŸ…*å"!..…¢ØMùùr'pÑ¿m×“„¿<æ9¯Y¾ò·Ä·é,«YpU^øÓDY)ÌÄ¨J½uÉÓå´®…;)vV
+±é*——‰fªŸu}ÕK&BŸªó«ê‘2iØ¿¥ü`Hm-r    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar_offhand_right.png
+‰PNG
+
+   IHDR         ^ö¼  \IDATxÚÅVKNÜ@}ån{<Ÿ(`¢|/’UÁ)+NÂ’“ $8DÀY šói{\éW¶„+ÕrëÕ«.w/A7>¦iz^º$‰yT!T±|ğ³‹ô}–e?NNNäââªŠëëkxï±³³ƒ«««Ö¸|ÿ«>Nqpp ‘ø³D£xÕáá¡œa½^ƒˆª±X,ş(X.—ö®ªJED9Ï9§½^ºZ­”NN&“ŒÁã	äy.ãñqa8>>ş®5Œ ES}ğ)P€ˆÃ«W£toïÛWçˆ§H©ÎBX–eT´(&oA@Ûe46ğÉ¢úPP)ğk®x=ìÌû‚~¿Oç»I©`kk‹Ê„^ú€U@B¶B”f­&5ßŒTl5m­ÔíV&]Jonnè¥¨Ö„¾IšÙÜì™qÚ¬Ç2ç¬¯…wt`­WÕNR*$1Ã"l“0qõq0"¡3,Ê
+I$¾6Él½÷İ¤Ú(ˆ0¥%(+ëÛe X¯¡è¹:Ô÷±\X„Z)ËFJ9ñ>ÖZjÆÍ©y¡ö¾]µ¢1,ìIôœbS¥$m'pgl¶RAß	B%å‚Ì§(+Ìœã¬É8ƒj¥³s®“´ÉIjª¸;Ã‘[’¨(ÒÄÔšúÔª¹Îæ,‹€&#?½ÍH©¶%zNW«SÇÍ|g)w ê:ËaÄYêqyy©MlFJ/K„Dd™-‰JT,f$%³ÈP®+›W1¡Œ6òç‘Ö‡º/ÉÈÃ¹–PJbS>9;¹”OílDJ"êª"<îˆEÉ,VL—ÇL›(¤©ĞkOcø3:á~>Kiû‘ÃÈıé›á:¼j&ï§ç`ûp<g[8ÎíÑápH;ÏJ$SEâöø¹#„Ö}y–CV #Fø68•X»Eì¶I˜¯€AO!¨÷½X—˜‡T^½póÒ¬×Öy¿‰RŞ©ûûû_¼Onù‰%Ù`0àŞBØÍfØŞŞf›vxùó,WÁÓøeÙùîî®´¿$ñÍ…µ¢(HÆ1^ü4n$qm“„jåôôTCİxÇÿ$ÊáÂÿ•ñÀÅ‹ü‚şiö8ã<ı›¸    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar_attack_indicator_progress.png
+‰PNG
+
+   IHDR         a~e   'PLTE      ÒÒÖoGKG65+ …Y\•kn½¾ÃbMFXGFŸ¡¯¯°µúmµR   tRNS @æØf   WIDATxÚ…ĞÑ
+€@DQoºV[ÿÿ½‘B±.”œ§aä÷`’E™D)r¨SäÄ©ÂªŒ"A£hÒ+‚'ñˆ ~[HÖBÒò7k¥sß›Q¤Ã`XG„ï‰.Ò˜‹    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar_offhand_left.png
+‰PNG
+
+   IHDR         ^ö¼  IDATx^Í–ËNÛ@†Ä66°­(-UK'!B}6Ü¯– Ø`„@Äå	X x'[Ê2Îô|ãz,gUé×${>Ÿÿœ9ãÿò3"RyÕ××§úûûµT¡PP–e)Û¶_0”8äºîÛóó³zxxĞº¾¾V777êññQwwwF···)1ëââ‚øMïÇy½¿¿W«««jyyYkkkK-..ª¥¥%µ¶¶¦æææÔÂÂB<vfgg;2†áÊÊJ833ÓŸŸoooo+™Ón¼KÔÓÓ“Z__oË´DMù¯)v¡ ‰}Zƒ.c"ËbÎmíîîòPÙP¹	›ˆªÍc_
+_ŠôiŒÑ
+*%;˜ªy2ZŠVğq´TÊ–ÑdÕk55==J¤bOX¼àr÷ï¿ª•í´æ»ÍÃÃCR¥)ò@½â$‘& ("ßa>¬WƒZePC%¿ù ØKa 85éjØçñ´…XûmÂÂê”ë«¾Ç²¡²çbhh£Y<C¸ñõ» ÍSH¨©”,8ş­ŠÜæÈ+@ST@Ùr¹ ä”‹Æ‹¥¬-ÙØj¢Ÿ˜ ¬AäÚ8rttÄ~Ï¥ %* ,
+œ³02 dò]ŠÀ@ÏÏÏY§whM€,Ôµ8Å’Ú>¦Ê‹I1íííåÏ)}sssSÙ6¶`~£$&ïñ¶â;9í°OsCé·creìEIn‘0"Ú,ĞFÇØ™PNš;ı› èŠ5€TN)*"æ?æåwtíşşÏ}Ú”F°ŸX™šÈ»%Pé½!Ñp2¡WWWÊ	/ş~ÔGˆPôWˆ½½B[åb%O¥¢i
+Œ1„–ŒÙÍª4yzn½æµR›urA///ÕÎÎ:88hó´Ø„(*’MëììLœœ( }ßéé©:>>Vr§¯0/YĞaÉå›â:Zì‘·FÄ›â{üæÀ‰DcGş€xc@ y]ñ dÉ“‹_±Q}±d®W‹ş¿ÏUs—¹À“Ì,    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar_selection.png
+‰PNG
+
+   IHDR         &ÿ   ÒPLTE   _m\¡²ÕèĞ`n]ftcš«–Ÿ°›^l[ØëÓÚíÕ÷ù÷[iX\jYUcR®™ÓæÎVdS ±œXfU¢³©º¥«¼§ÏâÊÑäÌYgVao^draZhWgudÿÿÿÖéÑesb¯šm{j£´Ÿ¤µ ¥¶¡¨¹¤n|kª»¦¡Œ•¦‘®¿ªÊİÅÍàÈÎáÉ™ª•ĞãË   ÒåÍ›¬—ÔçÏœ­˜Üï××êÒhve¬½¨]kZİğØŞñÙâõİöööTbQøúøüüüüşüıııbp_Ü?@   tRNS ®GıC×   ÓIDATx^uÏE²Ä@ĞDr†™ç333İÿJß=³ëNäå+•ÊŞuM<ñû‘¿şˆ\ÜI&’Ê¹hè{ş7É[’ÓˆÇ½ˆyÄD!ç]Œ 
+¼ ûPX•È³ï¸áª pV	5¾eß”íêÆŸ2îÆLAvÕãœWƒpÇû®i4'0Ø<øiÃpo¥Ğ:™Ùğ¸İˆK¾â†Â’W-‘t8’Ù$ËómƒD=òrÀ&Éµ^Ü1@`:—@8‡&	qˆvàÿ8‚n\ò    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar_attack_indicator_background.png
+‰PNG
+
+   IHDR         üÇFÜ   CIDATxÚc üBBJ $%„ıG°ˆ1å?%W6å?1ıÇ¡•‡GAÃÆ‚Ë•ÿ4]á‹ )H5 'ê5Ëkå)ö    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar.png
+‰PNG
+
+   IHDR   ¶      Z2–Ø   ¥PLTE'% """%$'$*&.+
+*% ,(.*0,3.0-	3/3.]]]~~~```bbbzzzZZZ€€€ssswwwfff|||ggg„„„ppp………VVVkkkmmm‰‰‰“““«««‹‹‹MMM   ÎÎÎGGGTTTBæå   tRNSººººººººººººººººººººººººººº»!t×  ?IDATx^ÕWvã:d!3I²=áïLÊ¶'ı´÷?Úv×ƒı|…i[¤P¬Îğ©ùû·”æïşùùóÇùÿ}ä›„ı3ç|Íy^³ş]å~Ï%¯‚³ “|yÍù4áäó<çù:åYPò2™d½*Ø¶z]ë³¹ò&U ¦r=_„À%m½Û{gœEsÎy9œ®dõû¯†}nªüÑ<ñ~œÊÚ|!DxÜÄd36ÊàM>c¹
+&B¨JÉe®Øg‚Ê{-Ô?WkÊ[‰‰ÏJ¢.í•CnÉíğ‰·¢aÿ˜š ğ;¿‡Hy×;Pàú`âMMháÖlù"˜CB°P€×«bÖùöh]ÉËÜ "”fj¯Å÷ÆG”©äp¸s	'åY8«ÚÂyÄ…Õf8päÅêšáÃ¡õHA±Q3P¡Ó¬!=áDüYx_Üğ ¶;%´‹ê)Ët›ô‘u@§L†İàÙÒá9ße¹Vû*ê4ÉØ3màS­<(l*¼‚-"ÂÎk8#¢KÇ°%?ÏóIĞ@P{Ç³è¨ĞêÀ2?‹=Ëu‡Á·Şà’+o×’RK(‘ŒA€ñmaØ¹éhÕì :5L·ek 8Î¬®ÁÚÍ›Ut{$Ï.„º#``,¹ÁtöÎ#|õ€i[ƒ›¦ìàiö“ìømÄc¤d(eİö«İŞjØˆØá]:ºyŸ‡˜€†¨æ]í½(”³¸æ*¹ïm<1=z µ»iµ•ç¸–ü‹slT×Á#!2D>Æ&ßRÆ0Ğc•·j+™­h”iÉ£B‡ tË'5x“èåğ68=Z}ì£æ¡üUÖ±n]š…Á2é@PŒl@+)ß‰9ï{Z¹¤’s`ğè\°;,yËOúp`ãXğS=Iƒ„Üy2•”èJ&fºN­„qÖPZnçmj:º5à.y[ÿ¨Èú`ÿ©hh^*K&Ö™Šy—Xš¾uQóiûÕî¼ ÎÑ
+~åc=]Ğ9õ;èlÏMğÊ‰J,·‹_"PGb¹^şÒæRzg`ÚÛ‡-Ù­·èK¾äÑãÓC€¬nçE·½óèâ•(¹¼0–ç1¼‡İ2àDGé(êŸ9Ú;ñ\+ûª®ÁîP´sõ-”íÌMOx8]Â¶ÎZáİr“â<;¤ÎÄ´½Êà˜ÀÔêyjŠ”klY¹,ö0ìÀÊ”Ü€³}Ğ¢öu€çÌ‚ ¼ï;ck‡h`Ø,ë…sÌ7NêÂ¸z-µd^¦2=!YTA¨Æ¨A1 88ğD"?´7\ÙçÎ55ìë¨LQÀ¬ÁDşëáÛ=îXÄ ŠS“<U5vt]ß’š½îÃø_¯~9eÎñõõEoêa‡›Nïhë×`ŒıÛ$tì:LtÁ`Y9Û>
+Xlt=¼ Cïµ+ı°ƒZ¸:³MÏJUšóK–`ƒ{ä8Õ7g
+„)xVİÖé4x_Ãf÷<àˆ8÷6¢‚”r•ùô\†8pKŞ®½Lç‚·Œ‡ÖÂ;ç™Ş©nçˆ%[ò¦aûçÃNüISÜ'kxÎ¼¿/D·n”ySŒÒó>œÛU4Iu˜Pß`ØòóU+–juRì,+Æ¤ ß¸L÷õËWvÓuÆm y€eıÁ/-»‚®g4ŒğÃ¼[KıĞÜà-Bï.}{p<AùeGÚ‡‰ÕäCb«jWÍ¦CbC"0 <X'°L°­§ş‰j°Ğr·°.&_¦{`€Á mwY9ã=Ó—¼œ¹MCR·Ñ´0…aßË›|¿•rÿ¾éaW–r[är)å¹”m+s¹y|“¥`å¸=_$œ×Ë©ênåvÛ¶‹è¹Z–"ªJ]ˆ-$‰âIŒm·²î…–ÊŸ…*å"!..…¢ØMùùr'pÑ¿m×“„¿<æ9¯Y¾ò·Ä·é,«YpU^øÓDY)ÌÄ¨J½uÉÓå´®…;)vV
+±é*——‰fªŸu}ÕK&BŸªó«ê‘2iØ¿¥ü`Hm-r    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar_offhand_right.png
+‰PNG
+
+   IHDR         ^ö¼  \IDATxÚÅVKNÜ@}ån{<Ÿ(`¢|/’UÁ)+NÂ’“ $8DÀY šói{\éW¶„+ÕrëÕ«.w/A7>¦iz^º$‰yT!T±|ğ³‹ô}–e?NNNäââªŠëëkxï±³³ƒ«««Ö¸|ÿ«>Nqpp ‘ø³D£xÕáá¡œa½^ƒˆª±X,ş(X.—ö®ªJED9Ï9§½^ºZ­”NN&“ŒÁã	äy.ãñqa8>>ş®5Œ ES}ğ)P€ˆÃ«W£toïÛWçˆ§H©ÎBX–eT´(&oA@Ûe46ğÉ¢úPP)ğk®x=ìÌû‚~¿Oç»I©`kk‹Ê„^ú€U@B¶B”f­&5ßŒTl5m­ÔíV&]Jonnè¥¨Ö„¾IšÙÜì™qÚ¬Ç2ç¬¯…wt`­WÕNR*$1Ã"l“0qõq0"¡3,Ê
+I$¾6Él½÷İ¤Ú(ˆ0¥%(+ëÛe X¯¡è¹:Ô÷±\X„Z)ËFJ9ñ>ÖZjÆÍ©y¡ö¾]µ¢1,ìIôœbS¥$m'pgl¶RAß	B%å‚Ì§(+Ìœã¬É8ƒj¥³s®“´ÉIjª¸;Ã‘[’¨(ÒÄÔšúÔª¹Îæ,‹€&#?½ÍH©¶%zNW«SÇÍ|g)w ê:ËaÄYêqyy©MlFJ/K„Dd™-‰JT,f$%³ÈP®+›W1¡Œ6òç‘Ö‡º/ÉÈÃ¹–PJbS>9;¹”OílDJ"êª"<îˆEÉ,VL—ÇL›(¤©ĞkOcø3:á~>Kiû‘ÃÈıé›á:¼j&ï§ç`ûp<g[8ÎíÑápH;ÏJ$SEâöø¹#„Ö}y–CV #Fø68•X»Eì¶I˜¯€AO!¨÷½X—˜‡T^½póÒ¬×Öy¿‰RŞ©ûûû_¼Onù‰%Ù`0àŞBØÍfØŞŞf›vxùó,WÁÓøeÙùîî®´¿$ñÍ…µ¢(HÆ1^ü4n$qm“„jåôôTCİxÇÿ$ÊáÂÿ•ñÀÅ‹ü‚şiö8ã<ı›¸    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar_attack_indicator_progress.png
+‰PNG
+
+   IHDR         a~e   'PLTE      ÒÒÖoGKG65+ …Y\•kn½¾ÃbMFXGFŸ¡¯¯°µúmµR   tRNS @æØf   WIDATxÚ…ĞÑ
+€@DQoºV[ÿÿ½‘B±.”œ§aä÷`’E™D)r¨SäÄ©ÂªŒ"A£hÒ+‚'ñˆ ~[HÖBÒò7k¥sß›Q¤Ã`XG„ï‰.Ò˜‹    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar_offhand_left.png
+‰PNG
+
+   IHDR         ^ö¼  IDATx^Í–ËNÛ@†Ä66°­(-UK'!B}6Ü¯– Ø`„@Äå	X x'[Ê2Îô|ãz,gUé×${>Ÿÿœ9ãÿò3"RyÕ××§úûûµT¡PP–e)Û¶_0”8äºîÛóó³zxxĞº¾¾V777êññQwwwF···)1ëââ‚øMïÇy½¿¿W«««jyyYkkkK-..ª¥¥%µ¶¶¦æææÔÂÂB<vfgg;2†áÊÊJ833ÓŸŸoooo+™Ón¼KÔÓÓ“Z__oË´DMù¯)v¡ ‰}Zƒ.c"ËbÎmíîîòPÙP¹	›ˆªÍc_
+_ŠôiŒÑ
+*%;˜ªy2ZŠVğq´TÊ–ÑdÕk55==J¤bOX¼àr÷ï¿ª•í´æ»ÍÃÃCR¥)ò@½â$‘& ("ßa>¬WƒZePC%¿ù ØKa 85éjØçñ´…XûmÂÂê”ë«¾Ç²¡²çbhh£Y<C¸ñõ» ÍSH¨©”,8ş­ŠÜæÈ+@ST@Ùr¹ ä”‹Æ‹¥¬-ÙØj¢Ÿ˜ ¬AäÚ8rttÄ~Ï¥ %* ,
+œ³02 dò]ŠÀ@ÏÏÏY§whM€,Ôµ8Å’Ú>¦Ê‹I1íííåÏ)}sssSÙ6¶`~£$&ïñ¶â;9í°OsCé·creìEIn‘0"Ú,ĞFÇØ™PNš;ı› èŠ5€TN)*"æ?æåwtíşşÏ}Ú”F°ŸX™šÈ»%Pé½!Ñp2¡WWWÊ	/ş~ÔGˆPôWˆ½½B[åb%O¥¢i
+Œ1„–ŒÙÍª4yzn½æµR›urA///ÕÎÎ:88hó´Ø„(*’MëììLœœ( }ßéé©:>>Vr§¯0/YĞaÉå›â:Zì‘·FÄ›â{üæÀ‰DcGş€xc@ y]ñ dÉ“‹_±Q}±d®W‹ş¿ÏUs—¹À“Ì,    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar.png
+‰PNG
+
+   IHDR   ¶      Z2–Ø   ¥PLTE'% """%$'$*&.+
+*% ,(.*0,3.0-	3/3.]]]~~~```bbbzzzZZZ€€€ssswwwfff|||ggg„„„ppp………VVVkkkmmm‰‰‰“““«««‹‹‹MMM   ÎÎÎGGGTTTBæå   tRNSººººººººººººººººººººººººººº»!t×  ?IDATx^ÕWvã:d!3I²=áïLÊ¶'ı´÷?Úv×ƒı|…i[¤P¬Îğ©ùû·”æïşùùóÇùÿ}ä›„ı3ç|Íy^³ş]å~Ï%¯‚³ “|yÍù4áäó<çù:åYPò2™d½*Ø¶z]ë³¹ò&U ¦r=_„À%m½Û{gœEsÎy9œ®dõû¯†}nªüÑ<ñ~œÊÚ|!DxÜÄd36ÊàM>c¹
+&B¨JÉe®Øg‚Ê{-Ô?WkÊ[‰‰ÏJ¢.í•CnÉíğ‰·¢aÿ˜š ğ;¿‡Hy×;Pàú`âMMháÖlù"˜CB°P€×«bÖùöh]ÉËÜ "”fj¯Å÷ÆG”©äp¸s	'åY8«ÚÂyÄ…Õf8päÅêšáÃ¡õHA±Q3P¡Ó¬!=áDüYx_Üğ ¶;%´‹ê)Ët›ô‘u@§L†İàÙÒá9ße¹Vû*ê4ÉØ3màS­<(l*¼‚-"ÂÎk8#¢KÇ°%?ÏóIĞ@P{Ç³è¨ĞêÀ2?‹=Ëu‡Á·Şà’+o×’RK(‘ŒA€ñmaØ¹éhÕì :5L·ek 8Î¬®ÁÚÍ›Ut{$Ï.„º#``,¹ÁtöÎ#|õ€i[ƒ›¦ìàiö“ìømÄc¤d(eİö«İŞjØˆØá]:ºyŸ‡˜€†¨æ]í½(”³¸æ*¹ïm<1=z µ»iµ•ç¸–ü‹slT×Á#!2D>Æ&ßRÆ0Ğc•·j+™­h”iÉ£B‡ tË'5x“èåğ68=Z}ì£æ¡üUÖ±n]š…Á2é@PŒl@+)ß‰9ï{Z¹¤’s`ğè\°;,yËOúp`ãXğS=Iƒ„Üy2•”èJ&fºN­„qÖPZnçmj:º5à.y[ÿ¨Èú`ÿ©hh^*K&Ö™Šy—Xš¾uQóiûÕî¼ ÎÑ
+~åc=]Ğ9õ;èlÏMğÊ‰J,·‹_"PGb¹^şÒæRzg`ÚÛ‡-Ù­·èK¾äÑãÓC€¬nçE·½óèâ•(¹¼0–ç1¼‡İ2àDGé(êŸ9Ú;ñ\+ûª®ÁîP´sõ-”íÌMOx8]Â¶ÎZáİr“â<;¤ÎÄ´½Êà˜ÀÔêyjŠ”klY¹,ö0ìÀÊ”Ü€³}Ğ¢öu€çÌ‚ ¼ï;ck‡h`Ø,ë…sÌ7NêÂ¸z-µd^¦2=!YTA¨Æ¨A1 88ğD"?´7\ÙçÎ55ìë¨LQÀ¬ÁDşëáÛ=îXÄ ŠS“<U5vt]ß’š½îÃø_¯~9eÎñõõEoêa‡›Nïhë×`ŒıÛ$tì:LtÁ`Y9Û>
+Xlt=¼ Cïµ+ı°ƒZ¸:³MÏJUšóK–`ƒ{ä8Õ7g
+„)xVİÖé4x_Ãf÷<àˆ8÷6¢‚”r•ùô\†8pKŞ®½Lç‚·Œ‡ÖÂ;ç™Ş©nçˆ%[ò¦aûçÃNüISÜ'kxÎ¼¿/D·n”ySŒÒó>œÛU4Iu˜Pß`ØòóU+–juRì,+Æ¤ ß¸L÷õËWvÓuÆm y€eıÁ/-»‚®g4ŒğÃ¼[KıĞÜà-Bï.}{p<AùeGÚ‡‰ÕäCb«jWÍ¦CbC"0 <X'°L°­§ş‰j°Ğr·°.&_¦{`€Á mwY9ã=Ó—¼œ¹MCR·Ñ´0…aßË›|¿•rÿ¾éaW–r[är)å¹”m+s¹y|“¥`å¸=_$œ×Ë©ênåvÛ¶‹è¹Z–"ªJ]ˆ-$‰âIŒm·²î…–ÊŸ…*å"!..…¢ØMùùr'pÑ¿m×“„¿<æ9¯Y¾ò·Ä·é,«YpU^øÓDY)ÌÄ¨J½uÉÓå´®…;)vV
+±é*——‰fªŸu}ÕK&BŸªó«ê‘2iØ¿¥ü`Hm-r    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar_attack_indicator_background.png
+‰PNG
+
+   IHDR         üÇFÜ   CIDATxÚc üBBJ $%„ıG°ˆ1å?%W6å?1ıÇ¡•‡GAÃÆ‚Ë•ÿ4]á‹ )H5 'ê5Ëkå)ö    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar_attack_indicator_progress.png
+‰PNG
+
+   IHDR         a~e   'PLTE      ÒÒÖoGKG65+ …Y\•kn½¾ÃbMFXGFŸ¡¯¯°µúmµR   tRNS @æØf   WIDATxÚ…ĞÑ
+€@DQoºV[ÿÿ½‘B±.”œ§aä÷`’E™D)r¨SäÄ©ÂªŒ"A£hÒ+‚'ñˆ ~[HÖBÒò7k¥sß›Q¤Ã`XG„ï‰.Ò˜‹    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar_offhand_left.png
+‰PNG
+
+   IHDR         ^ö¼  IDATx^Í–ËNÛ@†Ä66°­(-UK'!B}6Ü¯– Ø`„@Äå	X x'[Ê2Îô|ãz,gUé×${>Ÿÿœ9ãÿò3"RyÕ××§úûûµT¡PP–e)Û¶_0”8äºîÛóó³zxxĞº¾¾V777êññQwwwF···)1ëââ‚øMïÇy½¿¿W«««jyyYkkkK-..ª¥¥%µ¶¶¦æææÔÂÂB<vfgg;2†áÊÊJ833ÓŸŸoooo+™Ón¼KÔÓÓ“Z__oË´DMù¯)v¡ ‰}Zƒ.c"ËbÎmíîîòPÙP¹	›ˆªÍc_
+_ŠôiŒÑ
+*%;˜ªy2ZŠVğq´TÊ–ÑdÕk55==J¤bOX¼àr÷ï¿ª•í´æ»ÍÃÃCR¥)ò@½â$‘& ("ßa>¬WƒZePC%¿ù ØKa 85éjØçñ´…XûmÂÂê”ë«¾Ç²¡²çbhh£Y<C¸ñõ» ÍSH¨©”,8ş­ŠÜæÈ+@ST@Ùr¹ ä”‹Æ‹¥¬-ÙØj¢Ÿ˜ ¬AäÚ8rttÄ~Ï¥ %* ,
+œ³02 dò]ŠÀ@ÏÏÏY§whM€,Ôµ8Å’Ú>¦Ê‹I1íííåÏ)}sssSÙ6¶`~£$&ïñ¶â;9í°OsCé·creìEIn‘0"Ú,ĞFÇØ™PNš;ı› èŠ5€TN)*"æ?æåwtíşşÏ}Ú”F°ŸX™šÈ»%Pé½!Ñp2¡WWWÊ	/ş~ÔGˆPôWˆ½½B[åb%O¥¢i
+Œ1„–ŒÙÍª4yzn½æµR›urA///ÕÎÎ:88hó´Ø„(*’MëììLœœ( }ßéé©:>>Vr§¯0/YĞaÉå›â:Zì‘·FÄ›â{üæÀ‰DcGş€xc@ y]ñ dÉ“‹_±Q}±d®W‹ş¿ÏUs—¹À“Ì,    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar_offhand_right.png
+‰PNG
+
+   IHDR         ^ö¼  \IDATxÚÅVKNÜ@}ån{<Ÿ(`¢|/’UÁ)+NÂ’“ $8DÀY šói{\éW¶„+ÕrëÕ«.w/A7>¦iz^º$‰yT!T±|ğ³‹ô}–e?NNNäââªŠëëkxï±³³ƒ«««Ö¸|ÿ«>Nqpp ‘ø³D£xÕáá¡œa½^ƒˆª±X,ş(X.—ö®ªJED9Ï9§½^ºZ­”NN&“ŒÁã	äy.ãñqa8>>ş®5Œ ES}ğ)P€ˆÃ«W£toïÛWçˆ§H©ÎBX–eT´(&oA@Ûe46ğÉ¢úPP)ğk®x=ìÌû‚~¿Oç»I©`kk‹Ê„^ú€U@B¶B”f­&5ßŒTl5m­ÔíV&]Jonnè¥¨Ö„¾IšÙÜì™qÚ¬Ç2ç¬¯…wt`­WÕNR*$1Ã"l“0qõq0"¡3,Ê
+I$¾6Él½÷İ¤Ú(ˆ0¥%(+ëÛe X¯¡è¹:Ô÷±\X„Z)ËFJ9ñ>ÖZjÆÍ©y¡ö¾]µ¢1,ìIôœbS¥$m'pgl¶RAß	B%å‚Ì§(+Ìœã¬É8ƒj¥³s®“´ÉIjª¸;Ã‘[’¨(ÒÄÔšúÔª¹Îæ,‹€&#?½ÍH©¶%zNW«SÇÍ|g)w ê:ËaÄYêqyy©MlFJ/K„Dd™-‰JT,f$%³ÈP®+›W1¡Œ6òç‘Ö‡º/ÉÈÃ¹–PJbS>9;¹”OílDJ"êª"<îˆEÉ,VL—ÇL›(¤©ĞkOcø3:á~>Kiû‘ÃÈıé›á:¼j&ï§ç`ûp<g[8ÎíÑápH;ÏJ$SEâöø¹#„Ö}y–CV #Fø68•X»Eì¶I˜¯€AO!¨÷½X—˜‡T^½póÒ¬×Öy¿‰RŞ©ûûû_¼Onù‰%Ù`0àŞBØÍfØŞŞf›vxùó,WÁÓøeÙùîî®´¿$ñÍ…µ¢(HÆ1^ü4n$qm“„jåôôTCİxÇÿ$ÊáÂÿ•ñÀÅ‹ü‚şiö8ã<ı›¸    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar_selection.png
+‰PNG
+
+   IHDR         &ÿ   ÒPLTE   _m\¡²ÕèĞ`n]ftcš«–Ÿ°›^l[ØëÓÚíÕ÷ù÷[iX\jYUcR®™ÓæÎVdS ±œXfU¢³©º¥«¼§ÏâÊÑäÌYgVao^draZhWgudÿÿÿÖéÑesb¯šm{j£´Ÿ¤µ ¥¶¡¨¹¤n|kª»¦¡Œ•¦‘®¿ªÊİÅÍàÈÎáÉ™ª•ĞãË   ÒåÍ›¬—ÔçÏœ­˜Üï××êÒhve¬½¨]kZİğØŞñÙâõİöööTbQøúøüüüüşüıııbp_Ü?@   tRNS ®GıC×   ÓIDATx^uÏE²Ä@ĞDr†™ç333İÿJß=³ëNäå+•ÊŞuM<ñû‘¿şˆ\ÜI&’Ê¹hè{ş7É[’ÓˆÇ½ˆyÄD!ç]Œ 
+¼ ûPX•È³ï¸áª pV	5¾eß”íêÆŸ2îÆLAvÕãœWƒpÇû®i4'0Ø<øiÃpo¥Ğ:™Ùğ¸İˆK¾â†Â’W-‘t8’Ù$ËómƒD=òrÀ&Éµ^Ü1@`:—@8‡&	qˆvàÿ8‚n\ò    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar_selection.png
+‰PNG
+
+   IHDR         &ÿ   ÒPLTE   _m\¡²ÕèĞ`n]ftcš«–Ÿ°›^l[ØëÓÚíÕ÷ù÷[iX\jYUcR®™ÓæÎVdS ±œXfU¢³©º¥«¼§ÏâÊÑäÌYgVao^draZhWgudÿÿÿÖéÑesb¯šm{j£´Ÿ¤µ ¥¶¡¨¹¤n|kª»¦¡Œ•¦‘®¿ªÊİÅÍàÈÎáÉ™ª•ĞãË   ÒåÍ›¬—ÔçÏœ­˜Üï××êÒhve¬½¨]kZİğØŞñÙâõİöööTbQøúøüüüüşüıııbp_Ü?@   tRNS ®GıC×   ÓIDATx^uÏE²Ä@ĞDr†™ç333İÿJß=³ëNäå+•ÊŞuM<ñû‘¿şˆ\ÜI&’Ê¹hè{ş7É[’ÓˆÇ½ˆyÄD!ç]Œ 
+¼ ûPX•È³ï¸áª pV	5¾eß”íêÆŸ2îÆLAvÕãœWƒpÇû®i4'0Ø<øiÃpo¥Ğ:™Ùğ¸İˆK¾â†Â’W-‘t8’Ù$ËómƒD=òrÀ&Éµ^Ü1@`:—@8‡&	qˆvàÿ8‚n\ò    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar_attack_indicator_background.png
+‰PNG
+
+   IHDR         üÇFÜ   CIDATxÚc üBBJ $%„ıG°ˆ1å?%W6å?1ıÇ¡•‡GAÃÆ‚Ë•ÿ4]á‹ )H5 'ê5Ëkå)ö    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar.png
+‰PNG
+
+   IHDR   ¶      Z2–Ø   ¥PLTE'% """%$'$*&.+
+*% ,(.*0,3.0-	3/3.]]]~~~```bbbzzzZZZ€€€ssswwwfff|||ggg„„„ppp………VVVkkkmmm‰‰‰“““«««‹‹‹MMM   ÎÎÎGGGTTTBæå   tRNSººººººººººººººººººººººººººº»!t×  ?IDATx^ÕWvã:d!3I²=áïLÊ¶'ı´÷?Úv×ƒı|…i[¤P¬Îğ©ùû·”æïşùùóÇùÿ}ä›„ı3ç|Íy^³ş]å~Ï%¯‚³ “|yÍù4áäó<çù:åYPò2™d½*Ø¶z]ë³¹ò&U ¦r=_„À%m½Û{gœEsÎy9œ®dõû¯†}nªüÑ<ñ~œÊÚ|!DxÜÄd36ÊàM>c¹
+&B¨JÉe®Øg‚Ê{-Ô?WkÊ[‰‰ÏJ¢.í•CnÉíğ‰·¢aÿ˜š ğ;¿‡Hy×;Pàú`âMMháÖlù"˜CB°P€×«bÖùöh]ÉËÜ "”fj¯Å÷ÆG”©äp¸s	'åY8«ÚÂyÄ…Õf8päÅêšáÃ¡õHA±Q3P¡Ó¬!=áDüYx_Üğ ¶;%´‹ê)Ët›ô‘u@§L†İàÙÒá9ße¹Vû*ê4ÉØ3màS­<(l*¼‚-"ÂÎk8#¢KÇ°%?ÏóIĞ@P{Ç³è¨ĞêÀ2?‹=Ëu‡Á·Şà’+o×’RK(‘ŒA€ñmaØ¹éhÕì :5L·ek 8Î¬®ÁÚÍ›Ut{$Ï.„º#``,¹ÁtöÎ#|õ€i[ƒ›¦ìàiö“ìømÄc¤d(eİö«İŞjØˆØá]:ºyŸ‡˜€†¨æ]í½(”³¸æ*¹ïm<1=z µ»iµ•ç¸–ü‹slT×Á#!2D>Æ&ßRÆ0Ğc•·j+™­h”iÉ£B‡ tË'5x“èåğ68=Z}ì£æ¡üUÖ±n]š…Á2é@PŒl@+)ß‰9ï{Z¹¤’s`ğè\°;,yËOúp`ãXğS=Iƒ„Üy2•”èJ&fºN­„qÖPZnçmj:º5à.y[ÿ¨Èú`ÿ©hh^*K&Ö™Šy—Xš¾uQóiûÕî¼ ÎÑ
+~åc=]Ğ9õ;èlÏMğÊ‰J,·‹_"PGb¹^şÒæRzg`ÚÛ‡-Ù­·èK¾äÑãÓC€¬nçE·½óèâ•(¹¼0–ç1¼‡İ2àDGé(êŸ9Ú;ñ\+ûª®ÁîP´sõ-”íÌMOx8]Â¶ÎZáİr“â<;¤ÎÄ´½Êà˜ÀÔêyjŠ”klY¹,ö0ìÀÊ”Ü€³}Ğ¢öu€çÌ‚ ¼ï;ck‡h`Ø,ë…sÌ7NêÂ¸z-µd^¦2=!YTA¨Æ¨A1 88ğD"?´7\ÙçÎ55ìë¨LQÀ¬ÁDşëáÛ=îXÄ ŠS“<U5vt]ß’š½îÃø_¯~9eÎñõõEoêa‡›Nïhë×`ŒıÛ$tì:LtÁ`Y9Û>
+Xlt=¼ Cïµ+ı°ƒZ¸:³MÏJUšóK–`ƒ{ä8Õ7g
+„)xVİÖé4x_Ãf÷<àˆ8÷6¢‚”r•ùô\†8pKŞ®½Lç‚·Œ‡ÖÂ;ç™Ş©nçˆ%[ò¦aûçÃNüISÜ'kxÎ¼¿/D·n”ySŒÒó>œÛU4Iu˜Pß`ØòóU+–juRì,+Æ¤ ß¸L÷õËWvÓuÆm y€eıÁ/-»‚®g4ŒğÃ¼[KıĞÜà-Bï.}{p<AùeGÚ‡‰ÕäCb«jWÍ¦CbC"0 <X'°L°­§ş‰j°Ğr·°.&_¦{`€Á mwY9ã=Ó—¼œ¹MCR·Ñ´0…aßË›|¿•rÿ¾éaW–r[är)å¹”m+s¹y|“¥`å¸=_$œ×Ë©ênåvÛ¶‹è¹Z–"ªJ]ˆ-$‰âIŒm·²î…–ÊŸ…*å"!..…¢ØMùùr'pÑ¿m×“„¿<æ9¯Y¾ò·Ä·é,«YpU^øÓDY)ÌÄ¨J½uÉÓå´®…;)vV
+±é*——‰fªŸu}ÕK&BŸªó«ê‘2iØ¿¥ü`Hm-r    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar_offhand_right.png
+‰PNG
+
+   IHDR         ^ö¼  \IDATxÚÅVKNÜ@}ån{<Ÿ(`¢|/’UÁ)+NÂ’“ $8DÀY šói{\éW¶„+ÕrëÕ«.w/A7>¦iz^º$‰yT!T±|ğ³‹ô}–e?NNNäââªŠëëkxï±³³ƒ«««Ö¸|ÿ«>Nqpp ‘ø³D£xÕáá¡œa½^ƒˆª±X,ş(X.—ö®ªJED9Ï9§½^ºZ­”NN&“ŒÁã	äy.ãñqa8>>ş®5Œ ES}ğ)P€ˆÃ«W£toïÛWçˆ§H©ÎBX–eT´(&oA@Ûe46ğÉ¢úPP)ğk®x=ìÌû‚~¿Oç»I©`kk‹Ê„^ú€U@B¶B”f­&5ßŒTl5m­ÔíV&]Jonnè¥¨Ö„¾IšÙÜì™qÚ¬Ç2ç¬¯…wt`­WÕNR*$1Ã"l“0qõq0"¡3,Ê
+I$¾6Él½÷İ¤Ú(ˆ0¥%(+ëÛe X¯¡è¹:Ô÷±\X„Z)ËFJ9ñ>ÖZjÆÍ©y¡ö¾]µ¢1,ìIôœbS¥$m'pgl¶RAß	B%å‚Ì§(+Ìœã¬É8ƒj¥³s®“´ÉIjª¸;Ã‘[’¨(ÒÄÔšúÔª¹Îæ,‹€&#?½ÍH©¶%zNW«SÇÍ|g)w ê:ËaÄYêqyy©MlFJ/K„Dd™-‰JT,f$%³ÈP®+›W1¡Œ6òç‘Ö‡º/ÉÈÃ¹–PJbS>9;¹”OílDJ"êª"<îˆEÉ,VL—ÇL›(¤©ĞkOcø3:á~>Kiû‘ÃÈıé›á:¼j&ï§ç`ûp<g[8ÎíÑápH;ÏJ$SEâöø¹#„Ö}y–CV #Fø68•X»Eì¶I˜¯€AO!¨÷½X—˜‡T^½póÒ¬×Öy¿‰RŞ©ûûû_¼Onù‰%Ù`0àŞBØÍfØŞŞf›vxùó,WÁÓøeÙùîî®´¿$ñÍ…µ¢(HÆ1^ü4n$qm“„jåôôTCİxÇÿ$ÊáÂÿ•ñÀÅ‹ü‚şiö8ã<ı›¸    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar_attack_indicator_progress.png
+‰PNG
+
+   IHDR         a~e   'PLTE      ÒÒÖoGKG65+ …Y\•kn½¾ÃbMFXGFŸ¡¯¯°µúmµR   tRNS @æØf   WIDATxÚ…ĞÑ
+€@DQoºV[ÿÿ½‘B±.”œ§aä÷`’E™D)r¨SäÄ©ÂªŒ"A£hÒ+‚'ñˆ ~[HÖBÒò7k¥sß›Q¤Ã`XG„ï‰.Ò˜‹    IEND®B`‚
+=== FILE assets/minecraft/textures/gui/sprites/hud/hotbar_offhand_left.png
+‰PNG
+
+   IHDR         ^ö¼  IDATx^Í–ËNÛ@†Ä66°­(-UK'!B}6Ü¯– Ø`„@Äå	X x'[Ê2Îô|ãz,gUé×${>Ÿÿœ9ãÿò3"RyÕ××§úûûµT¡PP–e)Û¶_0”8äºîÛóó³zxxĞº¾¾V777êññQwwwF···)1ëââ‚øMïÇy½¿¿W«««jyyYkkkK-..ª¥¥%µ¶¶¦æææÔÂÂB<vfgg;2†áÊÊJ833ÓŸŸoooo+™Ón¼KÔÓÓ“Z__oË´DMù¯)v¡ ‰}Zƒ.c"ËbÎmíîîòPÙP¹	›ˆªÍc_
+_ŠôiŒÑ
+*%;˜ªy2ZŠVğq´TÊ–ÑdÕk55==J¤bOX¼àr÷ï¿ª•í´æ»ÍÃÃCR¥)ò@½â$‘& ("ßa>¬WƒZePC%¿ù ØKa 85éjØçñ´…XûmÂÂê”ë«¾Ç²¡²çbhh£Y<C¸ñõ» ÍSH¨©”,8ş­ŠÜæÈ+@ST@Ùr¹ ä”‹Æ‹¥¬-ÙØj¢Ÿ˜ ¬AäÚ8rttÄ~Ï¥ %* ,
+œ³02 dò]ŠÀ@ÏÏÏY§whM€,Ôµ8Å’Ú>¦Ê‹I1íííåÏ)}sssSÙ6¶`~£$&ïñ¶â;9í°OsCé·creìEIn‘0"Ú,ĞFÇØ™PNš;ı› èŠ5€TN)*"æ?æåwtíşşÏ}Ú”F°ŸX™šÈ»%Pé½!Ñp2¡WWWÊ	/ş~ÔGˆPôWˆ½½B[åb%O¥¢i
+Œ1„–ŒÙÍª4yzn½æµR›urA///ÕÎÎ:88hó´Ø„(*’MëììLœœ( }ßéé©:>>Vr§¯0/YĞaÉå›â:Zì‘·FÄ›â{üæÀ‰DcGş€xc@ y]ñ dÉ“‹_±Q}±d®W‹ş¿ÏUs—¹À“Ì,    IEND®B`‚
