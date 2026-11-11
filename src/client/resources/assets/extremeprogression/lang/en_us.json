@@ -1242,5 +1242,12 @@
 	"synergy.extremeprogression.tailwind": "Tailwind",
 	"synergy.extremeprogression.tailwind.desc": "A firework rocket that boosts your elytra flight has a 50% chance not to be used up.",
 	"synergy.extremeprogression.tailwind.hint1": "A well-kept wing asks less of the wind.",
-	"synergy.extremeprogression.tailwind.hint2": "Boost an elytra flight with a firework rocket."
+	"synergy.extremeprogression.tailwind.hint2": "Boost an elytra flight with a firework rocket.",
+	"gui.extremeprogression.sheet.pace_on": "XP/h: on",
+	"gui.extremeprogression.sheet.pace_off": "XP/h: off",
+	"gui.extremeprogression.sheet.pace_tip": "Left of the hotbar, the one or two skills you earn the most XP in now: their XP an hour over the last 10 minutes, and the time their next level takes at that pace.",
+	"synergy.extremeprogression.echo_forging": "Echo Forging",
+	"synergy.extremeprogression.echo_forging.desc": "With an echo shard in your off hand, two equal enchantments at their highest level combine at an anvil into one level more, up to two beyond the maximum. The shard is used up.",
+	"synergy.extremeprogression.echo_forging.hint1": "Echoes remember a strength no table teaches.",
+	"synergy.extremeprogression.echo_forging.hint2": "Combine two equal top enchantments at an anvil, an echo shard in your off hand."
 }

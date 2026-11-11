@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.8.0: The Pace and Echo Forging
+
+- **The pace, left of the hotbar**: the one or two skills you earn the most XP in right now, each with its **XP an
+  hour** over the last 10 minutes, **the time to its next level** at that pace (or to its next Mastery rank), and a
+  bar of the progress. It shows while you earn and goes when you stop; the **XP/h** button at the top left of the
+  Character Sheet turns it off (kept on your own client).
+- **A new synergy, Echo Forging** (Arcana + Exploration, both at level 30): a special process at the anvil. With an
+  **echo shard** in your off hand, two equal enchantments at their highest level combine into **one level beyond the
+  maximum**, up to two: Sharpness V + V = VI, VI + VI = VII. It costs at least 10 levels (5 more a level beyond), and
+  the shard when you take the result. Enchantments with a maximum of 1 (Mending, Silk Touch) never do.
+- A level beyond the maximum is never lost at the anvil again: combining such an item keeps it.
+- The Codex grows with the window so that its fourteen synergies fit.
+
 ## 1.7.0: Tailwind
 
 - **A new synergy, Tailwind** (Exploration + Smithing, both at level 30): a firework rocket that boosts your elytra

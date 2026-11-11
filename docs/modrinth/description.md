@@ -49,8 +49,8 @@ Giant Slayer or Duelist, Mother Lode or Swift Pick.
 
 ![The Codex](https://raw.githubusercontent.com/Peertjeh/In-Game-MMO/develop/docs/images/codex.png)
 
-Thirteen hidden synergies between two skills at level 30: Counterstrike, Charge, High Ground, Deep Walker, Seafarer,
-Herb Lore, Tailwind (half your elytra rockets back) and more.
+Fourteen hidden synergies between two skills at level 30: Counterstrike, Charge, High Ground, Deep Walker, Seafarer,
+Herb Lore, Tailwind (half your elytra rockets back), Echo Forging (enchantments beyond their maximum) and more.
 
 - Each one works only once **you** discovered it, the first time its situation happens in your play.
 - Until then it is runes and a vague hint in your **Codex**.

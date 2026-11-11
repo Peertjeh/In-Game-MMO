@@ -63,6 +63,13 @@ public class CharacterSheetScreen extends Screen {
 					b -> Minecraft.getInstance().gui.setScreen(new SettingsScreen(this))).build());
 		}
 		buttons.add(Button.builder(Component.translatable("gui.done"), b -> this.onClose()).build());
+		// The pace left of the hotbar, on or off (1.8.0): a small button at the top left
+		Button pace = Button.builder(paceLabel(), b -> {
+			com.extremeprogression.client.state.ClientOptions.togglePace();
+			b.setMessage(paceLabel());
+		}).pos(x0, y0).size(64, 12).build();
+		pace.setTooltip(net.minecraft.client.gui.components.Tooltip.create(Component.translatable("gui.extremeprogression.sheet.pace_tip")));
+		this.addRenderableWidget(pace);
 		// The Players screen, for who may (1.6.0): a small button at the top right
 		if (com.extremeprogression.client.state.ClientAdmin.players()) {
 			this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.players.button"),
@@ -101,6 +108,10 @@ public class CharacterSheetScreen extends Screen {
 			y += 10 + tallest * (SkillTile.H + 2) + 4;
 		}
 		return y;
+	}
+
+	private static Component paceLabel() {
+		return Component.translatable(com.extremeprogression.client.state.ClientOptions.pace() ? "gui.extremeprogression.sheet.pace_on" : "gui.extremeprogression.sheet.pace_off");
 	}
 
 	private void column(int x, int top, List<List<Category>> rows) {

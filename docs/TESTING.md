@@ -36,6 +36,7 @@ key of its own). Extreme Dimensions is optional; the two work side by side.
 | Ability ready / in effect | the small icons right of the hotbar (in effect: with the seconds left) |
 | Death Register | the button at the foot of the Character Sheet |
 | Track a skill beside the hotbar | the Track button on its Skill Screen |
+| The pace (XP an hour, time to the next level) | left of the hotbar while you earn XP; the XP/h button on the Character Sheet turns it off |
 | Codex & Chronicle | the Codex button at the foot of the Character Sheet (duo synergies under Together) |
 | Party | the Party button at the foot of the Character Sheet, or `/party` |
 | Mastery perks | the Mastery button on a Skill Screen (from level 100) |

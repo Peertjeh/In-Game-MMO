@@ -37,6 +37,7 @@ public final class ClientProgress {
 	private static DeathData.Record summary = null;
 
 	public static void apply(ProgressPayload payload) {
+		ClientRates.observe(payload, System.currentTimeMillis());
 		current = payload;
 		updates++;
 		receivedTick = ticks;
@@ -108,6 +109,7 @@ public final class ClientProgress {
 	}
 
 	public static void clear() {
+		ClientRates.clear();
 		current = null;
 		cached = new PlayerProgress();
 		ACTIVE.clear();

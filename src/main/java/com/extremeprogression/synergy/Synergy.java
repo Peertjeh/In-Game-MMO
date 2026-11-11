@@ -40,6 +40,11 @@ public enum Synergy {
 	HERB_LORE(Skill.FORAGING, Skill.ARCANA, 10),
 	/** A firework rocket that boosts your elytra flight has a 50% chance not to be used up (1.7.0, the owner's wish). */
 	TAILWIND(Skill.EXPLORATION, Skill.SMITHING, 0.50),
+	/**
+	 * With an echo shard in your off hand, two equal enchantments at their highest level combine at an anvil into one
+	 * level more, up to two levels beyond the maximum (1.8.0, the owner's wish). The strength is those levels.
+	 */
+	ECHO_FORGING(Skill.ARCANA, Skill.EXPLORATION, 2),
 
 	// --- Duo synergies: your first skill, a party member's second ---
 	/** While you block with a shield, a party member within 4 blocks (Melee) takes 15% less damage. */
@@ -130,7 +135,7 @@ public enum Synergy {
 			com.google.gson.JsonObject o = new com.google.gson.JsonObject();
 			o.addProperty("enabled", s.enabled);
 			o.addProperty("strength", s.strength);
-			o.addProperty("strength_is", s == DEEP_WALKER ? "blocks" : s == HERB_LORE ? "seconds" : "share (0.2 = 20%)");
+			o.addProperty("strength_is", s == DEEP_WALKER ? "blocks" : s == HERB_LORE ? "seconds" : s == ECHO_FORGING ? "levels beyond the maximum" : "share (0.2 = 20%)");
 			json.add(s.id, o);
 		}
 		return json;

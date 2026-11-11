@@ -226,6 +226,77 @@ public final class SynergyEffects {
 		return trigger(p, Synergy.TAILWIND) && p.getRandom().nextDouble() < Synergy.TAILWIND.strength * power(p, Synergy.TAILWIND);
 	}
 
+	// --- Echo Forging (1.8.0) --------------------------------------------------------------------
+
+	private static net.minecraft.world.item.enchantment.ItemEnchantments enchantments(ItemStack s) {
+		return s.getOrDefault(s.is(Items.ENCHANTED_BOOK) ? net.minecraft.core.component.DataComponents.STORED_ENCHANTMENTS : net.minecraft.core.component.DataComponents.ENCHANTMENTS,
+				net.minecraft.world.item.enchantment.ItemEnchantments.EMPTY);
+	}
+
+	/**
+	 * Echo Forging, on the anvil's result (on both sides, so the client shows it as the server will give it): with an echo
+	 * shard in the off hand, every enchantment the two inputs share at the same level, at its maximum or beyond, comes
+	 * out one level higher, up to the synergy's strength (2) beyond the maximum. Enchantments with a maximum of 1 never
+	 * do. The cost is at least 10 levels and 5 more a level beyond, under the "Too Expensive" limit. Returns whether the
+	 * result was raised.
+	 */
+	public static boolean echoForge(net.minecraft.world.inventory.AnvilMenu menu, Player player, net.minecraft.world.inventory.DataSlot cost) {
+		ItemStack left = menu.getSlot(0).getItem(), right = menu.getSlot(1).getItem();
+		if (player == null || left.isEmpty() || right.isEmpty() || !player.getOffhandItem().is(Items.ECHO_SHARD)
+				|| !Synergies.eligible(player, Synergy.ECHO_FORGING)) {
+			return false;
+		}
+		if (!right.is(Items.ENCHANTED_BOOK) && !right.is(left.getItem())) {
+			return false;
+		}
+		var a = enchantments(left);
+		var b = enchantments(right);
+		int beyond = (int) Math.round(Synergy.ECHO_FORGING.strength);
+		ItemStack result = menu.getSlot(2).getItem().isEmpty() ? left.copy() : menu.getSlot(2).getItem();
+		int raised = 0;
+		for (net.minecraft.core.Holder<net.minecraft.world.item.enchantment.Enchantment> e : b.keySet()) {
+			int level = a.getLevel(e), max = e.value().getMaxLevel();
+			if (max > 1 && level == b.getLevel(e) && level >= max && level < max + beyond && (left.is(Items.ENCHANTED_BOOK) || e.value().canEnchant(left))) {
+				int to = level + 1;
+				net.minecraft.world.item.enchantment.EnchantmentHelper.updateEnchantments(result, m -> m.set(e, to));
+				raised = Math.max(raised, to - max);
+			}
+		}
+		if (raised == 0) {
+			return false;
+		}
+		if (menu.getSlot(2).getItem().isEmpty()) {
+			menu.getSlot(2).set(result);
+		}
+		cost.set(Math.min(39, Math.max(cost.get(), 10 + 5 * raised)));
+		return true;
+	}
+
+	/**
+	 * An enchantment beyond its maximum (from Echo Forging) is never lost at the anvil: vanilla would bring it down to the
+	 * maximum when the item is combined again, so the result keeps the left item's level where it was higher.
+	 */
+	public static void keepBeyond(net.minecraft.world.inventory.AnvilMenu menu) {
+		ItemStack left = menu.getSlot(0).getItem(), result = menu.getSlot(2).getItem();
+		if (left.isEmpty() || result.isEmpty()) {
+			return;
+		}
+		var a = enchantments(left);
+		var r = enchantments(result);
+		for (net.minecraft.core.Holder<net.minecraft.world.item.enchantment.Enchantment> e : a.keySet()) {
+			int level = a.getLevel(e);
+			if (level > e.value().getMaxLevel() && r.getLevel(e) > 0 && r.getLevel(e) < level) {
+				net.minecraft.world.item.enchantment.EnchantmentHelper.updateEnchantments(result, m -> m.set(e, level));
+			}
+		}
+	}
+
+	/** Echo Forging's result was taken: the echo shard is used up, and the synergy discovered the first time. */
+	public static void echoForged(ServerPlayer p) {
+		trigger(p, Synergy.ECHO_FORGING);
+		p.getOffhandItem().shrink(1);
+	}
+
 	// --- Gear and workstations -------------------------------------------------------------------
 
 	private static boolean armor(ItemStack stack) {

@@ -331,6 +331,15 @@ public class ClientShots implements FabricClientGameTest {
 			check(java.nio.file.Files.exists(FabricLoader.getInstance().getConfigDir().resolve("extremeprogression-client.json")), "the tracked skills were not saved");
 			check(ctx.computeOnClient(mc -> com.extremeprogression.client.hud.TrackedHud.shown()) == 3, "the HUD does not show the three tracked skills");
 
+			// The pace left of the hotbar (1.8.0): XP earned now shows as XP an hour and the time to the next level
+			sp.getServer().runOnServer(s -> admin(s, "add", "mining 3000"));
+			ctx.waitTicks(5);
+			sp.getServer().runOnServer(s -> admin(s, "add", "foraging 1200"));
+			ctx.waitTicks(5);
+			check(ctx.computeOnClient(mc -> com.extremeprogression.client.hud.RatesHud.shown()) == 2, "the pace does not show the two skills that earned XP");
+			check(ctx.computeOnClient(mc -> com.extremeprogression.client.state.ClientRates.active(System.currentTimeMillis()).get(0)) == Skill.MINING,
+					"Mining, which earned the most, is not first in the pace");
+
 			// With a sword in hand the ability key reaches Riposte: its icon shows beside the hotbar, and R uses it
 			sp.getServer().runOnServer(s -> s.getPlayerList().getPlayers().get(0).setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIAMOND_SWORD)));
 			// Long enough for the operator messages in the chat to fade, so the action bar shows in the screenshots
@@ -587,7 +596,7 @@ public class ClientShots implements FabricClientGameTest {
 				"inspect.points", "inspect.points_short", "players.title", "players.button", "players.search", "players.count", "players.waiting", "players.pick",
 				"players.summary", "players.fatigue", "players.more", "players.party", "players.minus_tip", "players.plus_tip", "players.respec_tip",
 				"players.cooldowns", "players.clear_deaths", "players.reset_all", "players.reset_sure", "players.reset_tip", "players.reset_skill_sure",
-				"players.points", "players.skill_help", "settings.title", "settings.button", "settings.preset.hardcore", "settings.preset.normal", "settings.preset.custom",
+				"players.points", "players.skill_help", "sheet.pace_on", "sheet.pace_off", "sheet.pace_tip", "settings.title", "settings.button", "settings.preset.hardcore", "settings.preset.normal", "settings.preset.custom",
 				"settings.search", "settings.save", "settings.revert", "settings.invalid", "settings.sent", "settings.waiting", "settings.preset", "settings.page",
 				"settings.read_only", "sheet.xp_event", "sheet.xp_event_all", "death.step2_off"}) {
 			keys.add("gui.extremeprogression." + k);

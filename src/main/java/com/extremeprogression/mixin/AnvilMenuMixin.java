@@ -38,11 +38,18 @@ public abstract class AnvilMenuMixin {
 	@Final
 	private DataSlot cost;
 
+	/** Whether the result shown now was raised by Echo Forging (1.8.0). */
+	@org.spongepowered.asm.mixin.Unique
+	private boolean extremeprogression$echoed;
+
 	/** The trunk and the specializations at the anvil: fewer levels, more (or less) restored. */
 	@Inject(method = "createResult", at = @At("TAIL"), require = 1)
 	private void extremeprogression$trunk(CallbackInfo ci) {
 		AnvilMenu self = (AnvilMenu) (Object) this;
 		Player player = ((ItemCombinerMenuAccess) self).extremeprogression$player();
+		// Echo Forging: beyond the maximum; and what is beyond it already is never lost
+		this.extremeprogression$echoed = com.extremeprogression.synergy.SynergyEffects.echoForge(self, player, this.cost);
+		com.extremeprogression.synergy.SynergyEffects.keepBeyond(self);
 		ItemStack result = self.getSlot(2).getItem();
 		if (result.isEmpty()) {
 			return;
@@ -63,6 +70,14 @@ public abstract class AnvilMenuMixin {
 	@ModifyConstant(method = "createResult", constant = @Constant(intValue = 40), require = 1)
 	private int extremeprogression$tooExpensive(int limit) {
 		return Smithing.tooExpensive(((ItemCombinerMenuAccess) (Object) this).extremeprogression$player());
+	}
+
+	@Inject(method = "onTake", at = @At("HEAD"), require = 1)
+	private void extremeprogression$echoTaken(Player player, ItemStack result, CallbackInfo ci) {
+		if (this.extremeprogression$echoed && player instanceof ServerPlayer p) {
+			this.extremeprogression$echoed = false;
+			com.extremeprogression.synergy.SynergyEffects.echoForged(p);
+		}
 	}
 
 	@Inject(method = "onTake", at = @At("HEAD"), require = 1)

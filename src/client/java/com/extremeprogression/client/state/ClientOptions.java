@@ -19,14 +19,15 @@ import com.extremeprogression.skill.Skill;
 import net.fabricmc.loader.api.FabricLoader;
 
 /**
- * This client's own choices, kept in {@code config/extremeprogression-client.json}: for now the skills tracked beside
- * the hotbar (none at first, in the order they were tracked).
+ * This client's own choices, kept in {@code config/extremeprogression-client.json}: the skills tracked beside the
+ * hotbar (none at first, in the order they were tracked), and whether the pace shows left of it (1.8.0, on at first).
  */
 public final class ClientOptions {
 	private ClientOptions() {}
 
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final List<Skill> TRACKED = new ArrayList<>();
+	private static boolean pace = true;
 
 	private static Path file() {
 		return FabricLoader.getInstance().getConfigDir().resolve(ExtremeProgression.MOD_ID + "-client.json");
@@ -34,12 +35,16 @@ public final class ClientOptions {
 
 	public static void load() {
 		TRACKED.clear();
+		pace = true;
 		Path f = file();
 		if (!Files.exists(f)) {
 			return;
 		}
 		try {
 			JsonElement parsed = JsonParser.parseString(Files.readString(f, StandardCharsets.UTF_8));
+			if (parsed.isJsonObject() && parsed.getAsJsonObject().get("pace") instanceof JsonElement p && p.isJsonPrimitive() && p.getAsJsonPrimitive().isBoolean()) {
+				pace = p.getAsBoolean();
+			}
 			if (parsed.isJsonObject() && parsed.getAsJsonObject().get("tracked") instanceof JsonArray list) {
 				for (JsonElement e : list) {
 					Skill s = e.isJsonPrimitive() ? Skill.byId(e.getAsString()) : null;
@@ -60,6 +65,7 @@ public final class ClientOptions {
 			list.add(s.id);
 		}
 		json.add("tracked", list);
+		json.addProperty("pace", pace);
 		try {
 			Files.writeString(file(), GSON.toJson(json), StandardCharsets.UTF_8);
 		} catch (Exception e) {
@@ -74,6 +80,17 @@ public final class ClientOptions {
 
 	public static boolean tracked(Skill s) {
 		return TRACKED.contains(s);
+	}
+
+	/** Whether the pace (XP an hour, time to the next level) shows left of the hotbar. */
+	public static boolean pace() {
+		return pace;
+	}
+
+	/** Shows the pace, or hides it; saved at once. */
+	public static void togglePace() {
+		pace = !pace;
+		save();
 	}
 
 	/** Tracks a skill, or stops tracking it; saved at once. */

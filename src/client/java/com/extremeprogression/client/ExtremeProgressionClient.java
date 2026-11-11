@@ -87,6 +87,9 @@ public class ExtremeProgressionClient implements ClientModInitializer {
 		HudElementRegistry.attachElementAfter(VanillaHudElements.HOTBAR, ExtremeProgression.id("ability"), (g, delta) -> AbilityHud.extract(g));
 		// The skills tracked beside the hotbar (the Track button on a Skill Screen)
 		com.extremeprogression.client.state.ClientOptions.load();
+		// The pace left of the hotbar (1.8.0)
+		HudElementRegistry.attachElementAfter(VanillaHudElements.HOTBAR, ExtremeProgression.id("pace"),
+				(g, delta) -> com.extremeprogression.client.hud.RatesHud.extract(g));
 		HudElementRegistry.attachElementAfter(VanillaHudElements.HOTBAR, ExtremeProgression.id("tracked"),
 				(g, delta) -> com.extremeprogression.client.hud.TrackedHud.extract(g));
 		// Key mappings only register presses while no screen is open, so this never opens over another screen

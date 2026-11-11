@@ -12,7 +12,7 @@ that you discover yourself. Slow, meaningful progression, and deaths that cost y
 - **Trees**: a trunk of four bonuses per skill, and thirty-three specializations with an ability, passives, a choice and
   a price each.
 - **Mastery** past level 100, ten ranks with a perk each.
-- **Thirteen hidden synergies**, a personal Codex and the server's Chronicle.
+- **Fourteen hidden synergies**, a personal Codex and the server's Chronicle.
 - **Playing together**: parties with an XP bonus for members near who play too, and eight duo synergies you discover
   with a party member.
 - **Deaths that cost you**: death pressure, the dimensions' factors, death fatigue, the Death Register and At Stake.

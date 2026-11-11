@@ -25,6 +25,8 @@ import net.minecraft.network.chat.Component;
  */
 public class CodexScreen extends Screen {
 	static final int W = 404, H = 222;
+	/** The height used: taller where the window allows, so that every synergy has room (1.8.0: fourteen). */
+	private int h = H;
 	private static final int ROW = 12, CHRONICLE_ROW = 11;
 	/** Runic letters for what is not discovered yet (in the game's fallback font). */
 	private static final String RUNES = "ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ";
@@ -51,7 +53,8 @@ public class CodexScreen extends Screen {
 	@Override
 	protected void init() {
 		x0 = (this.width - W) / 2;
-		y0 = Math.max(2, (this.height - H) / 2);
+		h = Math.max(H, Math.min(this.height - 8, 262));
+		y0 = Math.max(2, (this.height - h) / 2);
 		codexTab = this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.codex.tab"), b -> tab(0))
 				.pos(x0 + 4, y0 + 14).size(90, 14).build());
 		togetherTab = this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.codex.together_tab"), b -> tab(1))
@@ -59,7 +62,7 @@ public class CodexScreen extends Screen {
 		chronicleTab = this.addRenderableWidget(Button.builder(Component.translatable("gui.extremeprogression.chronicle.tab"), b -> tab(2))
 				.pos(x0 + 188, y0 + 14).size(90, 14).build());
 		this.addRenderableWidget(Button.builder(Component.translatable(parent != null ? "gui.back" : "gui.done"), b -> this.onClose())
-				.pos(this.width / 2 - 50, y0 + H - 20).size(100, 20).build());
+				.pos(this.width / 2 - 50, y0 + h - 20).size(100, 20).build());
 		tab(tab);
 	}
 
@@ -125,7 +128,7 @@ public class CodexScreen extends Screen {
 	public void extractBackground(GuiGraphicsExtractor g, int mouseX, int mouseY, float a) {
 		super.extractBackground(g, mouseX, mouseY, a);
 		Ui.centered(g, this.font, this.title.getString(), this.width / 2, y0 + 2, Ui.GOLD);
-		int py = y0 + 30, ph = H - 56;
+		int py = y0 + 30, ph = h - 56;
 		Ui.panel(g, x0, py, W, ph);
 		int ix = x0 + 6, iw = W - 12;
 		List<Synergy> shown = tab == 2 ? List.of(Synergy.values()) : Synergy.of(tab == 1);

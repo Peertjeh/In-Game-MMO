@@ -678,6 +678,7 @@ Mechanism b: these specializations of **different** skills exclude each other. W
 | Fishing + Arcana | Tidal Magic | Water Breathing potions last 50% longer |
 | Foraging + Arcana | Herb Lore | Glow berries give 10 seconds of Night Vision |
 | Exploration + Smithing | Tailwind (1.7.0, the owner's wish) | A firework rocket that boosts your elytra flight has a 50% chance not to be used up |
+| Arcana + Exploration | Echo Forging (1.8.0, the owner's wish) | With an echo shard in your off hand, two equal top enchantments combine at an anvil one level beyond the maximum (up to two) |
 
 General rules:
 - The rune hint appears in the GUI once one of the two skills reaches the required level.
@@ -749,6 +750,7 @@ The connections between skills, as built. Everything marked 💡 was decided whi
   | Tailored | Every point of wear on your armor has a 10% chance to be spared. |
   | Tidal Magic | A Water Breathing potion you drink lasts 50% longer. |
   | Herb Lore | Eating glow berries gives 10 seconds of Night Vision. |
+  | Echo Forging (1.8.0) | The special process: at an anvil, with an echo shard (ancient cities) in the off hand, every enchantment both inputs carry at the same level, at its maximum or beyond, comes out one level higher, up to 2 beyond the maximum (Sharpness V + V = VI, VI + VI = VII). Enchantments with a maximum of 1 never do. It costs at least 10 levels and 5 more a level beyond (under "Too Expensive"), and the shard when the result is taken. A level beyond the maximum is never lost to a later anvil combination. |
   | Tailwind (1.7.0) | A firework rocket used while flying with an elytra comes back to the hand half the time (into the stack, or dropped at your feet when the hand holds something else). Creative never uses one up. |
 
 - **The Chronicle:** `<world>/extremeprogression/world.json` holds every synergy's first discoverer, with the time and
@@ -1169,6 +1171,10 @@ The confirmed rules above, as built. Everything marked 💡 was decided while bu
       skill shows right of the hotbar, with its icon, level (Mastery rank past 100) and progress bar.
       Nothing shows until a player tracks something, and the choice is kept per client in
       `config/extremeprogression-client.json`.
+    - 1.8.0, the owner's choice: **the pace** left of the hotbar: the one or two skills earning the most XP now, each
+      with its XP an hour over the last 10 minutes and the time its next level takes at that pace (worked out on the
+      client; a jump of more than 3 levels at once, an operator's, is not counted). On by default; the "XP/h" button at
+      the top left of the Character Sheet turns it off.
     - 1.3.1, the owner's choice: the tracked skills are a **second hotbar** in the hotbar's own frame, one slot per
       skill: the icon, the level as an item count and a green durability bar for the progress.
 - **After a death:** after respawning a screen shows exactly what you lost (a fixed principle from §7).

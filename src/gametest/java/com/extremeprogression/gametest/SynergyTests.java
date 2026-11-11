@@ -56,11 +56,70 @@ public class SynergyTests {
 
 	@GameTest
 	public void everySynergyHasTwoSkillsThatDoNotOppose(GameTestHelper helper) {
-		check(helper, Synergy.of(false).size() == 13 && Synergy.of(true).size() == 8, "there are %s synergies and %s duo synergies, not 13 and 8",
+		check(helper, Synergy.of(false).size() == 14 && Synergy.of(true).size() == 8, "there are %s synergies and %s duo synergies, not 14 and 8",
 				Synergy.of(false).size(), Synergy.of(true).size());
 		for (Synergy s : Synergy.of(false)) {
 			check(helper, s.first != s.second && s.first.opposite() != s.second, "%s pairs opposing skills", s.id);
 		}
+		helper.succeed();
+	}
+
+	private static int sharpness(ItemStack s, net.minecraft.core.Holder<net.minecraft.world.item.enchantment.Enchantment> sharp) {
+		return s.getOrDefault(net.minecraft.core.component.DataComponents.ENCHANTMENTS, net.minecraft.world.item.enchantment.ItemEnchantments.EMPTY).getLevel(sharp);
+	}
+
+	private static ItemStack book(net.minecraft.core.Holder<net.minecraft.world.item.enchantment.Enchantment> e, int level) {
+		ItemStack book = new ItemStack(Items.ENCHANTED_BOOK);
+		net.minecraft.world.item.enchantment.EnchantmentHelper.updateEnchantments(book, m -> m.set(e, level));
+		return book;
+	}
+
+	@GameTest
+	public void echoForgingGoesBeyondTheMaximumWithAnEchoShard(GameTestHelper helper) {
+		Config.reset();
+		net.minecraft.server.level.ServerLevel level = helper.getLevel();
+		ServerPlayer p = with(helper, "Echo", Skill.ARCANA, 30, Skill.EXPLORATION, 30);
+		p.giveExperienceLevels(100);
+		helper.setBlock(new BlockPos(1, 1, 1), net.minecraft.world.level.block.Blocks.ANVIL);
+		var sharp = level.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT)
+				.getOrThrow(net.minecraft.world.item.enchantment.Enchantments.SHARPNESS);
+		net.minecraft.world.inventory.AnvilMenu anvil = new net.minecraft.world.inventory.AnvilMenu(0, p.getInventory(),
+				net.minecraft.world.inventory.ContainerLevelAccess.create(level, helper.absolutePos(new BlockPos(1, 1, 1))));
+		ItemStack sword = new ItemStack(Items.DIAMOND_SWORD);
+		sword.enchant(sharp, 5);
+		// Without an echo shard: never beyond V
+		anvil.getSlot(0).set(sword.copy());
+		anvil.getSlot(1).set(book(sharp, 5));
+		check(helper, sharpness(anvil.getSlot(2).getItem(), sharp) <= 5, "Sharpness went beyond V without an echo shard");
+		// With one: VI, and the shard is used up when the sword is taken
+		p.setItemSlot(net.minecraft.world.entity.EquipmentSlot.OFFHAND, new ItemStack(Items.ECHO_SHARD, 2));
+		anvil.getSlot(1).set(ItemStack.EMPTY);
+		anvil.getSlot(1).set(book(sharp, 5));
+		ItemStack six = anvil.getSlot(2).getItem();
+		check(helper, sharpness(six, sharp) == 6, "V and V with an echo shard made Sharpness %s, expected VI", sharpness(six, sharp));
+		anvil.getSlot(2).onTake(p, six);
+		check(helper, p.getOffhandItem().getCount() == 1 && Synergies.known(p, Synergy.ECHO_FORGING), "the echo shard was not used up, or Echo Forging not discovered");
+		// VI and VI: VII, the most; VII and VII stays VII (and is never brought down)
+		ItemStack sixSword = new ItemStack(Items.DIAMOND_SWORD);
+		sixSword.enchant(sharp, 6);
+		anvil.getSlot(0).set(sixSword);
+		anvil.getSlot(1).set(book(sharp, 6));
+		check(helper, sharpness(anvil.getSlot(2).getItem(), sharp) == 7, "VI and VI made Sharpness %s, expected VII", sharpness(anvil.getSlot(2).getItem(), sharp));
+		ItemStack sevenSword = new ItemStack(Items.DIAMOND_SWORD);
+		sevenSword.enchant(sharp, 7);
+		anvil.getSlot(0).set(sevenSword);
+		anvil.getSlot(1).set(ItemStack.EMPTY);
+		anvil.getSlot(1).set(book(sharp, 7));
+		ItemStack seven = anvil.getSlot(2).getItem();
+		check(helper, seven.isEmpty() || sharpness(seven, sharp) == 7, "VII and VII made Sharpness %s: beyond VII, or brought down", sharpness(seven, sharp));
+		// Without the levels: nothing beyond the maximum
+		ServerPlayer low = with(helper, "Plain", Skill.ARCANA, 29, Skill.EXPLORATION, 30);
+		low.setItemSlot(net.minecraft.world.entity.EquipmentSlot.OFFHAND, new ItemStack(Items.ECHO_SHARD));
+		net.minecraft.world.inventory.AnvilMenu other = new net.minecraft.world.inventory.AnvilMenu(0, low.getInventory(),
+				net.minecraft.world.inventory.ContainerLevelAccess.create(level, helper.absolutePos(new BlockPos(1, 1, 1))));
+		other.getSlot(0).set(sword.copy());
+		other.getSlot(1).set(book(sharp, 5));
+		check(helper, sharpness(other.getSlot(2).getItem(), sharp) <= 5, "Echo Forging worked with Arcana at 29");
 		helper.succeed();
 	}
 
