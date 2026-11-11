@@ -3,13 +3,16 @@ package com.extremeprogression.synergy;
 import static com.extremeprogression.synergy.Synergies.power;
 import static com.extremeprogression.synergy.Synergies.trigger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import com.mojang.serialization.Codec;
 
 import com.extremeprogression.ExtremeProgression;
+import com.extremeprogression.config.Config;
 import com.extremeprogression.trunk.Trunks;
 
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
@@ -17,6 +20,7 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -233,26 +237,33 @@ public final class SynergyEffects {
 				net.minecraft.world.item.enchantment.ItemEnchantments.EMPTY);
 	}
 
+	/** Echo Forging's colour: the deep dark's sculk teal. */
+	public static final int ECHO_COLOR = 0x2AC6C6;
+
 	/**
-	 * Echo Forging, on the anvil's result (on both sides, so the client shows it as the server will give it): with an echo
-	 * shard in the off hand, every enchantment the two inputs share at the same level, at its maximum or beyond, comes
-	 * out one level higher, up to the synergy's strength (2) beyond the maximum. Enchantments with a maximum of 1 never
-	 * do. The cost is at least 10 levels and 5 more a level beyond, under the "Too Expensive" limit. Returns whether the
-	 * result was raised.
+	 * Echo Forging, on the anvil's result (on the server only: the client is sent what it shows): with an echo shard in
+	 * the off hand, every enchantment the two inputs share at the same level, at its maximum or beyond, comes out one
+	 * level higher, up to the synergy's strength (2) beyond the maximum. Enchantments with a maximum of 1 never do.
+	 *
+	 * <p>The ritual (1.9.0, the owner's wish: harder, and together): the anvil stands within ECHO_CATALYST_RANGE blocks of
+	 * a sculk catalyst, and every level beyond the maximum needs ECHO_VOICES_PER_LEVEL voices besides the forger (see
+	 * {@link #voices}): Sharpness VI two players, VII three. What is missing is said on the action bar. The cost is at
+	 * least 10 levels and 10 more a level beyond (VI 20, VII 30), under the "Too Expensive" limit. The result remembers
+	 * who forged it. Returns the voices it needs, or -1 when nothing was raised.
 	 */
-	public static boolean echoForge(net.minecraft.world.inventory.AnvilMenu menu, Player player, net.minecraft.world.inventory.DataSlot cost) {
+	public static int echoForge(net.minecraft.world.inventory.AnvilMenu menu, Player player, BlockPos anvil, net.minecraft.world.inventory.DataSlot cost) {
 		ItemStack left = menu.getSlot(0).getItem(), right = menu.getSlot(1).getItem();
-		if (player == null || left.isEmpty() || right.isEmpty() || !player.getOffhandItem().is(Items.ECHO_SHARD)
-				|| !Synergies.eligible(player, Synergy.ECHO_FORGING)) {
-			return false;
+		if (!(player instanceof ServerPlayer p) || left.isEmpty() || right.isEmpty() || !p.getOffhandItem().is(Items.ECHO_SHARD)
+				|| !Synergies.eligible(p, Synergy.ECHO_FORGING)) {
+			return -1;
 		}
 		if (!right.is(Items.ENCHANTED_BOOK) && !right.is(left.getItem())) {
-			return false;
+			return -1;
 		}
 		var a = enchantments(left);
 		var b = enchantments(right);
 		int beyond = (int) Math.round(Synergy.ECHO_FORGING.strength);
-		ItemStack result = menu.getSlot(2).getItem().isEmpty() ? left.copy() : menu.getSlot(2).getItem();
+		ItemStack result = (menu.getSlot(2).getItem().isEmpty() ? left : menu.getSlot(2).getItem()).copy();
 		int raised = 0;
 		for (net.minecraft.core.Holder<net.minecraft.world.item.enchantment.Enchantment> e : b.keySet()) {
 			int level = a.getLevel(e), max = e.value().getMaxLevel();
@@ -263,13 +274,108 @@ public final class SynergyEffects {
 			}
 		}
 		if (raised == 0) {
-			return false;
+			return -1;
 		}
-		if (menu.getSlot(2).getItem().isEmpty()) {
-			menu.getSlot(2).set(result);
+		// The ritual: the forge beside a sculk catalyst, and a voice for every level beyond
+		if (!nearCatalyst(p.level(), anvil)) {
+			p.sendSystemMessage(Component.translatable("message.extremeprogression.echo.catalyst", Config.ECHO_CATALYST_RANGE).withColor(ECHO_COLOR), true);
+			return -1;
 		}
-		cost.set(Math.min(39, Math.max(cost.get(), 10 + 5 * raised)));
-		return true;
+		int needed = raised * Config.ECHO_VOICES_PER_LEVEL;
+		List<LivingEntity> voices = voices(p, anvil);
+		if (voices.size() < needed) {
+			p.sendSystemMessage(Component.translatable(allaysCount(p) ? "message.extremeprogression.echo.voices_allays" : "message.extremeprogression.echo.voices",
+					voices.size(), needed, Math.round(Config.ECHO_VOICE_RANGE)).withColor(ECHO_COLOR), true);
+			return -1;
+		}
+		// (the item remembers who forged it: a line of lore for every echo it went through)
+		List<String> names = new ArrayList<>();
+		names.add(p.getName().getString());
+		for (LivingEntity v : voices.subList(0, needed)) {
+			names.add(v.getName().getString());
+		}
+		Component line = Component.translatable("lore.extremeprogression.echo_forged", together(names))
+				.withStyle(st -> st.withColor(ECHO_COLOR).withItalic(false));
+		result.set(net.minecraft.core.component.DataComponents.LORE,
+				result.getOrDefault(net.minecraft.core.component.DataComponents.LORE, net.minecraft.world.item.component.ItemLore.EMPTY).withLineAdded(line));
+		menu.getSlot(2).set(result);
+		cost.set(Math.min(39, Math.max(cost.get(), 10 + 10 * raised)));
+		return needed;
+	}
+
+	/** "Steve", "Steve & Alex", "Steve, Alex & Sam". */
+	static String together(List<String> names) {
+		if (names.size() <= 1) {
+			return names.isEmpty() ? "" : names.get(0);
+		}
+		return String.join(", ", names.subList(0, names.size() - 1)) + " & " + names.get(names.size() - 1);
+	}
+
+	/** Whether a sculk catalyst stands within ECHO_CATALYST_RANGE blocks of the anvil (always, at 0). */
+	static boolean nearCatalyst(net.minecraft.world.level.Level level, BlockPos anvil) {
+		int r = Config.ECHO_CATALYST_RANGE;
+		if (r <= 0) {
+			return true;
+		}
+		for (int x = -r; x <= r; x++) {
+			for (int y = -r; y <= r; y++) {
+				for (int z = -r; z <= r; z++) {
+					if (level.getBlockState(new BlockPos(anvil.getX() + x, anvil.getY() + y, anvil.getZ() + z)).is(net.minecraft.world.level.block.Blocks.SCULK_CATALYST)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	/** Whether allays can be voices here: in singleplayer, or on a server that allows it. */
+	static boolean allaysCount(ServerPlayer p) {
+		MinecraftServer server = p.level().getServer();
+		return Config.ECHO_ALLAYS_ON_SERVERS || server != null && server.isSingleplayer() && !server.isPublished();
+	}
+
+	/**
+	 * The voices an Echo Forging hears at this anvil, players first and the nearest first: every other player within
+	 * ECHO_VOICE_RANGE blocks with an echo shard in their off hand, in the forger's party (anyone, with parties off); and
+	 * where allays count, every allay holding an echo shard.
+	 */
+	public static List<LivingEntity> voices(ServerPlayer forger, BlockPos anvil) {
+		ServerLevel level = forger.level();
+		net.minecraft.world.phys.Vec3 at = net.minecraft.world.phys.Vec3.atCenterOf(anvil);
+		double r = Config.ECHO_VOICE_RANGE;
+		List<LivingEntity> out = new ArrayList<>();
+		for (ServerPlayer o : level.players()) {
+			if (o != forger && o.isAlive() && !o.isSpectator() && o.getOffhandItem().is(Items.ECHO_SHARD) && o.position().distanceTo(at) <= r
+					&& (!Config.PARTIES || com.extremeprogression.party.Parties.together(forger, o))) {
+				out.add(o);
+			}
+		}
+		if (allaysCount(forger)) {
+			for (Entity e : level.getEntities((Entity) null, new net.minecraft.world.phys.AABB(anvil).inflate(r),
+					e -> e.isAlive() && "minecraft:allay".equals(BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()).toString()))) {
+				if (e instanceof LivingEntity allay && allay.getMainHandItem().is(Items.ECHO_SHARD) && allay.position().distanceTo(at) <= r) {
+					out.add(allay);
+				}
+			}
+		}
+		out.sort(java.util.Comparator.comparingInt((LivingEntity e) -> e instanceof Player ? 0 : 1).thenComparingDouble(e -> e.position().distanceTo(at)));
+		return out;
+	}
+
+	/**
+	 * Whether an Echo Forging's result may be taken: the forger still holds an echo shard and the voices are still there
+	 * (otherwise the echo fades, and the action bar says so).
+	 */
+	public static boolean echoHeard(Player player, BlockPos anvil, int needed) {
+		if (!(player instanceof ServerPlayer p)) {
+			return true;
+		}
+		if (p.getOffhandItem().is(Items.ECHO_SHARD) && voices(p, anvil).size() >= needed) {
+			return true;
+		}
+		p.sendSystemMessage(Component.translatable("message.extremeprogression.echo.faded").withColor(ECHO_COLOR), true);
+		return false;
 	}
 
 	/**
@@ -291,10 +397,32 @@ public final class SynergyEffects {
 		}
 	}
 
-	/** Echo Forging's result was taken: the echo shard is used up, and the synergy discovered the first time. */
-	public static void echoForged(ServerPlayer p) {
+	/**
+	 * Echo Forging's result was taken: the forger's echo shard is used up and the voices' (the nearest first), the
+	 * synergy is discovered the first time, and the echo answers: a shriek, sculk souls, and a moment of darkness around
+	 * the anvil.
+	 */
+	public static void echoForged(ServerPlayer p, BlockPos anvil, int needed) {
 		trigger(p, Synergy.ECHO_FORGING);
 		p.getOffhandItem().shrink(1);
+		List<LivingEntity> voices = voices(p, anvil);
+		for (LivingEntity v : voices.subList(0, Math.min(needed, voices.size()))) {
+			if (v instanceof ServerPlayer o) {
+				o.getOffhandItem().shrink(1);
+				o.sendSystemMessage(Component.translatable("message.extremeprogression.echo.answered", p.getDisplayName()).withColor(ECHO_COLOR), false);
+			} else {
+				v.getMainHandItem().shrink(1);
+			}
+		}
+		ServerLevel level = p.level();
+		net.minecraft.world.phys.Vec3 at = net.minecraft.world.phys.Vec3.atCenterOf(anvil);
+		level.playSound(null, at.x, at.y, at.z, net.minecraft.sounds.SoundEvents.SCULK_SHRIEKER_SHRIEK, net.minecraft.sounds.SoundSource.BLOCKS, 1.0f, 1.0f);
+		level.sendParticles(net.minecraft.core.particles.ParticleTypes.SCULK_SOUL, at.x, at.y + 0.6, at.z, 24, 0.6, 0.4, 0.6, 0.02);
+		for (ServerPlayer o : level.players()) {
+			if (o.position().distanceTo(at) <= Math.max(4, Config.ECHO_VOICE_RANGE)) {
+				o.addEffect(new MobEffectInstance(MobEffects.DARKNESS, 60, 0, false, false));
+			}
+		}
 	}
 
 	// --- Gear and workstations -------------------------------------------------------------------

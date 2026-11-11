@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.9.0: The Echo Forging ritual
+
+Echo Forging was too easy for what it gives; it is now a ritual you do together (the owner's wish).
+
+- **The Echo Forge**: the anvil must stand within 4 blocks of a **sculk catalyst** (`echo_catalyst_range`, 0 for
+  anywhere). Catalysts only drop with Silk Touch, deep in the Deep Dark.
+- **Voices**: every level beyond the maximum needs one more voice besides you (`echo_voices_per_level`): a **party
+  member** within 8 blocks of the anvil (`echo_voice_range`) with an **echo shard in their off hand**. Sharpness VI
+  takes two players, VII three. With parties turned off, any player counts.
+- **In singleplayer an allay** holding an echo shard is a voice too; on a server only with `echo_allays_on_servers`.
+- **Every shard is used up**: yours and each voice's (an allay's too). A Sharpness VII from scratch takes seven echo
+  shards: two for each VI and three for the VII.
+- **It costs more**: VI at least 20 levels, VII at least 30 (still under "Too Expensive").
+- **The item remembers who forged it**: a line of lore, "Echo-forged by Steve, Alex & Sam", for every echo it went
+  through.
+- **The echo answers**: a sculk shriek, sculk souls rising from the anvil, and a moment of darkness for everyone near.
+- What is missing is said on the action bar: no catalyst, or how many voices of how many. When a voice walks away (or
+  lets go of the shard) before the result is taken, the result stays in the anvil.
+- The anvil's result beyond the maximum is now worked out by the server alone; the client is sent what it shows.
+
 ## 1.8.0: The Pace and Echo Forging
 
 - **The pace, left of the hotbar**: the one or two skills you earn the most XP in right now, each with its **XP an

@@ -42,7 +42,8 @@ public enum Synergy {
 	TAILWIND(Skill.EXPLORATION, Skill.SMITHING, 0.50),
 	/**
 	 * With an echo shard in your off hand, two equal enchantments at their highest level combine at an anvil into one
-	 * level more, up to two levels beyond the maximum (1.8.0, the owner's wish). The strength is those levels.
+	 * level more, up to two levels beyond the maximum (1.8.0, the owner's wish). The strength is those levels. Since
+	 * 1.9.0 a ritual: the anvil beside a sculk catalyst, and a party member holding an echo shard for every level beyond.
 	 */
 	ECHO_FORGING(Skill.ARCANA, Skill.EXPLORATION, 2),
 

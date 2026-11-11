@@ -966,6 +966,12 @@
 	"message.extremeprogression.synergy.discovered": "Synergy discovered: %s (%s + %s). %s",
 	"message.extremeprogression.synergy.first": "%s is the first on this server to discover the synergy %s!",
 	"message.extremeprogression.synergy.first_you": "You are the first on this server to discover it.",
+	"message.extremeprogression.echo.catalyst": "The echo stays silent: this anvil needs a sculk catalyst within %s blocks.",
+	"message.extremeprogression.echo.voices": "The echo needs more voices: %s of %s. A voice is a party member within %s blocks of the anvil with an echo shard in their off hand.",
+	"message.extremeprogression.echo.voices_allays": "The echo needs more voices: %s of %s. A voice is a party member within %s blocks of the anvil with an echo shard in their off hand, or an allay holding one.",
+	"message.extremeprogression.echo.faded": "The echo faded: a voice left the anvil or let go of their echo shard.",
+	"message.extremeprogression.echo.answered": "Your echo shard answered %s's forge.",
+	"lore.extremeprogression.echo_forged": "Echo-forged by %s",
 	"spec.extremeprogression.juggernaut.conflict_reason": "heavy plate against somersaults",
 	"spec.extremeprogression.acrobat.conflict_reason": "heavy plate against somersaults",
 	"spec.extremeprogression.brawler.conflict_reason": "bare fists against a shield",
@@ -1247,7 +1253,7 @@
 	"gui.extremeprogression.sheet.pace_off": "XP/h: off",
 	"gui.extremeprogression.sheet.pace_tip": "Left of the hotbar, the one or two skills you earn the most XP in now: their XP an hour over the last 10 minutes, and the time their next level takes at that pace.",
 	"synergy.extremeprogression.echo_forging": "Echo Forging",
-	"synergy.extremeprogression.echo_forging.desc": "With an echo shard in your off hand, two equal enchantments at their highest level combine at an anvil into one level more, up to two beyond the maximum. The shard is used up.",
+	"synergy.extremeprogression.echo_forging.desc": "A ritual at an anvil beside a sculk catalyst: two equal enchantments at their highest level combine into one level more, up to two beyond the maximum. You hold an echo shard in your off hand, and every level beyond needs one more voice: a party member at the anvil holding one too (in singleplayer, an allay). Every shard is used up.",
 	"synergy.extremeprogression.echo_forging.hint1": "Echoes remember a strength no table teaches.",
-	"synergy.extremeprogression.echo_forging.hint2": "Combine two equal top enchantments at an anvil, an echo shard in your off hand."
+	"synergy.extremeprogression.echo_forging.hint2": "An anvil beside a sculk catalyst, two equal top enchantments, an echo shard in your off hand, and friends who hold one too."
 }

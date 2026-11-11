@@ -595,6 +595,11 @@ public class ClientShots implements FabricClientGameTest {
 		}
 		keys.add("message.extremeprogression.synergy.discovered_together");
 		keys.add("message.extremeprogression.synergy.first_together");
+		// Echo Forging's ritual (1.9.0)
+		for (String k : new String[] {"catalyst", "voices", "voices_allays", "faded", "answered"}) {
+			keys.add("message.extremeprogression.echo." + k);
+		}
+		keys.add("lore.extremeprogression.echo_forged");
 		for (String k : new String[] {"leaderboard.title", "leaderboard.button", "leaderboard.total", "leaderboard.waiting", "leaderboard.players",
 				"leaderboard.level", "inspect.title", "inspect.online", "inspect.offline", "inspect.synergies", "inspect.read_only", "inspect.no_spec",
 				"inspect.points", "inspect.points_short", "players.title", "players.button", "players.search", "players.count", "players.waiting", "players.pick",

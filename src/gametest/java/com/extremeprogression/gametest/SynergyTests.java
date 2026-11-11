@@ -74,52 +74,120 @@ public class SynergyTests {
 		return book;
 	}
 
+	/** Puts two items in the anvil (the second last, so the result is worked out anew). */
+	private static ItemStack put(net.minecraft.world.inventory.AnvilMenu anvil, ItemStack left, ItemStack right) {
+		anvil.getSlot(1).set(ItemStack.EMPTY);
+		anvil.getSlot(0).set(left);
+		anvil.getSlot(1).set(right);
+		return anvil.getSlot(2).getItem();
+	}
+
+	/** A party member of the forger beside the anvil, these echo shards in their off hand. */
+	private static ServerPlayer voice(GameTestHelper helper, String name, ServerPlayer forger, BlockPos anvil, int shards) {
+		ServerPlayer v = TestPlayers.survivor(helper, name);
+		v.setPos(anvil.getX() + 2.5, anvil.getY(), anvil.getZ() + 0.5);
+		v.setItemSlot(net.minecraft.world.entity.EquipmentSlot.OFFHAND, new ItemStack(Items.ECHO_SHARD, shards));
+		com.extremeprogression.party.Parties.invite(forger, v);
+		com.extremeprogression.party.Parties.accept(v, null);
+		return v;
+	}
+
 	@GameTest
-	public void echoForgingGoesBeyondTheMaximumWithAnEchoShard(GameTestHelper helper) {
+	public void echoForgingIsARitualOfTwoOrThreeVoices(GameTestHelper helper) {
 		Config.reset();
 		net.minecraft.server.level.ServerLevel level = helper.getLevel();
 		ServerPlayer p = with(helper, "Echo", Skill.ARCANA, 30, Skill.EXPLORATION, 30);
 		p.giveExperienceLevels(100);
+		BlockPos at = helper.absolutePos(new BlockPos(1, 1, 1));
+		p.setPos(at.getX() + 0.5, at.getY(), at.getZ() - 1.5);
 		helper.setBlock(new BlockPos(1, 1, 1), net.minecraft.world.level.block.Blocks.ANVIL);
 		var sharp = level.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT)
 				.getOrThrow(net.minecraft.world.item.enchantment.Enchantments.SHARPNESS);
 		net.minecraft.world.inventory.AnvilMenu anvil = new net.minecraft.world.inventory.AnvilMenu(0, p.getInventory(),
-				net.minecraft.world.inventory.ContainerLevelAccess.create(level, helper.absolutePos(new BlockPos(1, 1, 1))));
+				net.minecraft.world.inventory.ContainerLevelAccess.create(level, at));
 		ItemStack sword = new ItemStack(Items.DIAMOND_SWORD);
 		sword.enchant(sharp, 5);
 		// Without an echo shard: never beyond V
-		anvil.getSlot(0).set(sword.copy());
-		anvil.getSlot(1).set(book(sharp, 5));
-		check(helper, sharpness(anvil.getSlot(2).getItem(), sharp) <= 5, "Sharpness went beyond V without an echo shard");
-		// With one: VI, and the shard is used up when the sword is taken
+		check(helper, sharpness(put(anvil, sword.copy(), book(sharp, 5)), sharp) <= 5, "Sharpness went beyond V without an echo shard");
+		// An echo shard, but no sculk catalyst near the anvil: nothing
 		p.setItemSlot(net.minecraft.world.entity.EquipmentSlot.OFFHAND, new ItemStack(Items.ECHO_SHARD, 2));
-		anvil.getSlot(1).set(ItemStack.EMPTY);
-		anvil.getSlot(1).set(book(sharp, 5));
-		ItemStack six = anvil.getSlot(2).getItem();
-		check(helper, sharpness(six, sharp) == 6, "V and V with an echo shard made Sharpness %s, expected VI", sharpness(six, sharp));
+		check(helper, sharpness(put(anvil, sword.copy(), book(sharp, 5)), sharp) <= 5, "Sharpness went beyond V without a sculk catalyst");
+		// A catalyst, but nobody else: the forger alone is not enough
+		helper.setBlock(new BlockPos(3, 1, 1), net.minecraft.world.level.block.Blocks.SCULK_CATALYST);
+		check(helper, sharpness(put(anvil, sword.copy(), book(sharp, 5)), sharp) <= 5, "Sharpness VI was forged without a second voice");
+		// Somebody outside the party is no voice
+		ServerPlayer stranger = TestPlayers.survivor(helper, "Stranger");
+		stranger.setPos(at.getX() - 1.5, at.getY(), at.getZ() + 0.5);
+		stranger.setItemSlot(net.minecraft.world.entity.EquipmentSlot.OFFHAND, new ItemStack(Items.ECHO_SHARD));
+		check(helper, !SynergyEffects.voices(p, at).contains(stranger), "a player outside the party was a voice");
+		// A party member with an echo shard: VI, for 15 levels or more, and the sword remembers who forged it
+		ServerPlayer alex = voice(helper, "Alex", p, at, 2);
+		check(helper, SynergyEffects.voices(p, at).contains(alex), "a party member with an echo shard beside the anvil was no voice");
+		ItemStack six = put(anvil, sword.copy(), book(sharp, 5));
+		check(helper, sharpness(six, sharp) == 6, "V and V with two voices made Sharpness %s, expected VI", sharpness(six, sharp));
+		check(helper, anvil.getCost() >= 15, "Sharpness VI cost %s levels, expected at least 15", anvil.getCost());
+		String lore = String.valueOf(six.get(net.minecraft.core.component.DataComponents.LORE));
+		check(helper, lore.contains(p.getName().getString()) && lore.contains(alex.getName().getString()), "the sword's lore does not name its forgers: %s", lore);
+		// A voice walks away: the result stays in the anvil; back again, it can be taken
+		alex.setPos(at.getX() + 40, at.getY(), at.getZ());
+		check(helper, !anvil.getSlot(2).mayPickup(p), "the result could be taken after the voice walked away");
+		alex.setPos(at.getX() + 2.5, at.getY(), at.getZ() + 0.5);
+		check(helper, anvil.getSlot(2).mayPickup(p), "the result could not be taken with the voice back");
+		// Taking it uses up both echo shards and discovers the synergy
 		anvil.getSlot(2).onTake(p, six);
-		check(helper, p.getOffhandItem().getCount() == 1 && Synergies.known(p, Synergy.ECHO_FORGING), "the echo shard was not used up, or Echo Forging not discovered");
-		// VI and VI: VII, the most; VII and VII stays VII (and is never brought down)
+		check(helper, p.getOffhandItem().getCount() == 1 && alex.getOffhandItem().getCount() == 1, "the echo shards were not used up: %s and %s left",
+				p.getOffhandItem().getCount(), alex.getOffhandItem().getCount());
+		check(helper, Synergies.known(p, Synergy.ECHO_FORGING), "Echo Forging was not discovered");
+		// VI and VI: VII needs three voices, so not with two, and with a third it does
 		ItemStack sixSword = new ItemStack(Items.DIAMOND_SWORD);
 		sixSword.enchant(sharp, 6);
-		anvil.getSlot(0).set(sixSword);
-		anvil.getSlot(1).set(book(sharp, 6));
-		check(helper, sharpness(anvil.getSlot(2).getItem(), sharp) == 7, "VI and VI made Sharpness %s, expected VII", sharpness(anvil.getSlot(2).getItem(), sharp));
+		check(helper, sharpness(put(anvil, sixSword.copy(), book(sharp, 6)), sharp) == 6, "VI and VI with two voices made Sharpness %s, expected VI kept",
+				sharpness(anvil.getSlot(2).getItem(), sharp));
+		ServerPlayer sam = voice(helper, "Sam", p, at, 1);
+		ItemStack seven = put(anvil, sixSword.copy(), book(sharp, 6));
+		check(helper, sharpness(seven, sharp) == 7, "VI and VI with three voices made Sharpness %s, expected VII", sharpness(seven, sharp));
+		anvil.getSlot(2).onTake(p, seven);
+		check(helper, p.getOffhandItem().isEmpty() && alex.getOffhandItem().isEmpty() && sam.getOffhandItem().isEmpty(), "VII did not use up all three echo shards");
+		// VII and VII stays VII (and is never brought down)
 		ItemStack sevenSword = new ItemStack(Items.DIAMOND_SWORD);
 		sevenSword.enchant(sharp, 7);
-		anvil.getSlot(0).set(sevenSword);
-		anvil.getSlot(1).set(ItemStack.EMPTY);
-		anvil.getSlot(1).set(book(sharp, 7));
-		ItemStack seven = anvil.getSlot(2).getItem();
-		check(helper, seven.isEmpty() || sharpness(seven, sharp) == 7, "VII and VII made Sharpness %s: beyond VII, or brought down", sharpness(seven, sharp));
+		ItemStack top = put(anvil, sevenSword, book(sharp, 7));
+		check(helper, top.isEmpty() || sharpness(top, sharp) == 7, "VII and VII made Sharpness %s: beyond VII, or brought down", sharpness(top, sharp));
 		// Without the levels: nothing beyond the maximum
 		ServerPlayer low = with(helper, "Plain", Skill.ARCANA, 29, Skill.EXPLORATION, 30);
 		low.setItemSlot(net.minecraft.world.entity.EquipmentSlot.OFFHAND, new ItemStack(Items.ECHO_SHARD));
 		net.minecraft.world.inventory.AnvilMenu other = new net.minecraft.world.inventory.AnvilMenu(0, low.getInventory(),
-				net.minecraft.world.inventory.ContainerLevelAccess.create(level, helper.absolutePos(new BlockPos(1, 1, 1))));
-		other.getSlot(0).set(sword.copy());
-		other.getSlot(1).set(book(sharp, 5));
-		check(helper, sharpness(other.getSlot(2).getItem(), sharp) <= 5, "Echo Forging worked with Arcana at 29");
+				net.minecraft.world.inventory.ContainerLevelAccess.create(level, at));
+		check(helper, sharpness(put(other, sword.copy(), book(sharp, 5)), sharp) <= 5, "Echo Forging worked with Arcana at 29");
+		// An allay holding an echo shard is a voice where allays count (in singleplayer, or with the option on)
+		LivingEntity allay = (LivingEntity) helper.spawn(EntityTypes.ALLAY, new BlockPos(1, 2, 3), EntitySpawnReason.NATURAL);
+		allay.setItemSlot(net.minecraft.world.entity.EquipmentSlot.MAINHAND, new ItemStack(Items.ECHO_SHARD));
+		Config.ECHO_ALLAYS_ON_SERVERS = true;
+		check(helper, SynergyEffects.voices(p, at).contains(allay), "an allay holding an echo shard was no voice with ECHO_ALLAYS_ON_SERVERS on");
+		Config.reset();
+		helper.succeed();
+	}
+
+	@GameTest
+	public void echoForgingVoicesAndCatalystCanBeTurnedOff(GameTestHelper helper) {
+		Config.reset();
+		Config.ECHO_CATALYST_RANGE = 0;
+		Config.ECHO_VOICES_PER_LEVEL = 0;
+		net.minecraft.server.level.ServerLevel level = helper.getLevel();
+		ServerPlayer p = with(helper, "Lone", Skill.ARCANA, 30, Skill.EXPLORATION, 30);
+		p.giveExperienceLevels(100);
+		BlockPos at = helper.absolutePos(new BlockPos(1, 1, 1));
+		helper.setBlock(new BlockPos(1, 1, 1), net.minecraft.world.level.block.Blocks.ANVIL);
+		var sharp = level.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT)
+				.getOrThrow(net.minecraft.world.item.enchantment.Enchantments.SHARPNESS);
+		net.minecraft.world.inventory.AnvilMenu anvil = new net.minecraft.world.inventory.AnvilMenu(0, p.getInventory(),
+				net.minecraft.world.inventory.ContainerLevelAccess.create(level, at));
+		p.setItemSlot(net.minecraft.world.entity.EquipmentSlot.OFFHAND, new ItemStack(Items.ECHO_SHARD));
+		ItemStack sword = new ItemStack(Items.DIAMOND_SWORD);
+		sword.enchant(sharp, 5);
+		ItemStack six = put(anvil, sword, book(sharp, 5));
+		Config.reset();
+		check(helper, sharpness(six, sharp) == 6, "with no catalyst and no voices asked, V and V made Sharpness %s, expected VI", sharpness(six, sharp));
 		helper.succeed();
 	}
 

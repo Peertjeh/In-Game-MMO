@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
@@ -19,6 +20,7 @@ import com.extremeprogression.spec.Smithing;
 import com.extremeprogression.trunk.Trunks;
 import com.extremeprogression.xp.CraftingXp;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -38,9 +40,16 @@ public abstract class AnvilMenuMixin {
 	@Final
 	private DataSlot cost;
 
-	/** Whether the result shown now was raised by Echo Forging (1.8.0). */
+	/** The voices the result shown now needs when Echo Forging raised it (1.8.0; the ritual, 1.9.0), or -1. */
 	@org.spongepowered.asm.mixin.Unique
-	private boolean extremeprogression$echoed;
+	private int extremeprogression$echo = -1;
+
+	/** Where the anvil stands (where the player stands, for a menu without a place). */
+	@org.spongepowered.asm.mixin.Unique
+	private BlockPos extremeprogression$anvil(Player player) {
+		return ((ItemCombinerMenuAccess) (Object) this).extremeprogression$access().evaluate((level, pos) -> pos)
+				.orElse(player == null ? BlockPos.ZERO : player.blockPosition());
+	}
 
 	/** The trunk and the specializations at the anvil: fewer levels, more (or less) restored. */
 	@Inject(method = "createResult", at = @At("TAIL"), require = 1)
@@ -48,7 +57,7 @@ public abstract class AnvilMenuMixin {
 		AnvilMenu self = (AnvilMenu) (Object) this;
 		Player player = ((ItemCombinerMenuAccess) self).extremeprogression$player();
 		// Echo Forging: beyond the maximum; and what is beyond it already is never lost
-		this.extremeprogression$echoed = com.extremeprogression.synergy.SynergyEffects.echoForge(self, player, this.cost);
+		this.extremeprogression$echo = com.extremeprogression.synergy.SynergyEffects.echoForge(self, player, extremeprogression$anvil(player), this.cost);
 		com.extremeprogression.synergy.SynergyEffects.keepBeyond(self);
 		ItemStack result = self.getSlot(2).getItem();
 		if (result.isEmpty()) {
@@ -72,11 +81,21 @@ public abstract class AnvilMenuMixin {
 		return Smithing.tooExpensive(((ItemCombinerMenuAccess) (Object) this).extremeprogression$player());
 	}
 
+	/** Echo Forging's result stays where it is when its voices left (or the forger let go of the echo shard). */
+	@Inject(method = "mayPickup", at = @At("HEAD"), cancellable = true, require = 1)
+	private void extremeprogression$echoHeard(Player player, boolean hasItem, CallbackInfoReturnable<Boolean> cir) {
+		if (this.extremeprogression$echo >= 0
+				&& !com.extremeprogression.synergy.SynergyEffects.echoHeard(player, extremeprogression$anvil(player), this.extremeprogression$echo)) {
+			cir.setReturnValue(false);
+		}
+	}
+
 	@Inject(method = "onTake", at = @At("HEAD"), require = 1)
 	private void extremeprogression$echoTaken(Player player, ItemStack result, CallbackInfo ci) {
-		if (this.extremeprogression$echoed && player instanceof ServerPlayer p) {
-			this.extremeprogression$echoed = false;
-			com.extremeprogression.synergy.SynergyEffects.echoForged(p);
+		if (this.extremeprogression$echo >= 0 && player instanceof ServerPlayer p) {
+			int needed = this.extremeprogression$echo;
+			this.extremeprogression$echo = -1;
+			com.extremeprogression.synergy.SynergyEffects.echoForged(p, extremeprogression$anvil(p), needed);
 		}
 	}
 

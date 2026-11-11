@@ -139,6 +139,16 @@ public final class Config {
 	public static int SYNERGY_LEVEL = 30;
 	/** The first discovery of a synergy on the server is announced in the chat. */
 	public static boolean SYNERGY_ANNOUNCE = true;
+	/**
+	 * Echo Forging's ritual (1.9.0, the owner's wish: harder, and together). The anvil must stand within this many blocks
+	 * of a sculk catalyst (0: anywhere, at most 8), and every level beyond the maximum needs this many voices besides the
+	 * forger: party members within ECHO_VOICE_RANGE blocks of the anvil with an echo shard in their off hand. In
+	 * singleplayer an allay holding an echo shard is a voice too; on a server only with ECHO_ALLAYS_ON_SERVERS.
+	 */
+	public static int ECHO_CATALYST_RANGE = 4;
+	public static int ECHO_VOICES_PER_LEVEL = 1;
+	public static double ECHO_VOICE_RANGE = 8;
+	public static boolean ECHO_ALLAYS_ON_SERVERS = false;
 
 	/** The %extremeprogression:...% placeholders for TAB and chat mods (with Text Placeholder API), and how often they are worked out. */
 	public static boolean PLACEHOLDERS = true;
@@ -284,6 +294,9 @@ public final class Config {
 		OPPOSING_PASSIVE_POWER = share(OPPOSING_PASSIVE_POWER, "OPPOSING_PASSIVE_POWER");
 		MASTERY_PERK_STEP = nonNegative(MASTERY_PERK_STEP, "MASTERY_PERK_STEP");
 		SYNERGY_LEVEL = Math.max(0, SYNERGY_LEVEL);
+		ECHO_CATALYST_RANGE = Math.max(0, Math.min(8, ECHO_CATALYST_RANGE));
+		ECHO_VOICES_PER_LEVEL = Math.max(0, ECHO_VOICES_PER_LEVEL);
+		ECHO_VOICE_RANGE = nonNegative(ECHO_VOICE_RANGE, "ECHO_VOICE_RANGE");
 		PLACEHOLDER_REFRESH_TICKS = Math.max(1, PLACEHOLDER_REFRESH_TICKS);
 		PARTY_MAX_SIZE = Math.max(2, PARTY_MAX_SIZE);
 		PARTY_BONUS_PER_MEMBER = nonNegative(PARTY_BONUS_PER_MEMBER, "PARTY_BONUS_PER_MEMBER");
