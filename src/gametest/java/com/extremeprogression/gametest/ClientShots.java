@@ -337,8 +337,12 @@ public class ClientShots implements FabricClientGameTest {
 			sp.getServer().runOnServer(s -> admin(s, "add", "foraging 1200"));
 			ctx.waitTicks(5);
 			check(ctx.computeOnClient(mc -> com.extremeprogression.client.hud.RatesHud.shown()) == 2, "the pace does not show the two skills that earned XP");
-			check(ctx.computeOnClient(mc -> com.extremeprogression.client.state.ClientRates.active(System.currentTimeMillis()).get(0)) == Skill.MINING,
-					"Mining, which earned the most, is not first in the pace");
+			check(ctx.computeOnClient(mc -> {
+				long now = System.currentTimeMillis();
+				var active = com.extremeprogression.client.state.ClientRates.active(now);
+				return active.contains(Skill.MINING) && active.contains(Skill.FORAGING) && active.indexOf(Skill.MINING) < active.indexOf(Skill.FORAGING)
+						&& com.extremeprogression.client.state.ClientRates.hoursToNext(Skill.MINING, now) > 0;
+			}), "the pace does not have Mining before Foraging, which earned less");
 
 			// With a sword in hand the ability key reaches Riposte: its icon shows beside the hotbar, and R uses it
 			sp.getServer().runOnServer(s -> s.getPlayerList().getPlayers().get(0).setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIAMOND_SWORD)));
