@@ -22,6 +22,9 @@ public final class ClientRates {
 	/** The window the pace is taken over, and the least time it counts (a first gain is not an hour's pace). */
 	static final long WINDOW_MS = 10 * 60_000L, LEAST_MS = 2 * 60_000L;
 
+	/** The most XP one update can bring in play; more is an operator's command (or a reset) and is not counted. */
+	static final double MOST_AT_ONCE = 20_000;
+
 	private record Gain(long at, double xp) {}
 
 	private record Seen(int level, double xp, double need, int ranks, double masteryXp) {}
@@ -40,7 +43,8 @@ public final class ClientRates {
 			Seen after = new Seen(e.level(), e.xp(), e.need(), e.masteryRanks(), e.masteryXp());
 			SEEN.put(s, after);
 			double gained = before == null ? 0 : gained(before, after, payload.masteryXpPerRank());
-			if (gained > 0) {
+			// (more at once than any play gives between two updates is an operator's command: not counted)
+			if (gained > 0 && gained <= MOST_AT_ONCE) {
 				GAINS.computeIfAbsent(s, k -> new ArrayDeque<>()).addLast(new Gain(now, gained));
 			}
 		}
@@ -59,8 +63,8 @@ public final class ClientRates {
 			// (the rest of the old level, a level's need for every level between, and the new level's XP so far)
 			return Math.max(0, a.need() - a.xp()) + Math.max(0, b.level() - a.level() - 1) * a.need() + b.xp() + b.masteryXp();
 		}
-		if (b.level() == a.level() && b.ranks() > a.ranks()) {
-			return Math.max(0, perRank - a.masteryXp()) + Math.max(0, b.ranks() - a.ranks() - 1) * perRank + b.masteryXp();
+		if (b.level() == a.level() && b.ranks() == a.ranks() + 1) {
+			return Math.max(0, perRank - a.masteryXp()) + b.masteryXp();
 		}
 		return 0;
 	}
