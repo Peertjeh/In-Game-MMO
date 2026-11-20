@@ -207,7 +207,7 @@ def jval(toks):
     return code(ts)
 
 
-INTERNAL = re.compile(r"design\s*§|§\d|\bround \d+|\bowner\b|milestone|appendix|^\d+\.\d+(\.\d+)?$|^the legends update", re.I)
+INTERNAL = re.compile(r"design\s*§|§\d|\bround \d+|\bowner\b|milestone|appendix|mechanism [a-z]\b|^\d+\.\d+(\.\d+)?$|^the legends update", re.I)
 
 
 def player_text(s):
@@ -216,8 +216,10 @@ def player_text(s):
         return ""
 
     def paren(m):
-        parts = [p for p in re.split(r",\s*", m.group(1)) if not INTERNAL.search(p.strip())]
-        return f" ({', '.join(parts)})" if parts else ""
+        # (a parenthesis that holds a note for developers goes as a whole)
+        if any(INTERNAL.search(p.strip()) for p in re.split(r",\s*", m.group(1))):
+            return ""
+        return m.group(0)
 
     for _ in range(2):
         s = re.sub(r"\s*\(([^()]*)\)", paren, s)
@@ -234,8 +236,7 @@ def clean_doc(doc):
     s = re.sub(r"\{@(?:link|linkplain)\s+([^}\s]+)(?:\s+([^}]*))?\}",
                lambda m: m.group(2) or m.group(1).split("#")[-1].split(".")[-1].split("(")[0], s)
     s = re.sub(r"\{@(?:code|literal)\s+([^}]*)\}", r"\1", s)
-    s = re.sub(r"<li>", " ", s)
-    s = re.sub(r"<[^>]+>", " ", s)
+    s = re.sub(r"</?(?:p|b|i|em|strong|ul|ol|li|pre|br|code|tt|a|table|tr|td|th|h\d)(?:\s[^>]*)?/?>", " ", s, flags=re.I)
     s = html.unescape(s)
     return re.sub(r"\s+", " ", s).strip()
 
@@ -378,10 +379,10 @@ def field_doc(f):
     d = f["doc"]
     p = f["prev"]
     if d.startswith("...") and p:
-        return field_doc(p).rstrip(".").rstrip() + " " + d.lstrip(".").strip()
-    if not d and p and f["contiguous"] and related(f["name"], p["name"]):
-        return field_doc(p)
-    return d
+        d = field_doc(p).rstrip(".").rstrip() + " " + d.lstrip(".").strip()
+    elif not d and p and f["contiguous"] and related(f["name"], p["name"]):
+        d = field_doc(p)
+    return re.sub(r"\.\.\.$", ".", d)
 
 
 # ------------------------------------------------------------------------------------------------------------ formatting
@@ -1004,6 +1005,11 @@ class Wiki:
                 return None
         if kind == "lang":
             return self.L(arg)
+        if kind == "xph":
+            v = self.cfg_key(arg)
+            return None if v is None else v / self.cfg["XP_PER_HOUR"]
+        if kind == "mod" and arg == "version":
+            return self.version
         return None
 
     def expand(self, s):
@@ -1087,8 +1093,11 @@ class Wiki:
                 a, b = c["args"][0], c["args"][1]
                 if sid in (a, b):
                     other = b if a == sid else a
-                    syn.append(f"{self.L(f'synergy.{MOD}.{c['name'].lower()}', humanize(c['name']))} (with {self.skill_name(other)}"
-                               + (", a party member's" if duo(c) else "") + ")")
+                    sname = self.L(f'synergy.{MOD}.{c["name"].lower()}', humanize(c["name"]))
+                    if duo(c):
+                        syn.append(f"{sname} (duo: your {self.skill_name(a)}, a party member's {self.skill_name(b)})")
+                    else:
+                        syn.append(f"{sname} (with {self.skill_name(other)})")
             if syn:
                 facts.append(["Synergies", ", ".join(syn)])
             facts.append(["XP data file", f"config/{MOD}/xp/{low}.json", 1])
@@ -1166,7 +1175,8 @@ class Wiki:
                 extra = f" {slot['args'][3]} ranks, {slot['args'][4]} points a rank."
                 if (sid, sl) in reqs:
                     rs, rl = reqs[(sid, sl)]
-                    extra += f" Works only with {self.skill_name(rs)} {rl}."
+                    if f"{self.skill_name(rs)} {rl}" not in desc:
+                        extra += f" Works only with {self.skill_name(rs)} {rl}."
                 facts.append([f"{label}: {node}", desc + extra])
             if (sid, None) in reqs:
                 rs, rl = reqs[(sid, None)]
@@ -1182,7 +1192,7 @@ class Wiki:
             style = self.L(k + ".style", "")
             refs = [f"skill-{skill.lower()}"] + ([f"spec-{other.lower()}"] if other else []) + ["concept-specs"]
             self.add({"id": f"spec-{low}", "cat": "spec", "name": name, "alt": self.dutch.get(skill.lower(), ""), "kind": sname,
-                      "c": self.cat_of(skill), "text": f"{style} {self.L(k + '.ability', '')}: {self.L(k + '.ability.desc', '')}".strip(),
+                      "c": self.cat_of(skill), "text": style,
                       "facts": facts, "refs": refs})
 
     def gen_trunks(self):
@@ -1226,7 +1236,7 @@ class Wiki:
             else:
                 facts = [["Skills", f"{self.skill_name(a)} + {self.skill_name(b)}, both at level {lvl}"]]
             facts += [["Hint", self.L(k + ".hint1", "")], ["Clearer hint", self.L(k + ".hint2", "")],
-                      ["Strength", f"{human(strength)} ({self.strength_is.get(c['name'], self.strength_default)})"],
+                      ["Strength", strength_text(strength, self.strength_is.get(c['name'], self.strength_default))],
                       ["In synergies.json", f"{low}: enabled, strength", 1]]
             alt = " ".join(x for x in (self.dutch.get(a.lower()), self.dutch.get(b.lower())) if x)
             self.add({"id": f"synergy-{low}", "cat": "synergy", "name": self.L(k, humanize(c["name"])), "alt": alt,
@@ -1300,14 +1310,13 @@ class Wiki:
                 nodes = [x for x in self.perms if x["name"] in perm]
                 facts.append(["Permission", " or ".join(f"{MOD}.{x['args'][0].replace('/', '.')}" for x in nodes), 1])
                 facts.append(["Without a permission mod", " or ".join(sorted({f'operator level {OP_LEVELS.get(x["args"][1], "?")}' for x in nodes}))
-                              + "; in a world of your own you may"])
+                              + "; in a world of your own, always"])
                 kind = "Admin"
             else:
                 facts.append(["Who", "Everyone"])
                 kind = "Party" if g["root"] == "party" or "party" in key.split() else "Player"
             if g["root"] in alias:
-                facts.append(["Also", " · ".join("/" + " ".join(alias[g["root"]]) + u[1:] for u in usages)
-                              .replace("/ ", "/"), 1])
+                facts.append(["Also", " · ".join("/" + " ".join(alias[g["root"]]) + " " + u[1:] for u in usages), 1])
             text = notes.get(key)
             if text is None:
                 docs = [m.doc for m in self.cmd.methods if m.name in g["refs"] and m.doc]
@@ -1326,7 +1335,7 @@ class Wiki:
     def arg_text(self, a):
         s, t = a.suggest, a.argtype
         skills = ", ".join(x["name"].lower() for x in self.skills)
-        if "getOnlinePlayerNames" in s:
+        if "getOnlinePlayerNames" in s or "getPlayerNames" in s:
             return "the name of a player who is online"
         if "knownNames" in s:
             return "the name of any player the world knows, online or not"
@@ -1334,12 +1343,15 @@ class Wiki:
             return "a member of your party"
         if "invites" in s:
             return "the player who invited you"
-        if "Preset" in s:
-            return join_and(self.presets, "or")
         if ('"all"' in s or "all" in s.split()) and ("Skill" in s or "skillIds" in s):
             return f"all, or one skill: {skills}"
-        if "Skill" in s or "skillIds" in s:
+        if "skillIds" in s or re.search(r"\bSkill\s*\.\s*values", s):
             return f"a skill: {skills}"
+        m = re.search(r"(\w+)\s*\.\s*values\s*\(\s*\)", s)
+        if m:
+            ids = self.enum_ids(m.group(1))
+            if ids:
+                return join_and(ids, "or")
         m = re.search(r"(integer|doubleArg|longArg|floatArg)\s*\(([^)]*)\)", t)
         if m:
             kind = "a whole number" if m.group(1) in ("integer", "longArg") else "a number"
@@ -1352,6 +1364,20 @@ class Wiki:
         if "word" in t:
             return "a word"
         return t or "a value"
+
+    def enum_ids(self, name):
+        """The ids of an enum anywhere in the main sources (constant names in lower case)."""
+        if not hasattr(self, "_enum_cache"):
+            self._enum_cache = {}
+        if name not in self._enum_cache:
+            ids = []
+            for path in self.src.files(MAIN.rstrip("/"), ".java"):
+                text = self.src.read(path) or ""
+                if re.search(r"\benum\s+" + name + r"\b", text):
+                    ids = [c["name"].lower() for c in parse_enum(text, name)]
+                    break
+            self._enum_cache[name] = ids
+        return self._enum_cache[name]
 
     def gen_perms(self):
         notes = self.pages.get("permissions", {})
@@ -1397,6 +1423,7 @@ class Wiki:
                      ["About", "the server" if all(n in world for n in names) else "each player"]]
             if any("<skill>" in n for n in names):
                 facts.append(["<skill>", skills])
+            what = player_text(what)
             text = what[:1].upper() + what[1:] + ("." if what and not what.endswith(".") else "")
             self.add({"id": "placeholder-" + re.sub(r"[^a-z0-9_]+", "", names[0]), "cat": "placeholder",
                       "name": ", ".join(names), "kind": "Server" if facts[1][1] == "the server" else "Player",
@@ -1438,21 +1465,24 @@ class Wiki:
                  ["abilities.<specialization>", "cooldown_minutes: " + " · ".join(f"{c['name'].lower()} {c['args'][1]}" for c in self.specs)],
                  ["requirements.<name>", "skill and level: " + " · ".join(
                      f"{r['name'].lower()} {str(r['args'][2]).lower()} {r['args'][3]}" for r in self.hardreqs)]]
+        notes = self.pages.get("settings", {})
         self.add({"id": "setting-skills_json", "cat": "setting", "name": "skills.json", "kind": "Data file",
-                  "text": player_text(re.sub(r"^config/\S+:\s*", "", doc)), "facts": facts, "refs": ["concept-presets", "concept-hardreq"]})
+                  "text": self.expand(notes.get("skills.json", "")) or player_text(doc), "facts": facts,
+                  "refs": ["concept-presets", "concept-hardreq"]})
         facts = [["File", f"config/{MOD}/synergies.json", 1],
                  ["<synergy>", "enabled (true or false) and strength"],
                  ["Strengths", " · ".join(f"{c['name'].lower()} {human(c['args'][2])}" for c in self.synergies)],
                  ["Strength is", "; ".join([f"for {self.L(f'synergy.{MOD}.{k.lower()}', humanize(k))} {v}" for k, v in self.strength_is.items()]
                                           + [f"otherwise a {self.strength_default}"])]]
         self.add({"id": "setting-synergies_json", "cat": "setting", "name": "synergies.json", "kind": "Data file",
-                  "text": "Every synergy on or off, and its strength.", "facts": facts, "refs": ["concept-synergies"]})
+                  "text": self.expand(notes.get("synergies.json", "Every synergy on or off, and its strength.")), "facts": facts,
+                  "refs": ["concept-synergies"]})
         facts = [["Folder", f"config/{MOD}/xp/", 1]]
         for sk in self.skills:
             values, tables = self.xp_layout.get(sk["name"], ([], []))
             facts.append([f"{sk['name'].lower()}.json", ", ".join([v.lower() for v in values] + [t for t, _ in tables])])
         self.add({"id": "setting-xp_files", "cat": "setting", "name": "xp/<skill>.json", "kind": "Data file",
-                  "text": player_text(re.sub(r"^The XP tables as data files:?\s*", "", self.xp_doc)), "facts": facts,
+                  "text": self.expand(notes.get("xp/<skill>.json", "")) or player_text(self.xp_doc), "facts": facts,
                   "refs": [f"xp-{x['name'].lower()}" for x in self.skills] + ["guide-mod-xp"]})
 
     def add_pages(self):
@@ -1521,6 +1551,12 @@ CATS = [["concept", "How it works"], ["guide", "How to"], ["skill", "Skills"], [
         ["spec", "Specializations"], ["trunk", "Trunk bonuses"], ["mastery", "Mastery perks"], ["synergy", "Synergies"],
         ["screen", "Screens and HUD"], ["command", "Commands"], ["permission", "Permissions"],
         ["placeholder", "Placeholders"], ["setting", "Settings"]]
+
+
+def strength_text(v, what):
+    if what.startswith("share"):
+        return f"{human(v)}: +{pct(v)}"
+    return f"{human(v)} {what}"
 
 
 def duo(c):

@@ -1,0 +1,334 @@
+{
+  "_about": "Hand-written parts of the Extreme Progression wiki; build.py merges them with what it reads from the sources. Values in braces come from the code at build time: {cfg:key} a config default (|pct as a percentage, |x as a factor), {normal:key} the Normal preset's value, {xp:FIELD} or {xp:TABLE.id} an XP value, {hours:L} the play time to level L, {xph:key} a config value in hours of XP, {node:A4.level} a tree node, {syn:id} a synergy's strength, {perm:node} a permission, {oplevel:node} its operator level, {n:...} counts, {list:...} lists, {mod:version}. A fact written as \"@name\" expands into a generated list: @presets, @perms, @hardreqs, @conflicts, @opposing, @categories. Backticks mark code. Keep it plain English and use the in-game names.",
+
+  "page": {
+    "lede": "Everything in the mod in one place: the {n:skills} skills with their specializations, trunk bonuses, Mastery perks and synergies, every screen, command, permission and setting, step-by-step guides under How to, and every release in the Changelog tab. Search by name, or ask a question in plain words.",
+    "footer": "Built from the language files, settings and changelog of Extreme Progression {mod:version}. Dutch words work in the search too."
+  },
+
+  "dutch": {
+    "melee": "Melee", "ranged": "Afstandsgevecht", "defense": "Verdediging", "mining": "Mijnbouw", "foraging": "Houthakken",
+    "farming": "Landbouw", "fishing": "Vissen", "exploration": "Verkenning", "smithing": "Smeden", "arcana": "Magie", "trading": "Handel"
+  },
+
+  "skills": {
+    "melee": {"xp": "Fully charged hits (the attack bar at least {cfg:melee_full_charge|pct} full) on hostile mobs and players: {xp:MELEE_PER_DAMAGE} XP per point of damage, counted up to the target's remaining health, × its danger factor (a zombie {xp:DANGER.zombie}, a creeper {xp:DANGER.creeper}, a wither skeleton {xp:DANGER.wither_skeleton}, a warden or boss {xp:DANGER.warden}, a player {xp:DANGER_PLAYER}). Passive animals and mobs from spawners, spawn eggs or /summon give nothing; trial spawners give full XP."},
+    "ranged": {"xp": "Fully drawn arrows, thrown tridents and fireworks shot from a crossbow: {xp:RANGED_PER_DAMAGE} XP per point of damage up to the target's remaining health, × its danger factor, plus {xp:RANGED_BONUS_PER_BLOCK|pct} for every block beyond {xp:RANGED_FREE_DISTANCE} blocks (at most +{xp:RANGED_MAX_BONUS|pct})."},
+    "defense": {"xp": "What your shield blocked and your armor absorbed from hostile mobs and players: {xp:DEFENSE_PER_DAMAGE} XP per point of damage × the attacker's danger factor. Only while you are really playing (you attacked, interacted or moved yourself in the last {cfg:defense_active_seconds} seconds), and one attacker gives XP at most {cfg:defense_hits_per_attacker} times, then again after {cfg:defense_attacker_reset_seconds} seconds without hits from it."},
+    "mining": {"xp": "Blocks you mine with a pickaxe that can mine them: stone {xp:PICKAXE.stone}, deepslate {xp:PICKAXE.deepslate}, iron ore {xp:PICKAXE.iron_ore} (deepslate {xp:PICKAXE.deepslate_iron_ore}), diamond ore {xp:PICKAXE.diamond_ore} (deepslate {xp:PICKAXE.deepslate_diamond_ore}), ancient debris {xp:PICKAXE.ancient_debris}; dirt, sand, gravel, clay, mud and snow with a shovel; and brushing suspicious sand or gravel ({xp:BRUSHING}). Placed blocks, blocks a piston moved and blocks that lava and water formed give nothing, and neither do explosions. No dimension gives extra XP."},
+    "foraging": {"xp": "Logs of natural trees (oak {xp:LOGS.oak_log} up to pale oak {xp:LOGS.pale_oak_log}; a tree grown from a sapling a player planted gives {cfg:planted_tree_factor|pct}), and wild plants: sweet berries and glow berries {xp:WILD_SWEET_BERRIES}, mushrooms {xp:MUSHROOM}, flowers {xp:FLOWER} (rare ones {xp:RARE_FLOWER}), wild cocoa {xp:WILD_COCOA}, wild melons and pumpkins {xp:WILD_MELON}, and honey from wild bee nests {xp:WILD_HONEY}. Whatever bonemeal grew gives nothing."},
+    "farming": {"xp": "Fully grown crops you harvest by hand: wheat, carrots and potatoes {xp:CROPS.wheat}, beetroots {xp:CROPS.beetroots}, nether wart {xp:NETHER_WART}, torchflowers {xp:TORCHFLOWER}, pitcher plants {xp:PITCHER}; melons and pumpkins from a stem ({xp:STEM_FRUIT}), planted cocoa ({xp:PLANTED_COCOA}) and berry bushes ({xp:PLANTED_SWEET_BERRIES}), sugar cane ({xp:SUGAR_CANE}) and cactus ({xp:CACTUS}) above the bottom block. Also breeding ({xp:BREEDING}), shearing ({xp:SHEARING}), taming (a wolf {xp:TAMING.wolf} up to a camel {xp:TAMING.camel}), and {xp:PET_PER_DAMAGE} XP per point of damage your tamed animals deal × the target's danger factor. Crops grown with bonemeal give nothing."},
+    "fishing": {"xp": "Every catch in open water: cod {xp:CATCHES.cod}, salmon {xp:CATCHES.salmon}, pufferfish {xp:CATCHES.pufferfish}, tropical fish {xp:CATCHES.tropical_fish}, a name tag, saddle or nautilus shell {xp:CATCHES.name_tag}, an enchanted book {xp:CATCHES.enchanted_book}, an enchanted bow or rod {xp:TREASURE_GEAR}, a heart of the sea or trident {xp:CATCHES.heart_of_the_sea}, junk {xp:JUNK}. A small pit gives nothing. After {cfg:overfished_catches} catches in one spot it is overfished ({cfg:overfished_factor|pct} XP, after {cfg:overfished_late_catches} catches {cfg:overfished_late_factor|pct}): fish somewhere else."},
+    "exploration": {"xp": "Your first visit to each chunk ({xp:NEW_CHUNK} XP, {xp:NEW_CHUNK_ELYTRA} with an elytra), a chunk you left alone for {cfg:revisit_days} days ({xp:REVISITED_CHUNK}), your first time in each biome ({xp:NEW_BIOME}), each structure the first time you enter it (a ruined portal {xp:STRUCTURE_TYPES.ruined_portal} up to an ancient city {xp:STRUCTURE_TYPES.ancient_city}; the first of each type ×{xp:FIRST_OF_TYPE}), and falls you survive ({xp:FALL_PER_DAMAGE} per point of damage, once per spot every {cfg:fall_spot_minutes} minutes). Walking or swimming distance gives nothing.", "note": "In heavy armor (3 or more pieces of iron or heavier) Exploration's trunk bonuses and its specializations' passives do not work."},
+    "smithing": {"xp": "Metal you take out of a furnace or blast furnace yourself: a copper ingot {xp:SMELTED.copper_ingot}, iron {xp:SMELTED.iron_ingot}, gold {xp:SMELTED.gold_ingot}, netherite scrap {xp:SMELTED.netherite_scrap} (blocks 9×); repairs at the anvil ({xp:REPAIR} × the material's factor × the share of durability restored: wood {xp:MATERIAL.wooden_} up to netherite {xp:MATERIAL.netherite_}); netherite upgrades ({xp:NETHERITE_UPGRADE}) and armor trims ({xp:ARMOR_TRIM}) at the smithing table. A hopper emptying a furnace gives nothing."},
+    "arcana": {"xp": "Potions the brewing stand brewed that you take out yourself: an awkward, mundane or thick potion {xp:POTION_BASE}, a potion with an effect {xp:POTION_EFFECT}, a longer or stronger one {xp:POTION_STRONGER}, splash {xp:POTION_SPLASH}, lingering {xp:POTION_LINGERING}; enchanting at the enchanting table ({xp:ENCHANTING_PER_LEVEL} per level the offer requires); and combining enchantments at an anvil ({xp:ANVIL_ENCHANTING_PER_LEVEL} per level of its cost)."},
+    "trading": {"xp": "Trades with villagers by the offer's tier (novice {xp:TRADE_NOVICE} up to master {xp:TRADE_MASTER}) plus {xp:TRADE_PER_EMERALD} for every emerald paid or received; wandering traders (the journeyman's XP ×{xp:WANDERING_FACTOR}); a villager reaching a new level through your trade ({xp:LEVEL_APPRENTICE} up to {xp:LEVEL_MASTER}); every gold ingot of yours a piglin barters ({xp:BARTER_PER_INGOT}); and a won raid ({xp:RAID_PER_OMEN_LEVEL} × its omen level). One villager's offer counts fully for {xp:SAME_OFFER_FULL} trades after each restock, then {xp:SAME_OFFER_FACTOR|pct}. Villagers and piglins from spawn eggs, spawners or commands give nothing."}
+  },
+
+  "keys": {
+    "sheet": {"alt": "Karakterblad openen toets", "text": "Opens the Character Sheet, as the button inside your inventory and `/skills` do."},
+    "ability": {"alt": "Vaardigheid gebruiken toets", "text": "Uses the ability of a first specialization that fits what you hold or look at; with Shift held, a second specialization's. The icon beside the hotbar shows the one that is ready."}
+  },
+
+  "commands": {
+    "skills": "Opens your Character Sheet. A client without the mod gets every skill's level in the chat instead.",
+    "skills top": "The leaderboard in the chat: the first ten by total level, or by one skill's level, with Mastery ranks.",
+    "skills players": "Opens the Players screen, as the Players button at the top of the Character Sheet does.",
+    "skills inspect": "Opens a read-only view of a player's progression: totals, deaths, synergies, and every skill's level, specializations, points and perks. Works for offline players too.",
+    "skills admin set": "Sets a player's level in a skill. The player is told, and the change goes to the server log.",
+    "skills admin add": "Gives a player XP in a skill, or takes it away with a negative number. The player is told, and the change goes to the server log.",
+    "skills admin respec": "A free respec: the skill's specializations and points are reset, without the XP cost or the waiting time.",
+    "skills admin cooldowns": "Makes every ability of the player ready again.",
+    "skills admin reset": "Resets all of a player's progression, or one skill, online or offline. It asks first: confirm with `/skills admin reset confirm` within 30 seconds.",
+    "skills admin reset confirm": "Carries out the reset you asked for in the last 30 seconds.",
+    "skills reload": "Rereads config/extremeprogression.json and the data files, and sends the settings to every player.",
+    "skills settings": "Opens the settings screen: every option, searchable, with the presets as buttons.",
+    "skills preset": "Switches the preset: hardcore, normal or custom.",
+    "skills xprate": "Starts an XP event: the multiplier for every skill (all) or one skill, for a number of minutes or until it is ended. Announced in the chat and shown on the Character Sheet.",
+    "skills xprate reset": "Ends every running XP event.",
+    "party": "Shows your party in the chat: its members, who of them is near and earning XP, and the XP bonus it gives you now.",
+    "party invite": "Invites a player who is in no party. The invitation stands for {cfg:party_invite_seconds} seconds; they accept with a click in the chat.",
+    "party accept": "Accepts the invitation waiting for you, or the one from that player.",
+    "party decline": "Turns the invitation down.",
+    "party leave": "Leaves your party. When the leader leaves, the longest member leads; a party of one is disbanded.",
+    "party kick": "Removes a member from the party. Only the party's leader can.",
+    "party leader": "Hands the lead to another member. Only the party's leader can.",
+    "skills legends": "Opens the Legends screen.",
+    "skills boost give": "Gives a player an XP boost: this many percent more XP for this many minutes.",
+    "skills boost tome": "Gives a player tomes (one, or as many as count), for example as a vote reward.",
+    "skills boost clear": "Takes all of a player's boosts and their Well Rested time away."
+  },
+
+  "settings": {
+    "max_level": "The highest level of a skill. Past it, XP goes into Mastery ranks.",
+    "mastery_ranks": "How many Mastery ranks a skill has past the maximum level; each rank is a perk.",
+    "first_specialization_level": "The level at which a skill's first specialization is chosen.",
+    "second_specialization_level": "The level at which a skill's second specialization is chosen.",
+    "diminishing_window_minutes": "The window diminishing returns count over, in minutes.",
+    "parties": "Parties at all: /party, the Party screen, the party bonus and the duo synergies. false turns them off.",
+    "party_max_size": "The most players a party holds.",
+    "daily_rewards": "A tome on the first login of each day (the streak).",
+    "milestone_tomes": "Tomes for skill milestones.",
+    "boss_tomes": "Tomes from bosses.",
+    "loot_tomes": "Tomes in treasure chests.",
+    "skills.json": "Which skills earn XP and how fast, every ability's cooldown, and the skill and level of every hard requirement. A skill turned off earns no XP; what it already reached keeps working. Read on startup and on `/skills reload`; a file that lacks something is written back complete.",
+    "synergies.json": "Every synergy on or off, and its strength. Read on startup and on `/skills reload`; a file that lacks something is written back complete.",
+    "xp/<skill>.json": "One file per skill with every XP value it counts with: its single values by name and its tables of ids. Minecraft's ids go without a namespace, another mod's as namespace:path. A table in the file is the whole table: an id left out gives nothing. Missing values are written back, so a file always lists everything; the XP tables only matter on the server."
+  },
+
+  "setting_groups": {
+    "OPPOSING_": "Opposing skills", "MASTERY_PERK": "Mastery", "SYNERGY_": "Synergies", "ECHO_": "Echo Forging",
+    "PLACEHOLDER": "Placeholders", "NAMETAG_": "Power level", "PART": "Parties", "PVP_": "PvP",
+    "BOOST": "XP boosts", "RESTED_": "XP boosts", "DAILY_REWARDS": "Tomes", "MILESTONE_TOMES": "Tomes", "BOSS_TOMES": "Tomes",
+    "LOOT_TOMES": "Tomes", "CHAMPION_": "Champions", "CONTRACTS": "Contracts", "SKILL_OF_THE_DAY": "Skill of the Day", "TITLES": "Titles"
+  },
+
+  "entries": [
+    {"id": "concept-start", "cat": "concept", "name": "Getting started", "alt": "Aan de slag, beginnen",
+     "text": "Extreme Progression adds {n:skills} skills that grow with what you already do in Minecraft: fighting, mining, gathering, farming, fishing, travelling, smithing, brewing, enchanting and trading. Nothing needs unlocking first: play, and the XP comes. Press K (or the button inside your inventory, or type `/skills`) to open the Character Sheet and see your levels. The first levels take minutes; at level {cfg:first_specialization_level} in a skill, about {hours:25} of focused play, you choose its first specialization. A death costs real progress, and the Death Register always shows what is at stake.",
+     "facts": [["Open the Character Sheet", "K, the button inside your inventory, or `/skills`"], ["First specialization", "level {cfg:first_specialization_level} in a skill"], ["Install", "on the server and on every client (Fabric)"]],
+     "refs": ["concept-skills", "screen-sheet", "guide-choose-spec", "concept-death"]},
+
+    {"id": "concept-skills", "cat": "concept", "name": "Skills and levels", "alt": "Vaardigheden en levels, niveaus",
+     "text": "There are {n:skills} skills in {n:categories} categories. Each runs from level 0 to {cfg:max_level}, and the curve is steep: level 10 takes about {hours:10}, level 25 about {hours:25}, level 50 about {hours:50}, level 75 about {hours:75} and level 100 about {hours:100} of focused play in that skill ({cfg:xp_per_hour} XP is one hour's worth). The budget factor makes every level cost more as the total of all your levels rises, so each skill you master takes longer than the one before. The total stops at {cfg:total_level_cap}: enough to master about four skills, never all of them. Past level {cfg:max_level} a skill goes on into Mastery, which does not count toward the cap.",
+     "facts": ["@categories", ["Total level cap", "{cfg:total_level_cap}"], ["Budget factor", "1 + (total level / {cfg:budget_divisor})², on every level's XP"], ["One hour of focused play", "about {cfg:xp_per_hour} XP"]],
+     "refs": ["concept-xp", "concept-mastery", "screen-sheet"]},
+
+    {"id": "concept-xp", "cat": "concept", "name": "Earning XP", "alt": "XP verdienen, ervaring",
+     "text": "Every skill earns XP from its own part of play (each skill's page and the XP tables list what and how much), always for what you do yourself, and always worked out on the server. On its way to the skill: nothing in Creative or Spectator, nothing while you are AFK, and diminishing returns above a farm's pace; then the XP multiplier, the skill's own multiplier from skills.json, a running XP event and an opposing skill's penalty; and last the party bonus. A short line on the action bar tells you when a level comes.",
+     "facts": [["XP multiplier", "{cfg:xp_multiplier|x} under Hardcore, {normal:xp_multiplier|x} under Normal"], ["Against farms", "see Rules against farms and AFK"]],
+     "refs": ["concept-antifarm", "xp-mining", "concept-xpevents", "concept-parties", "concept-opposing"]},
+
+    {"id": "concept-antifarm", "cat": "concept", "name": "Rules against farms and AFK", "alt": "Regels tegen farms en AFK, misbruik",
+     "text": "XP is for playing, not for machines. Placed blocks never give XP, and neither do blocks a piston moved or that lava and water formed, so a cobblestone generator earns nothing. Crops, plants and trees that bonemeal grew give nothing; a tree from a sapling a player planted gives {cfg:planted_tree_factor|pct}. Only what a player does by hand counts: no XP from explosions, pistons, water, dispensers, hoppers or villagers. Mobs from spawners, spawn eggs or /summon give no combat XP (trial spawners do), passive animals never do, and damage counts only up to the target's remaining health, so finishing off the mobs of a farm earns next to nothing.",
+     "facts": [["AFK", "no XP after {cfg:afk_minutes} minutes without looking around, moving yourself or interacting"],
+               ["Diminishing returns", "above {cfg:diminishing_threshold} XP in one skill within {cfg:diminishing_window_minutes} minutes, XP shrinks step by step, down to {cfg:diminishing_floor|pct}"],
+               ["Melee", "only hits with the attack bar at least {cfg:melee_full_charge|pct} full"],
+               ["Fishing", "open water only; after {cfg:overfished_catches} catches in one spot {cfg:overfished_factor|pct}, after {cfg:overfished_late_catches} catches {cfg:overfished_late_factor|pct}"],
+               ["Exploration", "every chunk counts once for you ({xp:NEW_CHUNK_ELYTRA} XP instead of {xp:NEW_CHUNK} with an elytra), falls once per spot every {cfg:fall_spot_minutes} minutes, nothing for distance"],
+               ["PvP", "at most {cfg:pvp_damage_per_hour} damage to one player an hour counts, and nothing from players below {cfg:pvp_min_level_share|pct} of your total level"],
+               ["Creative and Spectator", "no XP at all"]],
+     "refs": ["concept-xp", "setting-afk_minutes"]},
+
+    {"id": "concept-points", "cat": "concept", "name": "Points and the respec", "alt": "Punten en respec, opnieuw verdelen",
+     "text": "From level {cfg:first_specialization_level} every level of a skill gives 1 point: {n:points} at level {cfg:max_level}. Both specializations of the skill share them. You spend them on the nodes of a specialization's branch, from the bottom up: two passives, the ability's ranks I and II, two more passives, a choice node (one side of two), then ranks III, IV (level {node:A4.level}) and V (level {node:A5.level}). A full branch costs {n:branch} points, more than a skill ever earns, so you can never take everything.\nA respec (the Respec… button on the Skill Screen) frees both specializations and every point of that skill for {cfg:respec_xp_share|pct} of its XP, and then waits {cfg:respec_days} real days; the confirmation shows the exact cost first. Moving points within a specialization is a respec too.",
+     "facts": [["Points", "1 a level from level {cfg:first_specialization_level}: {n:points} at most"], ["Passives of row 1", "{node:P1.maxrank} ranks, {node:P1.cost} points a rank"], ["Ability ranks", "{node:A1.cost} points each"], ["Passives of row 4 and the choice node", "{node:P3.maxrank} ranks, {node:P3.cost} points a rank"], ["Respec", "{cfg:respec_xp_share|pct} of the skill's XP, then {cfg:respec_days} real days before the next"], ["Lost levels", "set your newest points aside; won back, they return to the same nodes"]],
+     "refs": ["guide-respec", "concept-specs", "screen-skill"]},
+
+    {"id": "concept-specs", "cat": "concept", "name": "Specializations and abilities", "alt": "Specialisaties en vaardigheden, krachten",
+     "text": "Every skill has three specializations. You choose the first at level {cfg:first_specialization_level} and a second at level {cfg:second_specialization_level}, on the skill's Skill Screen. A specialization brings the gear it is for, a price (a real drawback), four passives, a choice node and one active ability with ranks I to V. Use the ability with R for a first specialization and Shift + R for a second: the key reaches the ability that fits what you hold or look at, a workstation first, then a tool, then anything. Each ability has a cooldown of a few minutes, and a small icon beside the hotbar shows the one that is ready. A few specializations of different skills exclude each other. When a death drops a skill below level {cfg:first_specialization_level} or {cfg:second_specialization_level}, that specialization is dormant: kept, but not in use until the level is back.",
+     "facts": [["Specializations", "{n:specs}, three per skill"], ["First", "level {cfg:first_specialization_level}"], ["Second", "level {cfg:second_specialization_level}"], ["Ability key", "R for a first specialization, Shift + R for a second"]],
+     "refs": ["guide-choose-spec", "guide-ability", "concept-points", "concept-conflicts", "spec-blade"]},
+
+    {"id": "concept-trunk", "cat": "concept", "name": "Trunk bonuses", "alt": "Stambonussen, stam",
+     "text": "Every skill has a trunk of four passive bonuses that unlock by themselves at levels {list:trunk}: no points, no choice. That makes {n:trunks} in all. Like every passive bonus they work at {cfg:death_fatigue_power|pct} during death fatigue and at {cfg:opposing_passive_power|pct} while an opposing skill presses on the skill. Exploration's do not work in heavy armor.",
+     "refs": ["concept-fatigue", "concept-opposing", "concept-heavy"]},
+
+    {"id": "concept-mastery", "cat": "concept", "name": "Mastery", "alt": "Meesterschap",
+     "text": "Past level {cfg:max_level} a skill's XP goes into Mastery: {cfg:mastery_ranks} ranks of {cfg:mastery_xp_per_rank} XP each (about {xph:mastery_xp_per_rank} hours of play), without the budget factor and outside the total cap. Every rank asks you to choose one of the skill's two Mastery perks, rank I first, on the Mastery screen (the Mastery button on the Skill Screen reads “Mastery (!)” while a rank waits). Each rank you put in a perk adds {cfg:mastery_perk_step|pct} to it. A choice is final while you hold the rank. A death at high death pressure can take a rank and its perk; win the rank back and you choose again.",
+     "facts": [["Ranks", "{cfg:mastery_ranks} per skill"], ["XP per rank", "{cfg:mastery_xp_per_rank}"], ["Per rank in a perk", "+{cfg:mastery_perk_step|pct}"]],
+     "refs": ["guide-mastery", "screen-mastery", "mastery-giant_slayer"]},
+
+    {"id": "concept-opposing", "cat": "concept", "name": "Opposing skills", "alt": "Tegengestelde vaardigheden, tegenstanders",
+     "text": "Some skills pull against each other: {list:opposing}. Once one of a pair is above level {cfg:opposing_start_level} and higher than the other, the weaker one earns less XP, more for a larger gap: {cfg:opposing_max_penalty|pct} less at a gap of {cfg:opposing_full_gap} levels or more. Meanwhile its passive bonuses work at {cfg:opposing_passive_power|pct}. The Character Sheet and the Skill Screen show it while it happens. Opposing skills never share a synergy.",
+     "facts": ["@opposing", ["Penalty", "{cfg:opposing_max_penalty|pct} × gap / {cfg:opposing_full_gap}, at most {cfg:opposing_max_penalty|pct}"]],
+     "refs": ["concept-skills", "setting-opposing_start_level"]},
+
+    {"id": "concept-synergies", "cat": "concept", "name": "Synergies", "alt": "Synergieën, verborgen bonussen",
+     "text": "Synergies are hidden bonuses between two skills that never oppose each other: {n:solo} you have alone, and {n:duo} duo synergies with a party member. One works once both its skills are at level {cfg:synergy_level} and you discovered it yourself: the first time its situation happens in your own play, with the levels met. The Codex lists what you found; the rest show as runes with a hint. The first player on the server to find one goes into the Chronicle, and the chat announces it.",
+     "facts": [["Level", "{cfg:synergy_level} in both skills"], ["Strengths", "in synergies.json, where each can also be turned off"]],
+     "refs": ["guide-synergy", "concept-codex", "concept-duo", "synergy-counterstrike"]},
+
+    {"id": "concept-codex", "cat": "concept", "name": "The Codex and the Chronicle", "alt": "Codex en kroniek",
+     "text": "The Codex button on the Character Sheet opens your synergies. One you found shows its name, its two skills, what it does, and when and where you found it. Until then a synergy reads “? ? ?”, out of reach, until one of its two skills reaches level {cfg:synergy_level}; then its name shows in runes with a vague hint. Once anybody on the server found it, half its letters become readable, its two skills show, and a second, clearer hint appears. The Together tab holds the duo synergies, with whom you found each. The Chronicle tab lists the server's first discoverers; a ★ marks your own first finds, a mark of honour with no power.",
+     "refs": ["concept-synergies", "guide-synergy", "setting-synergy_announce"]},
+
+    {"id": "concept-death", "cat": "concept", "name": "What a death costs", "alt": "Wat de dood kost, doodgaan, sterven, verlies",
+     "text": "A death takes a share of every skill's current step: the XP within its level, or at the maximum level the progress toward its next Mastery rank. Your highest skill loses the most: each skill loses base × (its level / your highest level) × the dimension's factor, at most the whole step, so this never takes a level. The base is {cfg:death_base|pct} at death pressure 0 and {cfg:death_base_pressured|pct} from pressure 1. From pressure {cfg:death_whole_loss_pressure} your highest skill also loses one Mastery rank (and its perk), or one whole level when it has none. The loss is permanent: only new XP brings it back, and a killer in PvP gains nothing. Deaths in Creative or Spectator cost nothing. After respawning, a summary shows what the death cost.",
+     "facts": [["Overworld", "×1"], ["Nether", "{cfg:death_nether|x}"], ["End", "{cfg:death_end|x}"], ["The Seam (with Extreme Dimensions)", "{cfg:death_seam|x}"], ["Under Normal", "base {normal:death_base|pct} and {normal:death_base_pressured|pct}, never a whole level"]],
+     "refs": ["concept-pressure", "concept-fatigue", "screen-death", "guide-stake"]},
+
+    {"id": "concept-pressure", "cat": "concept", "name": "Death pressure", "alt": "Doodsdruk",
+     "text": "Every death raises your death pressure by 1, and every {cfg:death_pressure_decay_minutes} minutes of active play without dying (online and not AFK) lower it by 1; a death starts that count over. The pressure at the moment you die decides the cost: at 0 a death takes {cfg:death_base|pct} of every step, from 1 it takes {cfg:death_base_pressured|pct}, and from {cfg:death_whole_loss_pressure} it also takes a whole Mastery rank or level of your highest skill. The Character Sheet and the Death Register show your pressure and when it drops.",
+     "refs": ["concept-death", "screen-death"]},
+
+    {"id": "concept-fatigue", "cat": "concept", "name": "Death fatigue", "alt": "Doodsvermoeidheid, vermoeidheid",
+     "text": "For {cfg:death_fatigue_minutes} minutes after a death your passive bonuses work at {cfg:death_fatigue_power|pct}: the trunk bonuses, every passive and choice node, and the Mastery perks. An ability's own rank, a specialization's price and your XP stay as they are; a bonus that is all or nothing works {cfg:death_fatigue_power|pct} of the time. The minutes are game time. The Character Sheet and the Death Register show how long it still lasts; the HUD never does.",
+     "refs": ["concept-death", "screen-death"]},
+
+    {"id": "concept-parties", "cat": "concept", "name": "Parties and the party bonus", "alt": "Groepen en groepsbonus, samen spelen, team",
+     "text": "Play together in a party of up to {cfg:party_max_size}. Invite with `/party invite <player>` or the Party button on the Character Sheet; the invitation stands for {cfg:party_invite_seconds} seconds and is accepted with a click in the chat. Any member can invite; the leader can remove members and hand the lead on, and when the leader leaves the longest member leads.\nThe party bonus: {cfg:party_bonus_per_member|pct} more XP for every other member within {cfg:party_range} blocks in your dimension who earned XP of their own in the last {cfg:party_active_seconds} seconds, up to {cfg:party_bonus_max|pct}; under Normal {normal:party_bonus_per_member|pct} up to {normal:party_bonus_max|pct}. Nobody AFK, in Creative or in Spectator counts. A fight needs no sharing: every hit earns its own Melee or Ranged XP and every block its Defense XP. Party members carry a green ◆ before their name.",
+     "facts": [["Commands", "`/party …`, always also `/skills party …` (the only one when another mod, such as BattleHub, has its own /party)"], ["Kept in", "<world>/extremeprogression/parties.json"]],
+     "refs": ["guide-party", "screen-party", "concept-duo", "command-party-invite"]},
+
+    {"id": "concept-duo", "cat": "concept", "name": "Duo synergies", "alt": "Duo-synergieën, samen",
+     "text": "Duo synergies work between two party members near each other: the one who acts needs the first skill at level {cfg:synergy_level}, the party member the second. You discover one together, the first time its situation happens with both levels met; the Codex shows it under Together, with whom you found it, and the Chronicle names the first pair. It works as strongly as the weaker part, so either player's death fatigue weakens it.",
+     "refs": ["guide-duo", "concept-parties", "synergy-shield_wall"]},
+
+    {"id": "concept-echo", "cat": "concept", "name": "Echo Forging", "alt": "Echo-smeden, voorbij het maximum betoveren",
+     "text": "Echo Forging is a synergy of Arcana and Exploration and a ritual at the anvil: two equal enchantments at their highest level combine into one level more, up to {syn:echo_forging} levels beyond the maximum (Sharpness V + V = VI, VI + VI = VII). The anvil must stand within {cfg:echo_catalyst_range} blocks of a sculk catalyst, you hold an echo shard in your off hand, and every level beyond the maximum needs {cfg:echo_voices_per_level} voice besides you: a party member within {cfg:echo_voice_range} blocks of the anvil with an echo shard in their off hand. In singleplayer an allay holding an echo shard is a voice too. Every shard is used up, and the item gets a line of lore with the names of its forgers.",
+     "facts": [["Skills", "Arcana and Exploration, both at level {cfg:synergy_level}"], ["Anvil", "within {cfg:echo_catalyst_range} blocks of a sculk catalyst (catalysts drop only with Silk Touch)"], ["Voices", "{cfg:echo_voices_per_level} per level beyond the maximum: Sharpness VI takes two players, VII three"], ["Cost", "at least 20 levels for a VI, 30 for a VII"], ["Never", "enchantments with a maximum of 1, such as Mending and Silk Touch"], ["Allays", "voices in singleplayer; on a server only with echo_allays_on_servers"]],
+     "refs": ["guide-echo", "synergy-echo_forging", "setting-echo_catalyst_range"]},
+
+    {"id": "concept-hardreq", "cat": "concept", "name": "Hard requirements", "alt": "Harde vereisten, eisen",
+     "text": "A few nodes only work with another skill at a level. You can buy them without it; they do nothing until the level is there, and the Skill Screen shows the skill and level they need beside yours. skills.json holds the levels.",
+     "facts": ["@hardreqs"],
+     "refs": ["setting-skills_json", "concept-points"]},
+
+    {"id": "concept-conflicts", "cat": "concept", "name": "Specializations that exclude each other", "alt": "Specialisaties die elkaar uitsluiten, conflict",
+     "text": "Some specializations of different skills cannot be combined: once you chose one, the other cannot be chosen, and the Skill Screen says why. A respec of the skill that holds it frees the choice again.",
+     "facts": ["@conflicts"],
+     "refs": ["concept-specs", "guide-respec"]},
+
+    {"id": "concept-heavy", "cat": "concept", "name": "Heavy armor", "alt": "Zware bepantsering, harnas",
+     "text": "Wearing 3 or more pieces of iron armor or heavier counts as heavy armor. Exploration's trunk bonuses and its specializations' passives are off while you do, and the Skill Screen says so. Some specializations name heavy armor in their price, such as the Blade's lower damage against targets in heavy armor.",
+     "refs": ["skill-exploration", "spec-blade"]},
+
+    {"id": "concept-presets", "cat": "concept", "name": "Presets and settings", "alt": "Voorinstellingen en instellingen, configuratie",
+     "text": "The preset option is {list:presets}. Hardcore, the default, is the mod as designed. Normal is milder: a death takes {normal:death_base|pct} or {normal:death_base_pressured|pct} of a step instead of {cfg:death_base|pct} or {cfg:death_base_pressured|pct}, never a whole level, XP comes {normal:xp_multiplier|x} as fast, and the party bonus is larger. Hardcore and Normal set only the options listed here; every other option stays as the file says. To change one of those yourself, choose custom (the settings screen switches to it by itself).\nEvery option is in config/extremeprogression.json, which always lists them all. The larger tables are data files in config/extremeprogression/: xp/<skill>.json, skills.json and synergies.json. `/skills reload` rereads them, the settings screen changes them in the game, and every player's screens then show the server's own numbers.",
+     "facts": ["@presets"],
+     "refs": ["guide-normal", "screen-settings", "setting-preset", "setting-skills_json"]},
+
+    {"id": "concept-xpevents", "cat": "concept", "name": "XP events", "alt": "XP-evenementen, dubbele XP",
+     "text": "An admin can raise the XP rate for a while: `/skills xprate <multiplier> [skills] [minutes]`, for all skills or one. It is announced in the chat and shown on the Character Sheet, and it ends by itself after its minutes, with `/skills xprate reset`, or when the server stops. A new event for the same skills replaces the running one; an event for one skill and one for all multiply.",
+     "refs": ["guide-xpevent", "command-skills-xprate"]},
+
+    {"id": "concept-permissions", "cat": "concept", "name": "Permissions", "alt": "Rechten, permissies, LuckPerms",
+     "text": "Every admin command and screen asks a permission of its own, through Fabric API's permission API, so a permission mod such as LuckPerms can hand one out without making someone an operator: a moderator who may change levels but not reset anyone, say. Without a permission mod each falls back to the operator level it always needed, so nothing changes on a server that has none; in a world of your own you hold them all. The fallback levels are fixed on purpose: who may change the settings cannot lower the bar for a permission they lack.",
+     "facts": ["@perms"],
+     "refs": ["guide-luckperms", "screen-players"]},
+
+    {"id": "concept-tab", "cat": "concept", "name": "TAB, chat and placeholders", "alt": "TAB, chat en placeholders, tablijst",
+     "text": "With Text Placeholder API on the server, the mod offers %extremeprogression:…% placeholders to TAB, Styled Chat and other mods: your total level, best skill, death pressure, party and more (the Placeholders category lists them all). The repository's server/config folder holds ready TAB and Styled Chat configs: a level badge behind every name, and the preset, XP events and your own numbers in the header and footer. The values are in English and worked out every {cfg:placeholder_refresh_ticks} ticks; `placeholders: false` empties them. The ✦ level above players' heads needs no TAB: the mod draws it itself.",
+     "refs": ["placeholder-total", "screen-power", "setting-placeholders"]},
+
+    {"id": "concept-saving", "cat": "concept", "name": "Saving and backups", "alt": "Opslaan en back-ups",
+     "text": "Your progression is saved per player in <world>/extremeprogression/players/, with the world's saves, when you leave, and at once after a death. Writes are crash-safe, {cfg:player_backups} earlier versions are kept beside each file, and a damaged file falls back to its newest backup. Parties are kept in <world>/extremeprogression/parties.json.",
+     "refs": ["setting-player_backups"]},
+
+    {"id": "screen-sheet", "cat": "screen", "name": "The Character Sheet", "alt": "Karakterblad, overzicht", "kind": "Screen",
+     "text": "Your main screen: your figure, your total level against the cap of {cfg:total_level_cap}, the budget factor, your Mastery ranks, your death pressure (and death fatigue while it lasts), a running XP event, and all {n:skills} skills as tiles grouped by category. Each tile shows the level, a bar of the progress to the next, your specializations and a warning when an opposing skill costs you XP; hover for the exact numbers, click to open the skill's Skill Screen.",
+     "facts": [["Opens with", "K, the button inside your inventory (between your figure and the crafting grid), or `/skills`"], ["Along the foot", "Ranking, Party, Codex, Deaths, Settings (only for who may change the settings) and Done"], ["Top left", "XP/h: the pace beside the hotbar, on or off"], ["Top right", "Players (only for who may use the Players screen)"]],
+     "refs": ["screen-skill", "key-sheet", "screen-pace", "screen-death"]},
+
+    {"id": "screen-skill", "cat": "screen", "name": "The Skill Screen", "alt": "Vaardigheidsscherm, boom, skill tree", "kind": "Screen",
+     "text": "Click a tile on the Character Sheet. At the top: the skill's level, XP, its milestones ({cfg:first_specialization_level}, {cfg:second_specialization_level}, Mastery) and its opposing skill. Below: the three specializations as tabs, the branch of the one you pick over the full width with every node's name and lines showing which node opens which, and the trunk at the bottom. Click a node for the detail panel: what it does, its cost and requirements, the price and any conflict; then Choose or Buy. A node's colour tells whether you own it, can buy it now, cannot reach it yet, are blocked by a conflict, or hold it dormant.",
+     "facts": [["Buttons", "Track, Mastery and Respec…"], ["Points", "shown as free and earned"]],
+     "refs": ["concept-points", "guide-choose-spec", "screen-track", "screen-mastery"]},
+
+    {"id": "screen-mastery", "cat": "screen", "name": "The Mastery screen", "alt": "Meesterschapsscherm", "kind": "Screen",
+     "text": "The Mastery button on a Skill Screen: the {cfg:mastery_ranks} ranks with the perk chosen at each. A rank waiting for its choice offers the skill's two perks; the ranks above it wait until you chose the one below. While a rank waits, the button reads “Mastery (!)”. Before level {cfg:max_level} the screen says when Mastery starts.",
+     "refs": ["concept-mastery", "guide-mastery"]},
+
+    {"id": "screen-death", "cat": "screen", "name": "The Death Register and At Stake", "alt": "Doodsregister, op het spel", "kind": "Screen",
+     "text": "The Deaths button on the Character Sheet. On the left: your deaths, your death pressure with its three steps and when it drops, death fatigue left, and the dimensions' factors with the current one framed. At Stake shows every skill with exactly what it would lose if you died now, as a bar of its step: kept, lost in red, still to earn; hover for the share and what would be left, and a line says what the pressure means for this death and the next. Below, your last {cfg:death_history} deaths, the newest first: hover for the cause, the place, the pressure and every skill's loss. After respawning, a summary of what the death cost opens once.",
+     "refs": ["concept-death", "concept-pressure", "guide-stake"]},
+
+    {"id": "screen-party", "cat": "screen", "name": "The Party screen", "alt": "Groepsscherm", "kind": "Screen",
+     "text": "The Party button on the Character Sheet: your party's members with the leader named and a green dot for who is near and earning XP (who gives you the bonus), the bonus now and at most, Lead and remove buttons for the leader, Leave party, the invitations waiting for you with Accept and Decline, and the players online who are in no party, each with Invite.",
+     "refs": ["concept-parties", "guide-party"]},
+
+    {"id": "screen-ranking", "cat": "screen", "name": "Ranking and inspect", "alt": "Ranglijst, leaderboard, scorebord", "kind": "Screen",
+     "text": "The Ranking button on the Character Sheet opens the leaderboard: every player with a file, by total level or by one skill, with their Mastery ranks (the first 100 come from the server). `/skills top [skill]` shows the first ten in the chat. With the players permission, `/skills inspect <player>` opens a read-only view of anyone's progression, offline players too: totals, deaths, synergies, and every skill's level, specializations, points and perks.",
+     "refs": ["command-skills-top", "command-skills-inspect"]},
+
+    {"id": "screen-players", "cat": "screen", "name": "The Players screen", "alt": "Spelersscherm, beheer, admin", "kind": "Admin screen",
+     "text": "For admins: `/skills players`, or the Players button at the top right of the Character Sheet (shown only to who may). On the left every player the world knows, online first, with a search box. On the right the one picked: total, Mastery, deaths, death pressure and fatigue, party and synergies, and every skill with − and + (Shift: ten levels; at the maximum level a Mastery rank, and − takes ranks first), ↺ for a free respec, Abilities ready, Clear deaths, and for who may reset, a reset of one skill (Shift-click ↺ twice) or Reset all (press twice). It works for offline players too: their file is written at once. The server checks every request, logs every change with who made it, and tells a player who is online.",
+     "facts": [["Needs", "{perm:players}; the resets {perm:reset}"]],
+     "refs": ["guide-luckperms", "concept-permissions", "command-skills-players"]},
+
+    {"id": "screen-settings", "cat": "screen", "name": "The settings screen", "alt": "Instellingenscherm", "kind": "Admin screen",
+     "text": "For admins: `/skills settings`, or the Settings button on the Character Sheet (only for who may change the settings). Every option of config/extremeprogression.json, skills.json and synergies.json, searchable and in pages of eight, with the presets as buttons and Save and Revert. Saving applies the settings, writes the files and sends them to every player; editing an option a preset governs switches the preset to custom.",
+     "facts": [["Needs", "{perm:settings}"]],
+     "refs": ["concept-presets", "command-skills-settings"]},
+
+    {"id": "screen-track", "cat": "screen", "name": "Tracked skills beside the hotbar", "alt": "Vaardigheden volgen, tweede hotbar", "kind": "HUD",
+     "text": "Track on a Skill Screen puts that skill in a second hotbar right of your own: one slot per tracked skill with its icon, its level as the slot's number (past {cfg:max_level} its Mastery rank, such as “M3”, in gold) and a green bar of the progress to the next level where a tool shows its durability. Track as many as you like; nothing shows until you track one. The choice is kept on your own client, in config/extremeprogression-client.json.",
+     "refs": ["guide-track", "guide-hud-off"]},
+
+    {"id": "screen-pace", "cat": "screen", "name": "The pace (XP/h)", "alt": "Tempo, XP per uur", "kind": "HUD",
+     "text": "Left of the hotbar, the one or two skills you earn the most XP in right now: each with its XP an hour over the last 10 minutes, the time its next level (or Mastery rank) takes at that pace, and a bar of the progress. It shows while you earn and goes when you stop. The XP/h button at the top left of the Character Sheet turns it off or on again; the choice is kept on your own client.",
+     "refs": ["guide-hud-off", "screen-sheet"]},
+
+    {"id": "screen-ability", "cat": "screen", "name": "The ability icon and notices", "alt": "Vaardigheidsicoon en meldingen", "kind": "HUD",
+     "text": "Beside the hotbar: the icon of the ability R would use now, while it is ready (hold Shift to see the second specialization's), and above it the abilities in effect with the seconds they still last. A level-up or a Mastery rank shows as a short line on the action bar in the skill's colour; a discovered synergy is told in the chat. There is no XP bar and no death fatigue timer on the HUD.",
+     "refs": ["key-ability", "concept-specs"]},
+
+    {"id": "screen-power", "cat": "screen", "name": "The power level above heads", "alt": "Machtsniveau boven hoofden, naamplaatje", "kind": "HUD",
+     "text": "In multiplayer every player's total level shows beside their name above their head, as in the tablist: ✦312, with a gold star once they have Mastery. Party members carry a green ◆ before the name. Admins can hide it in some dimensions (`nametag_hidden_dimensions`, BattleHub's lobby and matches by default) or everywhere (`nametag_power: false`).",
+     "refs": ["setting-nametag_power", "concept-tab"]},
+
+    {"id": "guide-choose-spec", "cat": "guide", "name": "Choose a specialization", "alt": "Een specialisatie kiezen",
+     "text": "At level {cfg:first_specialization_level} in a skill you choose its first specialization, at {cfg:second_specialization_level} a second one of the two that are left.",
+     "steps": ["Open the Character Sheet (K) and click the skill's tile.", "Pick one of the three specialization tabs and read its gear, ability, passives and price: the price always counts. A specialization that one of your choices in another skill excludes says so.", "Click Choose. The choice is free; only a respec undoes it.", "Spend your points: click a node, read the detail panel and click Buy. Start at the bottom, with the passives of row 1 and the ability's rank I.", "Use the ability with R while holding the gear it is for, or looking at its workstation."],
+     "refs": ["concept-specs", "concept-points", "screen-skill"]},
+
+    {"id": "guide-respec", "cat": "guide", "name": "Respec a skill", "alt": "Respecten, opnieuw kiezen, punten terug",
+     "text": "Choose a skill's specializations and points again.",
+     "steps": ["Open the skill's Skill Screen and click Respec…", "Read the cost: {cfg:respec_xp_share|pct} of this skill's XP, shown as the level you drop to.", "Confirm with Respec. Both specializations and all their points are free again; choose again right away.", "The next respec of this skill waits {cfg:respec_days} real days. Moving points within a specialization is a respec too."],
+     "facts": [["Free respec", "an admin can give one: `/skills admin respec <player> <skill>`, or ↺ in the Players screen"]],
+     "refs": ["concept-points", "command-skills-admin-respec"]},
+
+    {"id": "guide-ability", "cat": "guide", "name": "Use an ability", "alt": "Een vaardigheid gebruiken, kracht activeren",
+     "steps": ["Buy the ability's rank I in the specialization's branch (the third node from the bottom).", "Hold what the ability needs (a sword for Riposte, a pickaxe for Ore Sense) or look at its workstation (a furnace for Flash Forge).", "Press R for a first specialization's ability, Shift + R for a second's. The icon beside the hotbar shows which one is ready.", "Wait out the cooldown; higher ranks make the ability stronger."],
+     "refs": ["concept-specs", "key-ability", "screen-ability"]},
+
+    {"id": "guide-mastery", "cat": "guide", "name": "Choose a Mastery perk", "alt": "Een meesterschapsperk kiezen",
+     "steps": ["Bring a skill to level {cfg:max_level}; its XP now fills Mastery ranks.", "When a rank comes, open the skill's Skill Screen: the button reads “Mastery (!)”.", "On the Mastery screen, pick one of the two perks for the waiting rank. Each rank in a perk adds {cfg:mastery_perk_step|pct}.", "The choice is final while you hold the rank."],
+     "refs": ["concept-mastery", "screen-mastery"]},
+
+    {"id": "guide-synergy", "cat": "guide", "name": "Discover a synergy", "alt": "Een synergie ontdekken, vinden",
+     "steps": ["Bring both skills of a synergy to level {cfg:synergy_level}. Opposing skills never share one.", "Open the Codex (the Codex button on the Character Sheet). Runes with a hint appear once one of the two skills reaches level {cfg:synergy_level}.", "Read the hint and play the situation it points at. Once somebody on the server found it, its two skills and a second, clearer hint show.", "The first time it happens with both levels met, the synergy is yours: the chat says so, and the Codex shows when and where.", "Found it first on the server? You enter the Chronicle, and the chat tells everyone."],
+     "refs": ["concept-synergies", "concept-codex"]},
+
+    {"id": "guide-party", "cat": "guide", "name": "Start a party", "alt": "Een groep starten, samen spelen",
+     "steps": ["Open the Party screen (the Party button on the Character Sheet) and click Invite beside a player who is in no party, or type `/party invite <player>`.", "They click [Accept] in the chat, Accept in their Party screen, or type `/party accept`, within {cfg:party_invite_seconds} seconds. The one who invited leads.", "Any member can invite more, up to {cfg:party_max_size} players.", "Play near each other: members within {cfg:party_range} blocks who earn XP of their own give each other the party bonus. The Party screen gives them a green dot.", "`/party leave` leaves; the leader removes a member with `/party kick <player>` and hands on the lead with `/party leader <player>`, or Lead in the Party screen."],
+     "facts": [["With BattleHub", "its own /party is BattleHub's: use `/skills party …`"]],
+     "refs": ["concept-parties", "screen-party", "command-party"]},
+
+    {"id": "guide-duo", "cat": "guide", "name": "Discover a duo synergy", "alt": "Een duo-synergie ontdekken",
+     "steps": ["Start a party.", "Each of you brings your own part to level {cfg:synergy_level}: the one who acts the first skill, the other the second (Shield Wall: you Defense, your party member Melee).", "Read the hints on the Codex's Together tab.", "Play the situation together, near each other. The first time it happens with both levels met, you both discover it."],
+     "refs": ["concept-duo", "guide-party", "synergy-shield_wall"]},
+
+    {"id": "guide-echo", "cat": "guide", "name": "Forge beyond the maximum (Echo Forging)", "alt": "Voorbij het maximum smeden, echo-smeden",
+     "text": "Turn two Sharpness V swords into one Sharpness VI, or two VI into a VII.",
+     "steps": ["Bring Arcana and Exploration to level {cfg:synergy_level}.", "Find a sculk catalyst in the Deep Dark and mine it with Silk Touch. Place an anvil within {cfg:echo_catalyst_range} blocks of it.", "Collect echo shards from ancient cities: one for you, and one for every voice.", "Put two items in the anvil with the same enchantment at its highest level: two of the same kind, or the item and an enchanted book, such as two Sharpness V swords.", "Hold an echo shard in your off hand. For every level beyond the maximum, a party member stands within {cfg:echo_voice_range} blocks of the anvil with an echo shard in their off hand: one for a VI, two for a VII. In singleplayer an allay holding an echo shard counts.", "The action bar says what is missing. Take the result: it costs at least 20 levels for a VI and 30 for a VII, uses up every shard, and the item names its forgers."],
+     "refs": ["concept-echo", "synergy-echo_forging", "guide-party"]},
+
+    {"id": "guide-track", "cat": "guide", "name": "Track a skill", "alt": "Een vaardigheid volgen",
+     "steps": ["Open the Character Sheet (K) and click the skill's tile.", "Click Track; it reads “✓ Tracked”.", "The skill now has a slot in a second hotbar right of your own, with its level and a bar of its progress.", "Click ✓ Tracked again to stop tracking it."],
+     "refs": ["screen-track"]},
+
+    {"id": "guide-hud-off", "cat": "guide", "name": "Turn off the HUD extras", "alt": "HUD-extra's uitzetten, scherm opruimen",
+     "steps": ["The pace (XP/h beside the hotbar): open the Character Sheet and click XP/h at the top left until it reads “XP/h: off”.", "Tracked skills: open each tracked skill's Skill Screen and click ✓ Tracked.", "The ability icon shows only while an ability is ready; it has no switch of its own.", "Server admins: `nametag_power: false` in config/extremeprogression.json hides the ✦ level above heads, and `placeholders: false` empties the TAB placeholders."],
+     "refs": ["screen-pace", "screen-track", "screen-power"]},
+
+    {"id": "guide-luckperms", "cat": "guide", "name": "Give a moderator the Players screen (LuckPerms)", "alt": "Een moderator het spelersscherm geven, rechten",
+     "steps": ["Install LuckPerms, or another permission mod that works through Fabric API's permission API, on the server.", "Give the group the permission: `/lp group moderator permission set {perm:players} true`.", "They can now open the Players screen and use `/skills players`, `/skills inspect` and `/skills admin set|add|respec|cooldowns`, without being an operator.", "Resets need {perm:reset}, the settings {perm:settings} and XP events {perm:events}: give those only to who should have them.", "Without a permission mod, the Players screen needs operator level {oplevel:players} and the others level {oplevel:reset}."],
+     "refs": ["concept-permissions", "screen-players", "perm-players"]},
+
+    {"id": "guide-xpevent", "cat": "guide", "name": "Run an XP event", "alt": "Een XP-evenement starten, dubbele XP",
+     "steps": ["`/skills xprate 2` doubles the XP of every skill until you end it.", "`/skills xprate 2 mining 60` doubles Mining XP for 60 minutes; `all` instead of a skill means every skill.", "Everyone sees it announced in the chat and on the Character Sheet.", "`/skills xprate reset` ends every event."],
+     "facts": [["Needs", "{perm:events}"]],
+     "refs": ["concept-xpevents", "command-skills-xprate"]},
+
+    {"id": "guide-normal", "cat": "guide", "name": "Switch to the Normal preset", "alt": "Naar de Normal-voorinstelling, makkelijker",
+     "steps": ["As an admin, type `/skills preset normal`, or open the settings screen and click Normal.", "Normal sets only the options below; every other option stays as it was.", "To change one of those options yourself, choose custom first."],
+     "facts": ["@presets", ["Needs", "{perm:settings}"]],
+     "refs": ["concept-presets", "command-skills-preset"]},
+
+    {"id": "guide-mod-xp", "cat": "guide", "name": "Give XP for another mod's blocks", "alt": "XP voor blokken van een andere mod",
+     "text": "The XP tables are data files, so the blocks, mobs and items of other mods can give XP too.",
+     "steps": ["Start the server once: it writes config/extremeprogression/xp/<skill>.json for every skill, with every value in it.", "Open the skill's file, such as xp/mining.json, and add the block to the right table with its namespace, such as \"othermod:ruby_ore\": 400 in \"pickaxe\".", "Minecraft's own ids go without a namespace. A table in the file is the whole table: an id you remove gives nothing.", "Run `/skills reload`, or restart. The XP tables only matter on the server."],
+     "refs": ["setting-xp_files", "xp-mining"]},
+
+    {"id": "guide-reset", "cat": "guide", "name": "Reset a player", "alt": "Een speler resetten, wissen",
+     "steps": ["Type `/skills admin reset <player>` for everything, or `/skills admin reset <player> <skill>` for one skill. It works for offline players too.", "Read what it will reset, then type `/skills admin reset confirm` within 30 seconds.", "The file is written at once, the player is told, and the server log records it. In the Players screen: Reset all, pressed twice."],
+     "facts": [["Needs", "{perm:reset}"]],
+     "refs": ["command-skills-admin-reset", "screen-players"]},
+
+    {"id": "guide-stake", "cat": "guide", "name": "Check what a death would cost", "alt": "Bekijken wat een dood kost, risico",
+     "steps": ["Open the Character Sheet and click Deaths.", "At Stake shows every skill with what it would lose if you died now: here, in this dimension, at your pressure.", "The line below it says what this death and the next would mean, such as losing a whole level.", "Waiting lowers the risk: every {cfg:death_pressure_decay_minutes} minutes of active play without dying lower the pressure by 1."],
+     "refs": ["screen-death", "concept-death", "concept-pressure"]}
+  ]
+}
