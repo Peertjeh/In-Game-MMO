@@ -99,7 +99,15 @@ public class ClientShots implements FabricClientGameTest {
 			ctx.waitTicks(10);
 			check(ctx.computeOnClient(mc -> CharacterSheetScreen.opened()) > sheets, "K did not open the Character Sheet");
 			ctx.takeScreenshot("03_character_sheet");
-			// Both columns in line: Survival's Exploration beside Crafting's Smithing
+			// Both columns in line: Survival's Exploration beside Crafting's Smithing. (Another mod may have put its own
+			// screen over the sheet, as Extreme Dimensions' newer versions can on a first day: the sheet is opened again.)
+			ctx.runOnClient(mc -> {
+				if (!(mc.gui.screen() instanceof CharacterSheetScreen)) {
+					System.out.println("[ClientShots] over the Character Sheet: " + (mc.gui.screen() == null ? "no screen" : mc.gui.screen().getClass().getName()));
+					mc.gui.setScreen(new CharacterSheetScreen(null));
+				}
+			});
+			ctx.waitTicks(5);
 			ctx.runOnClient(mc -> {
 				java.util.Map<Skill, Integer> top = new java.util.EnumMap<>(Skill.class);
 				for (var child : mc.gui.screen().children()) {
