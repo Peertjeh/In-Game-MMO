@@ -29,6 +29,8 @@ import net.minecraft.network.chat.Component;
  */
 public class LegendsScreen extends Screen {
 	static final int W = 380, H = 232;
+	/** The Boosts tab's left column (the boost now) and where its right one (where tomes come from) starts. */
+	private static final int LEFT_W = 158, RIGHT_X = 176;
 	private static final int TITLE_COLS = 3, TITLE_ROW = 12;
 
 	public enum Tab {
@@ -156,7 +158,7 @@ public class LegendsScreen extends Screen {
 
 	private List<Component> boosts(GuiGraphicsExtractor g) {
 		Legends.View v = view();
-		int x = x0 + 8, y = py() + 8, w = 176;
+		int x = x0 + 8, y = py() + 8, w = LEFT_W;
 		if (!v.boostsOn) {
 			Ui.text(g, this.font, Ui.tr("gui.extremeprogression.legends.boost.off"), x, y, Ui.MUTED);
 			return null;
@@ -173,7 +175,9 @@ public class LegendsScreen extends Screen {
 			}
 		}
 		if (run != null) {
-			Ui.text(g, this.font, Ui.ellipsize(this.font, Ui.tr("gui.extremeprogression.legends.boost.running", name(run), run.percent, time(run.seconds)), w), x, y,
+			Ui.text(g, this.font, Ui.ellipsize(this.font, name(run), w), x, y, ClientLegends.color(run));
+			y += 10;
+			Ui.text(g, this.font, Ui.ellipsize(this.font, Ui.tr("gui.extremeprogression.legends.boost.running", run.percent, time(run.seconds)), w), x + 6, y,
 					ClientLegends.color(run));
 			y += 11;
 			for (LegendsData.Boost b : v.boosts) {
@@ -205,7 +209,8 @@ public class LegendsScreen extends Screen {
 			y += 10;
 		}
 		// Right: where tomes come from
-		int rx = x0 + W / 2 + 4, rw = W / 2 - 14, ry = py() + 8;
+		int rx = x0 + RIGHT_X, rw = W - RIGHT_X - 8, ry = py() + 8;
+		g.fill(rx - 9, py() + 6, rx - 8, py() + ph() - 6, Ui.argb(0.25, 0xFFFFFF));
 		Ui.text(g, this.font, Ui.tr("gui.extremeprogression.legends.boost.how"), rx, ry, Ui.GOLD);
 		ry += 13;
 		for (int i = 1; i <= 6; i++) {
@@ -214,7 +219,7 @@ public class LegendsScreen extends Screen {
 				Ui.text(g, this.font, line, rx, ry, Ui.MUTED);
 				ry += 9;
 			}
-			ry += 3;
+			ry += 2;
 		}
 		return null;
 	}
@@ -261,7 +266,7 @@ public class LegendsScreen extends Screen {
 		Ui.tile(g, x, y, w, 30, Ui.mix(edge, Ui.SHADOW, 0.35));
 		String text = Contracts.describe(c).getString();
 		Ui.text(g, this.font, Ui.ellipsize(this.font, (c.done ? "✔ " : "") + text, w - 60), x + 5, y + 4, c.done ? Ui.OK : Ui.TEXT);
-		int mw = w - 120;
+		int mw = w - 170;
 		Ui.meter(g, x + 5, y + 15, mw, 4, c.share(), c.done ? Ui.OK : edge);
 		Ui.text(g, this.font, Ui.number(c.progress) + " / " + Ui.number(c.goal), x + 10 + mw, y + 13, Ui.MUTED);
 		Tome t = Tome.byId(c.rewardTome);
