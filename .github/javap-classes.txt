@@ -198,3 +198,12 @@ net.minecraft.world.item.component.ItemLore
 net.minecraft.core.component.DataComponents
 net.minecraft.world.level.block.Blocks
 net.minecraft.world.inventory.ItemCombinerMenu
+net.minecraft.nbt.CompoundTag
+net.minecraft.world.item.Rarity
+net.minecraft.world.entity.MobCategory
+net.minecraft.world.level.storage.loot.LootContext
+net.minecraft.world.damagesource.DamageSource
+net.minecraft.server.level.ServerBossEvent
+net.minecraft.world.BossEvent
+net.minecraft.world.item.KnowledgeBookItem
+net.minecraft.core.Holder
