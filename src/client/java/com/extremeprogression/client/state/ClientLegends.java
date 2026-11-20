@@ -18,9 +18,10 @@ public final class ClientLegends {
 	public static void apply(LegendsPayload payload) {
 		view = Legends.parse(payload.json());
 		updates++;
-		if (payload.open()) {
-			Minecraft mc = Minecraft.getInstance();
-			mc.gui.setScreen(new LegendsScreen(mc.gui.screen() instanceof LegendsScreen open ? null : mc.gui.screen()));
+		Minecraft mc = Minecraft.getInstance();
+		// (open, unless it is already: the Character Sheet's button opens it at once and asks for the news)
+		if (payload.open() && !(mc.gui.screen() instanceof LegendsScreen)) {
+			mc.gui.setScreen(new LegendsScreen(mc.gui.screen()));
 		}
 	}
 
