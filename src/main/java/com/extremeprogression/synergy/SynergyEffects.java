@@ -405,6 +405,9 @@ public final class SynergyEffects {
 	public static void echoForged(ServerPlayer p, BlockPos anvil, int needed) {
 		trigger(p, Synergy.ECHO_FORGING);
 		p.getOffhandItem().shrink(1);
+		com.extremeprogression.data.PlayerStore.get(p.getUUID()).legends.add("echo_forged", 1);
+		com.extremeprogression.data.PlayerStore.markDirty(p.getUUID());
+		com.extremeprogression.legends.Titles.check(p);
 		List<LivingEntity> voices = voices(p, anvil);
 		for (LivingEntity v : voices.subList(0, Math.min(needed, voices.size()))) {
 			if (v instanceof ServerPlayer o) {

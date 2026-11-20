@@ -30,7 +30,9 @@ public final class Perms {
 		/** Changing the settings (the settings screen), {@code /skills settings}, {@code preset} and {@code reload}. */
 		SETTINGS("admin/settings", PermissionLevel.ADMINS),
 		/** XP events: {@code /skills xprate}. */
-		EVENTS("admin/events", PermissionLevel.ADMINS);
+		EVENTS("admin/events", PermissionLevel.ADMINS),
+		/** Giving and taking XP boosts and tomes: {@code /skills boost give|tome|clear} (2.0). */
+		BOOSTS("admin/boosts", PermissionLevel.ADMINS);
 
 		public final Identifier id;
 		public final PermissionLevel level;

@@ -38,6 +38,10 @@ public final class Migrations {
 			// 4 → 5: Mastery perks and discovered synergies; a file without them has chosen and found none
 			json.addProperty("schema", 5);
 		}
+		if (from < 6) {
+			// 5 → 6: the Legends update (boosts, streak, contracts, titles); a file without it has none of them yet
+			json.addProperty("schema", 6);
+		}
 		return json;
 	}
 }

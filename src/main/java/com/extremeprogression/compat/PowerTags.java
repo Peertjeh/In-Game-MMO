@@ -25,7 +25,8 @@ public final class PowerTags {
 		List<PowerPayload.Entry> out = new ArrayList<>();
 		for (ServerPlayer p : s.getPlayerList().getPlayers()) {
 			PlayerProgress progress = PlayerStore.get(p.getUUID());
-			out.add(new PowerPayload.Entry(p.getUUID(), progress.totalLevel(), progress.totalMasteryRanks()));
+			com.extremeprogression.legends.Titles.Def title = com.extremeprogression.legends.Titles.shown(progress);
+			out.add(new PowerPayload.Entry(p.getUUID(), progress.totalLevel(), progress.totalMasteryRanks(), title == null ? "" : title.id()));
 		}
 		return out;
 	}
@@ -55,6 +56,11 @@ public final class PowerTags {
 	}
 
 	public static void clear() {
+		last = List.of();
+	}
+
+	/** Something shown changed (a title chosen): everyone is told with the next check. */
+	public static void changed() {
 		last = List.of();
 	}
 }

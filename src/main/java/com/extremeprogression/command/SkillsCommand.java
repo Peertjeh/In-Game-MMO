@@ -70,6 +70,7 @@ public final class SkillsCommand {
 										.suggests((c, b) -> SharedSuggestionProvider.suggest(c.getSource().getOnlinePlayerNames(), b))
 										.executes(SkillsCommand::cooldowns))));
 		AdminCommands.register(skills);
+		LegendsCommands.register(skills);
 		dispatcher.register(skills);
 	}
 

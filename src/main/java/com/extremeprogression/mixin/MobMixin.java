@@ -21,4 +21,13 @@ public abstract class MobMixin {
 			CallbackInfoReturnable<SpawnGroupData> cir) {
 		MobOrigins.created((Mob) (Object) this, reason);
 	}
+
+	/** Set up for a natural spawn: it may be a Champion (2.0). */
+	@Inject(method = "finalizeSpawn", at = @At("RETURN"), require = 1)
+	private void extremeprogression$champion(ServerLevelAccessor level, DifficultyInstance difficulty, EntitySpawnReason reason, SpawnGroupData data,
+			CallbackInfoReturnable<SpawnGroupData> cir) {
+		if (!com.extremeprogression.legends.Legends.quiet) {
+			com.extremeprogression.legends.Champions.spawned((Mob) (Object) this, reason);
+		}
+	}
 }

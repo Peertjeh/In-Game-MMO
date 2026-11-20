@@ -60,8 +60,27 @@ public final class XpService {
 		if (xp > 0) {
 			// (what counts for the others' bonus is earning at all; the bonus itself counts only the others)
 			com.extremeprogression.party.Parties.earned(player);
-			xp *= 1 + com.extremeprogression.party.Parties.bonus(player);
+			com.extremeprogression.legends.Boosts.earned(player);
+			// (the party bonus, the player's boost and the Skill of the Day add up, 2.0)
+			xp *= 1 + com.extremeprogression.party.Parties.bonus(player) + com.extremeprogression.legends.Boosts.bonus(player)
+					+ com.extremeprogression.legends.SkillOfTheDay.bonus(skill);
 		}
+		return apply(player, p, skill, xp);
+	}
+
+	/**
+	 * XP given straight, as a reward (a contract's, a Champion's): no diminishing returns, no multipliers, no boost; the
+	 * levels, notices and milestones as for any XP.
+	 */
+	public static double grant(ServerPlayer player, Skill skill, double amount) {
+		if (!(amount > 0) || !Double.isFinite(amount) || !com.extremeprogression.config.SkillSettings.enabled(skill)) {
+			return 0;
+		}
+		return apply(player, PlayerStore.get(player.getUUID()), skill, amount);
+	}
+
+	private static double apply(ServerPlayer player, PlayerProgress p, Skill skill, double xp) {
+		int levelBefore = p.get(skill).level, ranksBefore = p.get(skill).masteryRanks;
 		Progression.Change c = Progression.add(p, skill, xp);
 		if (c.applied() > 0 || c.levelsGained() > 0 || c.ranksGained() > 0) {
 			PlayerStore.markDirty(player.getUUID());
@@ -73,6 +92,13 @@ public final class XpService {
 		} else if (c.ranksGained() > 0) {
 			notice(player, Component.translatable("message.extremeprogression.mastery_up", Component.translatable(skill.translationKey()),
 					p.get(skill).masteryRanks), skill);
+		}
+		if (c.levelsGained() > 0 || c.ranksGained() > 0) {
+			com.extremeprogression.legends.Boosts.leveled(player, skill, levelBefore, p.get(skill).level, ranksBefore, p.get(skill).masteryRanks);
+			com.extremeprogression.legends.Titles.check(player);
+		}
+		if (c.applied() > 0) {
+			com.extremeprogression.legends.Contracts.xp(player, skill, c.applied());
 		}
 		return c.applied();
 	}

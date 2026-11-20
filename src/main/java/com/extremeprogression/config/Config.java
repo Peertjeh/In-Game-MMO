@@ -175,6 +175,37 @@ public final class Config {
 	/** How long an invitation stands. */
 	public static double PARTY_INVITE_SECONDS = 120;
 
+	/**
+	 * XP boosts (the Legends update, 2.0): Tomes of Insight and Well Rested add to a player's XP, together at most
+	 * BOOST_MAX (3.0 = +300%). Their time runs only while the player earns XP.
+	 */
+	public static boolean BOOSTS = true;
+	public static double BOOST_MAX = 3.0;
+	/**
+	 * Well Rested: RESTED_BONUS more XP (1.0 = +100%) for RESTED_MINUTES_PER_HOUR minutes of play for every hour
+	 * offline, at most RESTED_MAX_MINUTES.
+	 */
+	public static double RESTED_BONUS = 1.0;
+	public static double RESTED_MINUTES_PER_HOUR = 6;
+	public static double RESTED_MAX_MINUTES = 60;
+	/** Where tomes come from: the first login of each day (the streak), skill milestones, bosses and treasure chests. */
+	public static boolean DAILY_REWARDS = true;
+	public static boolean MILESTONE_TOMES = true;
+	public static boolean BOSS_TOMES = true;
+	public static boolean LOOT_TOMES = true;
+	/**
+	 * Champions: the chance a hostile mob that spawns naturally is one (half again in the Nether, double in the End; 0
+	 * turns them off), and the XP its slayer earns on top of the fight's own.
+	 */
+	public static double CHAMPION_CHANCE = 0.02;
+	public static double CHAMPION_KILL_XP = 400;
+	/** Contracts: three a day and one a week, for XP and tomes. */
+	public static boolean CONTRACTS = true;
+	/** Skill of the Day: one skill a day earns this much more XP for everyone (0 turns it off). */
+	public static double SKILL_OF_THE_DAY_BONUS = 0.25;
+	/** Titles players earn and show above their heads, in the tablist and in chat. */
+	public static boolean TITLES = true;
+
 	private static final Map<String, Object> DEFAULTS = snapshot();
 
 	/**
@@ -306,6 +337,13 @@ public final class Config {
 		if (!(PARTY_INVITE_SECONDS > 0)) {
 			PARTY_INVITE_SECONDS = (double) DEFAULTS.get("PARTY_INVITE_SECONDS");
 		}
+		BOOST_MAX = nonNegative(BOOST_MAX, "BOOST_MAX");
+		RESTED_BONUS = nonNegative(RESTED_BONUS, "RESTED_BONUS");
+		RESTED_MINUTES_PER_HOUR = nonNegative(RESTED_MINUTES_PER_HOUR, "RESTED_MINUTES_PER_HOUR");
+		RESTED_MAX_MINUTES = nonNegative(RESTED_MAX_MINUTES, "RESTED_MAX_MINUTES");
+		CHAMPION_CHANCE = share(CHAMPION_CHANCE, "CHAMPION_CHANCE");
+		CHAMPION_KILL_XP = nonNegative(CHAMPION_KILL_XP, "CHAMPION_KILL_XP");
+		SKILL_OF_THE_DAY_BONUS = nonNegative(SKILL_OF_THE_DAY_BONUS, "SKILL_OF_THE_DAY_BONUS");
 		RESPEC_DAYS = nonNegative(RESPEC_DAYS, "RESPEC_DAYS");
 		XP_MULTIPLIER = nonNegative(XP_MULTIPLIER, "XP_MULTIPLIER");
 		PLANTED_TREE_FACTOR = share(PLANTED_TREE_FACTOR, "PLANTED_TREE_FACTOR");

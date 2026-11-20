@@ -5,6 +5,9 @@
 	"name": "Extreme Progression tests",
 	"environment": "*",
 	"entrypoints": {
+		"main": [
+			"com.extremeprogression.gametest.TestSetup"
+		],
 		"fabric-gametest": [
 			"com.extremeprogression.gametest.SkeletonTests",
 			"com.extremeprogression.gametest.ProgressionTests",
@@ -30,7 +33,8 @@
 			"com.extremeprogression.gametest.AdminTests",
 			"com.extremeprogression.gametest.CompatTests",
 			"com.extremeprogression.gametest.BalanceTests",
-			"com.extremeprogression.gametest.PlaceholderTests"
+			"com.extremeprogression.gametest.PlaceholderTests",
+			"com.extremeprogression.gametest.LegendsTests"
 		],
 		"fabric-client-gametest": [
 			"com.extremeprogression.gametest.ClientShots"

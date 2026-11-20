@@ -191,7 +191,7 @@ public class ConnectionTests {
 		Path file = Files.createTempDirectory("extremeprogression-schema4").resolve("player.json");
 		Files.writeString(file, "{\"schema\":4,\"skills\":{\"mining\":{\"level\":100,\"masteryRanks\":2}},\"death\":{\"pressure\":1}}");
 		PlayerProgress p = PlayerStore.read(file);
-		check(helper, p.schema == PlayerProgress.SCHEMA && p.schema == 5, "the file is at schema %s", p.schema);
+		check(helper, p.schema == PlayerProgress.SCHEMA && p.schema == 6, "the file is at schema %s", p.schema);
 		check(helper, p.get(Skill.MINING).masteryRanks == 2 && p.get(Skill.MINING).perks.isEmpty() && Mastery.waiting(p.get(Skill.MINING)) == 1,
 				"the Mastery ranks did not come back waiting for their perks");
 		check(helper, p.synergies.isEmpty() && p.death.pressure == 1, "the synergies or the death pressure did not load");

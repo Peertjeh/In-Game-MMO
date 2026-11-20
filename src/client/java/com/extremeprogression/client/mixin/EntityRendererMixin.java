@@ -28,6 +28,11 @@ public abstract class EntityRendererMixin {
 			if (badge != null) {
 				state.nameTag = state.nameTag.copy().append(" ").append(badge);
 			}
+			// (the title the player shows, before the name, 2.0)
+			Component title = com.extremeprogression.client.state.ClientPower.title(p.getUUID());
+			if (title != null) {
+				state.nameTag = title.copy().append(" ").append(state.nameTag);
+			}
 			// (a party member: a green mark before the name)
 			Component mark = com.extremeprogression.client.state.ClientParty.mark(p.getUUID());
 			if (mark != null) {

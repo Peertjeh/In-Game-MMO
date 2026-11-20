@@ -344,6 +344,35 @@ public class ClientShots implements FabricClientGameTest {
 						&& com.extremeprogression.client.state.ClientRates.hoursToNext(Skill.MINING, now) > 0;
 			}), "the pace does not have Mining before Foraging, which earned less");
 
+			// The Legends update (2.0): a boost above the pace, today's contracts, titles; the Legends screen's three tabs
+			sp.getServer().runOnServer(s -> {
+				net.minecraft.server.level.ServerPlayer p0 = s.getPlayerList().getPlayers().get(0);
+				com.extremeprogression.legends.Boosts.add(p0, 50, 1800, "greater");
+				com.extremeprogression.legends.Boosts.add(p0, 25, 1800, "insight");
+				com.extremeprogression.data.PlayerStore.get(p0.getUUID()).legends.restedSeconds = 1200;
+				com.extremeprogression.legends.Contracts.ensure(p0, java.time.LocalDate.now());
+				com.extremeprogression.legends.LegendsData.ContractBook book = com.extremeprogression.data.PlayerStore.get(p0.getUUID()).legends.contracts;
+				book.daily.get(0).progress = book.daily.get(0).goal * 0.6;
+				book.daily.get(1).progress = book.daily.get(1).goal;
+				book.daily.get(1).done = true;
+				com.extremeprogression.legends.Titles.check(p0);
+				com.extremeprogression.legends.Legends.send(p0, false);
+			});
+			ctx.waitTicks(10);
+			check(ctx.computeOnClient(mc -> com.extremeprogression.client.state.ClientLegends.current() != null
+					&& com.extremeprogression.client.state.ClientLegends.current().boost > 0.7), "the client was not told of the boost");
+			check(ctx.computeOnClient(mc -> com.extremeprogression.client.hud.RatesHud.boostShown()), "the boost does not show above the pace");
+			for (com.extremeprogression.client.screen.LegendsScreen.Tab tab : com.extremeprogression.client.screen.LegendsScreen.Tab.values()) {
+				ctx.runOnClient(mc -> {
+					com.extremeprogression.client.screen.LegendsScreen.show(tab);
+					mc.gui.setScreen(new com.extremeprogression.client.screen.LegendsScreen(null));
+				});
+				ctx.waitTicks(5);
+				ctx.takeScreenshot("05_legends_" + tab.name().toLowerCase(java.util.Locale.ROOT));
+			}
+			ctx.runOnClient(mc -> mc.gui.setScreen(null));
+			check(com.extremeprogression.client.screen.LegendsScreen.opened() >= 3, "the Legends screen did not open");
+
 			// With a sword in hand the ability key reaches Riposte: its icon shows beside the hotbar, and R uses it
 			sp.getServer().runOnServer(s -> s.getPlayerList().getPlayers().get(0).setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIAMOND_SWORD)));
 			// Long enough for the operator messages in the chat to fade, so the action bar shows in the screenshots
@@ -600,6 +629,31 @@ public class ClientShots implements FabricClientGameTest {
 			keys.add("message.extremeprogression.echo." + k);
 		}
 		keys.add("lore.extremeprogression.echo_forged");
+		// The Legends update (2.0)
+		for (com.extremeprogression.legends.Tome t : com.extremeprogression.legends.Tome.values()) {
+			keys.add(t.translationKey());
+		}
+		for (com.extremeprogression.legends.Titles.Def t : com.extremeprogression.legends.Titles.all()) {
+			keys.add(com.extremeprogression.legends.Titles.translationKey(t.id()));
+			keys.add(com.extremeprogression.legends.Titles.translationKey(t.id()) + ".how");
+		}
+		for (com.extremeprogression.legends.Champions.Affix a : com.extremeprogression.legends.Champions.Affix.values()) {
+			keys.add(a.translationKey());
+		}
+		for (String k : new String[] {"title", "button", "button_tip", "tab.boosts", "tab.contracts", "tab.titles", "boost.total", "boost.none", "boost.running",
+				"boost.waiting", "boost.rested", "boost.max", "boost.streak", "boost.sotd", "boost.how", "boost.how1", "boost.how2", "boost.how3", "boost.how4",
+				"boost.how5", "boost.how6", "boost.off", "contracts.daily", "contracts.weekly", "contracts.reward_xp", "contracts.reward_tome", "contracts.done",
+				"contracts.swap", "contracts.swap_tip", "contracts.off", "contracts.all", "contracts.count", "contracts.waiting", "titles.none", "titles.count",
+				"titles.off", "titles.tip"}) {
+			keys.add("gui.extremeprogression.legends." + k);
+		}
+		for (String k : new String[] {"boost.ended", "boost.next", "boost.rested_ended", "boost.rested", "boost.daily", "boost.off", "boost.read", "boost.read_waits",
+				"boost.milestone", "boost.milestone_rank", "boost.boss", "boost.given", "skill_of_the_day", "title.earned", "contract.progress", "contract.done",
+				"contract.weekly_done", "contract.all_done", "contract.no_reroll", "champion.slain"}) {
+			keys.add("message.extremeprogression." + k);
+		}
+		keys.addAll(List.of("contract.extremeprogression.xp", "contract.extremeprogression.xp_any", "contract.extremeprogression.kill",
+				"contract.extremeprogression.champion", "champion.extremeprogression.name", "item.extremeprogression.tome.lore", "item.extremeprogression.tome.lore2"));
 		for (String k : new String[] {"leaderboard.title", "leaderboard.button", "leaderboard.total", "leaderboard.waiting", "leaderboard.players",
 				"leaderboard.level", "inspect.title", "inspect.online", "inspect.offline", "inspect.synergies", "inspect.read_only", "inspect.no_spec",
 				"inspect.points", "inspect.points_short", "players.title", "players.button", "players.search", "players.count", "players.waiting", "players.pick",

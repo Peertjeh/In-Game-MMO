@@ -50,6 +50,15 @@ public class CharacterSheetScreen extends Screen {
 		column(rx + 6 + SkillTile.W + 4, y0 + 20, RIGHT);
 		// The other screens, along the foot: the settings only for those who may change them
 		List<Button> buttons = new java.util.ArrayList<>();
+		// (the Legends screen first: boosts, contracts, titles, 2.0)
+		Button legends = Button.builder(Component.translatable("gui.extremeprogression.legends.button"), b -> {
+			if (net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.canSend(com.extremeprogression.network.LegendsActionPayload.TYPE)) {
+				net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.send(new com.extremeprogression.network.LegendsActionPayload("open", ""));
+			}
+			Minecraft.getInstance().gui.setScreen(new LegendsScreen(this));
+		}).build();
+		legends.setTooltip(net.minecraft.client.gui.components.Tooltip.create(Component.translatable("gui.extremeprogression.legends.button_tip")));
+		buttons.add(legends);
 		buttons.add(Button.builder(Component.translatable("gui.extremeprogression.leaderboard.button"),
 				b -> Minecraft.getInstance().gui.setScreen(new LeaderboardScreen(this))).build());
 		buttons.add(Button.builder(Component.translatable("gui.extremeprogression.party.button"),

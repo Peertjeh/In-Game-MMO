@@ -26,18 +26,16 @@ public final class RatesHud {
 
 	public static void extract(GuiGraphicsExtractor g) {
 		Minecraft mc = Minecraft.getInstance();
-		if (mc.player == null || mc.player.isSpectator() || !ClientOptions.pace() || ClientProgress.current() == null) {
-			return;
-		}
-		long now = System.currentTimeMillis();
-		List<Skill> active = ClientRates.active(now);
-		int n = Math.min(MAX, active.size());
-		if (n == 0) {
+		if (mc.player == null || mc.player.isSpectator()) {
 			return;
 		}
 		// (the off-hand slot sits left of the hotbar for a right-handed player holding something there)
 		boolean offhand = mc.player.getMainArm() == HumanoidArm.RIGHT && !mc.player.getOffhandItem().isEmpty();
 		int right = g.guiWidth() / 2 - 91 - 4 - (offhand ? 31 : 0);
+		int top = g.guiHeight();
+		long now = System.currentTimeMillis();
+		List<Skill> active = ClientOptions.pace() && ClientProgress.current() != null ? ClientRates.active(now) : List.of();
+		int n = Math.min(MAX, active.size());
 		int x = right - W, y = g.guiHeight() - H;
 		for (int i = 0; i < n; i++) {
 			if (x < 2 && i > 0) {
@@ -45,8 +43,38 @@ public final class RatesHud {
 				y -= H + GAP;
 			}
 			block(g, active.get(i), x, y, now);
+			top = Math.min(top, y);
 			x -= W + GAP;
 		}
+		boost(g, mc, right, top);
+	}
+
+	/**
+	 * The XP boost (2.0), above the pace: "+150% XP · 24m" in the running tome's colour, a moon while Well Rested. Shown
+	 * whenever a boost runs, the pace on or off.
+	 */
+	private static void boost(GuiGraphicsExtractor g, Minecraft mc, int right, int top) {
+		com.extremeprogression.legends.Legends.View v = com.extremeprogression.client.state.ClientLegends.current();
+		if (v == null || !v.boostsOn || !(v.boost > 0)) {
+			return;
+		}
+		com.extremeprogression.legends.LegendsData.Boost run = com.extremeprogression.client.state.ClientLegends.running(v);
+		int seconds = run != null ? run.seconds : v.rested;
+		String text = "+" + Math.round(v.boost * 100) + "% XP · " + ClientRates.shortTime(seconds / 3600.0) + (v.rested > 0 ? " ☾" : "");
+		int w = mc.font.width(text) + 8, h = 11;
+		int x = right - w, y = top - h - 2;
+		int color = run != null ? com.extremeprogression.client.state.ClientLegends.color(run) : 0x55FFFF;
+		g.fill(x, y, x + w, y + h, Ui.argb(0.6, Ui.SHADOW));
+		g.fill(x, y, x + 1, y + h, Ui.argb(0.9, color));
+		Ui.text(g, mc.font, text, x + 4, y + 2, color);
+		boostShown = true;
+	}
+
+	private static boolean boostShown;
+
+	/** Whether the boost was drawn in the last frame (for tests). */
+	public static boolean boostShown() {
+		return boostShown;
 	}
 
 	private static void block(GuiGraphicsExtractor g, Skill s, int x, int y, long now) {

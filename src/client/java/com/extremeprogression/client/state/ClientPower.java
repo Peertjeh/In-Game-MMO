@@ -21,16 +21,32 @@ public final class ClientPower {
 	private ClientPower() {}
 
 	private static final Map<UUID, int[]> POWER = new ConcurrentHashMap<>();
+	private static final Map<UUID, String> TITLES = new ConcurrentHashMap<>();
 
 	public static void apply(PowerPayload payload) {
 		POWER.clear();
+		TITLES.clear();
 		for (PowerPayload.Entry e : payload.players()) {
 			POWER.put(e.player(), new int[] {e.total(), e.mastery()});
+			if (!e.title().isEmpty()) {
+				TITLES.put(e.player(), e.title());
+			}
 		}
 	}
 
 	public static void clear() {
 		POWER.clear();
+		TITLES.clear();
+	}
+
+	/** The title before this player's name above their head (2.0), or null: none shown, titles off, or hidden here. */
+	public static Component title(UUID player) {
+		String id = TITLES.get(player);
+		com.extremeprogression.legends.Titles.Def d = id == null ? null : com.extremeprogression.legends.Titles.byId(id);
+		if (d == null || !Config.TITLES || hiddenHere()) {
+			return null;
+		}
+		return Component.translatable(com.extremeprogression.legends.Titles.translationKey(id)).withColor(d.color());
 	}
 
 	/**
