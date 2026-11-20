@@ -1426,7 +1426,7 @@ class Wiki:
             what = player_text(what)
             text = what[:1].upper() + what[1:] + ("." if what and not what.endswith(".") else "")
             self.add({"id": "placeholder-" + re.sub(r"[^a-z0-9_]+", "", names[0]), "cat": "placeholder",
-                      "name": ", ".join(names), "kind": "Server" if facts[1][1] == "the server" else "Player",
+                      "name": ", ".join(f"%{MOD}:{n}%" for n in names), "kind": "Server" if facts[1][1] == "the server" else "Player",
                       "alt": "plaatshouder", "text": text, "facts": facts, "refs": ["concept-tab"]})
 
     def gen_settings(self):
@@ -1513,7 +1513,7 @@ class Wiki:
             for r in self.hardreqs:
                 spec, slot, skill, level = (r["args"] + [None] * 4)[:4]
                 node = self.L(f"spec.{MOD}.{spec.lower()}.{slot.lower()}") if slot else None
-                what = f"{node} ({self.spec_name(spec)})" if node else f"{self.spec_name(spec)}: {player_text(r['doc']).split(':')[0]}"
+                what = f"{node} ({self.spec_name(spec)})" if node else player_text(r["doc"]).split(":")[0]
                 out.append([what, f"{self.skill_name(skill)} {level}"])
             return out
         if name == "conflicts":
@@ -1628,8 +1628,12 @@ def main():
     wiki.build()
     releases = parse_changelog(src.need("CHANGELOG.md"))
     links = download_links(args.offline)
+    newest_linked = max((vtuple(t[1:]) for t in links if re.fullmatch(r"v\d+(\.\d+)+", t)), default=None)
     for r in releases:
         r["dl"] = links.get("v" + r["v"], "")
+        # a section for a version not out yet: newer than gradle.properties, or newer than every release on GitHub
+        if vtuple(r["v"]) > vtuple(wiki.version) or (newest_linked and not r["dl"] and vtuple(r["v"]) > newest_linked):
+            r["up"] = 1
     page = render(wiki, releases)
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)

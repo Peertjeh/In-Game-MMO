@@ -11,3 +11,6 @@ out/
 
 # javac argument files left behind by a failed compile
 javac.*.args
+
+# the generated wiki page (tools/wiki/build.py)
+tools/wiki/out/

@@ -80,7 +80,7 @@ button:disabled { opacity: .5; cursor: default }
 main { padding-block: 18px 60px }
 .section-title { font: 600 13px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 8px 0 12px }
 .list { display: grid; gap: 12px }
-article { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 15px 18px 16px 23px; min-width: 0; box-shadow: inset 0 1px 0 var(--hi), 0 2px 0 var(--lo) }
+article { scroll-margin-top: var(--below-band, 170px); position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 15px 18px 16px 23px; min-width: 0; box-shadow: inset 0 1px 0 var(--hi), 0 2px 0 var(--lo) }
 article::before { content: ""; position: absolute; left: -1px; top: -1px; bottom: -1px; width: 6px; border-radius: 4px 0 0 4px;
   background: linear-gradient(var(--s1, var(--line)) 0 50%, var(--s2, var(--s1, var(--line))) 50% 100%) }
 article:target, article.flash { border-color: var(--xp); box-shadow: 0 0 0 3px var(--xp-soft) }
@@ -116,6 +116,7 @@ footer { color: var(--muted); font-size: 14px; padding-block: 0 40px }
 .release .ver { font: 500 16px var(--display); color: var(--xp-ink); font-variant-numeric: tabular-nums }
 .release h3 { font-size: 22px }
 .release .latest { font: 12px var(--mono); color: var(--xp-ink); border: 1px solid currentColor; border-radius: 3px; padding: 0 7px }
+.release .latest.up { color: var(--muted) }
 .release .dl { margin-left: auto; font: 700 14px var(--body); color: var(--ink); background: var(--xp-soft); border: 1px solid var(--xp); border-radius: 4px; padding: 4px 10px; text-decoration: none; white-space: nowrap; box-shadow: inset 0 -2px 0 var(--lo) }
 .release .body { max-width: 70ch }
 .release .body h4 { font: 700 16px var(--body); margin: 14px 0 4px }
@@ -145,7 +146,7 @@ footer { color: var(--muted); font-size: 14px; padding-block: 0 40px }
 <div class="band">
   <div class="wrap">
     <div class="search">
-      <input id="q" type="search" placeholder="Search, e.g. respec, Echo Forging, mijnbouw…" aria-label="Search the wiki" autocomplete="off">
+      <input id="q" type="search" placeholder="Search, e.g. respec, mijnbouw…" aria-label="Search the wiki" autocomplete="off">
       <span class="count" id="count"></span>
     </div>
     <div class="chips" id="chips" role="group" aria-label="Category"></div>
@@ -267,7 +268,7 @@ function render() {
   const cl = state.view === "changelog";
   $("chips").hidden = cl; $("vchips").hidden = !cl; $("ask").hidden = cl || !sample;
   $("tab-wiki").setAttribute("aria-pressed", String(!cl)); $("tab-changelog").setAttribute("aria-pressed", String(cl));
-  $("q").placeholder = cl ? "Search the changelog, e.g. party, Trading, 1.6…" : "Search, e.g. respec, Echo Forging, mijnbouw…";
+  $("q").placeholder = cl ? "Search the changelog, e.g. party, Trading, 1.6…" : "Search, e.g. respec, mijnbouw…";
   if (cl) return renderChangelog();
   chips();
   const toks = tokens(state.q);
@@ -292,8 +293,10 @@ const relByRef = new Map(RELEASES.map(r => ["release-" + r.v, r]));
 for (const r of RELEASES) { r._plain = r.html.replace(/<[^>]+>/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/\s+/g, " ").trim(); r._t = norm(r.v + " " + r.name + " " + r._plain); }
 $("relcount").textContent = RELEASES.length;
 const series = v => v.split(".").slice(0, 2).join(".");
+// The newest release that is out; a section for a version not out yet says so instead
+const LATEST = RELEASES.find(r => !r.up);
 function releaseCard(r, latest) {
-  return `<article class="release" id="${r.id}"><header><span class="ver">${esc(r.v)}</span><h3>${esc(r.name || "Version " + r.v)}</h3>${latest ? `<span class="latest">latest</span>` : ""}${r.dl ? `<a class="dl" href="${esc(r.dl)}">Download .jar</a>` : ""}</header><div class="body">${r.html}</div></article>`;
+  return `<article class="release" id="${r.id}"><header><span class="ver">${esc(r.v)}</span><h3>${esc(r.name || "Version " + r.v)}</h3>${latest ? `<span class="latest">latest</span>` : r.up ? `<span class="latest up">upcoming</span>` : ""}${r.dl ? `<a class="dl" href="${esc(r.dl)}">Download .jar</a>` : ""}</header><div class="body">${r.html}</div></article>`;
 }
 function searchReleases(q) {
   const toks = tokens(q);
@@ -307,7 +310,7 @@ function renderChangelog() {
   $("vchips").innerHTML = Object.entries(first).map(([m, r]) => `<button class="chip" type="button" data-go="${r.id}">${esc(m)}<b>${RELEASES.filter(x => series(x.v) === m).length}</b></button>`).join("");
   $("title").textContent = tokens(state.q).length ? `${items.length} releases mention “${state.q.trim()}”` : `Every release, newest first`;
   $("count").textContent = tokens(state.q).length ? `${items.length} found` : `${RELEASES.length} releases`;
-  $("list").innerHTML = items.length ? items.map(r => releaseCard(r, r === RELEASES[0])).join("") : `<p class="empty">No release mentions that. Try another word.</p>`;
+  $("list").innerHTML = items.length ? items.map(r => releaseCard(r, r === LATEST)).join("") : `<p class="empty">No release mentions that. Try another word.</p>`;
 }
 function setView(v) {
   state.view = v;
@@ -336,7 +339,12 @@ function show(id) {
     state.q = ""; $("q").value = ""; state.view = "wiki"; state.cat = e.cat; render();
   }
   const el = document.getElementById(id);
-  if (el) { el.scrollIntoView({ block: "center" }); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 2400); }
+  if (el) {
+    // (a tall card shows from its top, just under the sticky band; a short one in the middle)
+    document.documentElement.style.setProperty("--below-band", (document.querySelector(".band").offsetHeight + 12) + "px");
+    el.scrollIntoView({ block: el.offsetHeight > innerHeight * 0.55 ? "start" : "center" });
+    el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 2400);
+  }
 }
 document.addEventListener("click", ev => {
   const a = ev.target.closest("[data-go]"); if (!a) return;
