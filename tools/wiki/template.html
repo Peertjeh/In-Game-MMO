@@ -1,0 +1,412 @@
+<title>Extreme Progression Wiki</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,400;0,600;0,800;1,400&family=Pixelify+Sans:wght@500;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a skill sheet. One reading column and a sticky search band; stone-grey panels with the bevel of
+   Minecraft's own buttons, an XP bar under the title, and every card edged in the colour of its skill's category
+   (the mod's five chat colours). XP-orb green is the one interactive accent. */
+:root {
+  --bg: #dcded8; --panel: #f7f7f4; --sunk: #eceee8; --ink: #1c1f23; --muted: #555b62; --line: #bdc1b9;
+  --hi: rgba(255, 255, 255, .9); --lo: rgba(36, 40, 33, .2); --drop: #c3c7bf;
+  --xp: #58a515; --xp-hi: #9be04f; --xp-ink: #2c6a06; --xp-soft: #e1f0cc; --mark: #e6f5a1; --chip: #e8e9e4;
+  --btn: #3d7f0c; --on-btn: #ffffff; --bar-bg: #34382d; --bar-edge: #1c1f23;
+  --combat: #e0473f; --gathering: #3ea83a; --survival: #17a2a6; --crafting: #e38c00; --other: #c344c3;
+  --combat-ink: #ad2620; --gathering-ink: #22731f; --survival-ink: #0b6c70; --crafting-ink: #8a5300; --other-ink: #8d2b8d;
+  --display: "Pixelify Sans", "Trebuchet MS", system-ui, sans-serif;
+  --body: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #1a1c1f; --panel: #25282c; --sunk: #1f2124; --ink: #e8eae5; --muted: #a3a9ae; --line: #3b3f44;
+  --hi: rgba(255, 255, 255, .06); --lo: rgba(0, 0, 0, .5); --drop: #050607;
+  --xp: #80d424; --xp-hi: #b8f374; --xp-ink: #a5e65c; --xp-soft: #2b3a1b; --mark: #4a6420; --chip: #303338;
+  --btn: #80d424; --on-btn: #10180a; --bar-bg: #0f110d; --bar-edge: #000000;
+  --combat: #ff5555; --gathering: #55ff55; --survival: #55ffff; --crafting: #ffaa00; --other: #ff55ff;
+  --combat-ink: #ff7b74; --gathering-ink: #79f272; --survival-ink: #74eeee; --crafting-ink: #ffbf47; --other-ink: #ff88ff;
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #1a1c1f; --panel: #25282c; --sunk: #1f2124; --ink: #e8eae5; --muted: #a3a9ae; --line: #3b3f44;
+  --hi: rgba(255, 255, 255, .06); --lo: rgba(0, 0, 0, .5); --drop: #050607;
+  --xp: #80d424; --xp-hi: #b8f374; --xp-ink: #a5e65c; --xp-soft: #2b3a1b; --mark: #4a6420; --chip: #303338;
+  --btn: #80d424; --on-btn: #10180a; --bar-bg: #0f110d; --bar-edge: #000000;
+  --combat: #ff5555; --gathering: #55ff55; --survival: #55ffff; --crafting: #ffaa00; --other: #ff55ff;
+  --combat-ink: #ff7b74; --gathering-ink: #79f272; --survival-ink: #74eeee; --crafting-ink: #ffbf47; --other-ink: #ff88ff;
+  color-scheme: dark }
+
+* { box-sizing: border-box }
+[hidden] { display: none !important }
+body { background: var(--bg); color: var(--ink); font: 17px/1.6 var(--body); margin: 0 }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg) }
+a { color: var(--xp-ink); text-underline-offset: 2px }
+.wrap { max-width: 880px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)) }
+header.top { padding-block: 36px 0 }
+.eyebrow { font: 500 15px/1.2 var(--display); letter-spacing: .03em; color: var(--xp-ink) }
+h1 { font: 700 clamp(36px, 7.4vw, 58px)/1.02 var(--display); margin: 10px 0 12px; letter-spacing: .01em; text-shadow: 3px 3px 0 var(--drop); text-wrap: balance }
+.lede { color: var(--muted); max-width: 62ch; margin: 0 }
+.xpbar { position: relative; height: 12px; margin-top: 24px; background: var(--bar-bg); border: 2px solid var(--bar-edge); border-radius: 2px; overflow: hidden }
+.xpbar i { position: absolute; inset: 0 auto 0 0; width: 64%; background: linear-gradient(180deg, var(--xp-hi) 0 35%, var(--xp) 35% 100%) }
+.xpbar::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 calc(100% / 18 - 2px), var(--bar-edge) calc(100% / 18 - 2px) calc(100% / 18)) }
+.legend { display: flex; flex-wrap: wrap; gap: 2px 16px; margin: 10px 0 0; padding: 0; list-style: none; font: 13px/1.6 var(--mono); color: var(--muted) }
+.legend li::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 7px; background: var(--c); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .3); vertical-align: -1px }
+
+.band { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 12px 10px; border-bottom: 2px solid var(--line) }
+.search { display: flex; gap: 10px; align-items: center }
+.search input { flex: 1; min-width: 0; font: 17px var(--body); color: var(--ink); background: var(--panel); border: 2px solid var(--line); border-radius: 4px; padding: 10px 13px; box-shadow: inset 0 2px 0 var(--lo) }
+.search input:focus-visible, .ask input:focus-visible { outline: 2px solid var(--xp); outline-offset: 1px; border-color: transparent }
+.count { font: 13px var(--mono); color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px }
+.chip { font: 600 14px var(--body); color: var(--ink); background: var(--chip); border: 1px solid var(--line); border-radius: 4px; padding: 4px 10px 5px; cursor: pointer; box-shadow: inset 0 1px 0 var(--hi), inset 0 -2px 0 var(--lo) }
+.chip b { font: 12px var(--mono); color: var(--muted); margin-left: 5px }
+.chip[aria-pressed="true"] { background: var(--xp-soft); border-color: var(--xp); box-shadow: inset 0 2px 0 var(--lo) }
+.chip:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid var(--xp); outline-offset: 2px }
+
+.ask { margin-top: 18px; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 16px 18px; box-shadow: inset 0 1px 0 var(--hi), 0 2px 0 var(--lo) }
+.ask h2 { font: 700 21px/1.2 var(--display); margin: 0 0 4px }
+.ask p.hint { margin: 0 0 10px; color: var(--muted); font-size: 15px }
+.ask form { display: flex; gap: 8px; flex-wrap: wrap }
+.ask input { flex: 1 1 260px; min-width: 0; font: 16px var(--body); color: var(--ink); background: var(--sunk); border: 2px solid var(--line); border-radius: 4px; padding: 9px 12px }
+button { font: 700 15px var(--body); color: var(--on-btn); background: var(--btn); border: 0; border-radius: 4px; padding: 10px 16px; cursor: pointer; box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .25) }
+button.ghost { background: transparent; color: var(--muted); border: 1px solid var(--line); font-weight: 400; box-shadow: none }
+button:disabled { opacity: .5; cursor: default }
+.examples { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px }
+.examples button { font: 13.5px var(--body); background: var(--chip); color: var(--ink); padding: 5px 10px; font-weight: 400; border: 1px solid var(--line); box-shadow: inset 0 -2px 0 var(--lo) }
+.answer { margin-top: 14px; border-left: 4px solid var(--xp); padding: 2px 0 2px 14px; max-width: 68ch }
+.answer p { margin: 0 0 10px }
+.answer ul { margin: 0 0 10px; padding-left: 20px }
+.answer .note { color: var(--muted); font-size: 14px }
+
+main { padding-block: 18px 60px }
+.section-title { font: 600 13px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 8px 0 12px }
+.list { display: grid; gap: 12px }
+article { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 15px 18px 16px 23px; min-width: 0; box-shadow: inset 0 1px 0 var(--hi), 0 2px 0 var(--lo) }
+article::before { content: ""; position: absolute; left: -1px; top: -1px; bottom: -1px; width: 6px; border-radius: 4px 0 0 4px;
+  background: linear-gradient(var(--s1, var(--line)) 0 50%, var(--s2, var(--s1, var(--line))) 50% 100%) }
+article:target, article.flash { border-color: var(--xp); box-shadow: 0 0 0 3px var(--xp-soft) }
+article h3 { font: 800 20px/1.25 var(--body); margin: 0; text-wrap: balance; overflow-wrap: anywhere }
+.meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 8px }
+.tag { font: 12px/1.5 var(--mono); color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 0 7px }
+.tag.kind { color: var(--k, var(--xp-ink)); border-color: currentColor }
+.text { margin: 0; max-width: 70ch; white-space: pre-line }
+.text code, dd code, .steps code, .release .body code { font: 14px var(--mono); background: var(--chip); border-radius: 3px; padding: 0 4px; overflow-wrap: anywhere }
+.steps { margin: 10px 0 0; padding-left: 1.7em; max-width: 70ch }
+.steps li { margin: 5px 0; padding-left: 2px }
+.steps li::marker { color: var(--xp-ink); font: 600 15px var(--mono) }
+dl { display: grid; grid-template-columns: minmax(0, max-content) minmax(0, 1fr); gap: 4px 14px; margin: 10px 0 0; font-size: 15.5px }
+dt { color: var(--muted); min-width: 0; max-width: 16em }
+dd { margin: 0; min-width: 0; overflow-wrap: anywhere }
+.refs { margin: 10px 0 0; font-size: 15px; color: var(--muted) }
+mark { background: var(--mark); color: inherit; border-radius: 2px; padding: 0 1px }
+.track { margin: 12px 0 2px; max-width: 70ch }
+.rail { position: relative; height: 8px; background: color-mix(in srgb, var(--s1, var(--xp)) 28%, var(--sunk)); border: 1px solid var(--line); border-radius: 2px }
+.rail i { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: var(--ink) }
+.rail i.t { top: 0; bottom: 0; opacity: .45 }
+.marks { position: relative; height: 18px; font: 11.5px/18px var(--mono); color: var(--muted) }
+.marks span { position: absolute; top: 2px; transform: translateX(-50%); white-space: nowrap }
+.marks span:last-child { transform: translateX(-100%) }
+.marks span:first-child { transform: none; left: 0 }
+.empty { color: var(--muted); padding: 20px 0 }
+footer { color: var(--muted); font-size: 14px; padding-block: 0 40px }
+.tabs { display: flex; gap: 4px; margin-top: 18px; border-bottom: 2px solid var(--line) }
+.tab { font: 700 16px var(--body); color: var(--muted); background: none; border: 0; border-bottom: 3px solid transparent; border-radius: 0; padding: 8px 14px; margin-bottom: -2px; cursor: pointer; box-shadow: none }
+.tab b { font: 12px var(--mono); color: var(--muted); margin-left: 5px }
+.tab[aria-pressed="true"] { color: var(--ink); border-bottom-color: var(--xp) }
+.release header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px }
+.release .ver { font: 500 16px var(--display); color: var(--xp-ink); font-variant-numeric: tabular-nums }
+.release h3 { font-size: 22px }
+.release .latest { font: 12px var(--mono); color: var(--xp-ink); border: 1px solid currentColor; border-radius: 3px; padding: 0 7px }
+.release .dl { margin-left: auto; font: 700 14px var(--body); color: var(--ink); background: var(--xp-soft); border: 1px solid var(--xp); border-radius: 4px; padding: 4px 10px; text-decoration: none; white-space: nowrap; box-shadow: inset 0 -2px 0 var(--lo) }
+.release .body { max-width: 70ch }
+.release .body h4 { font: 700 16px var(--body); margin: 14px 0 4px }
+.release .body p { margin: 8px 0 }
+.release .body ul { margin: 6px 0; padding-left: 20px }
+.release .body li { margin: 3px 0 }
+@media (max-width: 560px) { dl { grid-template-columns: minmax(0, 1fr) } dt { margin-top: 4px; max-width: none } body { font-size: 16.5px }
+  .chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin } .chip { flex: none }
+  article { padding: 14px 14px 15px 20px } .release .dl { margin-left: 0 } }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Extreme Progression · version {{VERSION}}</div>
+    <h1>Extreme Progression Wiki</h1>
+    <p class="lede">{{LEDE}}</p>
+    <div class="xpbar" aria-hidden="true"><i></i></div>
+    <ul class="legend" id="legend" aria-label="Card edges show the skill's category"></ul>
+    <nav class="tabs" aria-label="Sections">
+      <button type="button" class="tab" id="tab-wiki" data-view="wiki" aria-pressed="true">Wiki</button>
+      <button type="button" class="tab" id="tab-changelog" data-view="changelog" aria-pressed="false">Changelog<b id="relcount"></b></button>
+    </nav>
+  </header>
+</div>
+
+<div class="band">
+  <div class="wrap">
+    <div class="search">
+      <input id="q" type="search" placeholder="Search, e.g. respec, Echo Forging, mijnbouw…" aria-label="Search the wiki" autocomplete="off">
+      <span class="count" id="count"></span>
+    </div>
+    <div class="chips" id="chips" role="group" aria-label="Category"></div>
+    <div class="chips" id="vchips" role="group" aria-label="Versions" hidden></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <section class="ask" id="ask" hidden>
+    <h2>Ask the wiki</h2>
+    <p class="hint">Claude looks for the answer in this wiki and points to where it is. This uses your own Claude usage.</p>
+    <form id="askform">
+      <input id="askq" type="text" placeholder="E.g. What does a death cost me?" aria-label="Your question" autocomplete="off">
+      <button id="askbtn" type="submit">Ask</button>
+      <button id="stopbtn" type="button" class="ghost" hidden>Stop</button>
+    </form>
+    <div class="examples" id="examples"></div>
+    <div class="answer" id="answer" hidden></div>
+  </section>
+
+  <main>
+    <div class="section-title" id="title"></div>
+    <div class="list" id="list"></div>
+  </main>
+  <footer>{{FOOTER}}</footer>
+</div>
+
+<script>
+const WIKI = __WIKI_DATA__;
+const CATS = Object.fromEntries(WIKI.cats);
+const byId = new Map(WIKI.entries.map(e => [e.id, e]));
+const STOP = new Set("de het een en of in op van voor met naar aan is zijn wat hoe waar waarom wanneer wie welke welk ik je jij jou we wij ze zij hij dat die dit deze kan kun kunnen moet moeten wordt worden doe doet doen krijg krijgen kom komen er hier daar ook nog wel niet geen als dan om te bij uit over door mijn mij me the a an of to is are how what where why when do does can i you it in on for with get find my me".split(" "));
+const norm = s => (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+for (const e of WIKI.entries) {
+  e.facts = e.facts || [];
+  e._n = norm(e.name); e._en = norm(e.alt);
+  e._f = norm(e.facts.map(f => f[0] + " " + f[1]).join(" "));
+  e._t = norm(e.text + " " + (e.steps || []).join(" ")); e._k = norm((e.kind || "") + " " + (CATS[e.cat] || ""));
+}
+const tokens = q => norm(q).split(/[^a-z0-9_%/.<>]+/).map(t => t.replace(/^[.]+|[.]+$/g, "")).filter(t => t.length > 1 && !STOP.has(t));
+
+// How much a hit in each category counts: the explanations first, the long lists of settings last
+const WEIGHT = { concept: 1.6, skill: 1.5, guide: 1.4, screen: 1.2, spec: 1.1, synergy: 1.1, command: 1, xp: 0.9, trunk: 0.9, mastery: 0.9, permission: 0.9, placeholder: 0.6, setting: 0.5 };
+function score(e, toks) {
+  let s = 0, hit = 0;
+  for (const t of toks) {
+    let ts = 0;
+    if (e._n === t) ts += 40;
+    if (e._n.includes(t)) ts += 14 + (e._n.startsWith(t) ? 6 : 0);
+    if (e._en.includes(t)) ts += 8;
+    if (e._k.includes(t)) ts += 4;
+    if (e._f.includes(t)) ts += 4;
+    if (e._t.includes(t)) ts += 2 + Math.min(4, e._t.split(t).length - 2);
+    if (ts) hit++;
+    s += ts;
+  }
+  if (!s) return 0;
+  // Every word should be found somewhere; the more are missing, the lower it ranks
+  return s * Math.pow(0.35, toks.length - hit) * (WEIGHT[e.cat] || 1);
+}
+function search(q, cat, limit) {
+  const toks = tokens(q);
+  if (!toks.length) return [];
+  const out = [];
+  for (const e of WIKI.entries) {
+    if (cat !== "all" && e.cat !== cat) continue;
+    const s = score(e, toks);
+    if (s > 0) out.push([s, e]);
+  }
+  out.sort((a, b) => b[0] - a[0]);
+  return out.slice(0, limit).map(x => x[1]);
+}
+
+const $ = id => document.getElementById(id);
+const esc = s => (s || "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+function highlight(text, toks) {
+  text = text || "";
+  if (!toks.length) return esc(text);
+  const re = new RegExp("(" + toks.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|") + ")", "gi");
+  return text.split(re).map((p, i) => i % 2 ? `<mark>${esc(p)}</mark>` : esc(p)).join("");
+}
+// `code` in the hand-written pages
+const rich = h => h.replace(/`([^`]+)`/g, "<code>$1</code>");
+let state = { q: "", cat: "concept", view: "wiki" };
+let sample = null, ctl = null;
+try { const c = localStorage.getItem("wiki-cat"); if (c && (c === "all" || CATS[c])) state.cat = c; } catch (e) {}
+
+function counts() {
+  const c = { all: WIKI.entries.length };
+  for (const e of WIKI.entries) c[e.cat] = (c[e.cat] || 0) + 1;
+  return c;
+}
+const COUNTS = counts();
+function chips() {
+  const list = [["all", "All"], ...WIKI.cats];
+  $("chips").innerHTML = list.map(([id, name]) =>
+    `<button class="chip" type="button" data-cat="${id}" aria-pressed="${state.cat === id}">${esc(name)}<b>${COUNTS[id] || 0}</b></button>`).join("");
+}
+$("legend").innerHTML = WIKI.skillcats.map(([id, name]) => `<li style="--c: var(--${id})">${esc(name)}</li>`).join("");
+// The colour of the card's edge: the category of its skill (two for a synergy)
+function edge(e) {
+  if (!e.c) return "";
+  const [a, b] = e.c.split(",");
+  return ` style="--s1: var(--${a})${b && b !== a ? `; --s2: var(--${b})` : ""}; --k: var(--${a}-ink)"`;
+}
+function track(ms) {
+  const at = l => (100 * l / ms.max).toFixed(2) + "%";
+  return `<div class="track" aria-hidden="true"><div class="rail">${ms.trunk.map(l => `<i class="t" style="left:${at(l)}"></i>`).join("")}${ms.marks.map(([l]) => `<i style="left:${at(l)}"></i>`).join("")}</div>` +
+    `<div class="marks"><span>Trunk</span>${ms.marks.map(([l, n]) => `<span style="left:${at(l)}">${esc(n)}</span>`).join("")}</div></div>`;
+}
+const link = id => byId.has(id) ? `<a href="#${esc(id)}" data-go="${esc(id)}">${esc(byId.get(id).name)}</a>` : "";
+function card(e, toks) {
+  const facts = e.facts.map(([a, b, c]) => `<dt>${highlight(a, toks)}</dt><dd>${c ? `<code>${highlight(b, toks)}</code>` : rich(highlight(b, toks))}</dd>`).join("");
+  return `<article id="${esc(e.id)}"${edge(e)}><h3>${highlight(e.name, toks)}</h3>
+    <div class="meta"><span class="tag">${esc(CATS[e.cat] || e.cat)}</span>${e.kind && e.kind !== CATS[e.cat] ? `<span class="tag kind">${esc(e.kind)}</span>` : ""}</div>
+    ${e.text ? `<p class="text">${rich(highlight(e.text, toks))}</p>` : ""}${e.ms ? track(e.ms) : ""}${e.steps ? `<ol class="steps">${e.steps.map(st => `<li>${rich(highlight(st, toks))}</li>`).join("")}</ol>` : ""}${facts ? `<dl>${facts}</dl>` : ""}${e.refs ? `<p class="refs">See also: ${e.refs.map(link).filter(Boolean).join(", ")}</p>` : ""}</article>`;
+}
+function render() {
+  const cl = state.view === "changelog";
+  $("chips").hidden = cl; $("vchips").hidden = !cl; $("ask").hidden = cl || !sample;
+  $("tab-wiki").setAttribute("aria-pressed", String(!cl)); $("tab-changelog").setAttribute("aria-pressed", String(cl));
+  $("q").placeholder = cl ? "Search the changelog, e.g. party, Trading, 1.6…" : "Search, e.g. respec, Echo Forging, mijnbouw…";
+  if (cl) return renderChangelog();
+  chips();
+  const toks = tokens(state.q);
+  let items, title;
+  if (toks.length) {
+    items = search(state.q, state.cat, 120);
+    title = `${items.length >= 120 ? "Top 120" : items.length} results for “${state.q.trim()}”` + (state.cat !== "all" ? ` in ${CATS[state.cat]}` : "");
+  } else {
+    const cat = state.cat === "all" ? "concept" : state.cat;
+    items = WIKI.entries.filter(e => e.cat === cat);
+    title = (state.cat === "all" ? "Start here: " : "") + CATS[cat];
+  }
+  $("title").textContent = title;
+  $("count").textContent = toks.length ? `${items.length} found` : `${WIKI.entries.length} pages`;
+  $("list").innerHTML = items.length ? items.map(e => card(e, toks)).join("")
+    : `<p class="empty">Nothing found. Try another word, or pick “All”.</p>`;
+}
+// ---------------------------------------------------------------- the changelog tab
+const RELEASES = WIKI.changelog;
+const relById = new Map(RELEASES.map(r => [r.id, r]));
+const relByRef = new Map(RELEASES.map(r => ["release-" + r.v, r]));
+for (const r of RELEASES) { r._plain = r.html.replace(/<[^>]+>/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/\s+/g, " ").trim(); r._t = norm(r.v + " " + r.name + " " + r._plain); }
+$("relcount").textContent = RELEASES.length;
+const series = v => v.split(".").slice(0, 2).join(".");
+function releaseCard(r, latest) {
+  return `<article class="release" id="${r.id}"><header><span class="ver">${esc(r.v)}</span><h3>${esc(r.name || "Version " + r.v)}</h3>${latest ? `<span class="latest">latest</span>` : ""}${r.dl ? `<a class="dl" href="${esc(r.dl)}">Download .jar</a>` : ""}</header><div class="body">${r.html}</div></article>`;
+}
+function searchReleases(q) {
+  const toks = tokens(q);
+  if (!toks.length) return RELEASES;
+  return RELEASES.filter(r => toks.every(t => r._t.includes(t)));
+}
+function renderChangelog() {
+  const items = searchReleases(state.q);
+  const first = {};
+  for (const r of RELEASES) { const m = series(r.v); if (!first[m]) first[m] = r; }
+  $("vchips").innerHTML = Object.entries(first).map(([m, r]) => `<button class="chip" type="button" data-go="${r.id}">${esc(m)}<b>${RELEASES.filter(x => series(x.v) === m).length}</b></button>`).join("");
+  $("title").textContent = tokens(state.q).length ? `${items.length} releases mention “${state.q.trim()}”` : `Every release, newest first`;
+  $("count").textContent = tokens(state.q).length ? `${items.length} found` : `${RELEASES.length} releases`;
+  $("list").innerHTML = items.length ? items.map(r => releaseCard(r, r === RELEASES[0])).join("") : `<p class="empty">No release mentions that. Try another word.</p>`;
+}
+function setView(v) {
+  state.view = v;
+  try { localStorage.setItem("wiki-view", v); } catch (e) {}
+  render();
+}
+document.querySelector(".tabs").addEventListener("click", ev => {
+  const b = ev.target.closest(".tab"); if (!b) return;
+  if (b.dataset.view !== state.view) { state.q = ""; $("q").value = ""; }
+  setView(b.dataset.view);
+  // (the address follows the tab where the viewer lets it)
+  try { history.replaceState(null, "", b.dataset.view === "changelog" ? "#changelog" : location.pathname + location.search); } catch (e) {}
+});
+let timer;
+$("q").addEventListener("input", ev => { clearTimeout(timer); timer = setTimeout(() => { state.q = ev.target.value; if (state.view === "wiki" && state.q.trim() && state.cat === "concept") state.cat = "all"; render(); }, 120); });
+$("chips").addEventListener("click", ev => {
+  const b = ev.target.closest(".chip"); if (!b) return;
+  state.cat = b.dataset.cat;
+  try { localStorage.setItem("wiki-cat", state.cat); } catch (e) {}
+  render();
+});
+function show(id) {
+  if (relById.has(id)) { state.q = ""; $("q").value = ""; state.view = "changelog"; render(); }
+  else {
+    const e = byId.get(id); if (!e) return;
+    state.q = ""; $("q").value = ""; state.view = "wiki"; state.cat = e.cat; render();
+  }
+  const el = document.getElementById(id);
+  if (el) { el.scrollIntoView({ block: "center" }); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 2400); }
+}
+document.addEventListener("click", ev => {
+  const a = ev.target.closest("[data-go]"); if (!a) return;
+  ev.preventDefault(); show(a.dataset.go);
+  if (a.tagName === "A") { try { history.replaceState(null, "", "#" + a.dataset.go); } catch (e) {} }
+});
+function fromHash() {
+  const h = decodeURIComponent(location.hash.slice(1));
+  if (h === "changelog") setView("changelog");
+  else if (h && (byId.has(h) || relById.has(h))) show(h);
+}
+window.addEventListener("hashchange", fromHash);
+render();
+fromHash();
+
+// ---------------------------------------------------------------- asking Claude
+const EXAMPLES = ["What does a death cost me?", "When do I choose a specialization?", "How do I respec a skill?", "How does Echo Forging work?", "How does the party XP bonus work?", "Which skills oppose each other?"];
+function answerHtml(text) {
+  const parts = esc(text).split(/\n{2,}/);
+  return parts.map(p => {
+    const lines = p.split("\n");
+    if (lines.every(l => /^\s*[-•*] /.test(l))) return "<ul>" + lines.map(l => "<li>" + l.replace(/^\s*[-•*] /, "") + "</li>").join("") + "</ul>";
+    return "<p>" + p.replace(/\n/g, "<br>") + "</p>";
+  }).join("").replace(/\*\*(.+?)\*\*/g, "<b>$1</b>")
+    .replace(/\[([a-z]+-[a-z0-9_.-]+)\]/g, (m, id) => byId.has(id) ? link(id)
+      : relByRef.has(id) ? `<a href="#${relByRef.get(id).id}" data-go="${relByRef.get(id).id}">Changelog ${esc(relByRef.get(id).v)}</a>` : "");
+}
+function context(question) {
+  let found = search(question, "all", 26);
+  if (found.length < 6) found = found.concat(WIKI.entries.filter(e => e.cat === "concept" && !found.includes(e)).slice(0, 8));
+  const toks = tokens(question);
+  const rels = toks.length ? RELEASES.map(r => [toks.filter(t => r._t.includes(t)).length, r]).filter(x => x[0] > 0)
+    .sort((a, b) => b[0] - a[0]).slice(0, 3).map(x => x[1]) : [];
+  return found.map(e => `[${e.id}] ${e.name}, ${CATS[e.cat]}${e.kind ? ", " + e.kind : ""}\n${(e.text + (e.steps ? "\n" + e.steps.map((st, i) => (i + 1) + ". " + st).join("\n") : "")).slice(0, 2600)}` +
+    (e.facts.length ? "\n" + e.facts.map(([a, b]) => `${a}: ${b}`).join("\n") : "")).join("\n\n")
+    + rels.map(r => `\n\n[release-${r.v}] Changelog ${r.v}: ${r.name}\n${r._plain.slice(0, 1500)}`).join("");
+}
+const ERR = {
+  rate_limited: "Too many questions in a row. Try again in a moment.",
+  session_expired: "Sign in to Claude again, then try once more.",
+  refused: "That question cannot be answered. Ask it another way.",
+  empty_completion: "No answer came back. Ask a simpler question.",
+  upstream_error: "The connection dropped. Try again.",
+  prompt_too_large: "The question is too long. Make it shorter.",
+};
+async function ask(question) {
+  question = question.trim(); if (!question || !sample) return;
+  const box = $("answer"); box.hidden = false; box.innerHTML = `<p class="note">Thinking…</p>`;
+  $("askbtn").disabled = true; $("stopbtn").hidden = false;
+  ctl = new AbortController();
+  const prompt = `You are the wiki assistant for the Minecraft mod Extreme Progression (version ${WIKI.version}), an MMO-style progression mod with eleven skills, levels, specializations with skill trees and abilities, trunk bonuses, Mastery perks, hidden synergies, parties and real death penalties. Answer the player's question in English, short and concrete: about 150 words at most, a short list is fine. Use only the wiki entries below and make nothing up. Give things their in-game names (skills, specializations, abilities, screens, buttons and keys as the game names them). If the answer is not in the entries, say so plainly and name the wiki category where they are most likely to find it. End with 1 to 3 references to the entries you used, on a line of their own, each as its id in square brackets, for example [concept-death] or [spec-blade], or a changelog entry such as [release-1.9.0]. Changelog entries say in which version something came or changed. If the question is asked in Dutch, still answer in English.\n\nQuestion: ${question}\n\nWiki entries:\n\n${context(question)}`;
+  try {
+    await sample(prompt, { signal: ctl.signal, onText: ({ text }) => { box.innerHTML = answerHtml(text); } });
+  } catch (e) {
+    const code = e && e.code;
+    if (code === "not_granted" || code === "sampling_disabled" || code === "not_declared" || code === "capability_disabled" || code === "capability_removed") {
+      $("ask").hidden = true; return;
+    }
+    if (code === "cancelled") { if (!e.text) box.hidden = true; }
+    else box.innerHTML = (e && e.text ? answerHtml(e.text) : "") + `<p class="note">${esc(ERR[code] || ERR.upstream_error)}</p>`;
+  } finally {
+    $("askbtn").disabled = false; $("stopbtn").hidden = true;
+  }
+}
+$("askform").addEventListener("submit", ev => { ev.preventDefault(); ask($("askq").value); });
+$("stopbtn").addEventListener("click", () => ctl && ctl.abort());
+$("examples").innerHTML = EXAMPLES.map(x => `<button type="button" data-ex="${esc(x)}">${esc(x)}</button>`).join("");
+$("examples").addEventListener("click", ev => { const b = ev.target.closest("[data-ex]"); if (!b) return; $("askq").value = b.dataset.ex; ask(b.dataset.ex); });
+(async () => {
+  try { sample = window.claude && await window.claude.use("sample"); } catch (e) { sample = null; }
+  if (sample) $("ask").hidden = state.view === "changelog";
+})();
+</script>
