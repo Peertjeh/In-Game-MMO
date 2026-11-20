@@ -16,6 +16,9 @@ that you discover yourself. Slow, meaningful progression, and deaths that cost y
 - **Playing together**: parties with an XP bonus for members near who play too, and eight duo synergies you discover
   with a party member.
 - **Deaths that cost you**: death pressure, the dimensions' factors, death fatigue, the Death Register and At Stake.
+- **Legends (2.0)**: XP boosts of +25 to +200% from Tomes of Insight, Well Rested time and a daily login streak;
+  Champions, elite mobs with affixes; three contracts a day and one a week; thirty-one titles to show above your head;
+  and a Skill of the Day with +25% XP for everyone.
 - **For server owners**: presets, data files for every number, an in-game settings screen, XP events, a leaderboard and
   admin commands, and placeholders for TAB and Styled Chat ([server/README.md](server/README.md)).
 
@@ -45,7 +48,8 @@ changes on a server that has none; in a world of your own you hold them all.
 | `extremeprogression.admin.players` | The Players screen, `/skills players`, `/skills inspect`, `/skills admin set\|add\|respec\|cooldowns` | Operator level 2 |
 | `extremeprogression.admin.reset` | Reset in the Players screen, `/skills admin reset` | Operator level 3 |
 | `extremeprogression.admin.settings` | Changing the settings (the settings screen), `/skills settings`, `/skills preset`, `/skills reload` | Operator level 3 |
-| `extremeprogression.admin.events` | XP events: `/skills xprate` | Operator level 3 |
+| `extremeprogression.admin.events` | XP events: `/skills xprate`, and `/skills champion` | Operator level 3 |
+| `extremeprogression.admin.boosts` | Giving XP boosts and tomes: `/skills boost give\|tome\|clear` | Operator level 3 |
 
 In LuckPerms: `/lp group moderator permission set extremeprogression.admin.players true`. (Under the hood each is an id
 such as `extremeprogression:admin/players`; LuckPerms writes it with dots.) The fallback levels are fixed on purpose:

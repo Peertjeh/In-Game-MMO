@@ -15,7 +15,7 @@
   "default": {
     "display_name": "${default}",
     "message_formats": {
-      "chat": "<hover:'<gray>%extremedimensions:realm% <dark_gray>|</dark_gray> %extremedimensions:status% <white>%extremedimensions:time_left%</white>\n<gray>Curses: <white>%extremedimensions:curses%</white>   Scars: <white>%extremedimensions:scars%/5</white>\n<gray>Expeditions: <white>%extremedimensions:expeditions%</white>   Collapses: <white>%extremedimensions:collapses%</white>\n<gray>Level <white>%extremeprogression:total%</white>   Best <white>%extremeprogression:highest%</white>   Death pressure <white>%extremeprogression:pressure%</white>\n<gray>%extremeprogression:specs%'><shadow:#00000000>%player:head%</shadow> ${player} %extremeprogression:badge%</hover> <dark_gray>»</dark_gray> ${message}"
+      "chat": "<hover:'<gray>%extremedimensions:realm% <dark_gray>|</dark_gray> %extremedimensions:status% <white>%extremedimensions:time_left%</white>\n<gray>Curses: <white>%extremedimensions:curses%</white>   Scars: <white>%extremedimensions:scars%/5</white>\n<gray>Expeditions: <white>%extremedimensions:expeditions%</white>   Collapses: <white>%extremedimensions:collapses%</white>\n<gray>Level <white>%extremeprogression:total%</white>   Best <white>%extremeprogression:highest%</white>   Death pressure <white>%extremeprogression:pressure%</white>\n<gray>%extremeprogression:specs%'><shadow:#00000000>%player:head%</shadow> %extremeprogression:title_prefix%${player} %extremeprogression:badge%</hover> <dark_gray>»</dark_gray> ${message}"
     },
     "mention_style": "<c:#7878ff>%player:displayname%",
     "emoticons": {

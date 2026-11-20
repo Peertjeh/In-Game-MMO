@@ -63,6 +63,19 @@ Herb Lore, Tailwind (half your elytra rockets back), Echo Forging (a ritual with
 - **Eight duo synergies** between two party members, one skill each: Shield Wall, Spotter, Pincer, Field Medic,
   Whetstone, Hearty Meal, Caravan and Market Day. Discovered together, with both names in the Chronicle.
 
+## 🏆 Legends: boosts, Champions, contracts and titles
+
+- **XP boosts** of +25%, +50%, +100% and +200% from **Tomes of Insight**, read with a right click. Their time runs
+  only while you earn XP.
+- **Well Rested**: time offline gives +100% XP for a while. **A daily login streak** gives a tome every day, a better
+  one every 7th and 30th.
+- Tomes from milestones, bosses, treasure chests, Champions and contracts.
+- **Champions**: rare elite mobs with one of seven affixes (Frenzied, Juggernaut, Vampiric, Venomous, Frostbound,
+  Infernal, Warded), big XP and a chance at a tome.
+- **Contracts**: three a day and one a week, for XP and tomes.
+- **Thirty-one titles** to earn and show above your head, in the tablist and in chat.
+- **Skill of the Day**: one skill earns +25% XP for everyone, a different one every day.
+
 ## ☠ Deaths that cost you
 
 ![The Death Register](https://raw.githubusercontent.com/Peertjeh/In-Game-MMO/develop/docs/images/death-register.png)

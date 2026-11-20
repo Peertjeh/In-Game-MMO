@@ -43,7 +43,7 @@ header-footer:
         - ""
         - "%extremedimensions:realm%   &8|   %extremedimensions:status% &f%extremedimensions:time_left%"
         - "&7Curses: %extremedimensions:curses%   &8|   &7Scars: &f%extremedimensions:scars%&7/5"
-        - "&7Level &f%extremeprogression:total%&7/%extremeprogression:cap%   &8|   %condition:ep-highest%&7Death pressure %extremeprogression:pressure%%condition:ep-fatigue%%condition:ep-party%"
+        - "&7Level &f%extremeprogression:total%&7/%extremeprogression:cap%   &8|   %condition:ep-highest%&7Death pressure %extremeprogression:pressure%%condition:ep-fatigue%%condition:ep-party%%condition:ep-boost%"
         - "&7Online: &f%online%   &8|   &7Ping: &f%ping% ms"
         - ""
 
@@ -209,6 +209,19 @@ conditions:
       - "%extremeprogression:party_size%!="
     true: "   &8|   &aParty %extremeprogression:party_size% &2%extremeprogression:party_bonus%"
     false: ""
+  # Extreme Progression 2.0: the title a player shows, before the name, and
+  # in the survival footer their XP boost while one runs.
+  ep-title:
+    conditions:
+      - "%condition:battlehub%=false"
+      - "%extremeprogression:title%!="
+    true: "%extremeprogression:title% "
+    false: ""
+  ep-boost:
+    conditions:
+      - "%extremeprogression:boost%!="
+    true: "   &8|   &bBoost %extremeprogression:boost%"
+    false: ""
   # In BattleHub a dot before the name (tabprefix in groups.yml) says what the
   # player is doing: green in the lobby, yellow in a queue, red in a match,
   # gray watching. \u25cf is the dot.
@@ -325,6 +338,8 @@ placeholder-refresh-intervals:
   "%extremeprogression:fatigue%": 1000
   "%extremeprogression:party_size%": 1000
   "%extremeprogression:party_bonus%": 1000
+  "%extremeprogression:title%": 1000
+  "%extremeprogression:boost%": 1000
   "%player:displayname_visual%": 1000
   "%battlehub:activity%": 1000
   "%battlehub:level%": 1000

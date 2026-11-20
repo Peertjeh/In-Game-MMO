@@ -20,7 +20,7 @@ public final class ClientLegends {
 		updates++;
 		if (payload.open()) {
 			Minecraft mc = Minecraft.getInstance();
-			mc.gui.setScreen(new LegendsScreen(mc.screen));
+			mc.gui.setScreen(new LegendsScreen(mc.gui.screen() instanceof LegendsScreen open ? null : mc.gui.screen()));
 		}
 	}
 

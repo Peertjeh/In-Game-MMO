@@ -1521,6 +1521,83 @@ but new XP".
 
 ---
 
+## 17. Legends (2.0, the owner's wish: XP boosts and a lot of new content)
+
+Five parts, all in `com.extremeprogression.legends`, saved per player in schema 6 (`legends` in the player file), shown
+in the **Legends screen** (the first button along the Character Sheet's foot, or `/skills legends`) with three tabs:
+Boosts, Contracts and Titles.
+
+### XP boosts
+- A player's **boost** is the strongest Tome of Insight they read plus **Well Rested**, at most `boost_max` (+300%),
+  added to the party bonus and the Skill of the Day: `xp × (1 + party + boost + skill of the day)`, after diminishing
+  returns, the XP rate, the skill's multiplier, XP events and the opposing penalty. Rewards (contracts, Champions) are
+  given straight, never boosted.
+- **Boost time runs only while the player earns XP** (within the last minute, and not away), a second at a time.
+- **Tomes of Insight**: a knowledge book marked in its custom data, read with a right click. Tome of Insight +25% for
+  30 minutes, Greater +50% for 30, Grand +100% for 30, Legendary +200% for 15. Several read: the strongest runs, the
+  others wait. Stacks of 16.
+- **Well Rested**: +100% (`rested_bonus`) for 6 minutes of play for every hour offline (`rested_minutes_per_hour`), at
+  most an hour (`rested_max_minutes`), counted from the last time the player was seen (saved every minute).
+- **Where tomes come from**:
+  | Source | Tome |
+  |---|---|
+  | The first login of each day (the streak): every day / every 7th / every 30th | Insight / Greater / Grand |
+  | Every 25 levels in a skill; level 100; every 5 Mastery ranks (once each, ever) | Insight; Grand; Greater |
+  | Bosses, for every player within 96 blocks who is not away, once a day each: Ender Dragon, Wither, Warden, Elder Guardian | Legendary, Grand, Grand, Greater |
+  | Treasure chests (on top of their loot): dungeons 12%, mineshafts 8%, desert and jungle temples 12/15%, outposts 12%, shipwreck treasure 15% | Insight |
+  | Buried treasure, stronghold libraries, woodland mansions, bastion treasure 30%, ancient cities 15%, trial chamber rewards 8% | Greater |
+  | End city treasure 15%, ominous trial chamber rewards 10% | Grand |
+  | Champions: 35% / 10% / 2% each | Insight / Greater / Grand |
+  | Contracts: all three of a day / the weekly one | Insight / Grand |
+  | Admins: `/skills boost give <player> <percent> <minutes>`, `/skills boost tome <player> <tome> [count]` (vote rewards) | any |
+- Shown: above the pace left of the hotbar ("+75% XP · 24m", a moon while rested), the Legends screen's Boosts tab,
+  `/skills boost`, and the placeholders `boost` and `streak`.
+- Options: `boosts`, `boost_max`, `rested_bonus`, `rested_minutes_per_hour`, `rested_max_minutes`, `daily_rewards`,
+  `milestone_tomes`, `boss_tomes`, `loot_tomes`.
+
+### Champions
+- A hostile mob (category monster) that spawns naturally (natural, chunk generation, structure, patrol) is a Champion
+  at `champion_chance` (2%; ×1.5 in the Nether, ×2 in the End). Never a boss, a creaking, shulker, vex, endermite or
+  silverfish; never from a spawner, egg or command.
+- A Champion: its name above its head in its affix's colour ("Frenzied Zombie"), three times the health, half again the
+  damage, and one affix: **Frenzied** (35% faster), **Juggernaut** (five times the health, a quarter larger, never
+  knocked back, 10% slower), **Vampiric** (heals half the damage it deals), **Venomous** (Poison II for 5 s),
+  **Frostbound** (Slowness II for 4 s), **Infernal** (sets on fire for 5 s; immune to fire), **Warded** (Resistance I,
+  +6 armor). Kept on the mob (an attachment and permanent attribute modifiers).
+- Slain by a player: `champion_kill_xp` (400) in Melee, or Ranged for a projectile, on top of the fight's own XP; its
+  tomes; and it counts for titles and the weekly contract.
+- `/skills champion <affix>` makes the nearest hostile mob within 16 blocks a Champion (`admin.events`).
+
+### Contracts
+- Every player gets **three daily contracts** with their first login of the day (or at midnight while online) and **one
+  weekly** with the first of the ISO week, on the server's calendar.
+- Daily: the first asks for XP in one of the player's three highest skills, the second for XP in another skill, both
+  about half of what the skill's next level takes (at least 300, in steps of 50), paying a quarter of a level in that
+  skill; the third is a **bounty**: 8 to 20 of one common hostile mob, paying a quarter of a Melee level (at least 150).
+  All three done: a Tome of Insight.
+- Weekly: slay 5 Champions, or earn 20,000 XP in any skills; pays a Grand Tome.
+- One unfinished daily may be **swapped** for another once a day (the Swap button).
+- Progress is said on the action bar at every quarter; done, in the chat with a sound. `contracts` turns them off.
+
+### Titles
+- Earned for good when their feat is met (checked at login, level-ups, kills, contracts and the like); one at a time is
+  shown, chosen in the Titles tab: before the name above the head, in the tablist (`title`) and in chat
+  (`title_prefix`). `titles` turns them off.
+- The 31 titles: a skill at its highest level (the Warrior, the Marksman, the Bulwark, the Deep Miner, the Woodsman, the
+  Harvester, the Angler, the Smith, the Arcanist, the Wayfarer, the Merchant Prince); a total level of 250 (Adept), 500
+  (Veteran), 750 (Paragon); every skill at its highest (Legend); 25 Mastery ranks (the Masterful); there when the Ender
+  Dragon, the Wither, a Warden, an Elder Guardian dies (Dragonslayer, Witherbane, Wardenbane, Tidebreaker); 10 and 100
+  Champions (Champion Hunter, Champions' Bane); 25 and 150 contracts (Contractor, Guildmaster); a 7- and 30-day streak
+  (the Devoted, the Unbroken); 8 synergies (Seeker of Secrets), every solo synergy (the Sage), a duo synergy (of the
+  Fellowship), the server's first discoverer of one (Trailblazer); Echo Forging done (Echo-Forged).
+
+### Skill of the Day
+- Every day one skill earns `skill_of_the_day_bonus` (+25%) more XP for everyone. Which one follows from the date: every
+  skill once in each run of as many days as there are skills, in an order shuffled anew each run, never the same two
+  days in a row. Said at login, in the Boosts tab. 0 turns it off.
+
+---
+
 ## Appendix A: XP tables (✅ approved in round 24)
 
 All values are configurable (§11). They are calibrated against an assumed rate of active play, given per skill below. Internally XP is a decimal number; the GUI rounds it.

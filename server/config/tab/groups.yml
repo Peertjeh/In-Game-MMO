@@ -11,7 +11,7 @@
 # badge from Extreme Progression; before it, in BattleHub, a dot for what the
 # player is doing (tab-prefix in config.yml).
 _DEFAULT_:
-  tabprefix: "%condition:tab-prefix%%luckperms-prefix%"
+  tabprefix: "%condition:tab-prefix%%condition:ep-title%%luckperms-prefix%"
   customtabname: "%condition:tab-name%"
   tabsuffix: "%condition:badge%%condition:ep-badge%%luckperms-suffix%"
 

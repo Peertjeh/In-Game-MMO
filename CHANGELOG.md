@@ -1,5 +1,53 @@
 # Changelog
 
+## 2.0.0: Legends
+
+The biggest update yet (the owner's wish: XP boosts to earn, and a lot of new content). Everything is in the new
+**Legends screen**: the first button along the Character Sheet's foot, or `/skills legends`.
+
+### XP boosts: +25%, +50%, +100%, +200%
+- **Tomes of Insight**, read with a right click: Tome of Insight (+25% XP for 30 minutes), Greater (+50%), Grand
+  (+100%) and Legendary (+200% for 15 minutes). Read several: the strongest runs, the others wait their turn.
+- **Their time runs only while you earn XP**, so nothing is lost while you build, trade or step away.
+- **Well Rested**: every hour offline gives 6 minutes of +100% XP, up to an hour.
+- **A daily login streak**: your first login each day gives a Tome of Insight, every 7th day a Greater, every 30th a
+  Grand.
+- **Tomes to earn**: every 25 levels in a skill (a Grand at level 100), every 5 Mastery ranks, bosses (the Ender Dragon
+  a Legendary, the Wither and the Warden a Grand, an Elder Guardian a Greater, once a day each for everyone near),
+  treasure chests (dungeons, temples, buried treasure, ancient cities, bastions, end cities, trial chambers),
+  Champions and contracts.
+- Boosts add to the party bonus, together at most +300%. Your boost shows above the pace, left of the hotbar.
+- Admins: `/skills boost give <player> <percent> <minutes>` and `/skills boost tome <player> <tome> [count]` (for vote
+  rewards), `/skills boost clear <player>`; `/skills boost` shows your own. Permission `extremeprogression.admin.boosts`.
+
+### Champions
+- Now and then a hostile mob is a **Champion**, its name above its head: three times the health, half again the damage
+  and one of seven affixes: **Frenzied**, **Juggernaut**, **Vampiric**, **Venomous**, **Frostbound**, **Infernal** and
+  **Warded**. More of them in the Nether and the End.
+- Slay one for 400 XP on top of the fight's own, a good chance of a tome, and the weekly contract and titles.
+
+### Contracts
+- **Three contracts a day**: XP in two of your skills and a bounty on a mob. Each pays XP; all three a Tome of Insight.
+- **One a week**: slay five Champions or earn 20,000 XP, for a Grand Tome.
+- Swap one daily contract a day for another.
+
+### Titles
+- **Thirty-one titles** to earn: a grandmaster's for every skill at level 100, Adept to Legend for your total level,
+  Dragonslayer, Witherbane, Wardenbane, Tidebreaker, Champion Hunter, Guildmaster, the Devoted, Trailblazer,
+  Echo-Forged and more. Show one before your name above your head, in the tablist and in chat.
+
+### Skill of the Day
+- Every day one skill earns **+25% XP for everyone**. Every skill gets its day in turn.
+
+### For server owners
+- New options: `boosts`, `boost_max`, `rested_bonus`, `rested_minutes_per_hour`, `rested_max_minutes`,
+  `daily_rewards`, `milestone_tomes`, `boss_tomes`, `loot_tomes`, `champion_chance`, `champion_kill_xp`, `contracts`,
+  `skill_of_the_day_bonus`, `titles`.
+- New placeholders: `title`, `title_prefix`, `boost`, `streak`. The shared TAB config shows the title before the name
+  and the boost in the footer; the Styled Chat config shows the title in chat.
+- `/skills champion <affix>` makes the nearest hostile mob a Champion (permission `extremeprogression.admin.events`).
+- Player files move to schema 6 by themselves.
+
 ## 1.9.0: The Echo Forging ritual
 
 Echo Forging was too easy for what it gives; it is now a ritual you do together (the owner's wish).

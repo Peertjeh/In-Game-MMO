@@ -48,7 +48,7 @@ public final class TabPlaceholders {
 
 	private static List<String> player() {
 		List<String> out = new ArrayList<>(List.of("total", "mastery", "highest", "highest_skill", "highest_level", "specs", "pressure", "fatigue",
-				"deaths", "synergies", "badge", "party", "party_size", "party_bonus", "party_leader", "party_members", "title", "boost", "streak"));
+				"deaths", "synergies", "badge", "party", "party_size", "party_bonus", "party_leader", "party_members", "title", "title_prefix", "boost", "streak"));
 		for (Skill s : Skill.values()) {
 			out.add("level_" + s.id);
 			out.add("mastery_" + s.id);
@@ -164,6 +164,7 @@ public final class TabPlaceholders {
 		// The Legends update (2.0): the title shown, the XP boost now, the daily streak
 		com.extremeprogression.legends.Titles.Def title = com.extremeprogression.legends.Titles.shown(progress);
 		m.put("title", title == null ? Component.empty() : Component.literal(title.name()).withColor(title.color()));
+		m.put("title_prefix", title == null ? Component.empty() : Component.literal(title.name()).withColor(title.color()).append(Component.literal(" ")));
 		double boost = com.extremeprogression.legends.Boosts.bonus(p);
 		m.put("boost", text(boost > 0 ? "+" + Math.round(boost * 100) + "%" : ""));
 		m.put("streak", text(progress.legends.streak));

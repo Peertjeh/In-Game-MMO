@@ -35,6 +35,10 @@ Both need **Text Placeholder API** (`placeholder-api`) on the server: every `%ex
 | `%extremeprogression:party_size%` | how many are in the player's party (`3`); empty outside a party |
 | `%extremeprogression:party_bonus%` | the XP bonus the party gives the player now (`+10%`); empty when none |
 | `%extremeprogression:party_leader%`, `%extremeprogression:party_members%` | the party's leader, and all its members (`Steve, Alex`) |
+| `%extremeprogression:title%` | the title the player shows (2.0), in its colour; empty when none |
+| `%extremeprogression:title_prefix%` | the same with a space after it, for before a name in chat; empty when none |
+| `%extremeprogression:boost%` | the player's XP boost now (`+75%`): tomes and Well Rested; empty when none |
+| `%extremeprogression:streak%` | the player's daily login streak in days |
 | `%extremeprogression:party%` | a green tag with the party's size (`◆3`); empty outside a party |
 | `%extremeprogression:preset%` | Hardcore, Normal or Custom |
 | `%extremeprogression:cap%` | the total level cap (`400`) |
