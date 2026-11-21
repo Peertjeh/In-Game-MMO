@@ -198,6 +198,9 @@ public final class Legends {
 		public boolean oathsOn;
 		public List<String> oaths = new ArrayList<>();
 		public List<String> oathFeats = new ArrayList<>();
+		/** When the next Oath may be sworn (real milliseconds; 0: now), and whether one must stand at a beacon. */
+		public long oathReadyAt;
+		public boolean oathBeacon;
 	}
 
 	public static View view(ServerPlayer p) {
@@ -224,6 +227,8 @@ public final class Legends {
 		v.championChance = Config.CHAMPION_CHANCE;
 		v.oathsOn = Oath.on();
 		v.oaths = new ArrayList<>(d.oaths);
+		v.oathReadyAt = Oaths.readyAt(d);
+		v.oathBeacon = Config.OATH_BEACON;
 		for (Oath o : Oath.values()) {
 			if (o.feat.test(p)) {
 				v.oathFeats.add(o.id);

@@ -1258,10 +1258,10 @@ class Wiki:
 
     # The relics each Oath takes, and how many of each (legends/Oath.java)
     OATH_RELICS = {
-        "raid_breaker": (["warbanner_shard"], 5), "deep_dark": (["sculk_heart"], 3), "tides": (["tidal_pearl"], 4),
-        "embers": (["ember_core"], 5), "void": (["void_shard"], 4), "wilds": (["verdant_idol"], 4),
-        "champions": (["champions_crest"], 5),
-        "legends": (["warbanner_shard", "sculk_heart", "tidal_pearl", "ember_core", "void_shard", "verdant_idol", "champions_crest"], 1),
+        "raid_breaker": (["warbanner_shard"], 20), "deep_dark": (["sculk_heart"], 12), "tides": (["tidal_pearl"], 15),
+        "embers": (["ember_core"], 20), "void": (["void_shard"], 12), "wilds": (["verdant_idol"], 20),
+        "champions": (["champions_crest"], 15),
+        "legends": (["warbanner_shard", "sculk_heart", "tidal_pearl", "ember_core", "void_shard", "verdant_idol", "champions_crest"], 5),
     }
 
     def gen_legends(self):
@@ -1299,7 +1299,8 @@ class Wiki:
             needs = ", ".join(f"{count if count else 1} {self.L(f'item.{MOD}.relic.{r}', humanize(r))}" for r in relics)
             self.add({"id": f"oath-{oid}", "cat": "legends", "kind": "Oath", "alt": "eed, quest, opdracht, permanente buff",
                       "name": self.L(k, humanize(oid)), "text": f"Gives for good: {self.L(k + '.reward', '')}.",
-                      "facts": [["Relics", needs], ["Feat", self.L(k + ".need", "")], ["Swear it", "the Oaths tab of the Legends screen"]],
+                      "facts": [["Relics", needs], ["Feat", self.L(k + ".need", "")],
+                                ["Swear it", "the Oaths tab of the Legends screen, within 6 blocks of a beacon; one Oath a week"]],
                       "refs": ["concept-oaths"] + [f"relic-{r}" for r in relics][:3]})
         titles = sorted(k for k in self.lang if re.fullmatch(rf"title\.{MOD}\.[a-z_]+", k))
         for k in titles:

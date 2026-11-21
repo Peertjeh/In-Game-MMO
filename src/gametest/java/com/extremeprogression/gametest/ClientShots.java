@@ -364,9 +364,9 @@ public class ClientShots implements FabricClientGameTest {
 				book.daily.get(1).progress = book.daily.get(1).goal;
 				book.daily.get(1).done = true;
 				// (relics and an Oath, 2.2: the Raid Breaker ready to swear, the Tides sworn)
-				p0.addItem(com.extremeprogression.legends.Relic.WARBANNER_SHARD.stack(5));
-				p0.addItem(com.extremeprogression.legends.Relic.SCULK_HEART.stack(2));
-				com.extremeprogression.data.PlayerStore.get(p0.getUUID()).legends.add("raids", 1);
+				p0.addItem(com.extremeprogression.legends.Relic.WARBANNER_SHARD.stack(20));
+				p0.addItem(com.extremeprogression.legends.Relic.SCULK_HEART.stack(7));
+				com.extremeprogression.data.PlayerStore.get(p0.getUUID()).legends.add("raids", 10);
 				com.extremeprogression.data.PlayerStore.get(p0.getUUID()).legends.oaths.add("tides");
 				com.extremeprogression.legends.Titles.check(p0);
 				com.extremeprogression.legends.Legends.send(p0, false);
@@ -663,7 +663,8 @@ public class ClientShots implements FabricClientGameTest {
 		keys.addAll(List.of("item.extremeprogression.relic.use", "message.extremeprogression.oath.done", "message.extremeprogression.relic.raid",
 				"gui.extremeprogression.legends.tab.oaths", "gui.extremeprogression.legends.oaths.swear", "gui.extremeprogression.legends.oaths.swear_tip",
 				"gui.extremeprogression.legends.oaths.count", "gui.extremeprogression.legends.oaths.off", "gui.extremeprogression.legends.oaths.tip",
-				"gui.extremeprogression.legends.oaths.gives", "gui.extremeprogression.legends.oaths.every_relic"));
+				"gui.extremeprogression.legends.oaths.gives", "gui.extremeprogression.legends.oaths.every_relic", "gui.extremeprogression.legends.oaths.tip_beacon",
+				"gui.extremeprogression.legends.oaths.wait"));
 		// Skill potions (2.1)
 		for (String e : new String[] {"quickening", "persistence"}) {
 			keys.add("effect.extremeprogression." + e);

@@ -45,8 +45,8 @@ public class OathTests {
 			Relics.loot("minecraft:chests/trial_chambers/reward_ominous_rare", random, vault);
 			ominous += vault.size();
 		}
-		check(helper, found > 400 && found < 600, "an ancient city held a Sculk Heart %s times in 2000, expected about 500", found);
-		check(helper, ominous > 400 && ominous < 600, "an ominous vault held %s crests in 2000, expected about 500 (rolled once)", ominous);
+		check(helper, found > 110 && found < 210, "an ancient city held a Sculk Heart %s times in 2000, expected about 160", found);
+		check(helper, ominous > 110 && ominous < 210, "an ominous vault held %s crests in 2000, expected about 160 (rolled once)", ominous);
 		// A raid won: banner shards, one more for every omen level
 		ServerPlayer p = TestPlayers.survivor(helper, "Raider");
 		Relics.raidWon(p, 2);
@@ -55,30 +55,44 @@ public class OathTests {
 		helper.succeed();
 	}
 
+	/** The Oaths' rules for these tests: no beacon asked for and no wait between Oaths, unless a test says so. */
+	private static void easy() {
+		Config.reset();
+		Config.OATH_BEACON = false;
+		Config.OATH_COOLDOWN_DAYS = 0;
+	}
+
 	@GameTest
 	public void anOathTakesItsRelicsAndGivesItsBuffForGood(GameTestHelper helper) {
-		Config.reset();
+		easy();
 		ServerPlayer p = TestPlayers.survivor(helper, "Sworn");
 		double health = p.getAttribute(Attributes.MAX_HEALTH).getValue();
-		// Not the relics, and not the feat: no Oath
-		check(helper, Oaths.check(p, Oath.RAID_BREAKER) == Oaths.Result.FEAT, "the Raid Breaker could be sworn without a raid won");
+		// The feat first: ten raids won and Defense 50
+		legends(p).add("raids", 9);
+		Progression.setLevel(PlayerStore.get(p.getUUID()), Skill.DEFENSE, 50);
+		check(helper, Oaths.check(p, Oath.RAID_BREAKER) == Oaths.Result.FEAT, "the Raid Breaker could be sworn with nine raids won");
 		legends(p).add("raids", 1);
-		check(helper, Oaths.check(p, Oath.RAID_BREAKER) == Oaths.Result.RELICS, "the Raid Breaker could be sworn without its shards");
-		p.addItem(Relic.WARBANNER_SHARD.stack(7));
-		check(helper, Oaths.swear(p, Oath.RAID_BREAKER) == Oaths.Result.OK, "the Raid Breaker was not sworn with a raid and 7 shards");
-		check(helper, carried(p, Relic.WARBANNER_SHARD) == 2, "swearing took %s shards, expected 5", 7 - carried(p, Relic.WARBANNER_SHARD));
+		p.addItem(Relic.WARBANNER_SHARD.stack(19));
+		check(helper, Oaths.check(p, Oath.RAID_BREAKER) == Oaths.Result.RELICS, "the Raid Breaker could be sworn with 19 shards");
+		p.addItem(Relic.WARBANNER_SHARD.stack(3));
+		check(helper, Oaths.swear(p, Oath.RAID_BREAKER) == Oaths.Result.OK, "the Raid Breaker was not sworn with ten raids, Defense 50 and 22 shards");
+		check(helper, carried(p, Relic.WARBANNER_SHARD) == 2, "swearing took %s shards, expected 20", 22 - carried(p, Relic.WARBANNER_SHARD));
 		check(helper, Math.abs(p.getAttribute(Attributes.MAX_HEALTH).getValue() - health - 4) < 1e-9, "the Raid Breaker gave %s more health, expected 4",
 				p.getAttribute(Attributes.MAX_HEALTH).getValue() - health);
 		check(helper, Oaths.swear(p, Oath.RAID_BREAKER) == Oaths.Result.SWORN, "an Oath could be sworn twice");
 		check(helper, legends(p).titles.contains("oathsworn"), "the first Oath did not earn the title Oathsworn");
-		// Applied again on a new body (a respawn, a login), and taken off when not sworn
+		// Applied again on a new body (a respawn, a login)
 		p.getAttribute(Attributes.MAX_HEALTH).removeModifier(com.extremeprogression.ExtremeProgression.id("oath_raid_breaker"));
 		Oaths.apply(p);
 		check(helper, Math.abs(p.getAttribute(Attributes.MAX_HEALTH).getValue() - health - 4) < 1e-9, "the Oath's health was not put on again");
-		// The Deep Dark: shorter cooldowns; the Void: longer abilities
-		Progression.setLevel(PlayerStore.get(p.getUUID()), Skill.EXPLORATION, 50);
-		p.addItem(Relic.SCULK_HEART.stack(3));
-		p.addItem(Relic.VOID_SHARD.stack(4));
+		// The Deep Dark (Exploration 75, three Wardens) and the Void (a skill at 100, the Dragon)
+		Progression.setLevel(PlayerStore.get(p.getUUID()), Skill.EXPLORATION, 100);
+		p.addItem(Relic.SCULK_HEART.stack(12));
+		p.addItem(Relic.VOID_SHARD.stack(12));
+		legends(p).add("boss.warden", 2);
+		check(helper, Oaths.check(p, Oath.DEEP_DARK) == Oaths.Result.FEAT, "the Deep Dark could be sworn after two Wardens");
+		legends(p).add("boss.warden", 1);
+		legends(p).add("boss.ender_dragon", 1);
 		check(helper, Oaths.swear(p, Oath.DEEP_DARK) == Oaths.Result.OK && Oaths.swear(p, Oath.VOID) == Oaths.Result.OK, "the Deep Dark or the Void was not sworn");
 		check(helper, Math.abs(Oaths.cooldownCut(p) - 0.10) < 1e-9 && Math.abs(Oaths.lasting(p) - 0.15) < 1e-9, "the Oaths give %s shorter cooldowns and %s longer abilities",
 				Oaths.cooldownCut(p), Oaths.lasting(p));
@@ -92,26 +106,62 @@ public class OathTests {
 	}
 
 	@GameTest
-	public void theOathOfLegendsAsksForEverything(GameTestHelper helper) {
+	public void oathsAreSwornAtABeaconAndOneAWeek(GameTestHelper helper) {
 		Config.reset();
+		ServerPlayer p = TestPlayers.survivor(helper, "Pilgrim");
+		net.minecraft.core.BlockPos at = helper.absolutePos(new net.minecraft.core.BlockPos(1, 2, 1));
+		p.setPos(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
+		legends(p).add("champions", 100);
+		p.addItem(Relic.CHAMPIONS_CREST.stack(15));
+		check(helper, Oaths.check(p, Oath.CHAMPIONS) == Oaths.Result.BEACON, "an Oath could be sworn away from a beacon");
+		helper.setBlock(new net.minecraft.core.BlockPos(3, 1, 1), net.minecraft.world.level.block.Blocks.BEACON);
+		check(helper, Oaths.swear(p, Oath.CHAMPIONS) == Oaths.Result.OK, "the Oath of Champions was not sworn at a beacon");
+		// A week before the next
+		Progression.setLevel(PlayerStore.get(p.getUUID()), Skill.FORAGING, 75);
+		Progression.setLevel(PlayerStore.get(p.getUUID()), Skill.FARMING, 75);
+		p.addItem(Relic.VERDANT_IDOL.stack(20));
+		check(helper, Oaths.check(p, Oath.WILDS) == Oaths.Result.WAIT, "a second Oath could be sworn the same day");
+		legends(p).lastOath -= 8 * 86_400_000L;
+		check(helper, Oaths.swear(p, Oath.WILDS) == Oaths.Result.OK, "the next Oath could not be sworn after a week");
+		// Fewer relics asked with a lower factor
+		Config.OATH_RELIC_FACTOR = 0.5;
+		check(helper, Oath.TIDES.needed(Relic.TIDAL_PEARL) == 8 && Oath.LEGENDS.needed(Relic.VOID_SHARD) == 3, "the relic factor gave %s pearls",
+				Oath.TIDES.needed(Relic.TIDAL_PEARL));
+		Config.reset();
+		helper.succeed();
+	}
+
+	@GameTest
+	public void theOathOfLegendsAsksForEverything(GameTestHelper helper) {
+		easy();
 		ServerPlayer p = TestPlayers.survivor(helper, "Legend");
 		for (Relic r : Relic.values()) {
-			p.addItem(r.stack(1));
+			p.addItem(r.stack(5));
 		}
-		check(helper, Oaths.check(p, Oath.LEGENDS) == Oaths.Result.FEAT, "the Oath of Legends could be sworn without the other Oaths");
 		for (Oath o : Oath.values()) {
 			if (o != Oath.LEGENDS) {
 				legends(p).oaths.add(o.id);
 			}
 		}
-		check(helper, Oaths.swear(p, Oath.LEGENDS) == Oaths.Result.OK, "the Oath of Legends was not sworn with every relic and the other Oaths");
-		check(helper, Oaths.carried(p.getInventory()).isEmpty(), "the Oath of Legends did not take one of each relic");
+		check(helper, Oaths.check(p, Oath.LEGENDS) == Oaths.Result.FEAT, "the Oath of Legends could be sworn without the total level cap and Mastery");
+		var progress = PlayerStore.get(p.getUUID());
+		Skill[] top = {Skill.MELEE, Skill.MINING, Skill.ARCANA, Skill.FISHING};
+		for (Skill s : top) {
+			Progression.setLevel(progress, s, Config.MAX_LEVEL);
+		}
+		for (int i = 0; i < 3; i++) {
+			progress.get(top[i]).masteryRanks = 10;
+		}
+		check(helper, Oaths.swear(p, Oath.LEGENDS) == Oaths.Result.OK, "the Oath of Legends was not sworn with everything (total %s, ranks %s)",
+				progress.totalLevel(), progress.totalMasteryRanks());
+		check(helper, Oaths.carried(p.getInventory()).isEmpty(), "the Oath of Legends did not take five of each relic");
 		check(helper, Math.abs(Oaths.xp(p) - 0.10) < 1e-9 && legends(p).titles.contains("oathkeeper"), "the Oath of Legends gave %s XP, or no title", Oaths.xp(p));
 		// +10% XP on top of what is earned
 		ServerPlayer plain = TestPlayers.survivor(helper, "Unsworn");
-		double a = XpService.award(plain, Skill.FISHING, 40);
-		double b = XpService.award(p, Skill.FISHING, 40);
+		double a = XpService.award(plain, Skill.FARMING, 40);
+		double b = XpService.award(p, Skill.FARMING, 40);
 		check(helper, a > 0 && Math.abs(b - a * 1.1) < 1e-6, "the Oath of Legends made %s of %s", b, a);
+		Config.reset();
 		helper.succeed();
 	}
 }

@@ -17,26 +17,31 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
 /**
- * The Oaths (2.2, the owner's wish: quests with the relics that unlock permanent buffs). Each asks for relics, handed
- * in, and a feat; sworn, it gives a buff for good. The last one asks for every relic and the seven others.
+ * The Oaths (2.2, the owner's wish: quests with the relics that unlock permanent buffs; 2.2.1: much harder). Each asks
+ * for many relics, handed in, and a hard feat; it is sworn at a beacon, and only one a week. Sworn, it gives a buff for
+ * good. The last one asks for five of every relic, the seven others, the total level cap and 30 Mastery ranks.
  */
 public enum Oath {
-	/** Five banner shards and a raid won: two more hearts. */
-	RAID_BREAKER(relics(Relic.WARBANNER_SHARD, 5), p -> legends(p).stat("raids") >= 1, Buff.HEALTH),
-	/** Three sculk hearts and Exploration 30: the abilities' cooldowns 10% shorter. */
-	DEEP_DARK(relics(Relic.SCULK_HEART, 3), p -> level(p, Skill.EXPLORATION) >= 30, Buff.COOLDOWN),
-	/** Four tidal pearls and Fishing 30: breath for longer underwater, and quicker swimming. */
-	TIDES(relics(Relic.TIDAL_PEARL, 4), p -> level(p, Skill.FISHING) >= 30, Buff.WATER),
-	/** Five ember cores and Defense 30: fire burns half as long. */
-	EMBERS(relics(Relic.EMBER_CORE, 5), p -> level(p, Skill.DEFENSE) >= 30, Buff.FIRE),
-	/** Four void shards and any skill at 50: abilities last 15% longer. */
-	VOID(relics(Relic.VOID_SHARD, 4), p -> highest(p) >= 50, Buff.DURATION),
-	/** Four verdant idols and Foraging or Farming at 30: 5% quicker on foot. */
-	WILDS(relics(Relic.VERDANT_IDOL, 4), p -> Math.max(level(p, Skill.FORAGING), level(p, Skill.FARMING)) >= 30, Buff.SPEED),
-	/** Five champion's crests and ten Champions slain: two more armor and one more toughness. */
-	CHAMPIONS(relics(Relic.CHAMPIONS_CREST, 5), p -> legends(p).stat("champions") >= 10, Buff.ARMOR),
-	/** One of every relic and the seven other Oaths sworn: +10% XP in every skill, and the title Oathkeeper. */
-	LEGENDS(everyRelic(), p -> sworn(p) >= Oath.values().length - 1, Buff.XP);
+	/** 20 banner shards, 10 raids won and Defense 50: two more hearts. */
+	RAID_BREAKER(relics(Relic.WARBANNER_SHARD, 20), p -> legends(p).stat("raids") >= 10 && level(p, Skill.DEFENSE) >= 50, Buff.HEALTH),
+	/** 12 sculk hearts, Exploration 75 and three Wardens: the abilities' cooldowns 10% shorter. */
+	DEEP_DARK(relics(Relic.SCULK_HEART, 12), p -> level(p, Skill.EXPLORATION) >= 75 && legends(p).stat("boss.warden") >= 3, Buff.COOLDOWN),
+	/** 15 tidal pearls, Fishing 75 and three Elder Guardians: breath for three times as long underwater. */
+	TIDES(relics(Relic.TIDAL_PEARL, 15), p -> level(p, Skill.FISHING) >= 75 && legends(p).stat("boss.elder_guardian") >= 3, Buff.WATER),
+	/** 20 ember cores, Defense 75 and the Wither: fire burns half as long. */
+	EMBERS(relics(Relic.EMBER_CORE, 20), p -> level(p, Skill.DEFENSE) >= 75 && legends(p).stat("boss.wither") >= 1, Buff.FIRE),
+	/** 12 void shards, a skill at 100 and the Ender Dragon: abilities last 15% longer. */
+	VOID(relics(Relic.VOID_SHARD, 12), p -> highest(p) >= 100 && legends(p).stat("boss.ender_dragon") >= 1, Buff.DURATION),
+	/** 20 verdant idols, Foraging and Farming both at 75: 5% quicker on foot. */
+	WILDS(relics(Relic.VERDANT_IDOL, 20), p -> level(p, Skill.FORAGING) >= 75 && level(p, Skill.FARMING) >= 75, Buff.SPEED),
+	/** 15 champion's crests and 100 Champions slain: two more armor. */
+	CHAMPIONS(relics(Relic.CHAMPIONS_CREST, 15), p -> legends(p).stat("champions") >= 100, Buff.ARMOR),
+	/**
+	 * Five of every relic, the seven other Oaths, the total level at its cap and 30 Mastery ranks: +10% XP in every
+	 * skill, and the title Oathkeeper.
+	 */
+	LEGENDS(everyRelic(5), p -> sworn(p) >= Oath.values().length - 1 && PlayerStore.get(p.getUUID()).totalLevel() >= Config.TOTAL_LEVEL_CAP
+			&& PlayerStore.get(p.getUUID()).totalMasteryRanks() >= 30, Buff.XP);
 
 	/** What an Oath gives for good. */
 	public enum Buff {
@@ -92,12 +97,18 @@ public enum Oath {
 		return m;
 	}
 
-	private static Map<Relic, Integer> everyRelic() {
+	private static Map<Relic, Integer> everyRelic(int n) {
 		Map<Relic, Integer> m = new EnumMap<>(Relic.class);
 		for (Relic r : Relic.values()) {
-			m.put(r, 1);
+			m.put(r, n);
 		}
 		return m;
+	}
+
+	/** How many of a relic the Oath asks for, with OATH_RELIC_FACTOR (at least one when it asks for any). */
+	public int needed(Relic r) {
+		Integer n = relics.get(r);
+		return n == null ? 0 : Math.max(1, (int) Math.round(n * Config.OATH_RELIC_FACTOR));
 	}
 
 	static LegendsData legends(ServerPlayer p) {

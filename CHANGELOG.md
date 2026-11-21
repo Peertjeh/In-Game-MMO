@@ -1,5 +1,28 @@
 # Changelog
 
+## 2.2.1: Oaths for the truly devoted
+
+The Oaths' buffs are for good, so they are now earned like it (the owner's wish: much, much harder).
+
+| Oath | Relics | Feat |
+|---|---|---|
+| Raid Breaker | 20 Raider's Banner Shards | 10 raids won, and Defense 50 |
+| Deep Dark | 12 Sculk Hearts | Exploration 75, and be there when 3 Wardens die |
+| Tides | 15 Tidal Pearls | Fishing 75, and be there when 3 Elder Guardians die |
+| Embers | 20 Ember Cores | Defense 75, and be there when the Wither dies |
+| Void | 12 Void Shards | a skill at 100, and be there when the Ender Dragon dies |
+| Wilds | 20 Verdant Idols | Foraging and Farming both at 75 |
+| Champions | 15 Champion's Crests | 100 Champions slain |
+| Legends | 5 of every relic | the seven other Oaths, the total level cap and 30 Mastery ranks |
+
+- **An Oath is sworn at a beacon** (within 6 blocks), so the Wither comes first.
+- **One Oath a week**: after swearing one, the next waits seven days. The Oaths tab says how long.
+- **Relics are about three times as rare**: ancient cities 8%, buried treasure 10%, bastion treasure 12%, end city
+  treasure 10%, temples 6–10%, ominous vaults 8%; raid captains 25%, Champions 8%, an Elder Guardian one pearl, the
+  Ender Dragon two shards. Raids won still give one shard and one more for every omen level.
+- Server owners tune it with `oath_relic_factor` (the relics asked for), `oath_cooldown_days`, `oath_beacon` and
+  `relic_drop_factor` (every relic chance).
+
 ## 2.2.0: Relics and Oaths
 
 Things to find out in the world, and quests that turn them into permanent buffs (the owner's wish).

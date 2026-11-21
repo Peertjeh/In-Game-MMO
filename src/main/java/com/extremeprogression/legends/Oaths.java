@@ -4,6 +4,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import com.extremeprogression.ExtremeProgression;
+import com.extremeprogression.config.Config;
 import com.extremeprogression.data.PlayerStore;
 
 import net.minecraft.network.chat.Component;
@@ -26,7 +27,31 @@ public final class Oaths {
 
 	/** Why an Oath cannot be sworn now, or OK. */
 	public enum Result {
-		OK, OFF, UNKNOWN, SWORN, FEAT, RELICS
+		OK, OFF, UNKNOWN, SWORN, FEAT, RELICS, WAIT, BEACON
+	}
+
+	/** When the player may swear their next Oath (real milliseconds; 0 when they may now). */
+	public static long readyAt(LegendsData d) {
+		long wait = (long) (Config.OATH_COOLDOWN_DAYS * 86_400_000L);
+		return d.lastOath > 0 && wait > 0 ? d.lastOath + wait : 0;
+	}
+
+	/** Whether a beacon stands within 6 blocks of the player (always, with OATH_BEACON off). */
+	static boolean atBeacon(ServerPlayer p) {
+		if (!Config.OATH_BEACON) {
+			return true;
+		}
+		net.minecraft.core.BlockPos at = p.blockPosition();
+		for (int x = -6; x <= 6; x++) {
+			for (int y = -6; y <= 6; y++) {
+				for (int z = -6; z <= 6; z++) {
+					if (p.level().getBlockState(new net.minecraft.core.BlockPos(at.getX() + x, at.getY() + y, at.getZ() + z)).is(net.minecraft.world.level.block.Blocks.BEACON)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	static Identifier modifierId(Oath o) {
@@ -64,10 +89,16 @@ public final class Oaths {
 			return Result.FEAT;
 		}
 		Map<Relic, Integer> have = carried(p.getInventory());
-		for (Map.Entry<Relic, Integer> e : o.relics.entrySet()) {
-			if (have.getOrDefault(e.getKey(), 0) < e.getValue()) {
+		for (Relic r : o.relics.keySet()) {
+			if (have.getOrDefault(r, 0) < o.needed(r)) {
 				return Result.RELICS;
 			}
+		}
+		if (readyAt(PlayerStore.get(p.getUUID()).legends) > System.currentTimeMillis()) {
+			return Result.WAIT;
+		}
+		if (!atBeacon(p)) {
+			return Result.BEACON;
 		}
 		return Result.OK;
 	}
@@ -75,16 +106,21 @@ public final class Oaths {
 	/** Swears the Oath: its relics are taken, its buff given for good. */
 	public static Result swear(ServerPlayer p, Oath o) {
 		Result r = check(p, o);
+		if (r == Result.WAIT) {
+			long hours = Math.max(1, (readyAt(PlayerStore.get(p.getUUID()).legends) - System.currentTimeMillis() + 3_599_999) / 3_600_000);
+			p.sendSystemMessage(Component.translatable("message.extremeprogression.oath.wait", hours / 24, hours % 24).withColor(0xFF5555), true);
+			return r;
+		}
 		if (r != Result.OK) {
 			p.sendSystemMessage(Component.translatable("message.extremeprogression.oath." + r.name().toLowerCase(java.util.Locale.ROOT)).withColor(0xFF5555), true);
 			return r;
 		}
 		Inventory inv = p.getInventory();
-		for (Map.Entry<Relic, Integer> e : o.relics.entrySet()) {
-			int left = e.getValue();
+		for (Relic relic : o.relics.keySet()) {
+			int left = o.needed(relic);
 			for (int i = 0; i < inv.getContainerSize() && left > 0; i++) {
 				ItemStack s = inv.getItem(i);
-				if (Relic.of(s) == e.getKey()) {
+				if (Relic.of(s) == relic) {
 					int take = Math.min(left, s.getCount());
 					s.shrink(take);
 					left -= take;
@@ -93,6 +129,7 @@ public final class Oaths {
 		}
 		LegendsData d = PlayerStore.get(p.getUUID()).legends;
 		d.oaths.add(o.id);
+		d.lastOath = System.currentTimeMillis();
 		PlayerStore.markDirty(p.getUUID());
 		apply(p);
 		p.sendSystemMessage(Component.translatable("message.extremeprogression.oath.done", Component.translatable(o.translationKey()).withColor(0xFFAA00),

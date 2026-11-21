@@ -31,8 +31,9 @@ public class LegendsData {
 	/** Titles earned, and the one shown ("" for none). */
 	public Set<String> titles = new LinkedHashSet<>();
 	public String title = "";
-	/** The Oaths sworn, by id (2.2). */
+	/** The Oaths sworn, by id (2.2), and when the last one was (real milliseconds; one a week, 2.2.1). */
 	public Set<String> oaths = new LinkedHashSet<>();
+	public long lastOath;
 	/** Counts: champions slain, contracts done, bosses, and the like. */
 	public Map<String, Long> stats = new LinkedHashMap<>();
 

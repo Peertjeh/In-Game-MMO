@@ -1630,7 +1630,11 @@ Boosts, Contracts and Titles.
   burning time −50%, movement speed +5%, armor +2), put on at login, at respawn and when sworn, and taken off when
   relics are turned off; or shares read where they count: ability cooldowns −10% (`AbilityService`), ability time
   +15% (with Persistence, `SkillPotions.lasting`), and +10% XP added to the party bonus, boost and Skill of the Day.
-- The Oath of Legends asks for one of each relic and the seven other Oaths. Titles: Oathsworn, Oathkeeper.
+- The Oath of Legends asks for five of each relic, the seven other Oaths, the total level cap and 30 Mastery ranks.
+  Titles: Oathsworn, Oathkeeper.
+- **2.2.1, much harder** (the owner's wish): the relics and feats in the 2.2.1 changelog; an Oath is sworn within 6
+  blocks of a beacon (`oath_beacon`) and one a week (`oath_cooldown_days`, from `legends.lastOath`); every relic
+  chance is about a third of 2.2.0's, times `relic_drop_factor`; the relics asked for times `oath_relic_factor`.
 - Shown in the Legends screen's fourth tab: two columns of Oaths with what each needs (the relics counted in the
   inventory on the client, the feat from the server), what it gives, and a Swear button when it can be sworn.
 - `relics` turns relics and Oaths off; `/skills relic <player> <relic> [count]` gives relics.

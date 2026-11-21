@@ -213,6 +213,14 @@ public final class Config {
 	public static double PERSISTENCE_PER_LEVEL = 0.3;
 	/** Relics (2.2): found in chests, dropped by mobs, given for raids won; and the Oaths that take them for permanent buffs. */
 	public static boolean RELICS = true;
+	/**
+	 * How hard the Oaths are (2.2.1): the relics each asks for times OATH_RELIC_FACTOR, the days between two Oaths,
+	 * whether one is sworn at a beacon (within 6 blocks), and the chance of every relic drop times RELIC_DROP_FACTOR.
+	 */
+	public static double OATH_RELIC_FACTOR = 1.0;
+	public static double OATH_COOLDOWN_DAYS = 7;
+	public static boolean OATH_BEACON = true;
+	public static double RELIC_DROP_FACTOR = 1.0;
 
 	private static final Map<String, Object> DEFAULTS = snapshot();
 
@@ -354,6 +362,9 @@ public final class Config {
 		SKILL_OF_THE_DAY_BONUS = nonNegative(SKILL_OF_THE_DAY_BONUS, "SKILL_OF_THE_DAY_BONUS");
 		QUICKENING_PER_LEVEL = nonNegative(QUICKENING_PER_LEVEL, "QUICKENING_PER_LEVEL");
 		PERSISTENCE_PER_LEVEL = nonNegative(PERSISTENCE_PER_LEVEL, "PERSISTENCE_PER_LEVEL");
+		OATH_RELIC_FACTOR = nonNegative(OATH_RELIC_FACTOR, "OATH_RELIC_FACTOR");
+		OATH_COOLDOWN_DAYS = nonNegative(OATH_COOLDOWN_DAYS, "OATH_COOLDOWN_DAYS");
+		RELIC_DROP_FACTOR = nonNegative(RELIC_DROP_FACTOR, "RELIC_DROP_FACTOR");
 		RESPEC_DAYS = nonNegative(RESPEC_DAYS, "RESPEC_DAYS");
 		XP_MULTIPLIER = nonNegative(XP_MULTIPLIER, "XP_MULTIPLIER");
 		PLANTED_TREE_FACTOR = share(PLANTED_TREE_FACTOR, "PLANTED_TREE_FACTOR");

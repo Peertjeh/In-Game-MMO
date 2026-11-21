@@ -26,38 +26,40 @@ public final class Relics {
 	public record Find(String table, Relic relic, double chance) {}
 
 	public static final List<Find> CHESTS = List.of(
-			new Find("chests/pillager_outpost", Relic.WARBANNER_SHARD, 0.35),
-			new Find("chests/woodland_mansion", Relic.WARBANNER_SHARD, 0.40),
-			new Find("chests/woodland_mansion", Relic.VERDANT_IDOL, 0.30),
-			new Find("chests/ancient_city", Relic.SCULK_HEART, 0.25),
-			new Find("chests/shipwreck_treasure", Relic.TIDAL_PEARL, 0.20),
-			new Find("chests/buried_treasure", Relic.TIDAL_PEARL, 0.35),
-			new Find("chests/underwater_ruin_big", Relic.TIDAL_PEARL, 0.15),
-			new Find("chests/bastion_treasure", Relic.EMBER_CORE, 0.40),
-			new Find("chests/bastion_other", Relic.EMBER_CORE, 0.12),
-			new Find("chests/bastion_bridge", Relic.EMBER_CORE, 0.12),
-			new Find("chests/bastion_hoglin_stable", Relic.EMBER_CORE, 0.12),
-			new Find("chests/nether_bridge", Relic.EMBER_CORE, 0.15),
-			new Find("chests/end_city_treasure", Relic.VOID_SHARD, 0.30),
-			new Find("chests/jungle_temple", Relic.VERDANT_IDOL, 0.30),
-			new Find("chests/desert_pyramid", Relic.VERDANT_IDOL, 0.20),
-			new Find("chests/trial_chambers/reward_ominous", Relic.CHAMPIONS_CREST, 0.25),
-			new Find("chests/trial_chambers/reward", Relic.CHAMPIONS_CREST, 0.10));
+			new Find("chests/pillager_outpost", Relic.WARBANNER_SHARD, 0.10),
+			new Find("chests/woodland_mansion", Relic.WARBANNER_SHARD, 0.12),
+			new Find("chests/woodland_mansion", Relic.VERDANT_IDOL, 0.10),
+			new Find("chests/ancient_city", Relic.SCULK_HEART, 0.08),
+			new Find("chests/shipwreck_treasure", Relic.TIDAL_PEARL, 0.06),
+			new Find("chests/buried_treasure", Relic.TIDAL_PEARL, 0.10),
+			new Find("chests/underwater_ruin_big", Relic.TIDAL_PEARL, 0.05),
+			new Find("chests/bastion_treasure", Relic.EMBER_CORE, 0.12),
+			new Find("chests/bastion_other", Relic.EMBER_CORE, 0.03),
+			new Find("chests/bastion_bridge", Relic.EMBER_CORE, 0.03),
+			new Find("chests/bastion_hoglin_stable", Relic.EMBER_CORE, 0.03),
+			new Find("chests/nether_bridge", Relic.EMBER_CORE, 0.04),
+			new Find("chests/end_city_treasure", Relic.VOID_SHARD, 0.10),
+			new Find("chests/jungle_temple", Relic.VERDANT_IDOL, 0.10),
+			new Find("chests/desert_pyramid", Relic.VERDANT_IDOL, 0.06),
+			new Find("chests/trial_chambers/reward_ominous", Relic.CHAMPIONS_CREST, 0.08),
+			new Find("chests/trial_chambers/reward", Relic.CHAMPIONS_CREST, 0.03));
 
 	/** A mob's chance of a relic when a player slays it, and how many. */
 	public record Drop(String mob, Relic relic, double chance, int count) {}
 
 	public static final List<Drop> MOBS = List.of(
 			new Drop("minecraft:warden", Relic.SCULK_HEART, 1.0, 1),
-			new Drop("minecraft:elder_guardian", Relic.TIDAL_PEARL, 1.0, 2),
-			new Drop("minecraft:drowned", Relic.TIDAL_PEARL, 0.01, 1),
-			new Drop("minecraft:blaze", Relic.EMBER_CORE, 0.02, 1),
-			new Drop("minecraft:piglin_brute", Relic.EMBER_CORE, 0.15, 1),
-			new Drop("minecraft:shulker", Relic.VOID_SHARD, 0.04, 1),
-			new Drop("minecraft:ender_dragon", Relic.VOID_SHARD, 1.0, 3));
+			new Drop("minecraft:elder_guardian", Relic.TIDAL_PEARL, 1.0, 1),
+			new Drop("minecraft:drowned", Relic.TIDAL_PEARL, 0.002, 1),
+			new Drop("minecraft:blaze", Relic.EMBER_CORE, 0.005, 1),
+			new Drop("minecraft:piglin_brute", Relic.EMBER_CORE, 0.05, 1),
+			new Drop("minecraft:shulker", Relic.VOID_SHARD, 0.01, 1),
+			new Drop("minecraft:ender_dragon", Relic.VOID_SHARD, 1.0, 2));
 
 	/** The share of Champions that drop a Champion's Crest. */
-	public static final double CREST_CHANCE = 0.20;
+	public static final double CREST_CHANCE = 0.08;
+	/** The share of raid captains that drop a banner shard. */
+	public static final double CAPTAIN_CHANCE = 0.25;
 
 	static boolean on() {
 		return Config.RELICS;
@@ -73,13 +75,13 @@ public final class Relics {
 		java.util.Set<Relic> rolled = java.util.EnumSet.noneOf(Relic.class);
 		for (Find f : CHESTS) {
 			boolean match = path.equals(f.table()) || path.startsWith(f.table() + "_") || path.startsWith(f.table() + "/");
-			if (match && rolled.add(f.relic()) && random.nextDouble() < f.chance()) {
+			if (match && rolled.add(f.relic()) && random.nextDouble() < f.chance() * Config.RELIC_DROP_FACTOR) {
 				drops.add(f.relic().stack(1));
 			}
 		}
 	}
 
-	/** A mob died: a player who slew it may get its relic; a raid captain always gives a banner shard, a Champion maybe a crest. */
+	/** A mob died: a player who slew it may get its relic; a raid captain or a Champion may drop one too. */
 	public static void died(LivingEntity mob, DamageSource source) {
 		if (!on() || !(mob.level() instanceof ServerLevel level) || !(source.getEntity() instanceof ServerPlayer) || MobOrigins.flagged(mob)) {
 			return;
@@ -87,14 +89,14 @@ public final class Relics {
 		String id = BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType()).toString();
 		RandomSource r = mob.getRandom();
 		for (Drop d : MOBS) {
-			if (d.mob().equals(id) && r.nextDouble() < d.chance()) {
+			if (d.mob().equals(id) && r.nextDouble() < d.chance() * Config.RELIC_DROP_FACTOR) {
 				mob.spawnAtLocation(level, d.relic().stack(d.count()));
 			}
 		}
-		if (captain(mob)) {
+		if (captain(mob) && r.nextDouble() < CAPTAIN_CHANCE * Config.RELIC_DROP_FACTOR) {
 			mob.spawnAtLocation(level, Relic.WARBANNER_SHARD.stack(1));
 		}
-		if (Champions.is(mob) && r.nextDouble() < CREST_CHANCE) {
+		if (Champions.is(mob) && r.nextDouble() < CREST_CHANCE * Config.RELIC_DROP_FACTOR) {
 			mob.spawnAtLocation(level, Relic.CHAMPIONS_CREST.stack(1));
 		}
 	}
