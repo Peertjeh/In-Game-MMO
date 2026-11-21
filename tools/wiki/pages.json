@@ -60,7 +60,7 @@
   },
 
   "settings": {
-    "persistence_per_level": "Under a Potion of Persistence, an ability set off lasts this much longer a level (0.3: +30% at level I, +60% at II).", "max_level": "The highest level of a skill. Past it, XP goes into Mastery ranks.",
+    "relic_drop_factor": "Every relic chance, in chests and from mobs, raid captains and Champions, is multiplied by this (1.0 as shipped; 0.5 makes relics twice as rare).", "persistence_per_level": "Under a Potion of Persistence, an ability set off lasts this much longer a level (0.3: +30% at level I, +60% at II).", "max_level": "The highest level of a skill. Past it, XP goes into Mastery ranks.",
     "mastery_ranks": "How many Mastery ranks a skill has past the maximum level; each rank is a perk.",
     "first_specialization_level": "The level at which a skill's first specialization is chosen.",
     "second_specialization_level": "The level at which a skill's second specialization is chosen.",
