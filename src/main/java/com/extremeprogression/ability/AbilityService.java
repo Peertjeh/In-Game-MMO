@@ -68,7 +68,8 @@ public final class AbilityService {
 					spec.skill);
 			return Result.COOLDOWN;
 		}
-		d.cooldowns.put(spec.id, now + cooldownTicks(spec));
+		// (the Oath of the Deep Dark makes it shorter, 2.2)
+		d.cooldowns.put(spec.id, now + Math.round(cooldownTicks(spec) * (1 - com.extremeprogression.legends.Oaths.cooldownCut(player))));
 		PlayerStore.markDirty(player.getUUID());
 		Sync.send(player);
 		Ability ability = ABILITIES.get(spec);

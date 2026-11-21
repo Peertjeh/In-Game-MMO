@@ -97,6 +97,9 @@ public final class Titles {
 			return Chronicle.all().values().stream().anyMatch(f -> f.by(id));
 		}));
 		out.add(new Def("echo_forged", "Echo-Forged", 0x2AC6C6, p -> legends(p).stat("echo_forged") > 0));
+		// The Oaths (2.2)
+		out.add(new Def("oathsworn", "Oathsworn", 0xD8D8D8, p -> !legends(p).oaths.isEmpty()));
+		out.add(new Def("oathkeeper", "Oathkeeper", 0xFFD700, p -> legends(p).oaths.contains("legends")));
 		return Collections.unmodifiableList(out);
 	}
 

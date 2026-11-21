@@ -35,7 +35,8 @@
 			"com.extremeprogression.gametest.BalanceTests",
 			"com.extremeprogression.gametest.PlaceholderTests",
 			"com.extremeprogression.gametest.LegendsTests",
-			"com.extremeprogression.gametest.PotionTests"
+			"com.extremeprogression.gametest.PotionTests",
+			"com.extremeprogression.gametest.OathTests"
 		],
 		"fabric-client-gametest": [
 			"com.extremeprogression.gametest.ClientShots"

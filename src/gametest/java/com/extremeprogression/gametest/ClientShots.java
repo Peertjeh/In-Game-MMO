@@ -363,6 +363,11 @@ public class ClientShots implements FabricClientGameTest {
 				book.daily.get(0).progress = book.daily.get(0).goal * 0.6;
 				book.daily.get(1).progress = book.daily.get(1).goal;
 				book.daily.get(1).done = true;
+				// (relics and an Oath, 2.2: the Raid Breaker ready to swear, the Tides sworn)
+				p0.addItem(com.extremeprogression.legends.Relic.WARBANNER_SHARD.stack(5));
+				p0.addItem(com.extremeprogression.legends.Relic.SCULK_HEART.stack(2));
+				com.extremeprogression.data.PlayerStore.get(p0.getUUID()).legends.add("raids", 1);
+				com.extremeprogression.data.PlayerStore.get(p0.getUUID()).legends.oaths.add("tides");
 				com.extremeprogression.legends.Titles.check(p0);
 				com.extremeprogression.legends.Legends.send(p0, false);
 				// (the skill potions' effects, 2.1: their icons at the top right in the screenshots that follow)
@@ -640,6 +645,25 @@ public class ClientShots implements FabricClientGameTest {
 			keys.add("message.extremeprogression.echo." + k);
 		}
 		keys.add("lore.extremeprogression.echo_forged");
+		// Relics and Oaths (2.2)
+		for (com.extremeprogression.legends.Relic r : com.extremeprogression.legends.Relic.values()) {
+			keys.add(r.translationKey());
+			keys.add(r.translationKey() + ".lore");
+		}
+		for (com.extremeprogression.legends.Oath o : com.extremeprogression.legends.Oath.values()) {
+			keys.add(o.translationKey());
+			keys.add(o.translationKey() + ".need");
+			keys.add(o.translationKey() + ".reward");
+		}
+		for (com.extremeprogression.legends.Oaths.Result r : com.extremeprogression.legends.Oaths.Result.values()) {
+			if (r != com.extremeprogression.legends.Oaths.Result.OK) {
+				keys.add("message.extremeprogression.oath." + r.name().toLowerCase(java.util.Locale.ROOT));
+			}
+		}
+		keys.addAll(List.of("item.extremeprogression.relic.use", "message.extremeprogression.oath.done", "message.extremeprogression.relic.raid",
+				"gui.extremeprogression.legends.tab.oaths", "gui.extremeprogression.legends.oaths.swear", "gui.extremeprogression.legends.oaths.swear_tip",
+				"gui.extremeprogression.legends.oaths.count", "gui.extremeprogression.legends.oaths.off", "gui.extremeprogression.legends.oaths.tip",
+				"gui.extremeprogression.legends.oaths.gives", "gui.extremeprogression.legends.oaths.every_relic"));
 		// Skill potions (2.1)
 		for (String e : new String[] {"quickening", "persistence"}) {
 			keys.add("effect.extremeprogression." + e);

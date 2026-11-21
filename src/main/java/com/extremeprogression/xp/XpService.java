@@ -63,7 +63,7 @@ public final class XpService {
 			com.extremeprogression.legends.Boosts.earned(player);
 			// (the party bonus, the player's boost and the Skill of the Day add up, 2.0)
 			xp *= 1 + com.extremeprogression.party.Parties.bonus(player) + com.extremeprogression.legends.Boosts.bonus(player)
-					+ com.extremeprogression.legends.SkillOfTheDay.bonus(skill);
+					+ com.extremeprogression.legends.SkillOfTheDay.bonus(skill) + com.extremeprogression.legends.Oaths.xp(player);
 		}
 		return apply(player, p, skill, xp);
 	}

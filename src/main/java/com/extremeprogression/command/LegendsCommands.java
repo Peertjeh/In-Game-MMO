@@ -29,7 +29,7 @@ import net.minecraft.world.entity.MobCategory;
  * The Legends update's commands (2.0): {@code /skills legends} opens the Legends screen; {@code /skills boost} shows your
  * boost, and for admins gives one ({@code give <player> <percent> <minutes>}), gives tomes ({@code tome <player>
  * <tome> [count]}, e.g. as a vote reward) or takes them all ({@code clear <player>}); {@code /skills champion <affix>}
- * makes the nearest hostile mob a Champion.
+ * makes the nearest hostile mob a Champion; {@code /skills relic <player> <relic> [count]} gives relics (2.2).
  */
 public final class LegendsCommands {
 	private LegendsCommands() {}
@@ -57,6 +57,13 @@ public final class LegendsCommands {
 												.executes(c -> tome(c, IntegerArgumentType.getInteger(c, "count")))))))
 				.then(Commands.literal("clear").requires(boosts)
 						.then(player().executes(LegendsCommands::clear))));
+		skills.then(Commands.literal("relic").requires(boosts)
+				.then(player()
+						.then(Commands.argument("relic", StringArgumentType.word())
+								.suggests((c, b) -> SharedSuggestionProvider.suggest(Arrays.stream(com.extremeprogression.legends.Relic.values()).map(r -> r.id), b))
+								.executes(c -> relic(c, 1))
+								.then(Commands.argument("count", IntegerArgumentType.integer(1, 64))
+										.executes(c -> relic(c, IntegerArgumentType.getInteger(c, "count")))))));
 		skills.then(Commands.literal("champion").requires(events)
 				.then(Commands.argument("affix", StringArgumentType.word())
 						.suggests((c, b) -> SharedSuggestionProvider.suggest(Arrays.stream(Champions.Affix.values()).map(a -> a.id), b))
@@ -115,6 +122,23 @@ public final class LegendsCommands {
 		}
 		c.getSource().sendSuccess(() -> Component.translatable("commands.extremeprogression.boost.gave_tome", p.getName(), count,
 				Component.translatable(t.translationKey())), true);
+		return count;
+	}
+
+	/** Gives a player relics (2.2): a reward, an event, or to try the Oaths. */
+	private static int relic(CommandContext<CommandSourceStack> c, int count) {
+		ServerPlayer p = target(c);
+		if (p == null) {
+			return 0;
+		}
+		com.extremeprogression.legends.Relic r = com.extremeprogression.legends.Relic.byId(StringArgumentType.getString(c, "relic").toLowerCase(Locale.ROOT));
+		if (r == null) {
+			c.getSource().sendFailure(Component.translatable("commands.extremeprogression.relic.none", StringArgumentType.getString(c, "relic")));
+			return 0;
+		}
+		Boosts.giveStack(p, r.stack(count));
+		c.getSource().sendSuccess(() -> Component.translatable("commands.extremeprogression.boost.gave_tome", p.getName(), count,
+				Component.translatable(r.translationKey())), true);
 		return count;
 	}
 

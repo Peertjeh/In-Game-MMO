@@ -31,6 +31,8 @@ public class LegendsData {
 	/** Titles earned, and the one shown ("" for none). */
 	public Set<String> titles = new LinkedHashSet<>();
 	public String title = "";
+	/** The Oaths sworn, by id (2.2). */
+	public Set<String> oaths = new LinkedHashSet<>();
 	/** Counts: champions slain, contracts done, bosses, and the like. */
 	public Map<String, Long> stats = new LinkedHashMap<>();
 
@@ -150,6 +152,10 @@ public class LegendsData {
 		if (title == null || !title.isEmpty() && !titles.contains(title)) {
 			title = "";
 		}
+		if (oaths == null) {
+			oaths = new LinkedHashSet<>();
+		}
+		oaths.remove(null);
 		if (stats == null) {
 			stats = new LinkedHashMap<>();
 		}

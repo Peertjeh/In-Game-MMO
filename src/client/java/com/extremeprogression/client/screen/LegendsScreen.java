@@ -34,7 +34,7 @@ public class LegendsScreen extends Screen {
 	private static final int TITLE_COLS = 3, TITLE_ROW = 12;
 
 	public enum Tab {
-		BOOSTS, CONTRACTS, TITLES
+		BOOSTS, CONTRACTS, TITLES, OATHS
 	}
 
 	private static Tab tab = Tab.BOOSTS;
@@ -78,7 +78,7 @@ public class LegendsScreen extends Screen {
 		y0 = Math.max(2, (this.height - H) / 2);
 		seen = ClientLegends.updates();
 		// The tabs
-		int tw = 90, tx = this.width / 2 - (3 * tw + 8) / 2;
+		int tw = 84, tx = this.width / 2 - (Tab.values().length * (tw + 4) - 4) / 2;
 		for (Tab t : Tab.values()) {
 			Button b = Button.builder(Component.translatable("gui.extremeprogression.legends.tab." + t.name().toLowerCase(java.util.Locale.ROOT)), x -> {
 				tab = t;
@@ -97,6 +97,20 @@ public class LegendsScreen extends Screen {
 					Button b = Button.builder(Component.translatable("gui.extremeprogression.legends.contracts.swap"), x -> act("reroll", Integer.toString(index)))
 							.pos(x0 + W - 52, cardY(i) + 4).size(42, 14).build();
 					b.setTooltip(Tooltip.create(Component.translatable("gui.extremeprogression.legends.contracts.swap_tip")));
+					this.addRenderableWidget(b);
+				}
+			}
+		}
+		// The Oaths that may be sworn now (2.2)
+		if (tab == Tab.OATHS && v.oathsOn && Minecraft.getInstance().player != null) {
+			java.util.Map<com.extremeprogression.legends.Relic, Integer> have = com.extremeprogression.legends.Oaths.carried(Minecraft.getInstance().player.getInventory());
+			com.extremeprogression.legends.Oath[] all = com.extremeprogression.legends.Oath.values();
+			for (int i = 0; i < all.length; i++) {
+				com.extremeprogression.legends.Oath o = all[i];
+				if (!v.oaths.contains(o.id) && ready(o, v, have)) {
+					Button b = Button.builder(Component.translatable("gui.extremeprogression.legends.oaths.swear"), x -> act("oath", o.id))
+							.pos(oathX(i) + OATH_W - 44, oathY(i) + 2).size(40, 12).build();
+					b.setTooltip(Tooltip.create(Component.translatable("gui.extremeprogression.legends.oaths.swear_tip")));
 					this.addRenderableWidget(b);
 				}
 			}
@@ -148,6 +162,7 @@ public class LegendsScreen extends Screen {
 			case BOOSTS -> boosts(g);
 			case CONTRACTS -> contracts(g);
 			case TITLES -> titles(g, mouseX, mouseY);
+			case OATHS -> oaths(g, mouseX, mouseY);
 		};
 		if (tip != null) {
 			g.setComponentTooltipForNextFrame(this.font, tip, mouseX, mouseY);
@@ -325,6 +340,84 @@ public class LegendsScreen extends Screen {
 			if (d != null && mouseX >= cx - 2 && mouseX < cx + cw - 4 && mouseY >= cy - 2 && mouseY < cy + TITLE_ROW - 2) {
 				tip = List.of(Component.literal(label).withColor(d.color()),
 						Component.literal(Ui.tr(Titles.translationKey(id) + ".how")).withColor(earned ? Ui.OK : Ui.MUTED));
+			}
+		}
+		return tip;
+	}
+
+	// --- Oaths (2.2) ------------------------------------------------------------------------------
+
+	private static final int OATH_W = (W - 20) / 2, OATH_H = 34;
+
+	private int oathX(int i) {
+		return x0 + 8 + (i % 2) * (OATH_W + 4);
+	}
+
+	private int oathY(int i) {
+		return py() + 27 + (i / 2) * (OATH_H + 2);
+	}
+
+	private static boolean ready(com.extremeprogression.legends.Oath o, Legends.View v, java.util.Map<com.extremeprogression.legends.Relic, Integer> have) {
+		if (!v.oathFeats.contains(o.id)) {
+			return false;
+		}
+		for (java.util.Map.Entry<com.extremeprogression.legends.Relic, Integer> e : o.relics.entrySet()) {
+			if (have.getOrDefault(e.getKey(), 0) < e.getValue()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private List<Component> oaths(GuiGraphicsExtractor g, int mouseX, int mouseY) {
+		Legends.View v = view();
+		int x = x0 + 8;
+		if (!v.oathsOn) {
+			Ui.text(g, this.font, Ui.tr("gui.extremeprogression.legends.oaths.off"), x, py() + 8, Ui.MUTED);
+			return null;
+		}
+		com.extremeprogression.legends.Oath[] all = com.extremeprogression.legends.Oath.values();
+		Ui.text(g, this.font, Ui.tr("gui.extremeprogression.legends.oaths.count", v.oaths.size(), all.length), x, py() + 5, Ui.GOLD);
+		Ui.text(g, this.font, Ui.ellipsize(this.font, Ui.tr("gui.extremeprogression.legends.oaths.tip"), W - 16), x, py() + 15, Ui.DIM);
+		java.util.Map<com.extremeprogression.legends.Relic, Integer> have = Minecraft.getInstance().player == null ? java.util.Map.of()
+				: com.extremeprogression.legends.Oaths.carried(Minecraft.getInstance().player.getInventory());
+		List<Component> tip = null;
+		for (int i = 0; i < all.length; i++) {
+			com.extremeprogression.legends.Oath o = all[i];
+			int cx = oathX(i), cy = oathY(i);
+			boolean sworn = v.oaths.contains(o.id), feat = v.oathFeats.contains(o.id), ready = !sworn && ready(o, v, have);
+			Ui.tile(g, cx, cy, OATH_W, OATH_H, Ui.mix(sworn ? Ui.GOLD : ready ? Ui.OK : 0x777777, Ui.SHADOW, 0.35));
+			String name = Ui.tr(o.translationKey());
+			Ui.text(g, this.font, Ui.ellipsize(this.font, (sworn ? "✔ " : "") + name, OATH_W - (ready ? 52 : 10)), cx + 5, cy + 3, sworn ? Ui.GOLD : Ui.TEXT);
+			// What it needs: the relics (carried / asked) and the feat
+			StringBuilder needs = new StringBuilder();
+			boolean relicsMet = true;
+			for (java.util.Map.Entry<com.extremeprogression.legends.Relic, Integer> e : o.relics.entrySet()) {
+				int n = Math.min(have.getOrDefault(e.getKey(), 0), e.getValue());
+				relicsMet &= n >= e.getValue();
+				if (o.relics.size() == 1) {
+					needs.append(n).append('/').append(e.getValue()).append(' ').append(Ui.tr(e.getKey().translationKey()));
+				}
+			}
+			if (o.relics.size() > 1) {
+				needs.append(Ui.tr("gui.extremeprogression.legends.oaths.every_relic", o.relics.entrySet().stream()
+						.filter(e -> have.getOrDefault(e.getKey(), 0) >= e.getValue()).count(), o.relics.size()));
+			}
+			needs.append(" · ").append(feat ? "✔ " : "✘ ").append(Ui.tr(o.translationKey() + ".need"));
+			Ui.text(g, this.font, Ui.ellipsize(this.font, needs.toString(), OATH_W - 10), cx + 5, cy + 13,
+					sworn ? Ui.DIM : relicsMet && feat ? Ui.OK : Ui.MUTED);
+			Ui.text(g, this.font, Ui.ellipsize(this.font, Ui.tr(o.translationKey() + ".reward"), OATH_W - 10), cx + 5, cy + 23, sworn ? Ui.GOLD : 0x88CC88);
+			if (mouseX >= cx && mouseX < cx + OATH_W && mouseY >= cy && mouseY < cy + OATH_H) {
+				List<Component> lines = new ArrayList<>();
+				lines.add(Component.literal(name).withColor(Ui.GOLD));
+				for (java.util.Map.Entry<com.extremeprogression.legends.Relic, Integer> e : o.relics.entrySet()) {
+					int n = have.getOrDefault(e.getKey(), 0);
+					lines.add(Component.literal("• " + Ui.tr(e.getKey().translationKey()) + "  " + Math.min(n, e.getValue()) + "/" + e.getValue())
+							.withColor(n >= e.getValue() ? Ui.OK : e.getKey().color));
+				}
+				lines.add(Component.literal("• " + Ui.tr(o.translationKey() + ".need") + (feat ? "  ✔" : "")).withColor(feat ? Ui.OK : Ui.MUTED));
+				lines.add(Component.literal(Ui.tr("gui.extremeprogression.legends.oaths.gives", Ui.tr(o.translationKey() + ".reward"))).withColor(0x88CC88));
+				tip = lines;
 			}
 		}
 		return tip;

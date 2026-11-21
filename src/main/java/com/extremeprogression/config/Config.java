@@ -211,6 +211,8 @@ public final class Config {
 	 */
 	public static double QUICKENING_PER_LEVEL = 0.5;
 	public static double PERSISTENCE_PER_LEVEL = 0.3;
+	/** Relics (2.2): found in chests, dropped by mobs, given for raids won; and the Oaths that take them for permanent buffs. */
+	public static boolean RELICS = true;
 
 	private static final Map<String, Object> DEFAULTS = snapshot();
 

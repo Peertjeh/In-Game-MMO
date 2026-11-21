@@ -83,7 +83,8 @@ public final class SkillPotions {
 
 	/** An ability's time in effect, made longer by Persistence. */
 	public static int lasting(ServerPlayer p, int ticks) {
-		double more = persistence(p);
+		// (and the Oath of the Void, 2.2)
+		double more = persistence(p) + com.extremeprogression.legends.Oaths.lasting(p);
 		return more > 0 ? (int) Math.round(ticks * (1 + more)) : ticks;
 	}
 

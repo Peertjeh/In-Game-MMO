@@ -59,6 +59,10 @@ public final class Legends {
 		// Reading a tome (on both sides: the client hands the right click to the server)
 		UseItemCallback.EVENT.register((player, level, hand) -> {
 			ItemStack stack = player.getItemInHand(hand);
+			// (a relic is no book to read: nothing happens, and the knowledge book under it is not used up)
+			if (Relic.of(stack) != null) {
+				return InteractionResult.FAIL;
+			}
 			Tome t = Tome.of(stack);
 			if (t == null) {
 				return InteractionResult.PASS;
@@ -74,7 +78,12 @@ public final class Legends {
 		ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, base, taken, blocked) -> Champions.hit(entity, source, taken));
 		// Treasure chests may hold a tome
 		LootTableEvents.MODIFY_DROPS.register((holder, context, drops) ->
-				holder.unwrapKey().ifPresent(key -> Boosts.loot(key.identifier().toString(), context.getRandom(), drops)));
+				holder.unwrapKey().ifPresent(key -> {
+					Boosts.loot(key.identifier().toString(), context.getRandom(), drops);
+					Relics.loot(key.identifier().toString(), context.getRandom(), drops);
+				}));
+		// The Oaths' buffs again on a new body
+		net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> Oaths.apply(newPlayer));
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> joined(handler.getPlayer()));
 		ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> server.executeIfPossible(() -> Boosts.left(handler.getPlayer())));
 		ServerTickEvents.END_SERVER_TICK.register(Legends::tick);
@@ -85,6 +94,7 @@ public final class Legends {
 			return;
 		}
 		Boosts.bossDied(entity, LocalDate.now());
+		Relics.died(entity, source);
 		if (Champions.is(entity)) {
 			Champions.died(entity, source);
 		} else if (source.getEntity() instanceof ServerPlayer p && !MobOrigins.flagged(entity) && entity.getType().getCategory() == MobCategory.MONSTER) {
@@ -107,6 +117,7 @@ public final class Legends {
 			}
 		}
 		Titles.check(p);
+		Oaths.apply(p);
 		dirty(p);
 	}
 
@@ -183,6 +194,10 @@ public final class Legends {
 		public Map<String, Long> stats = new LinkedHashMap<>();
 		/** Champions on this server: the chance of one (0 when they are off). */
 		public double championChance;
+		/** The Oaths (2.2): whether they are on, those sworn, and those whose feat is met. */
+		public boolean oathsOn;
+		public List<String> oaths = new ArrayList<>();
+		public List<String> oathFeats = new ArrayList<>();
 	}
 
 	public static View view(ServerPlayer p) {
@@ -207,6 +222,13 @@ public final class Legends {
 		v.title = d.title;
 		v.stats = d.stats;
 		v.championChance = Config.CHAMPION_CHANCE;
+		v.oathsOn = Oath.on();
+		v.oaths = new ArrayList<>(d.oaths);
+		for (Oath o : Oath.values()) {
+			if (o.feat.test(p)) {
+				v.oathFeats.add(o.id);
+			}
+		}
 		return v;
 	}
 
@@ -217,7 +239,7 @@ public final class Legends {
 
 	// --- What the client asks for ----------------------------------------------------------------
 
-	/** A button in the Legends screen: "open", "reroll" (arg: the contract's index), "title" (arg: its id, "" for none). */
+	/** A button in the Legends screen: "open", "reroll" (arg: the contract's index), "title" (arg: its id, "" for none), "oath" (arg: its id). */
 	public static void act(ServerPlayer p, String action, String arg) {
 		switch (action) {
 			case "open" -> send(p, true);
@@ -235,6 +257,10 @@ public final class Legends {
 			}
 			case "title" -> {
 				Titles.equip(p, arg);
+				send(p, false);
+			}
+			case "oath" -> {
+				Oaths.swear(p, Oath.byId(arg));
 				send(p, false);
 			}
 			default -> {}

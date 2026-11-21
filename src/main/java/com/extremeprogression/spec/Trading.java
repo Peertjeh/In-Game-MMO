@@ -441,6 +441,8 @@ public final class Trading {
 	public static void effect(LivingEntity target, MobEffectInstance effect) {
 		if (target instanceof ServerPlayer p && effect.getEffect().equals(MobEffects.HERO_OF_THE_VILLAGE) && effect.getDuration() >= 40000) {
 			XpService.award(p, Skill.TRADING, XpTables.RAID_PER_OMEN_LEVEL * (effect.getAmplifier() + 1));
+			// (and banner shards for the Oath of the Raid Breaker, 2.2)
+			com.extremeprogression.legends.Relics.raidWon(p, effect.getAmplifier());
 		}
 	}
 

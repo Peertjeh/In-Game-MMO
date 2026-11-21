@@ -195,7 +195,11 @@ public final class Boosts {
 
 	/** Gives the player tomes: into the inventory, or at their feet when it is full. */
 	public static void give(ServerPlayer p, Tome t, int count) {
-		ItemStack s = t.stack(count);
+		giveStack(p, t.stack(count));
+	}
+
+	/** Gives the player an item: into the inventory, or at their feet when it is full. */
+	public static void giveStack(ServerPlayer p, ItemStack s) {
 		if (!p.addItem(s) && !s.isEmpty()) {
 			p.spawnAtLocation(p.level(), s);
 		}
