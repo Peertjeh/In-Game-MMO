@@ -23,6 +23,7 @@ public class ExtremeProgression implements ModInitializer {
 	public void onInitialize() {
 		ConfigFile.load();
 		com.extremeprogression.config.DataFiles.load();
+		com.extremeprogression.alchemy.SkillPotions.register();
 		Sync.register();
 		ServerEvents.register();
 		com.extremeprogression.legends.Legends.register();

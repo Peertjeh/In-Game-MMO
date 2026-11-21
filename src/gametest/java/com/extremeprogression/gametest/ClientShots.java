@@ -365,6 +365,9 @@ public class ClientShots implements FabricClientGameTest {
 				book.daily.get(1).done = true;
 				com.extremeprogression.legends.Titles.check(p0);
 				com.extremeprogression.legends.Legends.send(p0, false);
+				// (the skill potions' effects, 2.1: their icons at the top right in the screenshots that follow)
+				p0.addEffect(new net.minecraft.world.effect.MobEffectInstance(com.extremeprogression.alchemy.SkillPotions.QUICKENING, 6000, 1));
+				p0.addEffect(new net.minecraft.world.effect.MobEffectInstance(com.extremeprogression.alchemy.SkillPotions.PERSISTENCE, 6000, 0));
 			});
 			ctx.waitTicks(10);
 			check(ctx.computeOnClient(mc -> com.extremeprogression.client.state.ClientLegends.current() != null
@@ -637,6 +640,14 @@ public class ClientShots implements FabricClientGameTest {
 			keys.add("message.extremeprogression.echo." + k);
 		}
 		keys.add("lore.extremeprogression.echo_forged");
+		// Skill potions (2.1)
+		for (String e : new String[] {"quickening", "persistence"}) {
+			keys.add("effect.extremeprogression." + e);
+			keys.add("effect.extremeprogression." + e + ".desc");
+			for (String c : new String[] {"potion", "splash_potion", "lingering_potion", "tipped_arrow"}) {
+				keys.add("item.minecraft." + c + ".effect.ep_" + e);
+			}
+		}
 		// The Legends update (2.0)
 		for (com.extremeprogression.legends.Tome t : com.extremeprogression.legends.Tome.values()) {
 			keys.add(t.translationKey());

@@ -1404,5 +1404,17 @@
 	"gui.extremeprogression.legends.titles.off": "Titles are turned off on this server.",
 	"gui.extremeprogression.legends.titles.tip": "Click an earned title to show it above your head, in the tablist and in chat.",
 	"gui.extremeprogression.legends.hud.rested": "Rested",
-	"gui.extremeprogression.sheet.sotd": "Skill of the Day: +%s%% XP"
+	"gui.extremeprogression.sheet.sotd": "Skill of the Day: +%s%% XP",
+	"effect.extremeprogression.quickening": "Quickening",
+	"effect.extremeprogression.quickening.desc": "Your abilities' cooldowns run faster: half again as fast, twice as fast at level II.",
+	"effect.extremeprogression.persistence": "Persistence",
+	"effect.extremeprogression.persistence.desc": "An ability you set off lasts longer: +30%, +60% at level II.",
+	"item.minecraft.potion.effect.ep_quickening": "Potion of Quickening",
+	"item.minecraft.splash_potion.effect.ep_quickening": "Splash Potion of Quickening",
+	"item.minecraft.lingering_potion.effect.ep_quickening": "Lingering Potion of Quickening",
+	"item.minecraft.tipped_arrow.effect.ep_quickening": "Arrow of Quickening",
+	"item.minecraft.potion.effect.ep_persistence": "Potion of Persistence",
+	"item.minecraft.splash_potion.effect.ep_persistence": "Splash Potion of Persistence",
+	"item.minecraft.lingering_potion.effect.ep_persistence": "Lingering Potion of Persistence",
+	"item.minecraft.tipped_arrow.effect.ep_persistence": "Arrow of Persistence"
 }

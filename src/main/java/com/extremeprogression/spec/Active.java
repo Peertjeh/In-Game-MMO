@@ -17,7 +17,7 @@ import net.minecraft.world.entity.Entity;
 
 /**
  * The active abilities in effect: each lasts a number of ticks, or until it is used up (the next hit, the next shot).
- * Kept in memory only; none lasts longer than half a minute.
+ * Kept in memory only; none lasts longer than half a minute (or a little more, under a Potion of Persistence).
  */
 public final class Active {
 	private Active() {}
@@ -30,6 +30,11 @@ public final class Active {
 		/** A combo, the healing still to come: whatever the ability counts. */
 		public double value;
 
+		/** The server tick it ends (for tests). */
+		public long until() {
+			return until;
+		}
+
 		State(Specialization spec, int rank, long until) {
 			this.spec = spec;
 			this.rank = rank;
@@ -41,6 +46,8 @@ public final class Active {
 
 	/** Sets an ability off for this many ticks, replacing one already in effect. */
 	public static State start(ServerPlayer p, Specialization spec, int rank, int ticks) {
+		// (a Potion of Persistence makes it last longer, 2.1)
+		ticks = com.extremeprogression.alchemy.SkillPotions.lasting(p, ticks);
 		State s = new State(spec, rank, p.level().getServer().getTickCount() + ticks);
 		ACTIVE.computeIfAbsent(p.getUUID(), k -> new EnumMap<>(Specialization.class)).put(spec, s);
 		sync(p);

@@ -205,6 +205,12 @@ public final class Config {
 	public static double SKILL_OF_THE_DAY_BONUS = 0.25;
 	/** Titles players earn and show above their heads, in the tablist and in chat. */
 	public static boolean TITLES = true;
+	/**
+	 * Skill potions (2.1): under Quickening the abilities' cooldowns run this much faster a level (0.5: half again as
+	 * fast); under Persistence an ability set off lasts this much longer a level (0.3: +30%).
+	 */
+	public static double QUICKENING_PER_LEVEL = 0.5;
+	public static double PERSISTENCE_PER_LEVEL = 0.3;
 
 	private static final Map<String, Object> DEFAULTS = snapshot();
 
@@ -344,6 +350,8 @@ public final class Config {
 		CHAMPION_CHANCE = share(CHAMPION_CHANCE, "CHAMPION_CHANCE");
 		CHAMPION_KILL_XP = nonNegative(CHAMPION_KILL_XP, "CHAMPION_KILL_XP");
 		SKILL_OF_THE_DAY_BONUS = nonNegative(SKILL_OF_THE_DAY_BONUS, "SKILL_OF_THE_DAY_BONUS");
+		QUICKENING_PER_LEVEL = nonNegative(QUICKENING_PER_LEVEL, "QUICKENING_PER_LEVEL");
+		PERSISTENCE_PER_LEVEL = nonNegative(PERSISTENCE_PER_LEVEL, "PERSISTENCE_PER_LEVEL");
 		RESPEC_DAYS = nonNegative(RESPEC_DAYS, "RESPEC_DAYS");
 		XP_MULTIPLIER = nonNegative(XP_MULTIPLIER, "XP_MULTIPLIER");
 		PLANTED_TREE_FACTOR = share(PLANTED_TREE_FACTOR, "PLANTED_TREE_FACTOR");
