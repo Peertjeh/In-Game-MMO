@@ -1052,6 +1052,7 @@ class Wiki:
         self.gen_trunks()
         self.gen_mastery()
         self.gen_synergies()
+        self.gen_legends()
         self.gen_keys()
         self.gen_commands()
         self.gen_perms()
@@ -1243,6 +1244,48 @@ class Wiki:
                       "kind": "Duo synergy" if is_duo else "Synergy", "c": f"{self.cat_of(a)},{self.cat_of(b)}",
                       "text": self.L(k + ".desc", c["doc"]), "facts": [f for f in facts if f[1]],
                       "refs": [f"skill-{a.lower()}", f"skill-{b.lower()}", "concept-duo" if is_duo else "concept-synergies", "concept-codex"]})
+
+    # Where each Tome of Insight comes from (legends/Boosts.java, Champions.java, Contracts.java)
+    TOME_SOURCES = {
+        "INSIGHT": "Your first login on most days, every 25 levels in a skill, dungeons, mineshafts, desert and jungle temples, "
+                   "pillager outposts and shipwreck treasure, Champions (35%), and all three of a day's contracts.",
+        "GREATER": "Every 7th day of your login streak, every 5 Mastery ranks, an Elder Guardian, buried treasure, stronghold "
+                   "libraries, woodland mansions, ancient cities, bastion treasure, trial chamber rewards and Champions (10%).",
+        "GRAND": "Every 30th day of your login streak, a skill at level 100, the Wither and the Warden, end city treasure, "
+                 "ominous trial chamber rewards, Champions (2%) and the weekly contract.",
+        "LEGENDARY": "The Ender Dragon, for every player near when it dies (once a day).",
+    }
+
+    def gen_legends(self):
+        """The Legends update (2.0): the Tomes of Insight, the Champions' affixes and the titles."""
+        s = self.src
+        for t in parse_enum(s.need(MAIN + "legends/Tome.java"), "Tome"):
+            low = t["name"].lower()
+            percent, minutes = t["args"][0], t["args"][1]
+            self.add({"id": f"tome-{low}", "cat": "legends", "kind": "Tome of Insight", "alt": "boek, xp boost",
+                      "name": self.L(f"item.{MOD}.tome.{low}", humanize(t["name"])),
+                      "text": f"Read it with a right click: +{percent}% XP for {minutes} minutes of play. Its time runs only while "
+                              f"you earn XP. Read several and the strongest runs first; the others wait their turn.",
+                      "facts": [["Boost", f"+{percent}% XP"], ["Lasts", f"{minutes} minutes of play while earning XP"],
+                                ["Where from", self.TOME_SOURCES.get(t["name"], "")], ["Give one (admins)", f"/skills boost tome <player> {low}", 1]],
+                      "refs": ["concept-boosts", "guide-tome"]})
+        for a in parse_enum(s.need(MAIN + "legends/Champions.java"), "Affix"):
+            low = a["name"].lower()
+            name = self.L(f"champion.{MOD}.{low}", humanize(a["name"]))
+            self.add({"id": f"affix-{low}", "cat": "legends", "kind": "Champion affix", "alt": "kampioen, elite",
+                      "name": f"{name} Champion", "text": player_text(a["doc"]),
+                      "facts": [["Every Champion", "three times the health and half again the damage, its name above its head"],
+                                ["Slain", f"{human(self.cfg['CHAMPION_KILL_XP'])} XP in Melee (Ranged with a projectile), and a chance at a tome"],
+                                ["Make one (admins)", f"/skills champion {low}", 1]],
+                      "refs": ["concept-champions"]})
+        titles = sorted(k for k in self.lang if re.fullmatch(rf"title\.{MOD}\.[a-z_]+", k))
+        for k in titles:
+            tid = k.split(".")[-1]
+            skill = tid[:-len("_grandmaster")] if tid.endswith("_grandmaster") else None
+            self.add({"id": f"title-{tid}", "cat": "legends", "kind": "Title", "alt": "titel" + (" " + self.dutch.get(skill, "") if skill else ""),
+                      "name": self.L(k, humanize(tid)), "text": f"Earned by: {self.L(k + '.how', '')}.",
+                      "facts": [["Show it", "click it in the Titles tab of the Legends screen"]],
+                      "refs": ["concept-titles"] + ([f"skill-{skill}"] if skill else [])})
 
     def gen_keys(self):
         notes = self.pages.get("keys", {})
@@ -1549,7 +1592,7 @@ OP_LEVELS = {"ALL": 0, "MODERATORS": 1, "GAMEMASTERS": 2, "ADMINS": 3, "OWNERS":
 
 CATS = [["concept", "How it works"], ["guide", "How to"], ["skill", "Skills"], ["xp", "XP tables"],
         ["spec", "Specializations"], ["trunk", "Trunk bonuses"], ["mastery", "Mastery perks"], ["synergy", "Synergies"],
-        ["screen", "Screens and HUD"], ["command", "Commands"], ["permission", "Permissions"],
+        ["legends", "Legends"], ["screen", "Screens and HUD"], ["command", "Commands"], ["permission", "Permissions"],
         ["placeholder", "Placeholders"], ["setting", "Settings"]]
 
 

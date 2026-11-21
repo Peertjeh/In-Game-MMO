@@ -11,7 +11,7 @@
   --bg: #dcded8; --panel: #f7f7f4; --sunk: #eceee8; --ink: #1c1f23; --muted: #555b62; --line: #bdc1b9;
   --hi: rgba(255, 255, 255, .9); --lo: rgba(36, 40, 33, .2); --drop: #c3c7bf;
   --xp: #58a515; --xp-hi: #9be04f; --xp-ink: #2c6a06; --xp-soft: #e1f0cc; --mark: #e6f5a1; --chip: #e8e9e4;
-  --btn: #3d7f0c; --on-btn: #ffffff; --bar-bg: #34382d; --bar-edge: #1c1f23;
+  --btn: #3d7f0c; --on-btn: #ffffff; --bar-bg: #34382d; --bar-edge: #1c1f23; --shade: rgba(0, 0, 0, .28);
   --combat: #e0473f; --gathering: #3ea83a; --survival: #17a2a6; --crafting: #e38c00; --other: #c344c3;
   --combat-ink: #ad2620; --gathering-ink: #22731f; --survival-ink: #0b6c70; --crafting-ink: #8a5300; --other-ink: #8d2b8d;
   --display: "Pixelify Sans", "Trebuchet MS", system-ui, sans-serif;
@@ -22,7 +22,7 @@
   --bg: #1a1c1f; --panel: #25282c; --sunk: #1f2124; --ink: #e8eae5; --muted: #a3a9ae; --line: #3b3f44;
   --hi: rgba(255, 255, 255, .06); --lo: rgba(0, 0, 0, .5); --drop: #050607;
   --xp: #80d424; --xp-hi: #b8f374; --xp-ink: #a5e65c; --xp-soft: #2b3a1b; --mark: #4a6420; --chip: #303338;
-  --btn: #80d424; --on-btn: #10180a; --bar-bg: #0f110d; --bar-edge: #000000;
+  --btn: #80d424; --on-btn: #10180a; --bar-bg: #0f110d; --bar-edge: #000000; --shade: rgba(0, 0, 0, .4);
   --combat: #ff5555; --gathering: #55ff55; --survival: #55ffff; --crafting: #ffaa00; --other: #ff55ff;
   --combat-ink: #ff7b74; --gathering-ink: #79f272; --survival-ink: #74eeee; --crafting-ink: #ffbf47; --other-ink: #ff88ff;
   color-scheme: dark } }
@@ -30,7 +30,7 @@
   --bg: #1a1c1f; --panel: #25282c; --sunk: #1f2124; --ink: #e8eae5; --muted: #a3a9ae; --line: #3b3f44;
   --hi: rgba(255, 255, 255, .06); --lo: rgba(0, 0, 0, .5); --drop: #050607;
   --xp: #80d424; --xp-hi: #b8f374; --xp-ink: #a5e65c; --xp-soft: #2b3a1b; --mark: #4a6420; --chip: #303338;
-  --btn: #80d424; --on-btn: #10180a; --bar-bg: #0f110d; --bar-edge: #000000;
+  --btn: #80d424; --on-btn: #10180a; --bar-bg: #0f110d; --bar-edge: #000000; --shade: rgba(0, 0, 0, .4);
   --combat: #ff5555; --gathering: #55ff55; --survival: #55ffff; --crafting: #ffaa00; --other: #ff55ff;
   --combat-ink: #ff7b74; --gathering-ink: #79f272; --survival-ink: #74eeee; --crafting-ink: #ffbf47; --other-ink: #ff88ff;
   color-scheme: dark }
@@ -49,7 +49,7 @@ h1 { font: 700 clamp(36px, 7.4vw, 58px)/1.02 var(--display); margin: 10px 0 12px
 .xpbar i { position: absolute; inset: 0 auto 0 0; width: 64%; background: linear-gradient(180deg, var(--xp-hi) 0 35%, var(--xp) 35% 100%) }
 .xpbar::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 calc(100% / 18 - 2px), var(--bar-edge) calc(100% / 18 - 2px) calc(100% / 18)) }
 .legend { display: flex; flex-wrap: wrap; gap: 2px 16px; margin: 10px 0 0; padding: 0; list-style: none; font: 13px/1.6 var(--mono); color: var(--muted) }
-.legend li::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 7px; background: var(--c); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .3); vertical-align: -1px }
+.legend li::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 7px; background: var(--c); box-shadow: inset 0 0 0 1px var(--shade); vertical-align: -1px }
 
 .band { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 12px 10px; border-bottom: 2px solid var(--line) }
 .search { display: flex; gap: 10px; align-items: center }
@@ -67,7 +67,7 @@ h1 { font: 700 clamp(36px, 7.4vw, 58px)/1.02 var(--display); margin: 10px 0 12px
 .ask p.hint { margin: 0 0 10px; color: var(--muted); font-size: 15px }
 .ask form { display: flex; gap: 8px; flex-wrap: wrap }
 .ask input { flex: 1 1 260px; min-width: 0; font: 16px var(--body); color: var(--ink); background: var(--sunk); border: 2px solid var(--line); border-radius: 4px; padding: 9px 12px }
-button { font: 700 15px var(--body); color: var(--on-btn); background: var(--btn); border: 0; border-radius: 4px; padding: 10px 16px; cursor: pointer; box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .25) }
+button { font: 700 15px var(--body); color: var(--on-btn); background: var(--btn); border: 0; border-radius: 4px; padding: 10px 16px; cursor: pointer; box-shadow: inset 0 -3px 0 var(--shade) }
 button.ghost { background: transparent; color: var(--muted); border: 1px solid var(--line); font-weight: 400; box-shadow: none }
 button:disabled { opacity: .5; cursor: default }
 .examples { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px }
@@ -244,6 +244,9 @@ function chips() {
   const list = [["all", "All"], ...WIKI.cats];
   $("chips").innerHTML = list.map(([id, name]) =>
     `<button class="chip" type="button" data-cat="${id}" aria-pressed="${state.cat === id}">${esc(name)}<b>${COUNTS[id] || 0}</b></button>`).join("");
+  // (on a phone the chips scroll sideways: keep the chosen one in sight)
+  const row = $("chips"), on = row.querySelector('[aria-pressed="true"]');
+  if (on && row.scrollWidth > row.clientWidth) row.scrollLeft = Math.max(0, on.offsetLeft - row.offsetLeft - 16);
 }
 $("legend").innerHTML = WIKI.skillcats.map(([id, name]) => `<li style="--c: var(--${id})">${esc(name)}</li>`).join("");
 // The colour of the card's edge: the category of its skill (two for a synergy)
