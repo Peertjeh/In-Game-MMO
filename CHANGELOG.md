@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.1.0: Skill potions
+
+Two new potions to brew (the owner's wish): one that brings your abilities back sooner, one that makes them last
+longer. Both are real status effects with their own icons, and work as splash and lingering potions and tipped arrows
+too.
+
+| Potion | Brew | Effect | Long (redstone) | Strong (glowstone) |
+|---|---|---|---|---|
+| **Potion of Quickening** | Awkward Potion + **clock** | your abilities' cooldowns run half again as fast | 8:00 | level II, twice as fast, 1:30 |
+| **Potion of Persistence** | Awkward Potion + **amethyst shard** | an ability you set off lasts 30% longer | 8:00 | level II, +60%, 1:30 |
+
+- The base potions last 3:00. Gunpowder makes them splash potions, dragon's breath lingering ones.
+- Quickening works on every cooldown that is running while it lasts, so drinking it after using an ability still helps.
+- Persistence works on abilities that last a while, set off while it lasts.
+- Arcana's Potent Brews and the Alchemist's Extended make them last longer, like any brewed potion.
+- New options: `quickening_per_level` (0.5) and `persistence_per_level` (0.3).
+
 ## 2.0.0: Legends
 
 The biggest update yet (the owner's wish: XP boosts to earn, and a lot of new content). Everything is in the new

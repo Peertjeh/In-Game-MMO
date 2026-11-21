@@ -1598,6 +1598,24 @@ Boosts, Contracts and Titles.
 
 ---
 
+## 18. Skill potions (2.1, the owner's wish: potions for shorter cooldowns and longer abilities)
+
+- Two status effects of the mod's own, `extremeprogression:quickening` and `extremeprogression:persistence`
+  (beneficial, with 18×18 icons), and six potions registered in the potion registry: `quickening`, `long_quickening`,
+  `strong_quickening`, `persistence`, `long_persistence`, `strong_persistence` (names `ep_quickening` and
+  `ep_persistence` for their item names).
+- **Quickening**: every second it lasts, every running ability cooldown of the player loses `quickening_per_level`
+  (0.5) seconds more a level: I runs them half again as fast, II twice as fast. Never past ready. The client is sent
+  the new cooldowns at once.
+- **Persistence**: an ability set off while it lasts (`Active.start`) stays in effect `persistence_per_level` (0.3)
+  longer a level: +30% at I, +60% at II. Abilities without a time of their own gain nothing.
+- **Brewing** (data recipes, `data/extremeprogression/recipe/brewing`): an Awkward Potion and a clock make Quickening,
+  and an amethyst shard Persistence (3:00); redstone makes the long one (8:00), glowstone the strong one (II, 1:30);
+  for potions, splash and lingering potions alike. Gunpowder turns each into a splash potion, dragon's breath a splash
+  potion into a lingering one. Tipped arrows come from the lingering ones as for any potion.
+
+---
+
 ## Appendix A: XP tables (✅ approved in round 24)
 
 All values are configurable (§11). They are calibrated against an assumed rate of active play, given per skill below. Internally XP is a decimal number; the GUI rounds it.

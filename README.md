@@ -19,6 +19,8 @@ that you discover yourself. Slow, meaningful progression, and deaths that cost y
 - **Legends (2.0)**: XP boosts of +25 to +200% from Tomes of Insight, Well Rested time and a daily login streak;
   Champions, elite mobs with affixes; three contracts a day and one a week; thirty-one titles to show above your head;
   and a Skill of the Day with +25% XP for everyone.
+- **Skill potions (2.1)**: brew a Potion of Quickening (clock) for faster ability cooldowns, or a Potion of Persistence
+  (amethyst shard) for abilities that last longer.
 - **For server owners**: presets, data files for every number, an in-game settings screen, XP events, a leaderboard and
   admin commands, and placeholders for TAB and Styled Chat ([server/README.md](server/README.md)).
 
