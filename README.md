@@ -19,6 +19,8 @@ that you discover yourself. Slow, meaningful progression, and deaths that cost y
 - **Legends (2.0)**: XP boosts of +25 to +200% from Tomes of Insight, Well Rested time and a daily login streak;
   Champions, elite mobs with affixes; three contracts a day and one a week; thirty-one titles to show above your head;
   and a Skill of the Day with +25% XP for everyone.
+- **Relics and Oaths (2.2)**: seven relics to find in chests, raids and from bosses, and eight Oaths that take them
+  for permanent buffs: hearts, shorter cooldowns, longer abilities, armor, and +10% XP.
 - **Skill potions (2.1)**: brew a Potion of Quickening (clock) for faster ability cooldowns, or a Potion of Persistence
   (amethyst shard) for abilities that last longer.
 - **For server owners**: presets, data files for every number, an in-game settings screen, XP events, a leaderboard and
@@ -51,7 +53,7 @@ changes on a server that has none; in a world of your own you hold them all.
 | `extremeprogression.admin.reset` | Reset in the Players screen, `/skills admin reset` | Operator level 3 |
 | `extremeprogression.admin.settings` | Changing the settings (the settings screen), `/skills settings`, `/skills preset`, `/skills reload` | Operator level 3 |
 | `extremeprogression.admin.events` | XP events: `/skills xprate`, and `/skills champion` | Operator level 3 |
-| `extremeprogression.admin.boosts` | Giving XP boosts and tomes: `/skills boost give\|tome\|clear` | Operator level 3 |
+| `extremeprogression.admin.boosts` | Giving XP boosts, tomes and relics: `/skills boost give\|tome\|clear`, `/skills relic` | Operator level 3 |
 
 In LuckPerms: `/lp group moderator permission set extremeprogression.admin.players true`. (Under the hood each is an id
 such as `extremeprogression:admin/players`; LuckPerms writes it with dots.) The fallback levels are fixed on purpose:

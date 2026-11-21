@@ -75,6 +75,8 @@ Herb Lore, Tailwind (half your elytra rockets back), Echo Forging (a ritual with
 - **Contracts**: three a day and one a week, for XP and tomes.
 - **Thirty-one titles** to earn and show above your head, in the tablist and in chat.
 - **Skill of the Day**: one skill earns +25% XP for everyone, a different one every day.
+- **Relics and Oaths**: seven relics to find (raids, ancient cities, bastions, end cities, temples, Champions) and
+  eight Oaths that take them for permanent buffs, up to +10% XP for good.
 - **Skill potions**: brew a Potion of Quickening (an Awkward Potion and a clock) for faster ability cooldowns, or a
   Potion of Persistence (an amethyst shard) for abilities that last longer; long, strong, splash and lingering too.
 

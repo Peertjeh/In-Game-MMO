@@ -1256,6 +1256,14 @@ class Wiki:
         "LEGENDARY": "The Ender Dragon, for every player near when it dies (once a day).",
     }
 
+    # The relics each Oath takes, and how many of each (legends/Oath.java)
+    OATH_RELICS = {
+        "raid_breaker": (["warbanner_shard"], 5), "deep_dark": (["sculk_heart"], 3), "tides": (["tidal_pearl"], 4),
+        "embers": (["ember_core"], 5), "void": (["void_shard"], 4), "wilds": (["verdant_idol"], 4),
+        "champions": (["champions_crest"], 5),
+        "legends": (["warbanner_shard", "sculk_heart", "tidal_pearl", "ember_core", "void_shard", "verdant_idol", "champions_crest"], 1),
+    }
+
     def gen_legends(self):
         """The Legends update (2.0): the Tomes of Insight, the Champions' affixes and the titles."""
         s = self.src
@@ -1278,6 +1286,21 @@ class Wiki:
                                 ["Slain", f"{human(self.cfg['CHAMPION_KILL_XP'])} XP in Melee (Ranged with a projectile), and a chance at a tome"],
                                 ["Make one (admins)", f"/skills champion {low}", 1]],
                       "refs": ["concept-champions"]})
+        # Relics and Oaths (2.2)
+        for k in sorted(k for k in self.lang if re.fullmatch(rf"item\.{MOD}\.relic\.[a-z_]+", k) and not k.endswith(".use")):
+            rid = k.split(".")[-1]
+            oaths = [self.L(f"oath.{MOD}.{o}", o) for o, (r, _) in self.OATH_RELICS.items() if rid in r]
+            self.add({"id": f"relic-{rid}", "cat": "legends", "kind": "Relic", "alt": "relikwie, relic",
+                      "name": self.L(k, humanize(rid)), "text": self.L(k + ".lore", ""),
+                      "facts": [["Used for", ", ".join(oaths) if oaths else "the Oaths"], ["Give one (admins)", f"/skills relic <player> {rid}", 1]],
+                      "refs": ["concept-relics", "concept-oaths"]})
+        for oid, (relics, count) in self.OATH_RELICS.items():
+            k = f"oath.{MOD}.{oid}"
+            needs = ", ".join(f"{count if count else 1} {self.L(f'item.{MOD}.relic.{r}', humanize(r))}" for r in relics)
+            self.add({"id": f"oath-{oid}", "cat": "legends", "kind": "Oath", "alt": "eed, quest, opdracht, permanente buff",
+                      "name": self.L(k, humanize(oid)), "text": f"Gives for good: {self.L(k + '.reward', '')}.",
+                      "facts": [["Relics", needs], ["Feat", self.L(k + ".need", "")], ["Swear it", "the Oaths tab of the Legends screen"]],
+                      "refs": ["concept-oaths"] + [f"relic-{r}" for r in relics][:3]})
         titles = sorted(k for k in self.lang if re.fullmatch(rf"title\.{MOD}\.[a-z_]+", k))
         for k in titles:
             tid = k.split(".")[-1]

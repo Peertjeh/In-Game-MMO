@@ -1616,6 +1616,27 @@ Boosts, Contracts and Titles.
 
 ---
 
+## 19. Relics and Oaths (2.2, the owner's wish: items to find, from raids too, and quests for permanent buffs)
+
+- **Relics** (`legends/Relic.java`): a knowledge book marked in its custom data (`extremeprogression:relic`), drawn as a
+  vanilla item through `item_model`, stacking to 64, with a name, a rarity and two lines of lore. Using one does
+  nothing (the knowledge book is not used up), and it is in no recipe.
+- **Where from** (`Relics.java`): chests (rolled on top of their loot, each relic once a chest), mobs slain by a player
+  (not flagged by their origin), raid captains (an illager with a banner on its head: always a banner shard), raids
+  won (Hero of the Village: one shard and one more an omen level, given; counted as `raids`), and Champions (20% a
+  crest). The tables are in the 2.2.0 changelog.
+- **Oaths** (`Oath.java`, `Oaths.java`): relics and a feat; swearing takes the relics from the inventory and keeps the
+  Oath in the player's file (`legends.oaths`). Their buffs: attribute modifiers (max health +4, oxygen bonus +2,
+  burning time −50%, movement speed +5%, armor +2), put on at login, at respawn and when sworn, and taken off when
+  relics are turned off; or shares read where they count: ability cooldowns −10% (`AbilityService`), ability time
+  +15% (with Persistence, `SkillPotions.lasting`), and +10% XP added to the party bonus, boost and Skill of the Day.
+- The Oath of Legends asks for one of each relic and the seven other Oaths. Titles: Oathsworn, Oathkeeper.
+- Shown in the Legends screen's fourth tab: two columns of Oaths with what each needs (the relics counted in the
+  inventory on the client, the feat from the server), what it gives, and a Swear button when it can be sworn.
+- `relics` turns relics and Oaths off; `/skills relic <player> <relic> [count]` gives relics.
+
+---
+
 ## Appendix A: XP tables (✅ approved in round 24)
 
 All values are configurable (§11). They are calibrated against an assumed rate of active play, given per skill below. Internally XP is a decimal number; the GUI rounds it.

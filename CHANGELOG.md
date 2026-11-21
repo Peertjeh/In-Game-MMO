@@ -1,5 +1,41 @@
 # Changelog
 
+## 2.2.0: Relics and Oaths
+
+Things to find out in the world, and quests that turn them into permanent buffs (the owner's wish).
+
+### Seven relics
+| Relic | Where from |
+|---|---|
+| **Raider's Banner Shard** | every raid won (one more for each omen level), raid captains, pillager outposts, woodland mansions |
+| **Sculk Heart** | ancient cities (25%), the Warden |
+| **Tidal Pearl** | buried treasure (35%), shipwreck treasure, ocean ruins, Elder Guardians (2), drowned (1%) |
+| **Ember Core** | bastion treasure (40%) and other bastion chests, Nether fortresses, piglin brutes (15%), blazes (2%) |
+| **Void Shard** | end city treasure (30%), shulkers (4%), the Ender Dragon (3) |
+| **Verdant Idol** | jungle temples (30%), desert temples, woodland mansions |
+| **Champion's Crest** | Champions (20%), trial chamber vaults (ominous 25%) |
+
+Mobs only drop them when a player slays them, never from a spawner, egg or command.
+
+### Eight Oaths
+Swear them in the new **Oaths** tab of the Legends screen: the relics are taken, and the buff is yours for good, through
+deaths and logins.
+
+| Oath | Needs | Gives for good |
+|---|---|---|
+| Raid Breaker | 5 Raider's Banner Shards, a raid won | +2 hearts |
+| Deep Dark | 3 Sculk Hearts, Exploration 30 | ability cooldowns 10% shorter |
+| Tides | 4 Tidal Pearls, Fishing 30 | your breath lasts three times as long underwater |
+| Embers | 5 Ember Cores, Defense 30 | fire burns you half as long |
+| Void | 4 Void Shards, any skill at 50 | abilities last 15% longer |
+| Wilds | 4 Verdant Idols, Foraging or Farming 30 | 5% quicker on foot |
+| Champions | 5 Champion's Crests, 10 Champions slain | +2 armor |
+| **Legends** | one of every relic, the seven other Oaths | **+10% XP in every skill**, and the title Oathkeeper |
+
+- Two new titles: Oathsworn (your first Oath) and Oathkeeper.
+- Admins: `/skills relic <player> <relic> [count]` (permission `extremeprogression.admin.boosts`); the option `relics`
+  turns relics and Oaths off.
+
 ## 2.1.0: Skill potions
 
 Two new potions to brew (the owner's wish): one that brings your abilities back sooner, one that makes them last
