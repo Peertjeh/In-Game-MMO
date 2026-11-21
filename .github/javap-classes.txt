@@ -207,3 +207,10 @@ net.minecraft.server.level.ServerBossEvent
 net.minecraft.world.BossEvent
 net.minecraft.world.item.KnowledgeBookItem
 net.minecraft.core.Holder
+net.minecraft.world.item.alchemy.Potions
+net.minecraft.core.Registry
+net.minecraft.core.registries.BuiltInRegistries
+net.minecraft.world.effect.MobEffectCategory
+net.minecraft.world.item.crafting.RecipeManager
+BrewingRecipe
+net.minecraft.world.item.alchemy.PotionContents

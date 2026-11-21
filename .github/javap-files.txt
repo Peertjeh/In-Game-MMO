@@ -4,3 +4,5 @@ data/minecraft/recipe/*swiftness*.json
 data/minecraft/recipe/*long_swiftness*.json
 data/minecraft/recipe/*splash*.json
 assets/minecraft/textures/gui/sprites/hud/hotbar*
+assets/minecraft/textures/mob_effect/speed.png
+assets/minecraft/lang/en_us.json
